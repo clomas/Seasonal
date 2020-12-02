@@ -1,0 +1,6 @@
+framework module CocoaProxy {
+  umbrella header "CocoaProxy-umbrella.h"
+
+  export *
+  module * { export * }
+}

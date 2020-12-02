@@ -1,0 +1,23 @@
+PODS:
+  - CocoaProxy (0.1.1)
+  - InfiniteLayout (0.2.3.4):
+    - CocoaProxy (~> 0)
+    - InfiniteLayout/Core (= 0.2.3.4)
+  - InfiniteLayout/Core (0.2.3.4):
+    - CocoaProxy (~> 0)
+
+DEPENDENCIES:
+  - InfiniteLayout
+
+SPEC REPOS:
+  trunk:
+    - CocoaProxy
+    - InfiniteLayout
+
+SPEC CHECKSUMS:
+  CocoaProxy: b877740e2877b1d1b2fdaa30ac988e012f8d2807
+  InfiniteLayout: 0a2d22c0d7c12051468b1bd1763875285f2e6815
+
+PODFILE CHECKSUM: 6083494ac95727da05421a9c83fe4569fb98892d
+
+COCOAPODS: 1.8.4

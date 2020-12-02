@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CardViewController" customModule="Seasonal" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="iN0-l3-epB" id="Kjr-L0-OBv"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qx-N9-7ee">
+                    <rect key="frame" x="0.0" y="124" width="414" height="772"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNF-55-d6Z">
+                            <rect key="frame" x="196" y="15" width="22.5" height="23"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="22.5" id="JUE-ll-Pxf"/>
+                                <constraint firstAttribute="height" constant="23" id="lp2-JJ-dLS"/>
+                            </constraints>
+                            <state key="normal" image="downarrow"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.1890485908" green="0.87889230250000006" blue="0.79337290159999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <gestureRecognizers/>
+                    <constraints>
+                        <constraint firstItem="rNF-55-d6Z" firstAttribute="centerX" secondItem="2qx-N9-7ee" secondAttribute="centerX" id="Ysz-kk-vcj"/>
+                        <constraint firstItem="rNF-55-d6Z" firstAttribute="top" secondItem="2qx-N9-7ee" secondAttribute="top" constant="15" id="gvE-qz-VAY"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <gestureRecognizers/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="2qx-N9-7ee" secondAttribute="bottom" id="0a4-Ca-MwH"/>
+                <constraint firstItem="2qx-N9-7ee" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="80" id="FzQ-3c-ZXq"/>
+                <constraint firstItem="2qx-N9-7ee" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="eVd-40-dTY"/>
+                <constraint firstItem="2qx-N9-7ee" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="io8-85-jMb"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <point key="canvasLocation" x="47.826086956521742" y="35.491071428571423"/>
+        </view>
+        <panGestureRecognizer minimumNumberOfTouches="1" id="bm0-7w-WEw"/>
+    </objects>
+    <resources>
+        <image name="downarrow" width="22.5" height="22.5"/>
+    </resources>
+</document>

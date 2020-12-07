@@ -16,7 +16,7 @@ class MenuBar: UICollectionView {
     weak var coordinator: MainCoordinator?
     weak var menuBarSelectedDelegate: MenuBarDelegate?
     var menuBarViewModel: MenuBarViewModel!
-    let cellId = MENUBARCELL
+    private let cellId = MENUBARCELL
     var currentMonth: Month?
 
     override func awakeFromNib() {
@@ -24,7 +24,7 @@ class MenuBar: UICollectionView {
         setupView()
     }
 
-    func setupView() {
+    private func setupView() {
 
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -79,7 +79,7 @@ class MenuBar: UICollectionView {
 
     // MARK: Animations
 
-    func animateCalendarIconCell(month: Month, cell: MenuBarCell, slideTo: CGFloat, jumpTo: CGFloat) {
+    private func animateCalendarIconCell(month: Month, cell: MenuBarCell, slideTo: CGFloat, jumpTo: CGFloat) {
         let rect = cell.imageView.frame
         let originX = rect.origin.x
 
@@ -99,7 +99,7 @@ class MenuBar: UICollectionView {
 
     // MARK: Delegate
 
-    func updateMenuBarDelegate(indexPath: Int) {
+    private func updateMenuBarDelegate(indexPath: Int) {
 
         var indexPathToScrollTo = IndexPath(row: 8, section: 0)
         if indexPath == ViewDisplayed.ProduceFilter.cancelled.menuBarIndex() {

@@ -86,7 +86,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
 
     // MARK: Setup
 
-    func setUpView() {
+    private func setUpView() {
         setUpMenuBar()
         self.inifiniteMonthCollectionView.delegate = self
         self.inifiniteMonthCollectionView.dataSource = self
@@ -97,11 +97,13 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
         setContextualTitle()
     }
 
-    func setUpMenuBar() {
-        lastSelectedMenuItem = stateViewModel.status.current.onPage.rawValue
-        menuBar.menuBarSelectedDelegate = self
-        menuBar.menuBarViewModel = .init()
-        menuBar.menuBarViewModel.initMenuBar(selected: stateViewModel.status.onPage.rawValue, month: stateViewModel.status.month)
+    private func setUpMenuBar() {
+        if stateViewModel != nil {
+            lastSelectedMenuItem = stateViewModel.status.current.onPage.rawValue
+            menuBar.menuBarSelectedDelegate = self
+            menuBar.menuBarViewModel = .init()
+            menuBar.menuBarViewModel.initMenuBar(selected: stateViewModel.status.onPage.rawValue, month: stateViewModel.status.month)
+        }
     }
 
     func viewDidReappear() {
@@ -118,7 +120,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
         self.searchController.isActive = false
     }
 
-    func setupCollectionView() {
+    private func setupCollectionView() {
         if let flowLayout = inifiniteMonthCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
             flowLayout.scrollDirection = .horizontal
             flowLayout.minimumLineSpacing = 0
@@ -144,7 +146,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
         hideTableIfEmpty()
     }
     
-    func hideTableIfEmpty() {
+    private func hideTableIfEmpty() {
         nothingToShowLabel.text = ""
 
         if stateViewModel.status.onPage  == .favourites && favouritesTableView.numberOfRows(inSection: 0) == 0 {
@@ -214,7 +216,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
 
     // MARK: Title
 
-    func setTitleFromScrollViewPaged(newTitle: String) {
+    private func setTitleFromScrollViewPaged(newTitle: String) {
         if inifiniteMonthCollectionView.isHidden == false {
             if (newTitle).isEmpty == false { // only proceed with a valid value for newTitle.
                 // CATransition code
@@ -240,7 +242,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
         }
     }
 
-    func setContextualTitle() {
+    private func setContextualTitle() {
         var titleString = ""
 
         if stateViewModel.status.onPage == .favourites {
@@ -259,7 +261,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
 
     // MARK: Months or Favourites to show
 
-    func favouritesOrMonthSelected(favouritesPage: Bool) {
+    private func favouritesOrMonthSelected(favouritesPage: Bool) {
         if favouritesPage == true {
             self.favouritesTableView.reloadData()
             self.inifiniteMonthCollectionView.isHidden = true
@@ -298,7 +300,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
 
     // MARK: Search controller setup
 
-    func configureSearchController() {
+    private func configureSearchController() {
 
         nothingToShowLabel.text = ""
         let searchController = UISearchController(searchResultsController:  nil)

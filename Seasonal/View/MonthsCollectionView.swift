@@ -20,7 +20,7 @@ class MonthsCollectionView: UICollectionView {
         setupView()
     }
     
-    func setupView() {
+    private func setupView() {
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 2, height: self.frame.height / 5)
         layout.minimumInteritemSpacing = 0

@@ -15,20 +15,20 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
     weak var coordinator: MainCoordinator?
 
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
-    var dataLoaded = false
+    private var dataLoaded = false
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var dismissArrowButton: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var avPlayerView: AVPlayerView!
     var dismissButtonTappedCallback: (() -> Void)?
-    var player: AVPlayer!
+    private var player: AVPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
     }
 
-    func setupView() {
+    private func setupView() {
         setUpVideo()
         startStopAnimations(start: true)
     }
@@ -52,7 +52,7 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
 
     // MARK: Video
     
-    func setUpVideo() {
+    private func setUpVideo() {
         if traitCollection.userInterfaceStyle == .light {
             playVideo(videoName: "lightwelcomevideo")
         } else {
@@ -60,7 +60,7 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
         }
     }
 
-    func playVideo(videoName: String) {
+    private func playVideo(videoName: String) {
         guard let path = Bundle.main.path(forResource: videoName, ofType:"mp4") else {
             debugPrint("video not found")
             return
@@ -92,7 +92,7 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
 
     // MARK: Animations
 
-    func animateLabel() {
+    private func animateLabel() {
         if self.dismissButton.isHidden == false {
             self.activityMonitor.isHidden = true
         }

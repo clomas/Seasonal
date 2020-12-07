@@ -69,7 +69,7 @@ class InfoCardVC: UIViewController, Storyboarded {
         present(composer, animated: true)
     }
 
-    func copyEmailToClipboard() {
+    private func copyEmailToClipboard() {
         UIPasteboard.general.string = "clint.thomas@me.com"
     }
 

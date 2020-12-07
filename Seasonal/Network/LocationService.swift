@@ -26,9 +26,9 @@ protocol LocationDelegate {
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
     static let instance = LocationManager()
-    let locationManager : CLLocationManager
+    private let locationManager : CLLocationManager
     var locationDelegate: LocationDelegate?
-    let locationInfo = LocationInformation()
+    private let locationInfo = LocationInformation()
 
     override init() {
         locationManager = CLLocationManager()
@@ -81,7 +81,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     // MARK: States in Aus
 
-    func parseLocation() {
+    private func parseLocation() {
         var stateFound = State.noState
         print("location found - \(locationInfo.state ?? State.noState.rawValue)")
 

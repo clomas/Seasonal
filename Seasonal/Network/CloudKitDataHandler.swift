@@ -21,11 +21,11 @@ enum CloudKitError: Error {
 class CloudKitDataHandler {
     
     static let instance = CloudKitDataHandler()
-    let publicDatabase = CKContainer.default().publicCloudDatabase
-    let privateDatabase = CKContainer.default().privateCloudDatabase
+    private let publicDatabase = CKContainer.default().publicCloudDatabase
+    private let privateDatabase = CKContainer.default().privateCloudDatabase
     var currentLocation: State = .noState
 
-    func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> ()) {
+    private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> ()) {
         let container = CKContainer.default()
         container.fetchUserRecordID() {
             recordID, error in
@@ -75,7 +75,7 @@ class CloudKitDataHandler {
 
     // MARK: Sort Data
 
-    func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
+    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
         var produceArray = [Produce]()
         let likedArray = privateRecords.map { $0.object(forKey: ID ) as? Int}
 
@@ -126,7 +126,7 @@ class CloudKitDataHandler {
 
     // Update cloudkit with local data if there is a disparity
     // local data should always be accurate
-    func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
+    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
         let likedArr = produceArray.filter{ $0.liked == true}
 
         for localLike in locallyStoredData {

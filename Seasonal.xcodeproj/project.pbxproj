@@ -40,9 +40,7 @@
 		27A3835721DF673800BB62C1 /* MonthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A3835621DF673800BB62C1 /* MonthViewController.swift */; };
 		27A3835F21DF6EE200BB62C1 /* SelectedCategoryViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A3835E21DF6EE200BB62C1 /* SelectedCategoryViewCell.swift */; };
 		27B4E45B22D99930003D51B8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B4E44D22D99930003D51B8 /* CoreLocation.framework */; };
-		27B50747217046E7003A3A33 /* DataImportModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27B50746217046E7003A3A33 /* DataImportModel.swift */; };
 		27BEF26D222CFECB00E595E0 /* MonthPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */; };
-		27C5CD04255C932A00E937BF /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5CD03255C932A00E937BF /* SearchController.swift */; };
 		27C5CD0A255E5AD400E937BF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5CD09255E5AD400E937BF /* Extensions.swift */; };
 		27CC65F824D410EE0023A08B /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CC65F724D410EE0023A08B /* NetworkService.swift */; };
 		27E6E69122D1A3790018DCF2 /* InitialVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6E69022D1A3790018DCF2 /* InitialVC.swift */; };
@@ -50,7 +48,6 @@
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
 		27EFF3D2215A5C1700CFB31D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */; };
-		27F4322124F2244600DF91F5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4322024F2244600DF91F5 /* ViewController.swift */; };
 		27F4762D222DDAA000306FC2 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4762C222DDAA000306FC2 /* NavigationController.swift */; };
 		CA717B76A7CAC92C8440C99F /* Pods_Seasonal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A53913D37B2057E85417F027 /* Pods_Seasonal.framework */; };
 /* End PBXBuildFile section */
@@ -114,9 +111,7 @@
 		27A3835E21DF6EE200BB62C1 /* SelectedCategoryViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryViewCell.swift; sourceTree = "<group>"; };
 		27A8C54721D105D70083AE09 /* Seasonal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Seasonal.xcodeproj; sourceTree = "<group>"; };
 		27B4E44D22D99930003D51B8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		27B50746217046E7003A3A33 /* DataImportModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportModel.swift; sourceTree = "<group>"; };
 		27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthPickerViewController.swift; sourceTree = "<group>"; };
-		27C5CD03255C932A00E937BF /* SearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		27C5CD09255E5AD400E937BF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27CC65F724D410EE0023A08B /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		27E6E69022D1A3790018DCF2 /* InitialVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialVC.swift; sourceTree = "<group>"; };
@@ -127,7 +122,6 @@
 		27EFF3D1215A5C1700CFB31D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27EFF3D3215A5C1700CFB31D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27F4218E22328FA40009922C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		27F4322024F2244600DF91F5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "NEW STUFF/ViewController.swift"; sourceTree = "<group>"; };
 		27F4762C222DDAA000306FC2 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		A53913D37B2057E85417F027 /* Pods_Seasonal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Seasonal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B253232372400B007E8BCF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -207,7 +201,6 @@
 		275FAEF52168872000FD7044 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				27B50746217046E7003A3A33 /* DataImportModel.swift */,
 				279A3CDC25629A97008E88EC /* PageStatus.swift */,
 				278611B725687D2C00E8021B /* MenuBarItem.swift */,
 				278611B925687DF500E8021B /* Produce.swift */,
@@ -221,7 +214,6 @@
 				275E88CD21C113470015968C /* SeasonsViewController.swift */,
 				27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */,
 				27A3835621DF673800BB62C1 /* MonthViewController.swift */,
-				27C5CD03255C932A00E937BF /* SearchController.swift */,
 				27086B1F221D79D700E3C236 /* Modal Controllers */,
 			);
 			path = Controller;
@@ -331,7 +323,6 @@
 				271E69AB216DDF7400E7C126 /* Services */,
 				27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */,
 				27EFF3CB215A5C1500CFB31D /* Main.storyboard */,
-				27F4322024F2244600DF91F5 /* ViewController.swift */,
 				27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */,
 				27EFF3D3215A5C1700CFB31D /* Info.plist */,
 				271847F021F41A34002D4214 /* Package.swift */,
@@ -509,12 +500,10 @@
 			files = (
 				27CC65F824D410EE0023A08B /* NetworkService.swift in Sources */,
 				272D610A2568E7AC00C9A028 /* MenuBarCell.swift in Sources */,
-				27F4322124F2244600DF91F5 /* ViewController.swift in Sources */,
 				278611BA25687DF500E8021B /* Produce.swift in Sources */,
 				27ECB41622EF19090097A8D4 /* InfoCardVC.swift in Sources */,
 				279A3CDD25629A97008E88EC /* PageStatus.swift in Sources */,
 				27657F3124ED4CF700382E83 /* Storyboarded.swift in Sources */,
-				27B50747217046E7003A3A33 /* DataImportModel.swift in Sources */,
 				27657F2F24ED4A2500382E83 /* Coordinator.swift in Sources */,
 				27BEF26D222CFECB00E595E0 /* MonthPickerViewController.swift in Sources */,
 				276F35D924D695CC00D223A0 /* CloudKitDataHandler.swift in Sources */,
@@ -529,7 +518,6 @@
 				27993B11224A2A9500438A6B /* MonthTableCollectionViewCell.swift in Sources */,
 				279CA20C220B068E00A6D9CE /* MenuBar.swift in Sources */,
 				275E88CE21C113470015968C /* SeasonsViewController.swift in Sources */,
-				27C5CD04255C932A00E937BF /* SearchController.swift in Sources */,
 				27A3835F21DF6EE200BB62C1 /* SelectedCategoryViewCell.swift in Sources */,
 				271847F121F41A34002D4214 /* Package.swift in Sources */,
 				2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */,

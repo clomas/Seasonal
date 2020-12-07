@@ -18,7 +18,7 @@ class CustomNavigationController: UINavigationController {
         setUpNavigationControllerAppearance()
     }
 
-    func setUpNavigationControllerAppearance() {
+    private func setUpNavigationControllerAppearance() {
         let navbarAppearance = UINavigationBar.appearance()
         navbarAppearance.setBackgroundImage(UIImage(), for: .default)
         navbarAppearance.shadowImage = UIImage()

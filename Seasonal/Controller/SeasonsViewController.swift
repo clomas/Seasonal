@@ -45,15 +45,15 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     @IBOutlet weak var infoButton: UIBarButtonItem!
     @IBOutlet weak var seasonStack: UIStackView!
 
-    var produceFilter: ViewDisplayed.ProduceFilter = .cancelled
+    private var produceFilter: ViewDisplayed.ProduceFilter = .cancelled
 
-    let categoryButtonArr = [UIButton]()
+    private let categoryButtonArr = [UIButton]()
 
-    var searchController = UISearchController(searchResultsController: nil)
-    var searchString: String = ""
+    private var searchController = UISearchController(searchResultsController: nil)
+    private var searchString: String = ""
 
     // View models
-    var stateViewModel: AppStateViewModel!
+    weak var stateViewModel: AppStateViewModel!
     var viewModel: ProduceCellViewModel!
     var menuBarViewModel: MenuBarCellViewModel!
 
@@ -64,7 +64,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
     // MARK: Setup
 
-    func setUpView() {
+    private func setUpView() {
         setContextualTitle()
         setUpMenuBar()
         stateViewModel.status.current.onPage = .seasons
@@ -85,7 +85,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
    // MARK: Search Bar
 
-    func configureSearchController () {
+    private func configureSearchController () {
         nothingToShowLabel.text = ""
         let searchController = UISearchController(searchResultsController:  nil)
         searchController.hidesNavigationBarDuringPresentation = false
@@ -157,7 +157,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
         }
     }
 
-    func setContextualTitle() {
+    private func setContextualTitle() {
       var titleString = ""
       titleString = String(describing: stateViewModel.status.season).capitalized
 
@@ -169,60 +169,9 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
       }
       self.title = titleString
     }
-
-    // MARK: Animations
-
-    func animateLikeButton (button: UIButton, selected: Bool) {
-        // this removed a bug where the button jumped if I pressed like then pressed unlike - boom jump to the left.
-        button.translatesAutoresizingMaskIntoConstraints = true
-        
-        if selected == true {
-            button.setImage(UIImage(named:"\(LIKED).png"), for: .normal)
-            
-            UIView.animate(withDuration: 0.2, animations: {() -> Void in
-                button.transform = CGAffineTransform.identity.scaledBy(x: 0.6, y: 0.6)
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.2, animations: {
-                    button.transform = CGAffineTransform.identity.scaledBy(x: 1.2, y: 1.2)
-                }, completion: { _ in
-                    UIView.animate(withDuration: 0.2, animations: {
-                        button.transform = CGAffineTransform.identity.scaledBy(x: 1, y: 1)
-                    })
-                })
-            })
-        } else {
-            button.setImage(UIImage(named:"\(LIKED).png"), for: .normal)
-            button.layoutIfNeeded()
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-                button.frame = CGRect(x: button.frame.origin.x , y: button.frame.origin.y , width: button.frame.width, height: button.frame.height)
-            }, completion: { _ in
-                UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-                    button.frame = CGRect(x: button.frame.origin.x + 100, y: button.frame.origin.y , width: button.frame.width, height: button.frame.height)
-                }, completion: { _ in
-                    
-                    let image = UIImage(named: "\(UNLIKED).png")?.withRenderingMode(.alwaysTemplate)
-                    button.setImage(image, for: .normal)
-                    button.imageView?.tintColor = UIColor.LikeButton.likeTint
-
-                    UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-                        button.frame = CGRect(x: button.frame.origin.x - 100, y: button.frame.origin.y , width: button.frame.width, height: button.frame.height)
-                    })
-                })
-            })
-        }
-    }
-
-    func animateButton(button: UIButton, title: String, colour: UIColor) {
-        seasonStack.bringSubviewToFront(button)
-        button.isSelected = true
-
-        UIView.animate(withDuration: 0.2, animations: {() -> Void in
-            button.transform = CGAffineTransform.identity.scaledBy(x: 1.1, y: 1.2)
-        })
-    }
     
     // MARK: NavBar setup /////
-    func navigationBarAnimations() {
+    private func navigationBarAnimations() {
         let fadeTextAnimation = CATransition()
         fadeTextAnimation.duration = 2.5
         fadeTextAnimation.type = CATransitionType.fade
@@ -254,6 +203,10 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     @IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
         
+    }
+
+    deinit {
+        print("dasdas")
     }
 }
 

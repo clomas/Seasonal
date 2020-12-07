@@ -18,7 +18,6 @@ class InitialVC: UIViewController, Storyboarded {
     @IBOutlet weak var internetLabel: UILabel!
 
     override func viewDidLoad() {
-
         super.viewDidLoad()
         internetLabel.text = ""
         self.activityMonitor.startAnimating()
@@ -41,7 +40,7 @@ class InitialVC: UIViewController, Storyboarded {
         }
     }
 
-    func goToiCloudSettings(alert: UIAlertAction!) {
+    private func goToiCloudSettings(alert: UIAlertAction!) {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         
         if UIApplication.shared.canOpenURL(settingsUrl) {

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oNH-9P-vZ4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oNH-9P-vZ4">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--InitialVC-->
+        <!--Splash Screen View Controller-->
         <scene sceneID="p34-q3-Nmz">
             <objects>
-                <viewController storyboardIdentifier="InitialVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="T39-76-m2i" customClass="InitialVC" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="_SplashScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="T39-76-m2i" customClass="_SplashScreenViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rwc-Rz-8bB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -93,10 +93,10 @@
             </objects>
             <point key="canvasLocation" x="-1588.4057971014495" y="535.71428571428567"/>
         </scene>
-        <!--WelcomeVC-->
+        <!--Welcome View Controller-->
         <scene sceneID="w2l-Ci-X3G">
             <objects>
-                <viewController storyboardIdentifier="WelcomeVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TPe-FU-VCA" customClass="WelcomeVC" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="_WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TPe-FU-VCA" customClass="_WelcomeViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SLC-Mj-Ahe">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -104,31 +104,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVS-xi-NGk">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <activityIndicatorView contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ghd-Je-7a0">
-                                        <rect key="frame" x="197" y="756.5" width="20" height="20"/>
-                                        <color key="tintColor" name="fontDefault"/>
-                                        <color key="color" name="fontDefault"/>
-                                    </activityIndicatorView>
-                                    <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aoe-Br-6a5">
-                                        <rect key="frame" x="175" y="798.5" width="64" height="40.5"/>
-                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="19"/>
-                                        <state key="normal" title="dismiss">
-                                            <color key="titleColor" name="fontDefault"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="dismissButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="CyW-e9-ziQ"/>
-                                        </connections>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text=" " textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="ScC-1k-tvR">
-                                        <rect key="frame" x="47.5" y="675" width="319" height="81"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="81" id="DdR-rf-Lnd"/>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="319" id="dEs-Xh-amL"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
-                                        <color key="textColor" name="fontDefault"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rNd-d8-yzq" customClass="AVPlayerView" customModule="Seasonal" customModuleProvider="target">
                                         <rect key="frame" x="57" y="155" width="300" height="512"/>
                                         <color key="backgroundColor" name="welcomeBackground"/>
@@ -138,41 +113,65 @@
                                             <constraint firstAttribute="width" constant="300" id="g9F-5p-fP0"/>
                                         </constraints>
                                     </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="GxV-oT-oE8">
+                                        <rect key="frame" x="47.5" y="675" width="319" height="161"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text=" " textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="ScC-1k-tvR">
+                                                <rect key="frame" x="0.0" y="0.0" width="319" height="81"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="81" id="DdR-rf-Lnd"/>
+                                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="319" id="dEs-Xh-amL"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="17"/>
+                                                <color key="textColor" name="fontDefault"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <activityIndicatorView contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ghd-Je-7a0">
+                                                <rect key="frame" x="0.0" y="81" width="319" height="20"/>
+                                                <color key="tintColor" name="fontDefault"/>
+                                                <color key="color" name="fontDefault"/>
+                                            </activityIndicatorView>
+                                            <button opaque="NO" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="bottom" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aoe-Br-6a5">
+                                                <rect key="frame" x="0.0" y="101" width="319" height="38"/>
+                                                <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="19"/>
+                                                <state key="normal" title="dismiss">
+                                                    <color key="titleColor" name="fontDefault"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="dismissButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="CyW-e9-ziQ"/>
+                                                </connections>
+                                            </button>
+                                            <button contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Vw-8H-anz">
+                                                <rect key="frame" x="0.0" y="139" width="319" height="22"/>
+                                                <color key="tintColor" name="fontDefault"/>
+                                                <state key="normal" image="downarrow">
+                                                    <color key="titleColor" name="fontDefault"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="downArrowButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="0sl-gY-LBt"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" name="welcomeBackground"/>
                                 <gestureRecognizers/>
                                 <constraints>
+                                    <constraint firstItem="GxV-oT-oE8" firstAttribute="top" secondItem="rNd-d8-yzq" secondAttribute="bottom" constant="8" symbolic="YES" id="0cM-Ub-kQP"/>
                                     <constraint firstItem="rNd-d8-yzq" firstAttribute="centerY" secondItem="HVS-xi-NGk" secondAttribute="centerY" constant="-37" id="9RZ-z0-5lY"/>
-                                    <constraint firstItem="ghd-Je-7a0" firstAttribute="centerX" secondItem="HVS-xi-NGk" secondAttribute="centerX" id="AGj-oe-Rh2"/>
-                                    <constraint firstItem="ghd-Je-7a0" firstAttribute="top" secondItem="ScC-1k-tvR" secondAttribute="bottom" constant="0.5" id="KyF-pu-5wY"/>
-                                    <constraint firstAttribute="bottom" secondItem="aoe-Br-6a5" secondAttribute="bottom" constant="57" id="P8t-lR-pyW"/>
+                                    <constraint firstAttribute="bottom" secondItem="GxV-oT-oE8" secondAttribute="bottom" constant="60" id="cbW-RB-p1l"/>
                                     <constraint firstItem="rNd-d8-yzq" firstAttribute="centerX" secondItem="HVS-xi-NGk" secondAttribute="centerX" id="cqo-9J-rjp"/>
-                                    <constraint firstItem="ScC-1k-tvR" firstAttribute="centerX" secondItem="ghd-Je-7a0" secondAttribute="centerX" id="d6T-e3-hc4"/>
                                     <constraint firstItem="rNd-d8-yzq" firstAttribute="top" secondItem="HVS-xi-NGk" secondAttribute="top" constant="155" id="kEK-J1-PuF"/>
-                                    <constraint firstItem="aoe-Br-6a5" firstAttribute="top" secondItem="ghd-Je-7a0" secondAttribute="bottom" constant="22" id="srX-H9-Cvy"/>
-                                    <constraint firstItem="ScC-1k-tvR" firstAttribute="top" secondItem="rNd-d8-yzq" secondAttribute="bottom" constant="8" id="vOj-03-gDU"/>
-                                    <constraint firstItem="aoe-Br-6a5" firstAttribute="centerX" secondItem="HVS-xi-NGk" secondAttribute="centerX" id="wYz-6L-avh"/>
+                                    <constraint firstItem="GxV-oT-oE8" firstAttribute="centerX" secondItem="HVS-xi-NGk" secondAttribute="centerX" id="rLL-P9-1FH"/>
                                 </constraints>
                             </view>
-                            <button contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TpA-Yu-vau">
-                                <rect key="frame" x="201.5" y="834" width="11.5" height="22"/>
-                                <color key="tintColor" name="fontDefault"/>
-                                <state key="normal" image="downarrow">
-                                    <color key="titleColor" name="fontDefault"/>
-                                </state>
-                                <connections>
-                                    <action selector="downArrowButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="B0D-1j-77R"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="HMp-sl-5tm"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="HVS-xi-NGk" firstAttribute="top" secondItem="SLC-Mj-Ahe" secondAttribute="top" id="W1N-Du-xbj"/>
-                            <constraint firstItem="TpA-Yu-vau" firstAttribute="centerX" secondItem="SLC-Mj-Ahe" secondAttribute="centerX" id="X2k-zQ-LZk"/>
                             <constraint firstAttribute="bottom" secondItem="HVS-xi-NGk" secondAttribute="bottom" id="fWm-eT-0dC"/>
-                            <constraint firstAttribute="bottom" secondItem="TpA-Yu-vau" secondAttribute="bottom" constant="40" id="tYn-vv-8yq"/>
                             <constraint firstItem="HVS-xi-NGk" firstAttribute="centerX" secondItem="SLC-Mj-Ahe" secondAttribute="centerX" id="tsY-9b-mQJ"/>
                             <constraint firstItem="HVS-xi-NGk" firstAttribute="leading" secondItem="HMp-sl-5tm" secondAttribute="leading" id="uBb-y0-TkC"/>
                         </constraints>
@@ -180,20 +179,20 @@
                     <navigationItem key="navigationItem" id="ge6-pM-73x"/>
                     <connections>
                         <outlet property="activityMonitor" destination="ghd-Je-7a0" id="WC8-hq-Glz"/>
-                        <outlet property="avPlayerView" destination="rNd-d8-yzq" id="36u-wH-kEn"/>
-                        <outlet property="dismissArrowButton" destination="TpA-Yu-vau" id="1Jf-8v-sA1"/>
+                        <outlet property="avPlayerView" destination="rNd-d8-yzq" id="AG0-VI-XW2"/>
+                        <outlet property="dismissArrowButton" destination="6Vw-8H-anz" id="3ZC-aO-CtT"/>
                         <outlet property="dismissButton" destination="aoe-Br-6a5" id="vNu-Td-Qbd"/>
                         <outlet property="welcomeLabel" destination="ScC-1k-tvR" id="zVA-k4-bUN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HmC-ZA-O59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-928.125" y="535.56338028169012"/>
+            <point key="canvasLocation" x="-859.4202898550725" y="535.71428571428567"/>
         </scene>
         <!--Seasonal Produce-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="MonthViewController" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MonthViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="_MainViewController" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="_MainViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -391,7 +390,7 @@
                                         </constraints>
                                         <size key="customSize" width="411" height="719"/>
                                         <connections>
-                                            <outlet property="nothingToShowLabel" destination="DRb-sq-lbr" id="Rd3-ir-zmv"/>
+                                            <outlet property="nothingToShowLabel" destination="DRb-sq-lbr" id="8Hl-D5-53r"/>
                                             <outlet property="tableView" destination="J80-QI-Bp0" id="GrU-Lg-qcK"/>
                                         </connections>
                                     </collectionViewCell>
@@ -546,7 +545,7 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="MenuBar" customModule="Seasonal" customModuleProvider="target">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF">
                                 <rect key="frame" x="0.0" y="718" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -560,7 +559,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="MenuBarCell" id="KNj-oY-hRF" customClass="MenuBarCell" customModule="Seasonal" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="MenuBarCell" id="KNj-oY-hRF">
                                         <rect key="frame" x="0.0" y="0.0" width="95" height="58"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -609,17 +608,15 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="favouritesTableView" destination="DwX-Hw-KcE" id="bmm-fl-6Zi"/>
-                        <outlet property="inifiniteMonthCollectionView" destination="Hqv-Hz-VSU" id="HTl-7y-l80"/>
-                        <outlet property="menuBar" destination="VOO-Qb-bpF" id="aN6-F3-zfB"/>
-                        <outlet property="nothingToShowLabel" destination="rOq-dy-943" id="H7j-hp-Bb7"/>
+                        <outlet property="inifiniteMonthCollectionView" destination="Hqv-Hz-VSU" id="Q35-AA-IZj"/>
+                        <outlet property="nothingToShowLabel" destination="rOq-dy-943" id="oXP-ni-zB9"/>
                         <segue destination="T39-76-m2i" kind="presentation" identifier="initialModalSegue" modalPresentationStyle="fullScreen" id="ikf-zY-JlU"/>
                         <segue destination="TPe-FU-VCA" kind="presentation" identifier="WelcomeVCSegue" modalPresentationStyle="fullScreen" id="Khz-mi-3b0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-927.536231884058" y="-236.38392857142856"/>
+            <point key="canvasLocation" x="-930" y="-232"/>
         </scene>
         <!--Season-->
         <scene sceneID="NLB-nL-f7k">

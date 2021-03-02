@@ -34,22 +34,26 @@ class NetworkService {
     }
 
     init() {
-        monitor.pathUpdateHandler = { [unowned self] path in
-            for (id, observations) in self.observations {
-
-                // If any observer is nil, remove it from the list of observers
-                guard let observer = observations.observer else {
-                    self.observations.removeValue(forKey: id)
-                    continue
-                }
-
-                DispatchQueue.main.async(execute: {
-                    observer.internetStatusDidChange(status: path.status)
-                })
-            }
-        }
-        monitor.start(queue: DispatchQueue.global(qos: .background))
+		startMonitoring()
     }
+
+	func startMonitoring() {
+		monitor.pathUpdateHandler = { [unowned self] path in
+			for (id, observations) in self.observations {
+
+				// If any observer is nil, remove it from the list of observers
+				guard let observer = observations.observer else {
+					self.observations.removeValue(forKey: id)
+					continue
+				}
+
+				DispatchQueue.main.async(execute: {
+					observer.internetStatusDidChange(status: path.status)
+				})
+			}
+		}
+		monitor.start(queue: DispatchQueue.global(qos: .background))
+	}
 
     func addObserver(observer: NetworkCheckObserver) {
         let id = ObjectIdentifier(observer)

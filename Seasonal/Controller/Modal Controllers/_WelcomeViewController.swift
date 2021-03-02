@@ -1,5 +1,5 @@
 //
-//  WelcomeVC.swift
+//  _WelcomeViewController.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 11/1/19.
@@ -8,60 +8,60 @@
 
 import UIKit
 import AVFoundation
-import Network
+//import Network
 
-class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
+//class _WelcomeViewController: UIViewController, NetworkObserver, Storyboarded {
+//
+//    weak var coordinator: MainCoordinator?
 
-    weak var coordinator: MainCoordinator?
+class _WelcomeViewController: UIViewController, InitialViewDelegate {
+
+	var viewModel: _WelcomeViewModel!
 
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
-    private var dataLoaded = false
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var dismissArrowButton: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var avPlayerView: AVPlayerView!
-    var dismissButtonTappedCallback: (() -> Void)?
+
     private var player: AVPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        setupViews()
+		viewModel.viewDidLoad()
     }
 
-    private func setupView() {
-        setUpVideo()
-        startStopAnimations(start: true)
+    private func setupViews() {
+		welcomeLabel.text = viewModel.welcomeLabel
+		activityMonitor.startAnimating()
+		activityMonitor.hidesWhenStopped = true
+		dismissButton.isHidden = true
+		dismissArrowButton.isHidden = true
+		dismissButton.isEnabled = false
+		dismissArrowButton.isEnabled = false
+
+		// check if dark mode
+		if traitCollection.userInterfaceStyle == .dark {
+			viewModel.videoName = "darkwelcomevideo"
+		}
+
+		playVideo()
+		viewModel.viewDidLoad()
     }
 
-    func startStopAnimations(start: Bool) {
-        if start == true {
-            activityMonitor.startAnimating()
-            activityMonitor.hidesWhenStopped = true
-            dismissButton.isHidden = true
-            dismissArrowButton.isHidden = true
-            dismissButton.isEnabled = false
-            dismissArrowButton.isEnabled = false
-        } else {
-            dismissButton.isHidden.toggle()
-            dismissArrowButton.isHidden.toggle()
-            dismissButton.isEnabled.toggle()
-            dismissArrowButton.isEnabled.toggle()
-            activityMonitor.stopAnimating()
-        }
-    }
+	func viewReadyToDismiss() {
+		dismissButton.isHidden.toggle()
+		dismissArrowButton.isHidden.toggle()
+		dismissButton.isEnabled.toggle()
+		dismissArrowButton.isEnabled.toggle()
+		activityMonitor.stopAnimating()
+	}
 
     // MARK: Video
-    
-    private func setUpVideo() {
-        if traitCollection.userInterfaceStyle == .light {
-            playVideo(videoName: "lightwelcomevideo")
-        } else {
-            playVideo(videoName: "darkwelcomevideo")
-        }
-    }
 
-    private func playVideo(videoName: String) {
-        guard let path = Bundle.main.path(forResource: videoName, ofType:"mp4") else {
+    private func playVideo() {
+        guard let path = Bundle.main.path(forResource: viewModel.videoName, ofType: "mp4") else {
             debugPrint("video not found")
             return
         }
@@ -77,9 +77,10 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
         let castedLayer = avPlayerView.layer as! AVPlayerLayer
         castedLayer.player = player
         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        player.volume = 0
-        player.actionAtItemEnd = .none
+        //player.volume = 0
+        //player.actionAtItemEnd = .none
         player.play()
+
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
     }
 
@@ -98,7 +99,7 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
         }
         self.welcomeLabel.alpha = 0.0
         UIView.animate(withDuration: 0.9, animations: {() -> Void in
-            self.welcomeLabel.text = "Welome to Seasonal"
+			self.welcomeLabel.text = self.viewModel.welcomeLabel
             self.welcomeLabel.alpha = 1
         }, completion: { finished in
             UIView.animate(withDuration: 3, animations: {() -> Void in
@@ -111,7 +112,6 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
                         UIView.animate(withDuration: 0.3, animations: {
                             self.welcomeLabel.alpha = 1
                         })
-                        
                         DispatchQueue.global(qos: .utility).async {
                             DispatchQueue.global(qos: .default).async {
                             }
@@ -122,30 +122,35 @@ class WelcomeVC: UIViewController, NetworkCheckObserver, Storyboarded {
         })
     }
 
-    func internetStatusDidChange(status: NWPath.Status) {
-        if status == .satisfied {
-            print("Interenet Connected")
-            DispatchQueue.main.async {
-                self.animateLabel()
-            }
-        }else if status == .unsatisfied {
-            DispatchQueue.main.async {
-                self.activityMonitor.isHidden = true
-                self.activityMonitor.stopAnimating()
-                self.welcomeLabel.text = "No Internet Connection!"
-            }
-        }
-    }
+//    func internetStatusDidChange(status: NWPath.Status) {
+//        if status == .satisfied {
+//            print("Interenet Connected")
+//            DispatchQueue.main.async {
+//                self.animateLabel()
+//            }
+//        } else if status == .unsatisfied {
+//            DispatchQueue.main.async {
+//                self.activityMonitor.isHidden = true
+//                self.activityMonitor.stopAnimating()
+//                self.welcomeLabel.text = "No Internet Connection!"
+//            }
+//        }
+//    }
 
     // MARK: Buttons
 
     @IBAction func dismissButtonPressed(_ sender: Any) {
-        dismissButtonTappedCallback?()
+		viewModel.dismissTapped()
     }
     
     @IBAction func downArrowButtonPressed(_ sender: Any) {
-        dismissButtonTappedCallback?()
+		viewModel.dismissTapped()
     }
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.setNavigationBarHidden(true, animated: animated)
+	}
 }
 
 class AVPlayerView: UIView {

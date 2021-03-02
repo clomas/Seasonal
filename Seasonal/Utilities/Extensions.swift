@@ -30,37 +30,24 @@ extension UIViewController {
 
     // Global Alert
     // Define Your number of buttons, styles and completion
-    public func presentAlert(title: String,
-                            message: String,
-                            alertStyle: UIAlertController.Style,
-                            actionTitles: [String],
-                            actionStyles: [UIAlertAction.Style],
-                            actions: [((UIAlertAction) -> Void)]){
-
-        let alertController = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
-        for(index, indexTitle) in actionTitles.enumerated(){
-            let action = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actions[index])
-            alertController.addAction(action)
-        }
-        self.present(alertController, animated: true)
-    }
+//    public func presentAlert(title: String,
+//                            message: String,
+//                            alertStyle: UIAlertController.Style,
+//                            actionTitles: [String],
+//                            actionStyles: [UIAlertAction.Style],
+//                            actions: [((UIAlertAction) -> Void)]){
+//
+//        let alertController = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
+//        for(index, indexTitle) in actionTitles.enumerated(){
+//            let action = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actions[index])
+//            alertController.addAction(action)
+//        }
+//        self.present(alertController, animated: true)
+//    }
 }
 
 // MARK: For first launch
 
-extension UserDefaults {
-    // check for is first launch - only true on first invocation after app install, false on all further invocations
-    // Note: Store this value in AppDelegate if you have multiple places where you are checking for this flag
-    static func isFirstLaunch() -> Bool {
-        let hasBeenLaunchedBeforeFlag = "hasBeenLaunchedBeforeFlag"
-        let isFirstLaunch = !UserDefaults.standard.bool(forKey: hasBeenLaunchedBeforeFlag)
-        if (isFirstLaunch) {
-            UserDefaults.standard.set(true, forKey: hasBeenLaunchedBeforeFlag)
-            UserDefaults.standard.synchronize()
-        }
-        return isFirstLaunch
-    }
-}
 
 extension CaseIterable where Self: Equatable {
 

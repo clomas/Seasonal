@@ -13,6 +13,10 @@ import Foundation
 import UIKit
 import CloudKit
 
+// TODO: use core data
+// TODO: Rename to cloudkitdataservice.
+
+
 enum CloudKitError: Error {
     case databaseError
     case castingError
@@ -23,7 +27,7 @@ class CloudKitDataHandler {
     static let instance = CloudKitDataHandler()
     private let publicDatabase = CKContainer.default().publicCloudDatabase
     private let privateDatabase = CKContainer.default().privateCloudDatabase
-    var currentLocation: State = .noState
+    var currentLocation: StateLocation = .noState
 
     private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> ()) {
         let container = CKContainer.default()
@@ -41,7 +45,7 @@ class CloudKitDataHandler {
 
     // MARK: CloudKit Database
 
-    func getData(locationFound: State, dataFetched: @escaping([Produce]) -> (Void)) {
+    func getData(locationFound: StateLocation, dataFetched: @escaping([Produce]) -> (Void)) {
         currentLocation = locationFound
         let predicate = NSPredicate(value: true)
         let publicQuery = CKQuery(recordType: AUSTRALIAN_PRODUCE, predicate: predicate)
@@ -61,6 +65,7 @@ class CloudKitDataHandler {
                 CKContainer.default().privateCloudDatabase.perform(privateQuery, inZoneWith: .default) { [unowned self] results, error in
                     if let error = error {
                         dataFetched(addDataToArray(publicRecords: publicData, privateRecords: privateData))
+
                         print(error.localizedDescription)
                     } else {
                         if results != nil {

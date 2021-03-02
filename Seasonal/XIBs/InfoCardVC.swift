@@ -16,7 +16,7 @@ class InfoCardVC: UIViewController, Storyboarded {
     // This woul
     @IBOutlet weak var infoTextBlock: UILabel!
     @IBOutlet weak var emailButton: UIButton!
-    var state: State!
+    var state: StateLocation!
     @IBOutlet weak var button: UIButton!
 
     override func viewDidLoad() {
@@ -28,7 +28,7 @@ class InfoCardVC: UIViewController, Storyboarded {
             print("NIL")
         }
 
-        if state != State.noState {
+        if state != StateLocation.noState {
             let usersStateInAustralia = String(describing: state).titleCase()
             infoTextBlock.text = stringForTextBlock.replacingOccurrences(of: STRAYA, with: "\(usersStateInAustralia)")
         } else {

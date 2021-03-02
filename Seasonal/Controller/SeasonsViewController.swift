@@ -75,8 +75,10 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     func setUpMenuBar() {
         menuBar.menuBarSelectedDelegate = self
         menuBar.allowsMultipleSelection = false
-        menuBar.menuBarViewModel = .init()
-        menuBar.menuBarViewModel.initSeasonsMenuBar(selected: stateViewModel.status.season.rawValue)
+		menuBar.menuBarViewModel = .init(selected: stateViewModel.status.season.rawValue,
+										 month: Month(rawValue: stateViewModel.status.month.rawValue) ?? Month.december,
+										 viewDisplayed: ViewDisplayed.seasons
+		)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -223,7 +225,7 @@ extension SeasonsViewController: UITableViewDataSource {
         let season = stateViewModel.status.season.rawValue
         if let cell = tableView.dequeueReusableCell(withIdentifier: SEASONSTABLEVIEWCELL) as? SeasonsTableViewCell {
             cell.likeButtonDelegate = self
-            var produce: ProduceViewModel
+            var produce: ProduceModel
             produce = viewModel.filterBySelectedCategories(season: Season(rawValue: season)!, searchString: searchString, filter: stateViewModel.status.filter)[indexPath.row]
             cell.updateViews(produce: produce)
             return cell

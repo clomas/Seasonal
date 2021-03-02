@@ -13,5 +13,5 @@ struct PageStatus {
     var season: Season
     var onPage: ViewDisplayed
     var filter: ViewDisplayed.ProduceFilter
-    var location: State
+    var location: StateLocation
 }

@@ -22,7 +22,7 @@ class SeasonsTableViewCell: UITableViewCell {
 
     var id: Int?
     
-    func updateViews(produce: ProduceViewModel) {
+    func updateViews(produce: ProduceModel) {
 
         self.id = produce.id
         guard let image = UIImage(named: produce.imageName) else { return }

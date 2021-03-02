@@ -26,7 +26,7 @@ class SelectedCategoryViewCell: UITableViewCell {
     // Array of monthImages - https://stackoverflow.com/questions/24805180/swift-put-multiple-iboutlets-in-an-array
     @IBOutlet var monthImages: [UIImageView] = []
 
-    func updateViews(produce: ProduceViewModel) {
+    func updateViews(produce: _ProduceModel) {
         self.id = produce.id
         foodLabel.text = produce.produceName
         guard let image = UIImage(named: produce.imageName) else { return }

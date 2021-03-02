@@ -2,13 +2,15 @@
 //  AppStateViewModel.swift
 //  Seasonal
 //
-//  Created by Clint Thomas on 16/11/20.
+//  Created by Clint Thomas on 17/11/20.
 //  Copyright © 2020 Clint Thomas. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
+
+// TODO: Move this shit into their own files. 
 enum Season: Int, CaseIterable {
     case summer
     case autumn
@@ -102,6 +104,7 @@ enum ViewDisplayed: Int {
     case months = 2
     case seasons = 3
 
+	// TODO: this need to be nested?
     enum ProduceFilter: Int, CaseIterable {
         case all = 4
         case fruit = 5
@@ -137,7 +140,7 @@ final class AppStateViewModel {
          season: Season,
          monthOrFavView: ViewDisplayed,
          filter: ViewDisplayed.ProduceFilter,
-         state: State) {
+         state: StateLocation) {
 
         let statusToInit = StatusViewModel.init(currentAppStatus: PageStatus(month: month,
                                                                              season: season,
@@ -182,7 +185,7 @@ struct StatusViewModel {
             self.current.filter = filter
         }
     }
-    var location: State {
+    var location: StateLocation {
         get {
             return self.current.location
         } set(location) {

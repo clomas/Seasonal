@@ -8,33 +8,37 @@
 
 import Foundation
 
+
+//https://softwareengineering.stackexchange.com/questions/213040/when-using-mvvm-should-you-create-new-viewmodels-or-swap-out-the-models
+
+
 final class ProduceCellViewModel {
 
-    var monthsProduceCellVMs = [[ProduceViewModel]]()
-    var produceCellVMs = [ProduceViewModel]()
-    var seasonsCellVMs = [Season:[ProduceViewModel]]()
+    var monthCellViewModel = [[ProduceModel]]()
+    var produceCellVMs = [ProduceModel]()
+    var seasonsCellVMs = [Season:[ProduceModel]]()
 
     var reloadTableViewClosure: (()->())?
 
     var numberOfProduceCellVMs: Int {
-        return self.monthsProduceCellVMs.count
+        return self.monthCellViewModel.count
     }
 
-    init(produceData: [Produce]) {
-        self.monthsProduceCellVMs = self.sortIntoMonthArrays(produce: produceData)
-        self.produceCellVMs = produceData.map{ProduceViewModel.init(produce: $0)}
+	init(produceData: [Produce]) {
+        self.monthCellViewModel = self.sortIntoMonthArrays(produce: produceData)
+        self.produceCellVMs = produceData.map{ProduceModel.init(produce: $0)}
         self.seasonsCellVMs = self.sortIntoSeasonArrays(produce: produceData)
         //self._monthCellVMs = self._sortIntoMonthArrays(produce: produceData)
     }
 
-    func sortIntoMonthArrays(produce: [Produce]) -> [[ProduceViewModel]] {
-        var monthProduceArr: [[ProduceViewModel]] = .init(repeating: [], count: 12)
-        for monthIndex in 0...11 {
+    func sortIntoMonthArrays(produce: [Produce]) -> [[ProduceModel]] {
+        var monthProduceArr: [[ProduceModel]] = .init(repeating: [], count: 12)
 
-            var monthArray = [ProduceViewModel]()
+        for monthIndex in 0...11 {
+            var monthArray = [ProduceModel]()
             produce.forEach({ item in
                 if item.months.contains(Month.init(rawValue: monthIndex)!) {
-                    monthArray.append(ProduceViewModel.init(produce: item))
+                    monthArray.append(ProduceModel.init(produce: item))
                 }
             })
             monthProduceArr[monthIndex] = monthArray
@@ -43,15 +47,15 @@ final class ProduceCellViewModel {
         return monthProduceArr
     }
 
-    func sortIntoSeasonArrays(produce: [Produce]) -> [Season:[ProduceViewModel]] {
-        var seasonsArray = [Season: [ProduceViewModel]]()
+    func sortIntoSeasonArrays(produce: [Produce]) -> [Season:[ProduceModel]] {
+        var seasonsArray = [Season: [ProduceModel]]()
 
         Season.asArray.forEach { season in
-            var seasonsProduce = [ProduceViewModel]()
+            var seasonsProduce = [ProduceModel]()
             if season != Season.cancelled {
                 produce.forEach({ item in
                     if item.seasons.contains(season) {
-                        seasonsProduce.append(ProduceViewModel.init(produce: item))
+                        seasonsProduce.append(ProduceModel.init(produce: item))
                     }
                 })
                 seasonsArray[season] = seasonsProduce
@@ -63,28 +67,28 @@ final class ProduceCellViewModel {
 
 extension ProduceCellViewModel {
 
-    func filterMonthCellByCategory(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [[ProduceViewModel]] {
+    func filterMonthCellByCategory(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [[ProduceModel]] {
         switch filter {
         case .cancelled, .all:
             if searchString == "" {
-                return self.monthsProduceCellVMs
+                return self.monthCellViewModel
             } else {
-                return self.monthsProduceCellVMs.map ({
+                return self.monthCellViewModel.map ({
                                                         return $0.filter({ $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})})
             }
         case .fruit, .vegetables, .herbs:
             if searchString == "" {
-                return self.monthsProduceCellVMs.map ({
+                return self.monthCellViewModel.map ({
                                                         return $0.filter({ $0.category == filter })})
             } else {
-                return self.monthsProduceCellVMs.map ({
+                return self.monthCellViewModel.map ({
                                                         return $0.filter({ $0.category == filter &&
                                                                             $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})})
             }
         }
     }
 
-    func filterBySelectedCategories(season: Season, searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceViewModel] {
+    func filterBySelectedCategories(season: Season, searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceModel] {
         switch filter {
         case .cancelled, .all:
             if searchString == "" {
@@ -104,10 +108,10 @@ extension ProduceCellViewModel {
 
 
     func likedDatabaseHandler(id: Int, liked: Bool) {
-        for (monthIndex, month) in self.monthsProduceCellVMs.enumerated() {
+        for (monthIndex, month) in self.monthCellViewModel.enumerated() {
 
             if let likedProduceIndex = month.firstIndex(where: { $0.id == id }) {
-                self.monthsProduceCellVMs[monthIndex][likedProduceIndex].liked = liked
+                self.monthCellViewModel[monthIndex][likedProduceIndex].liked = liked
             } else {
                 print("like index not found")
             }
@@ -129,7 +133,7 @@ extension ProduceCellViewModel {
         }
     }
 
-    func findFavourites(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceViewModel] {
+    func findFavourites(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceModel] {
         switch filter {
         case .cancelled, .all:
 
@@ -148,14 +152,14 @@ extension ProduceCellViewModel {
         }
     }
 
-    func filterFavouritesBySearch(searchString: String) -> [ProduceViewModel] {
+    func filterFavouritesBySearch(searchString: String) -> [ProduceModel] {
         return self.produceCellVMs.filter{($0.produceName!.contains(searchString))}
     }
 }
 
 
 
-struct ProduceViewModel {
+struct ProduceModel {
 
     var produce: Produce!
 

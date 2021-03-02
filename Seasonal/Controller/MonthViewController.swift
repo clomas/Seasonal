@@ -51,7 +51,7 @@ enum MonthsViewMenuBar: Int, CaseIterable {
     }
 }
 
-class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISearchResultsUpdating, UISearchBarDelegate, Storyboarded, MenuBarDelegate, LikeButtonDelegate {
+class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, Storyboarded, MenuBarDelegate, LikeButtonDelegate {
 
     weak var coordinator: MainCoordinator?
 
@@ -101,8 +101,7 @@ class MonthViewController: UIViewController, UIGestureRecognizerDelegate, UISear
         if stateViewModel != nil {
             lastSelectedMenuItem = stateViewModel.status.current.onPage.rawValue
             menuBar.menuBarSelectedDelegate = self
-            menuBar.menuBarViewModel = .init()
-            menuBar.menuBarViewModel.initMenuBar(selected: stateViewModel.status.onPage.rawValue, month: stateViewModel.status.month)
+			menuBar.menuBarViewModel = .init(selected: stateViewModel.status.onPage.rawValue, month: stateViewModel.status.month, viewDisplayed: ViewDisplayed.months)
         }
     }
 
@@ -329,7 +328,7 @@ extension MonthViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: SELECTEDCATEGORYVIEWCELL) as? SelectedCategoryViewCell {
-            var produce: ProduceViewModel
+            var produce: ProduceModel
             produce = viewModel.findFavourites(searchString: self.searchString, filter: self.stateViewModel.status.current.filter)[indexPath.row]
 
             guard let image = UIImage(named: produce.imageName) else { return UITableViewCell() }
@@ -339,7 +338,7 @@ extension MonthViewController: UITableViewDataSource {
             cell.foodImage.image = image
             cell.likeButton.isSelected = true
             cell.backgroundColor = UIColor.tableViewCell.tint
-            cell.updateViews(produce: produce)
+            //cell.updateViews(produce: produce)
             cell.likeButtonDelegate = self
             return cell
 
@@ -370,8 +369,7 @@ extension MonthViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SCROLLINGCOLLECTIONVIEWCELL, for: indexPath) as! MonthTableCollectionViewCell
         cell.searchString = self.searchString
         cell.tag = (indexPath.item % 12)
-        cell.viewModel = viewModel
-        cell.stateViewModel = stateViewModel
+		//cell.viewModel = viewModel
         cell.collectionReloadData()
         return cell
     }
@@ -435,10 +433,6 @@ extension MonthViewController: UICollectionViewDelegateFlowLayout {
 // MARK: Search Bar Delegates
 extension MonthViewController: UISearchControllerDelegate {
 
-    func test() {
-        searchString = ""
-    }
-
     func updateSearchResults(for searchController: UISearchController) {
 
         self.searchString = searchController.searchBar.text!
@@ -448,6 +442,5 @@ extension MonthViewController: UISearchControllerDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.searchString = searchText
     }
-
 }
 

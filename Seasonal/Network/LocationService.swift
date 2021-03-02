@@ -9,7 +9,7 @@
 import Foundation
 import CoreLocation
 
-enum State: String {
+enum StateLocation: String {
     case noState = "aus"
     case westernAustralia = "wa"
     case southAustralia = "sa"
@@ -21,14 +21,14 @@ enum State: String {
 }
 
 protocol LocationDelegate {
-    func locationReadyGetData(location: State)
+    func locationReady(location: StateLocation)
 }
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
-    static let instance = LocationManager()
+    static let sharedInstance = LocationManager()
     private let locationManager : CLLocationManager
-    var locationDelegate: LocationDelegate?
     private let locationInfo = LocationInformation()
+	var locationDelegate: LocationDelegate?
 
     override init() {
         locationManager = CLLocationManager()
@@ -38,6 +38,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
         super.init()
         locationManager.delegate = self
+		start()
     }
 
     func start() {
@@ -56,7 +57,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     func stop() {
         locationManager.stopUpdatingLocation()
-        locationDelegate?.locationReadyGetData(location: State.noState)
+        locationDelegate?.locationReady(location: StateLocation.noState)
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -82,25 +83,24 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: States in Aus
 
     private func parseLocation() {
-        var stateFound = State.noState
-        print("location found - \(locationInfo.state ?? State.noState.rawValue)")
+        var stateFound = StateLocation.noState
+        print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
 
         if let state = locationInfo.state?.lowercased() {
-            if state == State.act.rawValue {
-                stateFound = State.newSouthWales
+            if state == StateLocation.act.rawValue {
+                stateFound = StateLocation.newSouthWales
             } else if state == "ca" {
-                stateFound = State.noState
+                stateFound = StateLocation.noState
             }  else {
-                if state != "" {
-                    stateFound = State.init(rawValue: state)!
-                }
-                if locationInfo.country != STRAYA {
-                    stateFound = State.init(rawValue: State.noState.rawValue)!
+				if locationInfo.country != STRAYA {
+					stateFound = StateLocation.init(rawValue: StateLocation.noState.rawValue)!
+				} else if state != "" {
+                    stateFound = StateLocation.init(rawValue: state)!
                 }
             }
         }
         locationManager.stopUpdatingLocation()
-        locationDelegate?.locationReadyGetData(location: stateFound)
+        locationDelegate?.locationReady(location: stateFound)
     }
 
     // MARK: Location Updated

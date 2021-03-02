@@ -1,5 +1,5 @@
 //
-//  InitialVC.swift
+//  _SplashScreenViewController.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 7/7/19.
@@ -9,9 +9,9 @@
 import UIKit
 import Network
 
-class InitialVC: UIViewController, Storyboarded {
+class _SplashScreenViewController: UIViewController {
 
-    weak var coordinator: MainCoordinator?
+	var viewModel: _SplashScreenViewModel!
     var networkCheck = NetworkService.sharedInstance()
 
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!

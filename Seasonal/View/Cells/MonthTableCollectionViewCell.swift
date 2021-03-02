@@ -8,14 +8,10 @@
 
 import UIKit
 
-
-
 class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
-    var stateViewModel: AppStateViewModel!
-    var viewModel: ProduceCellViewModel!
-
-    private let searchController = UISearchController(searchResultsController: nil)
+   // var stateViewModel: AppStateViewModel!
+    var viewModel: _MonthsViewModel!
     var searchString: String = ""
 
     @IBOutlet weak var tableView: UITableView!
@@ -42,21 +38,23 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
     func likeButtonTapped(cell: SelectedCategoryViewCell) {
         if let id = cell.id {
-            viewModel.likedDatabaseHandler(id: id, liked: cell.likeButton.isSelected)
+            viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
         }
     }
 
     private func hideTableIfEmpty() {
         nothingToShowLabel.text = ""
 
-        if stateViewModel.status.onPage == .months && tableView.numberOfRows(inSection: 0) == 0 {
-            if self.searchString.count > 0 {
-                nothingToShowLabel.text = "No Search Results"
-                self.tableView.isHidden = true
-            }
-        } else {
-            self.tableView.isHidden = false
-        }
+		// TODO: fix this if adding
+
+//        if stateViewModel.status.onPage == .months && tableView.numberOfRows(inSection: 0) == 0 {
+//            if self.searchString.count > 0 {
+//                nothingToShowLabel.text = "No Search Results"
+//                self.tableView.isHidden = true
+//            }
+//        } else {
+//            self.tableView.isHidden = false
+//        }
     }
 
     // this is called from cell update on parent
@@ -80,16 +78,17 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 extension MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.filterMonthCellByCategory(searchString: self.searchString,
-                                                   filter: stateViewModel.status.filter)[self.tag].count
+		
+		return viewModel.filter(by: self.searchString,
+                                                   of: viewModel.filter)[self.tag].count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if let cell = tableView.dequeueReusableCell(withIdentifier: SELECTEDCATEGORYVIEWCELL) as? SelectedCategoryViewCell {
             cell.likeButtonDelegate = self
-            var produce: ProduceViewModel
-            produce = viewModel.filterMonthCellByCategory(searchString: self.searchString , filter: stateViewModel.status.filter)[self.tag][indexPath.row]
+            var produce: _ProduceModel
+			produce = viewModel.filter(by: self.searchString , of: viewModel.filter)[self.tag][indexPath.row]
             cell.updateViews(produce: produce)
             return cell
         } else {

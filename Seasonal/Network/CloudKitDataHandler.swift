@@ -48,10 +48,10 @@ class CloudKitDataHandler {
     func getData(locationFound: StateLocation, dataFetched: @escaping([Produce]) -> (Void)) {
         currentLocation = locationFound
         let predicate = NSPredicate(value: true)
-        let publicQuery = CKQuery(recordType: AUSTRALIAN_PRODUCE, predicate: predicate)
-        let privateQuery = CKQuery(recordType: AUSTRALIAN_PRODUCE, predicate: predicate)
-        publicQuery.sortDescriptors = [NSSortDescriptor(key: ID, ascending: true)]
-        privateQuery.sortDescriptors = [NSSortDescriptor(key: ID, ascending: true)]
+		let publicQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
+        let privateQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
+		publicQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
+        privateQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
         var publicData = [CKRecord]()
         var privateData = [CKRecord]()
 
@@ -82,20 +82,20 @@ class CloudKitDataHandler {
 
     private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
         var produceArray = [Produce]()
-        let likedArray = privateRecords.map { $0.object(forKey: ID ) as? Int}
+		let likedArray = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
         for record in publicRecords {
 
-            var name = APPLE
-            var imageName = APPLE
+			var name = Constants.apple
+            var imageName = Constants.apple
             var category = ViewDisplayed.ProduceFilter.fruit
             let description = ""
             var months = [Month]()
             var seasons = [Season]()
             var liked = false
 
-            if let nameRecord = record.object(forKey: NAME) as? String,
-               let categoryRecord = record.object(forKey: CATEGORY) as? String,
+			if let nameRecord = record.object(forKey: Constants.name) as? String,
+			   let categoryRecord = record.object(forKey: Constants.category) as? String,
                let monthsRecord = record.object(forKey: "months_\(currentLocation.rawValue)") as? String,
                let seasonsRecord = record.object(forKey: "seasons_\(currentLocation.rawValue)") as? String {
                 name = nameRecord
@@ -105,11 +105,11 @@ class CloudKitDataHandler {
                 seasons = seasonsRecord.createSeasonArray()
             }
 
-            if likedArray.contains(record.object(forKey: ID) as? Int) {
-                liked = Bool(truncating: (record.object(forKey: ID) as! Int) as NSNumber)
+			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
+                liked = Bool(truncating: (record.object(forKey: Constants.id) as! Int) as NSNumber)
             }
 
-            let produce = Produce(id: record.object(forKey: ID) as! Int,
+            let produce = Produce(id: record.object(forKey: Constants.id) as! Int,
                                    name: name,
                                    category: category,
                                    imageName: imageName,
@@ -129,7 +129,7 @@ class CloudKitDataHandler {
         return produceArray
     }
 
-    // Update cloudkit with local data if there is a disparity
+    // Update cloudKit with local data if there is a disparity
     // local data should always be accurate
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
         let likedArr = produceArray.filter{ $0.liked == true}
@@ -149,8 +149,8 @@ class CloudKitDataHandler {
     func saveLikeToPrivateDatabaseInCloudKit(id: Int) {
         if FileManager.default.ubiquityIdentityToken != nil {
             let newPrivateRecordID = CKRecord.ID(recordName: "\(id)_")
-            let newPrivateRecord = CKRecord(recordType: AUSTRALIAN_PRODUCE_LIKES, recordID: newPrivateRecordID)
-            newPrivateRecord.setValue(id, forKey: ID)
+			let newPrivateRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: newPrivateRecordID)
+            newPrivateRecord.setValue(id, forKey: Constants.id)
 
             privateDatabase.save(newPrivateRecord) { (record, error) in
                 guard record != nil else {
@@ -161,6 +161,7 @@ class CloudKitDataHandler {
         }
     }
 }
+
 
 // On creating the database I made some questionable decisions, I could have maybe handled it better.
 // string matching is required to convert database data to useable app data.

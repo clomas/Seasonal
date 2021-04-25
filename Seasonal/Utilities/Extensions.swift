@@ -61,26 +61,31 @@ extension CaseIterable where Self: Equatable {
 extension UIColor {
 
     struct MonthIcon {
-        static var inSeasonTint: UIColor  { return UIColor(named: INSEASONTINT)! }
-        static var nonSeasonTint: UIColor { return UIColor(named: NONSEASONTINT)! }
+		static var inSeasonTint: UIColor  { return UIColor(named: Constants.inSeasonColor)! }
+		static var nonSeasonTint: UIColor { return UIColor(named: Constants.nonSeasonColor)! }
     }
 
     struct LikeButton {
-        static var likeTint: UIColor { return UIColor(named: LIKEBUTTONTINT)! }
+		static var tint: UIColor { return UIColor(named: Constants.likeButtonColor)! }
     }
 
     struct MenuBar {
-        static var tint: UIColor { return UIColor(named: MENUBARTINT)! }
-        static var selectedTint: UIColor { return UIColor(named: MENUBARSELECTEDTINT)! }
+		static var tint: UIColor { return UIColor(named: Constants.menuBarColor)! }
+		static var selectedTint: UIColor { return UIColor(named: Constants.menuBarSelectedColor)! }
     }
 
     struct NavigationBar {
-        static var tint: UIColor { return UIColor(named: NAVIGATIONBARTINT)! }
-        static var searchBarTint: UIColor { return UIColor(named: SEARCHBARTINT)! }
+		static var tint: UIColor { return UIColor(named: Constants.navigationBarColor)! }
+		//static var searchBarTint: UIColor { return UIColor(named: Constants.searchBarColor)! }
     }
 
+	struct SearchBar {
+		static var tint: UIColor { return UIColor(named: Constants.searchBarColor)! }
+		//static var searchBarTint: UIColor { return UIColor(named: Constants.searchBarColor)! }
+	}
+
     struct tableViewCell {
-        static var tint: UIColor { return UIColor(named: TABLEVIEWCELLCOLOR)! }
+		static var tint: UIColor { return UIColor(named: Constants.tableViewCellColor)! }
     }
 }
 
@@ -93,7 +98,7 @@ extension UIButton {
         self.translatesAutoresizingMaskIntoConstraints = true
 
         if selected == true {
-            self.setImage(UIImage(named: "\(LIKED).png"), for: .normal)
+			self.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
             UIView.animate(withDuration: 0.2, animations: {() -> Void in
                 self.transform = CGAffineTransform.identity.scaledBy(x: 0.8, y: 0.8)
             }, completion: { _ in
@@ -106,7 +111,7 @@ extension UIButton {
                 })
             })
         } else {
-            self.setImage(UIImage(named: "\(LIKED).png"), for: .normal)
+            self.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
             self.layoutIfNeeded()
             UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
                 self.frame = CGRect(x: self.frame.origin.x , y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)
@@ -115,9 +120,9 @@ extension UIButton {
                     self.frame = CGRect(x: self.frame.origin.x + 100, y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)
                 }, completion: { _ in
 
-                    let image = UIImage(named: "\(UNLIKED).png")?.withRenderingMode(.alwaysTemplate)
+					let image = UIImage(named: "\(Constants.unliked).png")?.withRenderingMode(.alwaysTemplate)
                     self.setImage(image, for: .normal)
-                    self.imageView?.tintColor = UIColor.LikeButton.likeTint
+                    self.imageView?.tintColor = UIColor.LikeButton.tint
 
                     UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
                         self.frame = CGRect(x: self.frame.origin.x - 100, y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)

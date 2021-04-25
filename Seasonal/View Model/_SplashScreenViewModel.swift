@@ -11,20 +11,14 @@ import Foundation
 final class _SplashScreenViewModel {
 
 	var coordinator: _InitialViewCoordinator?
-	var dataReadyEvent = {}
 
-	let welcomeLabel = "Welcome to Seasonal"
-	var videoName = "lightwelcomevideo"
-
-	//private let networkService: _NetworkServiceProtocol
-	var networkCheck = _NetworkService.sharedInstance()
-
-	init() {
-
+	func dataIsReady() {
+		// TODO:
 	}
 
-	func viewDidLoad() {
-		// need this?
+
+	func dismissTapped() {
+		coordinator?.readyToDismiss()
 	}
 }
 

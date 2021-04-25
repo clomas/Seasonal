@@ -69,5 +69,4 @@ final class _WelcomeViewCoordinator: _Coordinator {
 			childCoordinators.remove(at: index)
 		}
 	}
-
 }

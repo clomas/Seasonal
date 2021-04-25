@@ -17,9 +17,9 @@ class MonthPickerCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        for currView in self.subviews {
-            currView.clearsContextBeforeDrawing = true
-            currView.removeFromSuperview()
+        for currentView in self.subviews {
+			currentView.clearsContextBeforeDrawing = true
+			currentView.removeFromSuperview()
         }
     }
     

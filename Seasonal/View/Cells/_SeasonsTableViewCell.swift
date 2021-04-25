@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol SeasonsLikeButtonDelegate {
-    func likeButtonTapped(cell: SeasonsTableViewCell)
+protocol _SeasonsLikeButtonDelegate {
+    func likeButtonTapped(cell: _SeasonsTableViewCell)
 }
 
-class SeasonsTableViewCell: UITableViewCell {
+class _SeasonsTableViewCell: UITableViewCell {
 
-    var likeButtonDelegate: SeasonsLikeButtonDelegate?
+    var likeButtonDelegate: _SeasonsLikeButtonDelegate?
 
     @IBOutlet weak var foodImage: UIImageView!
     @IBOutlet weak var foodLabel: UILabel!
@@ -22,7 +22,7 @@ class SeasonsTableViewCell: UITableViewCell {
 
     var id: Int?
     
-    func updateViews(produce: ProduceModel) {
+    func updateViews(produce: _ProduceModel) {
 
         self.id = produce.id
         guard let image = UIImage(named: produce.imageName) else { return }
@@ -38,14 +38,13 @@ class SeasonsTableViewCell: UITableViewCell {
         self.backgroundColor = UIColor.tableViewCell.tint
 
         if produce.liked == false {
-
-            let likeImage = UIImage(named: "\(UNLIKED).png")
+			let likeImage = UIImage(named: "\(Constants.unliked).png")
             let tintedImage = likeImage?.withRenderingMode(.alwaysTemplate)
             self.likeButton.setImage(tintedImage, for: .normal)
-            self.likeButton.tintColor = UIColor.LikeButton.likeTint
+            self.likeButton.tintColor = UIColor.LikeButton.tint
             self.likeButton.isSelected = false
         } else {
-            likeButton.setImage(UIImage(named: "\(LIKED).png"), for: .normal)
+			likeButton.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
             self.likeButton.isSelected = true
         }
     }

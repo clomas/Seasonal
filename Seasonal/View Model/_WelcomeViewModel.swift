@@ -16,21 +16,8 @@ final class _WelcomeViewModel {
 	let welcomeLabel = "Welcome to Seasonal"
 	var videoName = "lightwelcomevideo"
 
-	//private let networkService: _NetworkServiceProtocol
-	//var networkCheck = _NetworkService.sharedInstance()
-
-
-	init() {
-		//initialViewDelegate = self
-		// TODO:  control annimations from this viewmodel.
-	}
-
-	func viewDidLoad() {
-		// need this?
-	}
-
 	func dismissTapped() {
-		coordinator?.initMainViewCoordinator()
+		coordinator?.readyToDismiss()
 	}
 }
 

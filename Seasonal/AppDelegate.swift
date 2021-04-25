@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Seasonsal
+//  Seasonal
 //
 //  Created by Clint Thomas on 25/9/18.
 //  Copyright © 2018 Clint Thomas. All rights reserved.

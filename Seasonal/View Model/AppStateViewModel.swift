@@ -12,7 +12,7 @@ import UIKit
 
 // TODO: Move this shit into their own files. 
 enum Season: Int, CaseIterable {
-    case summer
+    case summer = 0
     case autumn
     case winter
     case spring
@@ -116,11 +116,11 @@ enum ViewDisplayed: Int {
 
         var asString: String {
             switch self {
-            case .all: return ALL
-            case .fruit: return FRUIT
-            case .vegetables: return VEGETABLES
-            case .herbs: return HERBS
-            case .cancelled: return CANCELLED
+			case .all: return Constants.all
+            case .fruit: return Constants.fruit
+			case .vegetables: return Constants.vegetables
+			case .herbs: return Constants.herbs
+			case .cancelled: return Constants.cancelled
             }
         }
     }

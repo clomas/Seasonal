@@ -11,45 +11,7 @@ import CoreData
 import InfiniteLayout
 import CoreLocation
 
-enum MonthsViewMenuBar: Int, CaseIterable {
 
-    case favourites
-    case calendar
-    case currentMonth
-    case seasons
-    case all
-    case fruit
-    case vegetables
-    case herbs
-    case cancel
-
-    var altLabel: String {
-        switch self {
-        case .all:
-            return ALL
-        default:
-            return CATEGORY
-        }
-    }
-
-    func imageName(currentMonth: Month) -> String {
-        switch self {
-        case .favourites: return "\(FAVOURITES.lowercased()).png"
-        case .calendar: return "\(MONTHS.lowercased()).png"
-        case .currentMonth: return "cal_\(currentMonth.shortMonthName).png"
-        case .seasons: return "\(SEASONS.lowercased()).png"
-        case .all: return "\(ALLCATEGORIES.lowercased()).png"
-        case .fruit: return "\(FRUIT.lowercased()).png"
-        case .vegetables: return "\(VEGETABLES.lowercased()).png"
-        case .herbs: return "\(HERBS.lowercased()).png"
-        case .cancel: return "\(CANCEL.lowercased()).png"
-        }
-    }
-
-    func callAsFunction() -> Int {
-        return self.rawValue
-    }
-}
 
 class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, Storyboarded, MenuBarDelegate, LikeButtonDelegate {
 
@@ -245,7 +207,7 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
         var titleString = ""
 
         if stateViewModel.status.onPage == .favourites {
-            titleString = FAVOURITES
+			titleString = Constants.favourites
         } else if stateViewModel.status.onPage == .months {
             titleString = String(describing: stateViewModel.status.month).capitalized
         }
@@ -309,7 +271,7 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
         searchController.searchBar.searchBarStyle = .minimal
         searchController.searchBar.isTranslucent = false
         searchController.searchResultsUpdater = self
-        searchController.searchBar.tintColor = UIColor.NavigationBar.searchBarTint
+        searchController.searchBar.tintColor = UIColor.NavigationBar.tint
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         self.searchController.hidesNavigationBarDuringPresentation = false
@@ -327,7 +289,7 @@ extension MonthViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: SELECTEDCATEGORYVIEWCELL) as? SelectedCategoryViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? SelectedCategoryViewCell {
             var produce: ProduceModel
             produce = viewModel.findFavourites(searchString: self.searchString, filter: self.stateViewModel.status.current.filter)[indexPath.row]
 
@@ -366,8 +328,8 @@ extension MonthViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SCROLLINGCOLLECTIONVIEWCELL, for: indexPath) as! MonthTableCollectionViewCell
-        cell.searchString = self.searchString
+		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants._MonthTableCell, for: indexPath) as! _MonthTableCollectionViewCell
+
         cell.tag = (indexPath.item % 12)
 		//cell.viewModel = viewModel
         cell.collectionReloadData()

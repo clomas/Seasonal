@@ -8,28 +8,24 @@
 
 import UIKit
 import AVFoundation
-//import Network
-
-//class _WelcomeViewController: UIViewController, NetworkObserver, Storyboarded {
-//
-//    weak var coordinator: MainCoordinator?
 
 class _WelcomeViewController: UIViewController, InitialViewDelegate {
 
+	var parentCoordinator: _InitialViewCoordinator?
 	var viewModel: _WelcomeViewModel!
 
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var dismissArrowButton: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var avPlayerView: AVPlayerView!
+    @IBOutlet weak var AVPlayerView: AVPlayerView!
 
     private var player: AVPlayer!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
-		viewModel.viewDidLoad()
+		parentCoordinator?.initialViewDelegate = self
     }
 
     private func setupViews() {
@@ -45,18 +41,8 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 		if traitCollection.userInterfaceStyle == .dark {
 			viewModel.videoName = "darkwelcomevideo"
 		}
-
 		playVideo()
-		viewModel.viewDidLoad()
     }
-
-	func viewReadyToDismiss() {
-		dismissButton.isHidden.toggle()
-		dismissArrowButton.isHidden.toggle()
-		dismissButton.isEnabled.toggle()
-		dismissArrowButton.isEnabled.toggle()
-		activityMonitor.stopAnimating()
-	}
 
     // MARK: Video
 
@@ -74,7 +60,7 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
              print(error)
         }
         
-        let castedLayer = avPlayerView.layer as! AVPlayerLayer
+        let castedLayer = AVPlayerView.layer as! AVPlayerLayer
         castedLayer.player = player
         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         //player.volume = 0
@@ -122,21 +108,6 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
         })
     }
 
-//    func internetStatusDidChange(status: NWPath.Status) {
-//        if status == .satisfied {
-//            print("Interenet Connected")
-//            DispatchQueue.main.async {
-//                self.animateLabel()
-//            }
-//        } else if status == .unsatisfied {
-//            DispatchQueue.main.async {
-//                self.activityMonitor.isHidden = true
-//                self.activityMonitor.stopAnimating()
-//                self.welcomeLabel.text = "No Internet Connection!"
-//            }
-//        }
-//    }
-
     // MARK: Buttons
 
     @IBAction func dismissButtonPressed(_ sender: Any) {
@@ -150,6 +121,41 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: animated)
+	}
+
+	// Delegates passed down from the AppEntryCoordinator.
+
+	func dataIsReady() {
+		dismissButton.isHidden.toggle()
+		dismissArrowButton.isHidden.toggle()
+		dismissButton.isEnabled.toggle()
+		dismissArrowButton.isEnabled.toggle()
+		activityMonitor.stopAnimating()
+	}
+
+	func networkFailed() {
+		self.presentAlert(title: "Network Error",
+						  message: "Unable to connect to the internet",
+						  alertStyle: .alert,
+						  actionTitles: [],
+						  actionStyles: [.default],
+						  actions: []
+		)
+	}
+
+	func locationNotFound() {
+		// TODO: create a flag for this in userdefaults for boolean.
+		if true {
+			func networkFailed() {
+				self.presentAlert(title: "Location Error",
+								  message: "Unable to detect which state in Australia you live in, you will be shown general data for Australian Produce.",
+								  alertStyle: .alert,
+								  actionTitles: [],
+								  actionStyles: [.default],
+								  actions: []
+				)
+			}
+		}
 	}
 }
 

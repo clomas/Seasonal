@@ -8,54 +8,24 @@
 
 import UIKit
 
-enum SeasonsViewMenuBar: Int, CaseIterable {
 
-    case summer
-    case autumn
-    case winter
-    case spring
-    case all
-    case fruit
-    case vegetables
-    case herbs
-    case cancel
 
-    var imageName: String {
-        switch self {
-        case .summer: return "\(Season.summer.asString.lowercased()).png"
-        case .autumn: return "\(Season.autumn.asString.lowercased()).png"
-        case .winter: return "\(Season.winter.asString.lowercased()).png"
-        case .spring: return "\(Season.spring.asString.lowercased()).png"
-        case .all: return "\(ALLCATEGORIES.lowercased()).png"
-        case .fruit: return "\(FRUIT.lowercased()).png"
-        case .vegetables: return "\(VEGETABLES.lowercased()).png"
-        case .herbs: return "\(HERBS.lowercased()).png"
-        case .cancel: return "\(CANCEL.lowercased()).png"
-        }
-    }
-}
-
-class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, Storyboarded, SeasonsLikeButtonDelegate, MenuBarDelegate {
+class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, Storyboarded, _SeasonsLikeButtonDelegate, MenuBarDelegate {
 
     weak var coordinator: MainCoordinator?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nothingToShowLabel: UILabel!
-    @IBOutlet weak var menuBar: MenuBar!
+    @IBOutlet weak var menuBar: _MenuBar!
     @IBOutlet weak var infoButton: UIBarButtonItem!
-    @IBOutlet weak var seasonStack: UIStackView!
-
     private var produceFilter: ViewDisplayed.ProduceFilter = .cancelled
-
-    private let categoryButtonArr = [UIButton]()
-
     private var searchController = UISearchController(searchResultsController: nil)
     private var searchString: String = ""
 
     // View models
     weak var stateViewModel: AppStateViewModel!
     var viewModel: ProduceCellViewModel!
-    var menuBarViewModel: MenuBarCellViewModel!
+   // var menuBarViewModel: MenuBarCellViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,20 +36,22 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
     private func setUpView() {
         setContextualTitle()
-        setUpMenuBar()
         stateViewModel.status.current.onPage = .seasons
         configureSearchController()
         self.tableView.dataSource = self
+
+		func setUpMenuBar() {
+			//menuBar.menuBarSelectedDelegate = self
+			menuBar.allowsMultipleSelection = false
+			//menuBar.menuBarViewModel = .init(selected: stateViewModel.status.season.rawValue,
+											 //month: Month(rawValue: stateViewModel.status.month.rawValue) ?? Month.december,
+											 //viewDisplayed: ViewDisplayed.seasons
+			//)
+		}
+		setUpMenuBar()
     }
 
-    func setUpMenuBar() {
-        menuBar.menuBarSelectedDelegate = self
-        menuBar.allowsMultipleSelection = false
-		menuBar.menuBarViewModel = .init(selected: stateViewModel.status.season.rawValue,
-										 month: Month(rawValue: stateViewModel.status.month.rawValue) ?? Month.december,
-										 viewDisplayed: ViewDisplayed.seasons
-		)
-    }
+
 
     override func viewDidAppear(_ animated: Bool) {
         navigationBarAnimations()
@@ -96,7 +68,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
         searchController.searchBar.isTranslucent = true
         searchController.searchResultsUpdater = self
         navigationItem.searchController = searchController
-        searchController.searchBar.tintColor = UIColor.NavigationBar.searchBarTint
+        //searchController.searchBar.tintColor = UIColor.NavigationBar.searchBarTint
         navigationItem.hidesSearchBarWhenScrolling = false
         self.searchController.hidesNavigationBarDuringPresentation = false
         self.definesPresentationContext = true
@@ -129,7 +101,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     // MARK: Menu Bar
 
     func menuBarTapped(index: Int, indexToScrollTo: IndexPath) {
-        menuBar.menuBarViewModel.selectDeselectCells(indexSelected: index)
+       // menuBar.menuBarViewModel.selectDeselectCells(indexSelected: index)
 
         switch index {
         case Season.summer.rawValue...Season.spring.rawValue:
@@ -142,7 +114,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
                 menuBar.scrollToItem(at: indexToScrollTo, at: .right, animated: true)
             case ViewDisplayed.ProduceFilter.cancelled.rawValue:
                 menuBar.scrollToItem(at: indexToScrollTo, at: .left, animated: true)
-                menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.filter.rawValue].isSelected = false
+                //menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.filter.rawValue].isSelected = false
             default: break
             }
         default: break
@@ -154,7 +126,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
     func menuBarScrollFinished() {
         if stateViewModel.status.filter == .cancelled {
-            menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.season.rawValue].isSelected = true
+            //menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.season.rawValue].isSelected = true
             menuBar.reloadData()
         }
     }
@@ -182,14 +154,14 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
         fadeNavBarAnimation.duration = 2
         fadeNavBarAnimation.type = CATransitionType.fade
 
-        self.navigationController?.navigationBar.layer.add(fadeTextAnimation, forKey: SEASONS)
+		self.navigationController?.navigationBar.layer.add(fadeTextAnimation, forKey: Constants.Seasons)
         setContextualTitle()
-        self.navigationController?.navigationBar.layer.add(fadeNavBarAnimation, forKey: SEASONS)
+       // self.navigationController?.navigationBar.layer.add(fadeNavBarAnimation, forKey: SEASONS)
    
     }
 
     // MARK: Buttons
-    func likeButtonTapped(cell: SeasonsTableViewCell) {
+    func likeButtonTapped(cell: _SeasonsTableViewCell) {
         if let id = cell.id {
             viewModel.likedDatabaseHandler(id: id, liked: cell.likeButton.isSelected)
         } 
@@ -222,15 +194,15 @@ extension SeasonsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let season = stateViewModel.status.season.rawValue
-        if let cell = tableView.dequeueReusableCell(withIdentifier: SEASONSTABLEVIEWCELL) as? SeasonsTableViewCell {
-            cell.likeButtonDelegate = self
-            var produce: ProduceModel
-            produce = viewModel.filterBySelectedCategories(season: Season(rawValue: season)!, searchString: searchString, filter: stateViewModel.status.filter)[indexPath.row]
-            cell.updateViews(produce: produce)
-            return cell
-        } else {
+//        let season = stateViewModel.status.season.rawValue
+//		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? _SeasonsTableViewCell {
+//            cell.likeButtonDelegate = self
+//            var produce: _ProduceModel
+//            produce = viewModel.filterBySelectedCategories(season: Season(rawValue: season)!, searchString: searchString, filter: stateViewModel.status.filter)[indexPath.row]
+//            cell.updateViews(produce: produce)
+//            return cell
+//        } else {
             return SelectedCategoryViewCell()
-        }
+//        }
     }
 }

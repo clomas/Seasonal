@@ -41,13 +41,13 @@ class SelectedCategoryViewCell: UITableViewCell {
         self.backgroundColor = UIColor.tableViewCell.tint
 
         if produce.liked == false {
-            let likeImage = UIImage(named: "\(UNLIKED).png")
+			let likeImage = UIImage(named: "\(Constants.unliked).png")
             let tintedImage = likeImage?.withRenderingMode(.alwaysTemplate)
             self.likeButton.setImage(tintedImage, for: .normal)
-            self.likeButton.tintColor = UIColor.LikeButton.likeTint
+            self.likeButton.tintColor = UIColor.LikeButton.tint
             self.likeButton.isSelected = false
         } else {
-            likeButton.setImage(UIImage(named: "\(LIKED).png"), for: .normal)
+			likeButton.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
             self.likeButton.isSelected = true
         }
 

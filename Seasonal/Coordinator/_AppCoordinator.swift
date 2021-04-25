@@ -28,21 +28,22 @@ class _AppCoordinator {
 	}
 
 	func start() {
-// TODO: Try add nav controller later
+		// TODO: Try add nav controller later
 
 		let navigationController = UINavigationController()
-		let initialViewCoordinator = _InitialViewCoordinator(navigationController: navigationController)
-		childCoordinators.append(initialViewCoordinator)
-		initialViewCoordinator.start()
+		let appEntryCoordinator = _AppEntryCoordinator(navigationController: navigationController)
+		appEntryCoordinator.parentCoordinator = self
+		childCoordinators.append(appEntryCoordinator)
+		appEntryCoordinator.start()
 		window.rootViewController = navigationController
 		window.makeKeyAndVisible()
 	}
-
-	func childDidFinish(_ childCoordinator: _Coordinator) {
-		if let index = childCoordinators.firstIndex(where: { coordinator -> Bool in
-			return childCoordinator === coordinator
-		}) {
-			childCoordinators.remove(at: index)
-		}
-	}
 }
+
+
+
+// UP TO HERE
+// move all the data fetching to here, then pass down decisions for dismissal
+
+// then create a new coordinator which will be called _PrimaryCoordinator - which can have 2 coordinators but maybe that one is enough
+// or just mainViewCoord will do?

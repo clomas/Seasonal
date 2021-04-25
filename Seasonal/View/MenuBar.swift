@@ -16,7 +16,7 @@ class MenuBar: UICollectionView {
     weak var coordinator: MainCoordinator?
     weak var menuBarSelectedDelegate: MenuBarDelegate?
     var menuBarViewModel: MenuBarViewModel!
-    private let cellId = MENUBARCELL
+	private let cellId = Constants.MenuBarCell
     var currentMonth: Month?
 
     override func awakeFromNib() {
@@ -41,45 +41,26 @@ class MenuBar: UICollectionView {
         self.dataSource = self
     }
 
-    // MARK: Scrolling Month Animation
-    // Only for MonthViewVC
-    func determineCoordinatesForAnimations(monthToScrollTo: Month, previousMonth: Month) {
-        let indexPath = IndexPath(item: currentMonth?.rawValue ?? 0, section: 0)
+	// MARK: Delegate
 
-        if let cell = self.cellForItem(at: indexPath) as? MenuBarCell {
-            if cell.isSelected == true {
+	private func updateMenuBarDelegate(indexPath: Int) {
 
-                // slide coordinates for moving icon
-                var slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-                // jump icon back to the opposite side before sliding back into the cell.
-                var jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
+		var indexPathToScrollTo = IndexPath(row: 8, section: 0)
+		if indexPath == ViewDisplayed.ProduceFilter.cancelled.menuBarIndex() {
+			indexPathToScrollTo = IndexPath(row: 0, section: 0)
+		}
 
-                // need 4 options - I honestly can't figure out why, maths hurts.
+		menuBarSelectedDelegate?.menuBarTapped(index: indexPath, indexToScrollTo: indexPathToScrollTo)
+	}
 
-                if previousMonth.rawValue ==  Month.december.rawValue && monthToScrollTo.rawValue == Month.january.rawValue {
-                    jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
-                    slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-                } else if previousMonth.rawValue == Month.january.rawValue && monthToScrollTo.rawValue == Month.december.rawValue{
-                    slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
-                    jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
-                    // if page slideTos left
-                } else if previousMonth.rawValue > monthToScrollTo.rawValue  {
-                    slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
-                    jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
-                    // else page slideTos right
-                } else if previousMonth.rawValue < monthToScrollTo.rawValue {
-                    slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-                    jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
-
-                }
-                animateCalendarIconCell(month: monthToScrollTo, cell: cell, slideTo: slideTo, jumpTo: jumpTo)
-            }
-        }
-    }
+	func findNextMonthImage(month: Month) -> UIImage {
+		let month = month
+		return UIImage(named: "cal_\(month.shortMonthName).png")!.withRenderingMode(.alwaysTemplate)
+	}
 
     // MARK: Animations
 
-    private func animateCalendarIconCell(month: Month, cell: MenuBarCell, slideTo: CGFloat, jumpTo: CGFloat) {
+    private func animateCalendarIconCell(month: Month, cell: _MenuBarCell, slideTo: CGFloat, jumpTo: CGFloat) {
         let rect = cell.imageView.frame
         let originX = rect.origin.x
 
@@ -97,22 +78,41 @@ class MenuBar: UICollectionView {
         })
     }
 
-    // MARK: Delegate
+	// MARK: Scrolling Month Animation
+	// Only for MonthViewVC
+	func determineCoordinatesForAnimations(monthToScrollTo: Month, previousMonth: Month) {
+		let indexPath = IndexPath(item: currentMonth?.rawValue ?? 0, section: 0)
 
-    private func updateMenuBarDelegate(indexPath: Int) {
+		if let cell = self.cellForItem(at: indexPath) as? _MenuBarCell {
+			if cell.isSelected == true {
 
-        var indexPathToScrollTo = IndexPath(row: 8, section: 0)
-        if indexPath == ViewDisplayed.ProduceFilter.cancelled.menuBarIndex() {
-            indexPathToScrollTo = IndexPath(row: 0, section: 0)
-        }
+				// slide coordinates for moving icon
+				var slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
+				// jump icon back to the opposite side before sliding back into the cell.
+				var jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 
-        menuBarSelectedDelegate?.menuBarTapped(index: indexPath, indexToScrollTo: indexPathToScrollTo)
-    }
+				// need 4 options - I honestly can't figure out why, maths hurts.
 
-    func findNextMonthImage(month: Month) -> UIImage {
-        let month = month
-        return UIImage(named: "cal_\(month.shortMonthName).png")!.withRenderingMode(.alwaysTemplate)
-    }
+				if previousMonth.rawValue ==  Month.december.rawValue && monthToScrollTo.rawValue == Month.january.rawValue {
+					jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
+					slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
+				} else if previousMonth.rawValue == Month.january.rawValue && monthToScrollTo.rawValue == Month.december.rawValue{
+					slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
+					jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
+					// if page slide to left
+				} else if previousMonth.rawValue > monthToScrollTo.rawValue  {
+					slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
+					jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
+					// else page slide to right
+				} else if previousMonth.rawValue < monthToScrollTo.rawValue {
+					slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
+					jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
+
+				}
+				animateCalendarIconCell(month: monthToScrollTo, cell: cell, slideTo: slideTo, jumpTo: jumpTo)
+			}
+		}
+	}
 }
 
 // MARK: CollectionView
@@ -131,21 +131,21 @@ extension MenuBar: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         self.layoutIfNeeded()
 
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? MenuBarCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as? _MenuBarCell {
 
             cell.updateViews(imageName: menuBarViewModel.menuBarCells[indexPath.row].imageName,
                              constraints: menuBarViewModel.menuBarCells[indexPath.row].constraints,
                              selected: menuBarViewModel.menuBarCells[indexPath.row].isSelected)
 
             if cell.isSelected {
-                print("cell selected index = \(indexPath.row)")
+                //print("cell selected index = \(indexPath.row)")
                 cell.isUserInteractionEnabled = false
             } else {
                 cell.isUserInteractionEnabled = true
             }
             return cell
         }
-        return MenuBarCell()
+        return _MenuBarCell()
     }
 }
 

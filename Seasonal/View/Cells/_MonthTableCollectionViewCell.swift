@@ -1,5 +1,5 @@
 //
-//  MonthTableCollectionViewCell.swift
+//  _MonthTableCollectionViewCell.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 26/3/19.
@@ -8,14 +8,13 @@
 
 import UIKit
 
-class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
+class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
-   // var stateViewModel: AppStateViewModel!
-    var viewModel: _MonthsViewModel!
-    var searchString: String = ""
+    var viewModel: _MainViewModel!
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nothingToShowLabel: UILabel!
+	var numberOfRows: Int = 0
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -42,25 +41,21 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
         }
     }
 
-    private func hideTableIfEmpty() {
-        nothingToShowLabel.text = ""
-
-		// TODO: fix this if adding
-
-//        if stateViewModel.status.onPage == .months && tableView.numberOfRows(inSection: 0) == 0 {
-//            if self.searchString.count > 0 {
-//                nothingToShowLabel.text = "No Search Results"
-//                self.tableView.isHidden = true
-//            }
-//        } else {
-//            self.tableView.isHidden = false
-//        }
+	private func hideTableIfEmpty() {
+		if viewModel.viewDisplayed == .favourites {
+			nothingToShowLabel.text = "No Favourites Selected"
+		}
+		if viewModel.searchString.count > 0 {
+			nothingToShowLabel.text = "No Search Results"
+		}
+		if numberOfRows != 0 {
+			nothingToShowLabel.text = ""
+		}
     }
 
     // this is called from cell update on parent
     func collectionReloadData() {
         self.tableView.reloadData()
-        hideTableIfEmpty()
     }
     
     // this resolves the green flash when horizontally scrolling with no search results
@@ -75,29 +70,45 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
 // MARK: Tableview
 
-extension MonthTableCollectionViewCell: UITableViewDataSource {
+extension _MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		
-		return viewModel.filter(by: self.searchString,
-                                                   of: viewModel.filter)[self.tag].count
+		switch viewModel.viewDisplayed {
+		case .favourites:
+			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, filter: viewModel.filter).count
+			hideTableIfEmpty()
+			return numberOfRows
+		case .months:
+			numberOfRows = viewModel.filter(by: viewModel.searchString, of: viewModel.filter)[self.tag].count
+			hideTableIfEmpty()
+			return numberOfRows
+		default:
+			return 0
+		}
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        if let cell = tableView.dequeueReusableCell(withIdentifier: SELECTEDCATEGORYVIEWCELL) as? SelectedCategoryViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? SelectedCategoryViewCell {
             cell.likeButtonDelegate = self
-            var produce: _ProduceModel
-			produce = viewModel.filter(by: self.searchString , of: viewModel.filter)[self.tag][indexPath.row]
-            cell.updateViews(produce: produce)
-            return cell
+			switch viewModel.viewDisplayed {
+			case .favourites:
+				let produce = viewModel.filterFavourites(by: viewModel.searchString, filter: viewModel.filter)[indexPath.row]
+				cell.updateViews(produce: produce)
+				return cell
+			case .months:
+				let produce = viewModel.filter(by: viewModel.searchString , of: viewModel.filter)[self.tag][indexPath.row]
+				cell.updateViews(produce: produce)
+				return cell
+			default:
+				return SelectedCategoryViewCell()
+			}
         } else {
             return SelectedCategoryViewCell()
         }
     }
 }
 
-extension MonthTableCollectionViewCell: UITableViewDelegate {
+extension _MonthTableCollectionViewCell: UITableViewDelegate {
 
     private func tableView(_ tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         tableView.reloadData()

@@ -92,7 +92,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             } else if state == "ca" {
                 stateFound = StateLocation.noState
             }  else {
-				if locationInfo.country != STRAYA {
+				if locationInfo.country != Constants.straya {
 					stateFound = StateLocation.init(rawValue: StateLocation.noState.rawValue)!
 				} else if state != "" {
                     stateFound = StateLocation.init(rawValue: state)!
@@ -130,7 +130,7 @@ class LocationInformation {
     var country: String?
     var locationFound: Bool?
 
-    init(state: String? = "", country: String? = STRAYA, locationFound: Bool? = false) {
+	init(state: String? = "", country: String? = Constants.straya, locationFound: Bool? = false) {
         self.state = state
         self.country = country
         self.locationFound = locationFound

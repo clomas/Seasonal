@@ -19,7 +19,7 @@ class MonthPickerViewController: UIViewController, UICollectionViewDelegate, UIC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
         self.navigationController?.interactivePopGestureRecognizer?.isEnabled = true
 
@@ -32,7 +32,7 @@ class MonthPickerViewController: UIViewController, UICollectionViewDelegate, UIC
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SELECTMONTHCELL, for: indexPath) as? MonthPickerCell {
+		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.SelectMonthCell, for: indexPath) as? MonthPickerCell {
 
             cell.updateViews(month: Month.asArray[indexPath.row])
             
@@ -69,5 +69,4 @@ class MonthPickerViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBAction func backButtonPressed(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
     }
-
 }

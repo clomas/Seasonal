@@ -22,7 +22,7 @@ class InfoCardVC: UIViewController, Storyboarded {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let stringForTextBlock = INFOPAGESPIEL
+		let stringForTextBlock = Constants.infoPageSpiel
 
         if button == nil {
             print("NIL")
@@ -30,7 +30,7 @@ class InfoCardVC: UIViewController, Storyboarded {
 
         if state != StateLocation.noState {
             let usersStateInAustralia = String(describing: state).titleCase()
-            infoTextBlock.text = stringForTextBlock.replacingOccurrences(of: STRAYA, with: "\(usersStateInAustralia)")
+			infoTextBlock.text = stringForTextBlock.replacingOccurrences(of: Constants.straya, with: "\(usersStateInAustralia)")
         } else {
             infoTextBlock.text = stringForTextBlock
         }

@@ -586,6 +586,9 @@
                     <navigationItem key="navigationItem" title="Season" largeTitleDisplayMode="always" id="Giq-Mp-o5Z">
                         <barButtonItem key="leftBarButtonItem" image="back" id="xWB-IZ-NeM">
                             <color key="tintColor" name="fontDefault"/>
+                            <connections>
+                                <action selector="backButtonTapped:" destination="FTr-h4-Wv5" id="UYg-9v-RHE"/>
+                            </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="info.circle" catalog="system" id="8W3-yE-8xY">
                             <color key="tintColor" name="fontDefault"/>

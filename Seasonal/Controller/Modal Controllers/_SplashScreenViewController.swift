@@ -23,7 +23,7 @@ class _SplashScreenViewController: UIViewController, InitialViewDelegate {
 		activityMonitor.stopAnimating()
 	}
 
-	var parentCoordinator: _InitialViewCoordinator?
+	var coordinator: _InitialViewCoordinator?
 	var viewModel: _SplashScreenViewModel!
     //var networkCheck = NetworkService.sharedInstance()
 
@@ -34,12 +34,12 @@ class _SplashScreenViewController: UIViewController, InitialViewDelegate {
         super.viewDidLoad()
         internetLabel.text = ""
         self.activityMonitor.startAnimating()
-		parentCoordinator?.initialViewDelegate = self
+		coordinator?.initialViewDelegate = self
     }
 
 //    func internetStatusDidChange(status: NWPath.Status) {
 //        if status == .satisfied {
-//            print("Interenet Connected")
+//            print("Internet Connected")
 //            DispatchQueue.main.async {
 //                self.activityMonitor.isHidden = false
 //                self.activityMonitor.startAnimating()

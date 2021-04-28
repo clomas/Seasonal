@@ -29,7 +29,6 @@ class _AppCoordinator {
 
 	func start() {
 		// TODO: Try add nav controller later
-
 		let navigationController = UINavigationController()
 		let appEntryCoordinator = _AppEntryCoordinator(navigationController: navigationController)
 		appEntryCoordinator.parentCoordinator = self
@@ -39,7 +38,6 @@ class _AppCoordinator {
 		window.makeKeyAndVisible()
 	}
 }
-
 
 
 // UP TO HERE

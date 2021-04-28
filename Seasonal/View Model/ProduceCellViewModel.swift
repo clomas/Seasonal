@@ -112,8 +112,6 @@ extension ProduceCellViewModel {
 
             if let likedProduceIndex = month.firstIndex(where: { $0.id == id }) {
                 self.monthCellViewModel[monthIndex][likedProduceIndex].liked = liked
-            } else {
-                print("like index not found")
             }
         }
 

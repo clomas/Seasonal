@@ -19,9 +19,6 @@ class _MenuBar: UICollectionView {
 	//var currentMonth: Month?
 	//var tappedCallback: ((ViewDisplayed) -> Void)?
 
-
-	//TODO: animated when scrolling starts so make it only occur on didfinishdecelerating
-
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		setupView()
@@ -178,7 +175,6 @@ extension _MenuBar: UICollectionViewDataSource {
 							 selected: viewModel.menuBarCells[indexPath.row].isSelected)
 
 			if cell.isSelected {
-				print("cell selected index = \(indexPath.row)")
 				cell.isUserInteractionEnabled = false
 			} else {
 				cell.isUserInteractionEnabled = true

@@ -8,13 +8,11 @@
 
 import UIKit
 
-class _MonthPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate, UICollectionViewDelegateFlowLayout {
+class _MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	weak var coordinator: _MainViewCoordinator?
 
 	@IBOutlet weak var monthCollectionView: UICollectionView!
-
-	var currentMonthSelected: Month?
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,6 +30,15 @@ class _MonthPickerViewController: UIViewController, UICollectionViewDelegate, UI
 		self.navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
 	}
 
+	override func viewWillDisappear(_ animated: Bool) {
+		coordinator?.monthPickerFinished(display: nil)
+	}
+}
+
+//MARK: UICollectionView Data Source
+
+extension _MonthPickerViewController: UICollectionViewDataSource {
+
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		return Month.allCases.count
 	}
@@ -44,6 +51,11 @@ class _MonthPickerViewController: UIViewController, UICollectionViewDelegate, UI
 			return MonthPickerCell()
 		}
 	}
+}
+
+//MARK: UICollectionView Delegate Methods
+
+extension _MonthPickerViewController: UICollectionViewDelegate {
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
@@ -51,7 +63,6 @@ class _MonthPickerViewController: UIViewController, UICollectionViewDelegate, UI
 			coordinator?.monthPickerFinished(display: month)
 		}
 		self.dismiss(animated: true, completion: nil)
-//		monthSelectViewTapped?(Month.init(rawValue: indexPath.row)!)
 	}
 
 	// MARK: Collection View Sizing

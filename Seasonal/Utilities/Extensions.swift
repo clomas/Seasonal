@@ -8,9 +8,9 @@
 import UIKit
 
 // MARK: Sentence Case Strings
-
+// TODO: put this into Extension-String
 extension String {
-    // convert camel case to setence case
+    // convert camel case to sentence case
     func titleCase() -> String {
         return self
             .replacingOccurrences(of: "([A-Z])",
@@ -22,6 +22,20 @@ extension String {
             .capitalized // If input is in llamaCase
     }
 }
+
+extension String {
+
+	func createTitleString(with filter: ViewDisplayed.ProduceFilter) -> String {
+
+		var titleString = self.capitalized
+
+		if filter != .cancelled && filter != .all {
+			titleString = "\(filter.asString.capitalized) in \(titleString)"
+		}
+		return titleString
+	}
+}
+
 
 // MARK: global UIAlerts
 // credit - https://stackoverflow.com/questions/38144019/how-to-create-uialertcontroller-in-global-swift/42622755

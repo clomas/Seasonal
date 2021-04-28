@@ -49,8 +49,41 @@ final class _SeasonsViewModel: _MenuBarDelegate {
 		reloadTableView()
 	}
 
+	func updateTitle() -> String {
+		return String(describing: season).createTitleString(with: filter)
+	}
+
 	func menuBarScrollFinished() {
-		//
+		//<#code#>
+	}
+
+
+	func likeToggle(id: Int, liked: Bool) {
+
+		// UP TO HERE - likeToggle
+//		// reference for favourites array manipulation
+//		var lastMonthIndex = 0
+//		var produceIndex = 0
+//		produceDataService.updateLike(id: id, liked: liked)
+//		// update viewModel array
+//		for (monthIndex, month) in self.monthsProduce.enumerated() {
+//			if let likedProduceIndex = month.firstIndex(where: { $0.id == id }) {
+//				self.monthsProduce[monthIndex][likedProduceIndex].liked = liked
+//				lastMonthIndex = monthIndex
+//				produceIndex = likedProduceIndex
+//			} else {
+//				print("like index not found")
+//			}
+//		}
+//
+//		func addRemoveFavourites() {
+//			if liked == true {
+//				favouritesProduce.append(self.monthsProduce[lastMonthIndex][produceIndex])
+//			} else {
+//				favouritesProduce.removeAll{$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
+//			}
+//
+		
 	}
 }
 

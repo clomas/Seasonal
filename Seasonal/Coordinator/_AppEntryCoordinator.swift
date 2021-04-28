@@ -20,7 +20,7 @@ final class _AppEntryCoordinator: _Coordinator, LocationDelegate {
 	var parentCoordinator: _AppCoordinator?
 	private(set) var childCoordinators: [_Coordinator] = []
 	var initialCoordinatorDelegate: InitialCoordinatorDelegate?
-	private let navigationController: UINavigationController
+	var navigationController: UINavigationController
 	var networkService = NetworkService.sharedInstance()
 	var locationManager: LocationManager! = LocationManager.sharedInstance
 	var produceData: [Produce]?

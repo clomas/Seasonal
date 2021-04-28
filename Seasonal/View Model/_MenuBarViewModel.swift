@@ -20,9 +20,11 @@ final class _MenuBarViewModel {
 	var delegate: _MenuBarDelegate?
 	var onUpdate = {}
 	var selectedView: ViewDisplayed?
+	var mainViewIconSelected: ViewDisplayed?
 	var selectedFilter: ViewDisplayed.ProduceFilter?
 
 	init(month: Month?, season: Season?, viewDisplayed: ViewDisplayed) {
+		mainViewIconSelected = viewDisplayed
 		selectedView = viewDisplayed
 		switch viewDisplayed {
 		case .months, .favourites:
@@ -39,10 +41,14 @@ final class _MenuBarViewModel {
 	}
 
 	func menuBarTapped(at index: Int) {
-		selectDeselectCells(indexSelected: index)
+		toggleSelectedCells(indexSelected: index)
 		// keep track of the current view for when cancel is tapped
 		if index <= ViewDisplayed.seasons.rawValue {
 			selectedView = ViewDisplayed.init(rawValue: index)
+			// Hold value in mainViewIconSelected for navigating backwards to mainViewController
+			if index == ViewDisplayed.months.rawValue || index == ViewDisplayed.favourites.rawValue {
+				mainViewIconSelected = ViewDisplayed(rawValue: index)
+			}
 		} else {
 			selectedFilter = ViewDisplayed.ProduceFilter.init(rawValue: index)
 		}
@@ -52,12 +58,11 @@ final class _MenuBarViewModel {
 
 	func filterWasCancelledAnimationFinished() {
 		if let index = selectedView?.rawValue {
-			print(index)
-			selectDeselectCells(indexSelected: index)
+			toggleSelectedCells(indexSelected: index)
 		}
 	}
 
-	func selectDeselectCells(indexSelected: Int) {
+	func toggleSelectedCells(indexSelected: Int) {
 		self.menuBarCells[indexSelected].isSelected = true
 
 		for index in 0..<self.menuBarCells.count where index != indexSelected {

@@ -10,6 +10,7 @@ import UIKit
 
 class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, _SeasonsLikeButtonDelegate {
 
+	weak var coordinator: _MainViewCoordinator?
 		private var searchController = UISearchController(searchResultsController: nil)
 		@IBOutlet weak var tableView: UITableView!
 		@IBOutlet weak var nothingToShowLabel: UILabel!
@@ -25,13 +26,13 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 
 		viewModel.reloadTableView = { [weak self] in
 			self?.tableView.reloadData()
-			self?.setContextualTitle()
+			self?.title = self?.viewModel.updateTitle()
 		}
     }
 
 	private func setUpView() {
 		self.tableView.dataSource = self
-		setContextualTitle()
+		self.title = viewModel.updateTitle()
 		setUpNavigationControllerView()
 		setupMenuBar()
 	}
@@ -41,15 +42,10 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		menuBar.viewModel.delegate = viewModel.self
 	}
 
-	// TODO: search cancel is blue
-	func updateSearchResults(for searchController: UISearchController) {
-		//
-	}
-
-	
-
 	func likeButtonTapped(cell: _SeasonsTableViewCell) {
-		//
+		if let id = cell.id {
+			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
+		}
 	}
 
 	func menuBarScrollFinished() {
@@ -63,24 +59,6 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		if self.tableView.numberOfRows(inSection: 0) == 0 {
 			nothingToShowLabel.text = ""
 		}
-	}
-
-	// TODO: Finish this off with filters
-	private func setContextualTitle() {
-		var titleString = ""
-
-		//if stateViewModel.status.onPage == .favourites {
-		//	titleString = FAVOURITES
-		//} else if stateViewModel.status.onPage == .months {
-		titleString = String(describing: viewModel.season).capitalized
-		//}
-
-		//		switch stateViewModel.status.current.filter {
-		//		case .cancelled, .all:
-		self.title = titleString
-		//		case .fruit, .vegetables, .herbs:
-		//			self.title = "\(stateViewModel.status.current.filter.asString.capitalized) in \(titleString)"
-		//		}
 	}
 
 	private func setUpNavigationControllerView() {
@@ -99,6 +77,15 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 		self.definesPresentationContext = true
+	}
+
+	@IBAction func backButtonTapped(_ sender: Any) {
+		coordinator?.seasonsBackButtonTapped()
+	}
+
+
+	deinit {
+		print("!!!! ******* *** *** *** *** *** deiniting this viewcontroller")
 	}
 }
 
@@ -131,3 +118,18 @@ extension _SeasonsViewController: UITableViewDataSource {
 		}
 	}
 }
+
+// MARK: Search Bar Delegates
+extension _SeasonsViewController: UISearchControllerDelegate {
+
+	func updateSearchResults(for searchController: UISearchController) {
+		self.viewModel.searchString = searchController.searchBar.text!
+		tableView.reloadData()
+	}
+
+	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		self.viewModel.searchString = searchText
+	}
+}
+
+

@@ -8,11 +8,9 @@
 
 import UIKit
 
+class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, Storyboarded, _SeasonsLikeButtonDelegate, MenuBarDelegate {
 
-
-class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, Storyboarded, _SeasonsLikeButtonDelegate, MenuBarDelegate {
-
-    weak var coordinator: MainCoordinator?
+    weak var coordinator: _MainViewCoordinator?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nothingToShowLabel: UILabel!
@@ -174,14 +172,18 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
         infoVC.modalPresentationStyle = .popover
         present(infoVC, animated: true, completion: nil)
     }
-    @IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
-        
-    }
 
-    deinit {
-        print("dasdas")
-    }
+	@IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
+		self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+	}
+
+
+//	@IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
+//        self.navigationController?.popViewController(animated: true)
+//
+//    }
+
+
 }
 
 // MARK: Table View

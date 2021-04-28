@@ -12,6 +12,8 @@ import Foundation
 
 struct Constants {
 
+	static let seasonal = "Seasonal"
+
 	// Locations
 	static let straya = "Australia"
 
@@ -43,8 +45,9 @@ struct Constants {
 
 	// Titles
 	static let Seasons = "Seasons"
-	static let Calendar = "Calendar"
+	//static let Calendar = "Calendar"
 	static let Months = "Months"
+	static let selectAMonth = "Select a Month"
 
 	// Cells
 	static let SeasonsTableViewCell = "_SeasonsTableViewCell"

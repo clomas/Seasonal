@@ -15,12 +15,12 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 	var favouritesProduce: [_ProduceModel]
 	var viewDisplayed: ViewDisplayed
 	var month: Month
+	var previousMonth: Month // Keep track of - for animation
 	var filter: ViewDisplayed.ProduceFilter
 	var searchString: String
 	var reloadTableView = {}
 	var updateMenuBar = {}
 	//var updateMenuBar: (Month) -> () = {_ in }
-
 	
 	private let produceDataService: _ProduceDataService
 
@@ -28,6 +28,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		 favouritesProduce: [_ProduceModel],
 		 viewDisplayed: ViewDisplayed,
 		 month: Month,
+		 previousMonth: Month,
 		 filter: ViewDisplayed.ProduceFilter,
 		 searchString: String,
 		 dataService: _ProduceDataService = _ProduceDataService()) {
@@ -36,6 +37,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		self.favouritesProduce = favouritesProduce
 		self.viewDisplayed = viewDisplayed
 		self.month = month
+		self.previousMonth = month
 		self.filter = filter
 		self.searchString = searchString
 		self.produceDataService = dataService
@@ -49,7 +51,8 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 			 ViewDisplayed.ProduceFilter.vegetables.rawValue,
 			 ViewDisplayed.ProduceFilter.herbs.rawValue:
 			filter = ViewDisplayed.ProduceFilter.init(rawValue: index) ?? .all
-		case ViewDisplayed.ProduceFilter.cancelled.rawValue:
+		case ViewDisplayed.ProduceFilter.cancelled.rawValue,
+			 ViewDisplayed.ProduceFilter.all.rawValue:
 			filter = .cancelled
 		// navigation
 		case ViewDisplayed.monthPicker.rawValue,
@@ -65,8 +68,26 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		reloadTableView()
 	}
 
-	func updateMonth(to month: Month) {
-		self.month = month
+	func updateTitle() -> String {
+		switch viewDisplayed {
+		case .monthPicker:
+			return Constants.selectAMonth
+		case .months:
+			return String(describing: month).createTitleString(with: filter)
+		case .favourites:
+			return Constants.favourites.createTitleString(with: filter)
+		default:
+			return Constants.seasonal
+		}
+	}
+
+
+	/// Update Month after another ViewController was displayed.
+	/// - Parameter month: month can be nil - if it is no need to update.
+	func updateMonth(to month: Month?) {
+		if let month = month {
+			self.month = month
+		}
 		updateMenuBar()
 		reloadTableView()
 	}
@@ -92,9 +113,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 				self.monthsProduce[monthIndex][likedProduceIndex].liked = liked
 				lastMonthIndex = monthIndex
 				produceIndex = likedProduceIndex
- 			} else {
-				print("like index not found")
-			}
+ 			}
 		}
 
 		func addRemoveFavourites() {

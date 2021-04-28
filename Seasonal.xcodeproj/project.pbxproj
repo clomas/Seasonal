@@ -22,6 +22,7 @@
 		2749C9F6262DAE21009E19A5 /* _AppEntryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2749C9F5262DAE21009E19A5 /* _AppEntryCoordinator.swift */; };
 		2749C9FA26304B58009E19A5 /* _MenuBarModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2749C9F926304B58009E19A5 /* _MenuBarModel.swift */; };
 		2749C9FC26304CA5009E19A5 /* _SeasonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2749C9FB26304CA5009E19A5 /* _SeasonsViewController.swift */; };
+		2749C9FE26356C6B009E19A5 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2749C9FD26356C6B009E19A5 /* Router.swift */; };
 		274D476025FA08E900B60BD3 /* _MenuBarCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274D475F25FA08E900B60BD3 /* _MenuBarCellViewModel.swift */; };
 		275E88CE21C113470015968C /* SeasonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275E88CD21C113470015968C /* SeasonsViewController.swift */; };
 		275E88D621C113CC0015968C /* _SeasonsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275E88D521C113CC0015968C /* _SeasonsTableViewCell.swift */; };
@@ -57,6 +58,7 @@
 		27BEF26D222CFECB00E595E0 /* MonthPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */; };
 		27C5CD0A255E5AD400E937BF /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27C5CD09255E5AD400E937BF /* Extensions.swift */; };
 		27CC65F824D410EE0023A08B /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CC65F724D410EE0023A08B /* NetworkService.swift */; };
+		27D147F0263643FE0064709D /* CoordinatorNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D147EF263643FE0064709D /* CoordinatorNavigationController.swift */; };
 		27E1377C25DF8F39003A0BFC /* Main.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27E1377A25DF8F39003A0BFC /* Main.xcdatamodeld */; };
 		27E1377E25DF9218003A0BFC /* AppState-CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1377D25DF9218003A0BFC /* AppState-CoreDataHelper.swift */; };
 		27E1378025DF922E003A0BFC /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1377F25DF922E003A0BFC /* DataController.swift */; };
@@ -66,7 +68,6 @@
 		27E137A225E237A5003A0BFC /* FavouritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137A125E237A5003A0BFC /* FavouritesViewModel.swift */; };
 		27E137AB25E51CB6003A0BFC /* _SeasonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AA25E51CB6003A0BFC /* _SeasonsViewModel.swift */; };
 		27E137AD25E51D66003A0BFC /* _MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AC25E51D65003A0BFC /* _MainViewModel.swift */; };
-		27E137B125E52531003A0BFC /* _FavouritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137B025E52531003A0BFC /* _FavouritesViewController.swift */; };
 		27E698E825EE5DCC004B45E9 /* _ProduceDataSevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E698E725EE5DCC004B45E9 /* _ProduceDataSevice.swift */; };
 		27E6E69122D1A3790018DCF2 /* _SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6E69022D1A3790018DCF2 /* _SplashScreenViewController.swift */; };
 		27ECB41622EF19090097A8D4 /* InfoCardVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ECB41522EF19090097A8D4 /* InfoCardVC.swift */; };
@@ -123,6 +124,7 @@
 		2749C9F5262DAE21009E19A5 /* _AppEntryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _AppEntryCoordinator.swift; sourceTree = "<group>"; };
 		2749C9F926304B58009E19A5 /* _MenuBarModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _MenuBarModel.swift; sourceTree = "<group>"; };
 		2749C9FB26304CA5009E19A5 /* _SeasonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _SeasonsViewController.swift; sourceTree = "<group>"; };
+		2749C9FD26356C6B009E19A5 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		274D475F25FA08E900B60BD3 /* _MenuBarCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _MenuBarCellViewModel.swift; sourceTree = "<group>"; };
 		275E88CD21C113470015968C /* SeasonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewController.swift; sourceTree = "<group>"; };
 		275E88D521C113CC0015968C /* _SeasonsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _SeasonsTableViewCell.swift; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 		27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthPickerViewController.swift; sourceTree = "<group>"; };
 		27C5CD09255E5AD400E937BF /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		27CC65F724D410EE0023A08B /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		27D147EF263643FE0064709D /* CoordinatorNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorNavigationController.swift; sourceTree = "<group>"; };
 		27E1377B25DF8F39003A0BFC /* Main.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Main.xcdatamodel; sourceTree = "<group>"; };
 		27E1377D25DF9218003A0BFC /* AppState-CoreDataHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState-CoreDataHelper.swift"; sourceTree = "<group>"; };
 		27E1377F25DF922E003A0BFC /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -169,7 +172,6 @@
 		27E137A125E237A5003A0BFC /* FavouritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesViewModel.swift; sourceTree = "<group>"; };
 		27E137AA25E51CB6003A0BFC /* _SeasonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _SeasonsViewModel.swift; sourceTree = "<group>"; };
 		27E137AC25E51D65003A0BFC /* _MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _MainViewModel.swift; sourceTree = "<group>"; };
-		27E137B025E52531003A0BFC /* _FavouritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _FavouritesViewController.swift; sourceTree = "<group>"; };
 		27E698E725EE5DCC004B45E9 /* _ProduceDataSevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _ProduceDataSevice.swift; sourceTree = "<group>"; };
 		27E6E69022D1A3790018DCF2 /* _SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _SplashScreenViewController.swift; sourceTree = "<group>"; };
 		27ECB41522EF19090097A8D4 /* InfoCardVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InfoCardVC.swift; path = ../../XIBs/InfoCardVC.swift; sourceTree = "<group>"; };
@@ -296,9 +298,9 @@
 				27BEF26C222CFECB00E595E0 /* MonthPickerViewController.swift */,
 				27A3835621DF673800BB62C1 /* MonthViewController.swift */,
 				27086B1F221D79D700E3C236 /* Modal Controllers */,
-				27E137B025E52531003A0BFC /* _FavouritesViewController.swift */,
 				27949E7C2625A5D5007F3930 /* _MonthPickerViewController.swift */,
 				2749C9FB26304CA5009E19A5 /* _SeasonsViewController.swift */,
+				27D147EF263643FE0064709D /* CoordinatorNavigationController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -424,6 +426,7 @@
 				2706C40E2374C685006CB989 /* Seasonal.xcdatamodeld */,
 				2765920B223D2AE900A2C9C8 /* Seasonal.entitlements */,
 				27FCA53925DB781400AD2020 /* SceneDelegate.swift */,
+				2749C9FD26356C6B009E19A5 /* Router.swift */,
 			);
 			path = Seasonal;
 			sourceTree = "<group>";
@@ -601,7 +604,6 @@
 				27E137AB25E51CB6003A0BFC /* _SeasonsViewModel.swift in Sources */,
 				27E1379E25E219DC003A0BFC /* _MainViewCoordinator.swift in Sources */,
 				278CEFC325EC97A400348313 /* _LocalDataService.swift in Sources */,
-				27E137B125E52531003A0BFC /* _FavouritesViewController.swift in Sources */,
 				279A3CDD25629A97008E88EC /* PageStatus.swift in Sources */,
 				27657F3124ED4CF700382E83 /* Storyboarded.swift in Sources */,
 				27657F2F24ED4A2500382E83 /* Coordinator.swift in Sources */,
@@ -621,6 +623,7 @@
 				27F4762D222DDAA000306FC2 /* NavigationController.swift in Sources */,
 				27FCA53C25DB913D00AD2020 /* _InitialViewCoordinator.swift in Sources */,
 				27FCA54425DB992300AD2020 /* _NetworkService.swift in Sources */,
+				2749C9FE26356C6B009E19A5 /* Router.swift in Sources */,
 				278CEFC725ECC12900348313 /* _AppStatus.swift in Sources */,
 				27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */,
 				27C5CD0A255E5AD400E937BF /* Extensions.swift in Sources */,
@@ -645,6 +648,7 @@
 				27FCA53E25DB937600AD2020 /* _SplashScreenViewModel.swift in Sources */,
 				2749C9FC26304CA5009E19A5 /* _SeasonsViewController.swift in Sources */,
 				27FCA53425DB6C3C00AD2020 /* _AppCoordinator.swift in Sources */,
+				27D147F0263643FE0064709D /* CoordinatorNavigationController.swift in Sources */,
 				278611B42567304B00E8021B /* MenuBarViewModel.swift in Sources */,
 				274D476025FA08E900B60BD3 /* _MenuBarCellViewModel.swift in Sources */,
 				27E137AD25E51D66003A0BFC /* _MainViewModel.swift in Sources */,

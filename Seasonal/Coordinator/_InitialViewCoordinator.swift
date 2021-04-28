@@ -21,7 +21,7 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 	private(set) var childCoordinators: [_Coordinator] = []
 	var initialViewDelegate: InitialViewDelegate?
 
-	private let navigationController: UINavigationController
+	var navigationController: UINavigationController
 	var firstRun: Bool
 
 	init(navigationController: UINavigationController, firstRun: Bool) {
@@ -72,4 +72,9 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 	func readyToDismiss() {
 		parentCoordinator?.childDidFinish(self)
 	}
+
+	deinit {
+		print("deinitialised yeh")
+	}
 }
+

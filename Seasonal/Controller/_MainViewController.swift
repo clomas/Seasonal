@@ -9,6 +9,8 @@
 import UIKit
 import InfiniteLayout
 
+// TODO: make all delegates weak.
+
 class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, LikeButtonDelegate {
 
 	@IBOutlet weak var infiniteMonthCollectionView: InfiniteCollectionView!
@@ -29,7 +31,7 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 															   animated: false)
 			}
 			self?.infiniteMonthCollectionView.reloadData()
-			self?.setContextualTitle()
+			self?.title = self?.viewModel.updateTitle()
 		}
 		// Called from MonthPickerViewController to update -
 		// month icon,
@@ -37,7 +39,7 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 		// navigation bar title
 		viewModel.updateMenuBar = { [weak self] in
 			if let index = self?.viewModel.viewDisplayed.rawValue {
-				self?.menuBar.viewModel.selectDeselectCells(indexSelected: index)
+				self?.menuBar.viewModel.toggleSelectedCells(indexSelected: index)
 				if let month = self?.viewModel.month {
 					self?.menuBar.updateMonthIconImage(to: month)
 				}
@@ -48,12 +50,10 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 	private func setUpView() {
 		self.infiniteMonthCollectionView.delegate = self
 		self.infiniteMonthCollectionView.dataSource = self
-//		self.favouritesTableView.dataSource = self
 		setUpNavigationControllerView()
 		setupMenuBar()
 		setupCollectionView()
-//		favouritesTableView.isHidden = true
-		setContextualTitle()
+		self.title = viewModel.updateTitle()
 	}
 
 	// Init child viewModel & assign delegate between child and parent viewModel
@@ -62,19 +62,27 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 		menuBar.viewModel.delegate = viewModel.self
 	}
 
-	func viewDidReappear() {
+//	func viewDidReappear() {
+//
+//		// TODO: set a command to check date again, reload
+//		// TODO: Do I need this ? do it another way?
+//		self.title = viewModel.updateTitle()
+//		infiniteMonthCollectionView.scrollToItem(at: .init(row: viewModel.month.rawValue, section: 0),
+//												  at: .centeredHorizontally,
+//												  animated: true)
+//		menuBar.reloadData()
+//	}
 
-		// TODO: set a command to check date again, reload
-		// TODO: Do I need this ? do it another way?
-		setContextualTitle()
-
-		infiniteMonthCollectionView.scrollToItem(at: .init(row: viewModel.month.rawValue, section: 0),
-												  at: .centeredHorizontally,
-												  animated: true)
-		menuBar.reloadData()
-	}
+	// If navigating to SeasonsViewController I need to toggle the selected menuBar after it disappears.
+	// after changing it,
 	override func viewDidDisappear(_ animated: Bool) {
 		self.searchController.isActive = false
+		if menuBar.viewModel.selectedView == .seasons || menuBar.viewModel.selectedView == .monthPicker {
+			if let previousView = menuBar.viewModel.mainViewIconSelected?.rawValue {
+				menuBar.viewModel.toggleSelectedCells(indexSelected: previousView)
+				menuBar.reloadData()
+			} 
+		}
 	}
 
 	private func setupCollectionView() {
@@ -136,34 +144,20 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 	}
 
 	// TODO: Finish this off with filters
-	private func setContextualTitle() {
-		var titleString = ""
+//	private func updateTitle() {
+//		var titleString = ""
 
 		//if stateViewModel.status.onPage == .favourites {
 		//	titleString = FAVOURITES
 		//} else if stateViewModel.status.onPage == .months {
-		titleString = String(describing: viewModel.month).capitalized
+//		titleString = String(describing: viewModel.month).capitalized
 		//}
 
 //		switch stateViewModel.status.current.filter {
 //		case .cancelled, .all:
-			self.title = titleString
+//			self.title = titleString
 //		case .fruit, .vegetables, .herbs:
 //			self.title = "\(stateViewModel.status.current.filter.asString.capitalized) in \(titleString)"
-//		}
-	}
-
-	// MARK: Months or Favourites to show
-
-//	private func favouritesOrMonthSelected(favouritesPage: Bool) {
-//		if favouritesPage == true {
-////			self.favouritesTableView.reloadData()
-//			self.inifiniteMonthCollectionView.isHidden = true
-////			self.favouritesTableView.isHidden = false
-//		} else {
-//			self.inifiniteMonthCollectionView.reloadData()
-//			self.inifiniteMonthCollectionView.isHidden = false
-////			self.favouritesTableView.isHidden = true
 //		}
 //	}
 
@@ -183,6 +177,7 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 //				self.hideTableIfEmpty()
 //			})
 //		}
+
 	}
 
 	// TODO: this from coord
@@ -280,7 +275,10 @@ extension _MainViewController: UICollectionViewDelegateFlowLayout {
 			// update menubar before calling method for animation of month icon
 			// TODO: Need this?
 			//menuBar.currentMonth = updatedMonth
-			menuBar.monthIconCarouselAnimation(from: viewModel.month, to: updatedMonth)
+			if viewModel.previousMonth != updatedMonth {
+				menuBar.monthIconCarouselAnimation(from: viewModel.month, to: updatedMonth)
+				viewModel.previousMonth = updatedMonth
+			}
 			viewModel.month = updatedMonth
 		}
 

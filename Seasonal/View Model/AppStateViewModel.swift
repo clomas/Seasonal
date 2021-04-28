@@ -104,6 +104,16 @@ enum ViewDisplayed: Int {
     case months = 2
     case seasons = 3
 
+	var titleString: String {
+		switch self {
+		case .favourites: return self.titleString
+		case .monthPicker: return Constants.selectAMonth
+		case .seasons: return Constants.Seasons
+		default:
+			return ""
+		}
+	}
+
 	// TODO: this need to be nested?
     enum ProduceFilter: Int, CaseIterable {
         case all = 4

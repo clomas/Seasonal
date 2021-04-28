@@ -16,7 +16,7 @@ import Network
 final class _WelcomeViewCoordinator: _Coordinator {
 
 	private(set) var childCoordinators: [_Coordinator] = []
-	private let navigationController: UINavigationController
+	var navigationController: UINavigationController
 	var dataFetched: [Produce]?
 
 	init(navigationController: UINavigationController) {

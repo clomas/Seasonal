@@ -8,19 +8,34 @@
 
 import Foundation
 
+
+enum Month: Int, CaseIterable {
+	case january
+	case february
+	case march
+	case april
+	case may
+	case june
+	case july
+	case august
+	case september
+	case october
+	case november
+	case december
+}
+
 final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 
-	var coordinator: _MainViewCoordinator?
+	weak var coordinator: _MainViewCoordinator?
 	var monthsProduce: [[_ProduceModel]]
 	var favouritesProduce: [_ProduceModel]
 	var viewDisplayed: ViewDisplayed
 	var month: Month
 	var previousMonth: Month // Keep track of - for animation
-	var filter: ViewDisplayed.ProduceFilter
+	var category: ViewDisplayed.ProduceCategory
 	var searchString: String
 	var reloadTableView = {}
 	var updateMenuBar = {}
-	//var updateMenuBar: (Month) -> () = {_ in }
 	
 	private let produceDataService: _ProduceDataService
 
@@ -29,7 +44,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		 viewDisplayed: ViewDisplayed,
 		 month: Month,
 		 previousMonth: Month,
-		 filter: ViewDisplayed.ProduceFilter,
+		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
 		 dataService: _ProduceDataService = _ProduceDataService()) {
 
@@ -38,22 +53,20 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		self.viewDisplayed = viewDisplayed
 		self.month = month
 		self.previousMonth = month
-		self.filter = filter
+		self.category = category
 		self.searchString = searchString
 		self.produceDataService = dataService
 	}
 
 	func menuBarTapped(at index: Int) {
-		//coordinator?.menuBarTapped(at: index)
-		// the index is a filter
 		switch index {
-		case ViewDisplayed.ProduceFilter.fruit.rawValue,
-			 ViewDisplayed.ProduceFilter.vegetables.rawValue,
-			 ViewDisplayed.ProduceFilter.herbs.rawValue:
-			filter = ViewDisplayed.ProduceFilter.init(rawValue: index) ?? .all
-		case ViewDisplayed.ProduceFilter.cancelled.rawValue,
-			 ViewDisplayed.ProduceFilter.all.rawValue:
-			filter = .cancelled
+		case ViewDisplayed.ProduceCategory.fruit.rawValue,
+			 ViewDisplayed.ProduceCategory.vegetables.rawValue,
+			 ViewDisplayed.ProduceCategory.herbs.rawValue:
+			 category = ViewDisplayed.ProduceCategory.init(rawValue: index) ?? .all
+		case ViewDisplayed.ProduceCategory.cancelled.rawValue,
+			 ViewDisplayed.ProduceCategory.all.rawValue:
+			 category = .cancelled
 		// navigation
 		case ViewDisplayed.monthPicker.rawValue,
 			 ViewDisplayed.seasons.rawValue:
@@ -73,9 +86,9 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		case .monthPicker:
 			return Constants.selectAMonth
 		case .months:
-			return String(describing: month).createTitleString(with: filter)
+			return String(describing: month).createTitleString(with: category)
 		case .favourites:
-			return Constants.favourites.createTitleString(with: filter)
+			return Constants.favourites.createTitleString(with: category)
 		default:
 			return Constants.seasonal
 		}
@@ -103,6 +116,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 //	}
 
 	func likeToggle(id: Int, liked: Bool) {
+		print(liked)
 		// reference for favourites array manipulation
 		var lastMonthIndex = 0
 		var produceIndex = 0
@@ -118,18 +132,39 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 
 		func addRemoveFavourites() {
 			if liked == true {
-				favouritesProduce.append(self.monthsProduce[lastMonthIndex][produceIndex])
+				// get the liked produce, insert into array at the correct index by id
+				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
+				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
+
+				
 			} else {
 				favouritesProduce.removeAll{$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
 			}
 		}
+		addRemoveFavourites()
+	}
+
+	func infoButtonTapped() {
+		coordinator?.presentInfoViewController()
+	}
+
+	func insertSorted<T: Comparable>( seq: inout [T], newItem item: T) {
+		let index = seq.reduce(0) { $1 < item ? $0 + 1 : $0 }
+		seq.insert(item, at: index)
+	}
+
+}
+
+extension Collection {
+	func insertionIndex(of element: Self.Iterator.Element,
+						using areInIncreasingOrder: (Self.Iterator.Element, Self.Iterator.Element) -> Bool) -> Index {
+		return firstIndex(where: { !areInIncreasingOrder($0, element) }) ?? endIndex
 	}
 }
 
 // Sort produce into viewModel arrays
 
 extension Array where Element == Produce {
-
 	func sortIntoFavourites() -> [_ProduceModel] {
 		return self.map{_ProduceModel.init(produce: $0)}.filter {
 			$0.liked == true
@@ -157,38 +192,40 @@ extension Array where Element == Produce {
 
 extension _MainViewModel {
 
-	func filter(by searchString: String, of filter: ViewDisplayed.ProduceFilter) -> [[_ProduceModel]] {
-		switch filter {
+	func filter(by searchString: String, of category: ViewDisplayed.ProduceCategory) -> [[_ProduceModel]] {
+		switch category {
 		case .cancelled, .all:
 			if searchString == "" {
 				return self.monthsProduce
 			} else {
-				return self.monthsProduce.map ({ return $0.filter({ $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})})
+				return self.monthsProduce.map ({ return $0.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })})
 			}
 		case .fruit, .vegetables, .herbs:
 			if searchString == "" {
-				return self.monthsProduce.map ({ return $0.filter({ $0.category == filter })})
+				return self.monthsProduce.map ({ return $0.filter({ $0.category == category })})
 			} else {
-				return self.monthsProduce.map ({ return $0.filter({ $0.category == filter && $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})})
+				return self.monthsProduce.map ({ return $0.filter({ $0.category == category &&
+																	$0.produceName.lowercased().contains(searchString.lowercased()) })})
 			}
 		}
 	}
 
-	func filterFavourites(by searchString: String, filter: ViewDisplayed.ProduceFilter) -> [_ProduceModel] {
-		switch filter {
+	func filterFavourites(by searchString: String, category: ViewDisplayed.ProduceCategory) -> [_ProduceModel] {
+		switch category {
 		case .cancelled, .all:
 			if searchString == "" {
 				return self.favouritesProduce.filter{$0.liked == true}
 			} else {
-				return self.favouritesProduce.filter({ $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
+				return self.favouritesProduce.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })
 			}
 		case .fruit, .vegetables, .herbs:
 			if searchString == "" {
-				return self.favouritesProduce.filter({ $0.category == filter })
+				return self.favouritesProduce.filter({ $0.category == category })
 			} else {
-				return self.favouritesProduce.filter({ $0.category == filter &&
-												$0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
+				return self.favouritesProduce.filter({ $0.category == category &&
+													   $0.produceName.lowercased().contains(searchString.lowercased()) })
 			}
 		}
 	}
 }
+

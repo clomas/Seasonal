@@ -6,7 +6,7 @@
 import UIKit
 import Foundation
 
-protocol MenuBarDelegate: class {
+protocol MenuBarDelegate: AnyObject {
     func menuBarTapped(index: Int, indexToScrollTo: IndexPath)
     func menuBarScrollFinished()
 }
@@ -45,12 +45,12 @@ class MenuBar: UICollectionView {
 
 	private func updateMenuBarDelegate(indexPath: Int) {
 
-		var indexPathToScrollTo = IndexPath(row: 8, section: 0)
-		if indexPath == ViewDisplayed.ProduceFilter.cancelled.menuBarIndex() {
-			indexPathToScrollTo = IndexPath(row: 0, section: 0)
-		}
+		//var indexPathToScrollTo = IndexPath(row: 8, section: 0)
+//		if indexPath == ViewDisplayed.ProduceFilter.cancelled.menuBarIndex() {
+//			indexPathToScrollTo = IndexPath(row: 0, section: 0)
+//		}
 
-		menuBarSelectedDelegate?.menuBarTapped(index: indexPath, indexToScrollTo: indexPathToScrollTo)
+		//menuBarSelectedDelegate?.menuBarTapped(index: indexPath, indexToScrollTo: indexPathToScrollTo)
 	}
 
 	func findNextMonthImage(month: Month) -> UIImage {

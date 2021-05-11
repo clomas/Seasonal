@@ -12,6 +12,6 @@ struct PageStatus {
     var month: Month
     var season: Season
     var onPage: ViewDisplayed
-    var filter: ViewDisplayed.ProduceFilter
+    var category: ViewDisplayed.ProduceCategory
     var location: StateLocation
 }

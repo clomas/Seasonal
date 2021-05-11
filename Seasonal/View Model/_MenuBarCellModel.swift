@@ -8,15 +8,20 @@
 
 import Foundation
 
-struct _MenuBarCellViewModel {
-	var menuBarItem: MenuBarItem!
+struct _MenuBarCellModel {
+	
+	var menuBarItem: _MenuBarItem!
 
-	init(menuBarItem: MenuBarItem) {
+	init(menuBarItem: _MenuBarItem) {
 		self.menuBarItem = menuBarItem
 	}
 
 	var imageName: String {
-		return self.menuBarItem.imageName
+		get {
+			return self.menuBarItem.imageName
+		} set (imageUpdate) {
+			self.menuBarItem.imageName = imageUpdate
+		}
 	}
 	var constraints: (String, String) {
 		return self.menuBarItem.constraints
@@ -31,4 +36,8 @@ struct _MenuBarCellViewModel {
 	}
 }
 
-
+struct _MenuBarItem {
+	var imageName: String
+	var selected: Bool
+	var constraints: (String, String)
+}

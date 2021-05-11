@@ -10,15 +10,16 @@ import UIKit
 
 class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, _SeasonsLikeButtonDelegate {
 
-	weak var coordinator: _MainViewCoordinator?
-		private var searchController = UISearchController(searchResultsController: nil)
-		@IBOutlet weak var tableView: UITableView!
-		@IBOutlet weak var nothingToShowLabel: UILabel!
-		@IBOutlet weak var menuBar: _MenuBar!
+		// TODO: maybe bubble up to coordinator instead of calling it here.
+		weak var coordinator: _MainViewCoordinator?
+	private var searchController = UISearchController(searchResultsController: nil)
+	@IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var nothingToShowLabel: UILabel!
+	@IBOutlet weak var menuBar: _MenuBarCollectionView!
 
-		// View models
-		var viewModel: _SeasonsViewModel!
-		// var menuBarViewModel: MenuBarCellViewModel!
+	// View models
+	var viewModel: _SeasonsViewModel!
+	// var menuBarViewModel: MenuBarCellViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,10 +47,6 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		if let id = cell.id {
 			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
 		}
-	}
-
-	func menuBarScrollFinished() {
-		//
 	}
 
 	private func hideTableIfEmpty() {
@@ -83,9 +80,8 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		coordinator?.seasonsBackButtonTapped()
 	}
 
-
-	deinit {
-		print("!!!! ******* *** *** *** *** *** deiniting this viewcontroller")
+	@IBAction func infoButtonTapped(_ sender: Any) {
+		viewModel.infoButtonTapped()
 	}
 }
 
@@ -94,8 +90,8 @@ extension _SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if let season =  Season(rawValue: viewModel.season.rawValue) {
-			print(viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.filter).count)
-			return viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.filter).count
+			print(viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count)
+			return viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
 		} else {
 			return 0
 		}
@@ -107,14 +103,14 @@ extension _SeasonsViewController: UITableViewDataSource {
 			
 			if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? _SeasonsTableViewCell {
 				cell.likeButtonDelegate = self
-				let produce = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.filter)[indexPath.row]
+				let produce = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category)[indexPath.row]
 				cell.updateViews(produce: produce) 
 				return cell
 			} else {
-				return SelectedCategoryViewCell()
+				return _ProduceMonthInfoViewCell()
 			}
 		} else {
-			return SelectedCategoryViewCell()
+			return _ProduceMonthInfoViewCell()
 		}
 	}
 }

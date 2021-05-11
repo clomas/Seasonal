@@ -11,14 +11,6 @@ import Network
 
 class _SplashScreenViewController: UIViewController, InitialViewDelegate {
 
-	func networkFailed() {
-		//
-	}
-
-	func locationNotFound() {
-		//
-	}
-
 	func dataIsReady() {
 		activityMonitor.stopAnimating()
 	}
@@ -37,23 +29,6 @@ class _SplashScreenViewController: UIViewController, InitialViewDelegate {
 		coordinator?.initialViewDelegate = self
     }
 
-//    func internetStatusDidChange(status: NWPath.Status) {
-//        if status == .satisfied {
-//            print("Internet Connected")
-//            DispatchQueue.main.async {
-//                self.activityMonitor.isHidden = false
-//                self.activityMonitor.startAnimating()
-//                self.internetLabel.text = ""
-//            }
-//        } else if status == .unsatisfied {
-//            DispatchQueue.main.async {
-//                self.activityMonitor.isHidden = true
-//                self.activityMonitor.stopAnimating()
-//                self.internetLabel.text = "No Internet Connection!"
-//            }
-//        }
-//    }
-
     private func goToiCloudSettings(alert: UIAlertAction!) {
         guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
         
@@ -67,9 +42,32 @@ class _SplashScreenViewController: UIViewController, InitialViewDelegate {
 		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(true, animated: animated)
 	}
-
 	
 	func viewReadyToDismiss() {
 		viewModel.dismissTapped()
+	}
+
+	func networkFailed() {
+		self.presentAlert(title: "Network Error",
+						  message: "Unable to connect to the internet",
+						  alertStyle: .alert,
+						  actionTitles: [],
+						  actionStyles: [.default],
+						  actions: []
+		)
+	}
+
+	func locationNotFound() {
+		if true {
+			func networkFailed() {
+				self.presentAlert(title: "Location Error",
+								  message: "Unable to detect which state in Australia you live in, you will be shown general data for Australian Produce.",
+								  alertStyle: .alert,
+								  actionTitles: [],
+								  actionStyles: [.default],
+								  actions: []
+				)
+			}
+		}
 	}
 }

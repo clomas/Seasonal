@@ -11,23 +11,25 @@
 import UIKit
 
 protocol LikeButtonDelegate {
-    func likeButtonTapped(cell: SelectedCategoryViewCell)
+	func likeButtonTapped(cell: _ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed)
 }
 //https://stackoverflow.com/questions/24805180/swift-put-multiple-iboutlets-in-an-array
-class SelectedCategoryViewCell: UITableViewCell {
+class _ProduceMonthInfoViewCell: UITableViewCell {
 
     var likeButtonDelegate: LikeButtonDelegate?
 
     @IBOutlet weak var foodImage: UIImageView!
     @IBOutlet weak var foodLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
+	var viewDisplayed: ViewDisplayed?
     var id: Int?
 
     // Array of monthImages - https://stackoverflow.com/questions/24805180/swift-put-multiple-iboutlets-in-an-array
     @IBOutlet var monthImages: [UIImageView] = []
 
-    func updateViews(produce: _ProduceModel) {
-        self.id = produce.id
+	func updateViews(produce: _ProduceModel,in view: ViewDisplayed) {
+		self.id = produce.id
+		self.viewDisplayed = view
         foodLabel.text = produce.produceName
         guard let image = UIImage(named: produce.imageName) else { return }
         foodImage.image = image
@@ -63,7 +65,6 @@ class SelectedCategoryViewCell: UITableViewCell {
             }
             if produce.months.contains(Month.asArray[monthIndex]) {
                 uiView.tintColor = UIColor.MonthIcon.inSeasonTint
-
             } else {
                 uiView.tintColor = UIColor.MonthIcon.nonSeasonTint
             }
@@ -73,15 +74,14 @@ class SelectedCategoryViewCell: UITableViewCell {
 
     // MARK: Buttons
 
-    @IBAction func favouriteLikeButtonPressed(_ sender: Any) {
-        self.likeButton.isSelected.toggle()
-        likeButtonDelegate?.likeButtonTapped(cell: self)
-    }
-
     @IBAction func monthsLikeButtonPressed(_ sender: Any) {
-        self.likeButton.isSelected.toggle()
-        self.likeButton.animateLikeButton(selected: self.likeButton.isSelected)
-        likeButtonDelegate?.likeButtonTapped(cell: self)
+		if viewDisplayed == .months {
+			self.likeButton.animateLikeButton(selected: self.likeButton.isSelected)
+			likeButtonDelegate?.likeButtonTapped(cell: self, viewDisplayed: .months)
+		} else {
+			likeButtonDelegate?.likeButtonTapped(cell: self, viewDisplayed: .favourites)
+		}
+		self.likeButton.isSelected.toggle()
     }
 
     // MARK: Animations

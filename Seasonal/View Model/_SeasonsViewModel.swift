@@ -8,36 +8,42 @@
 
 import Foundation
 
+enum Season: Int, CaseIterable {
+	    case summer = 0
+	    case autumn
+	    case winter
+	    case spring
+	    case cancelled
+}
+
 final class _SeasonsViewModel: _MenuBarDelegate {
 
-	var coordinator: _MainViewCoordinator?
+	weak var coordinator: _MainViewCoordinator?
 	var produceData: [Season:[_ProduceModel]]
 	var season: Season
-	var filter: ViewDisplayed.ProduceFilter
+	var category: ViewDisplayed.ProduceCategory
 	var searchString: String
 	var reloadTableView = {}
 
 	init(produceData: [Season:[_ProduceModel]],
 		 season: Season,
-		 filter: ViewDisplayed.ProduceFilter,
+		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String
 	) {
 		self.produceData = produceData
 		self.season = season
-		self.filter = filter
+		self.category = category
 		self.searchString = searchString
 	}
 
 	func menuBarTapped(at index: Int) {
-		//coordinator?.menuBarTapped(at: index)
-		// the index is a filter
 		switch index {
-		case ViewDisplayed.ProduceFilter.fruit.rawValue,
-			 ViewDisplayed.ProduceFilter.vegetables.rawValue,
-			 ViewDisplayed.ProduceFilter.herbs.rawValue:
-			filter = ViewDisplayed.ProduceFilter.init(rawValue: index) ?? .all
-		case ViewDisplayed.ProduceFilter.cancelled.rawValue:
-			filter = .cancelled
+		case ViewDisplayed.ProduceCategory.fruit.rawValue,
+			 ViewDisplayed.ProduceCategory.vegetables.rawValue,
+			 ViewDisplayed.ProduceCategory.herbs.rawValue:
+			category = ViewDisplayed.ProduceCategory.init(rawValue: index) ?? .all
+		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
+			category = .cancelled
 		case Season.summer.rawValue,
 			 Season.autumn.rawValue,
 			 Season.winter.rawValue,
@@ -50,11 +56,11 @@ final class _SeasonsViewModel: _MenuBarDelegate {
 	}
 
 	func updateTitle() -> String {
-		return String(describing: season).createTitleString(with: filter)
+		return String(describing: season).createTitleString(with: category)
 	}
 
 	func menuBarScrollFinished() {
-		//<#code#>
+		//<#code#>Butt
 	}
 
 
@@ -85,6 +91,10 @@ final class _SeasonsViewModel: _MenuBarDelegate {
 //
 		
 	}
+
+	func infoButtonTapped() {
+		coordinator?.presentInfoViewController()
+	}
 }
 
 extension Array where Element == Produce {
@@ -109,21 +119,23 @@ extension Array where Element == Produce {
 
 extension _SeasonsViewModel {
 
-	func filter(by season: Season, matching searchString: String,of filter: ViewDisplayed.ProduceFilter) -> [_ProduceModel] {
+	func filter(by season: Season, matching searchString: String,of category: ViewDisplayed.ProduceCategory) -> [_ProduceModel] {
 		if let seasonData = produceData[season] {
-			switch filter {
+			switch category {
 			case .cancelled, .all:
 				if searchString == "" {
 					return seasonData
 				} else {
-					return seasonData.filter({ $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
+					return seasonData.filter({ $0.produceName.lowercased().contains(searchString.lowercased())
+					})
 				}
 			case .fruit, .vegetables, .herbs:
 				if searchString == "" {
-					return seasonData.filter({ $0.category == filter })
+					return seasonData.filter({ $0.category == category })
 				} else {
-					return seasonData.filter({ $0.category == filter &&
-																$0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
+					return seasonData.filter({ $0.category == category &&
+																$0.produceName.lowercased().contains(searchString.lowercased())
+					})
 				}
 			}
 		} else {

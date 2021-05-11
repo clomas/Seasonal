@@ -9,23 +9,46 @@
 import Foundation
 import UIKit
 
-protocol MonthSelectedDelegate {
+// Keep track of the current View that is shown
+// The integers match up with the index of the menuBar buttons
+enum ViewDisplayed: Int {
+	case favourites = 0
+	case monthPicker = 1
+	case months = 2
+	case seasons = 3
+
+	enum ProduceCategory: Int, CaseIterable {
+		case all = 4
+		case fruit = 5
+		case vegetables = 6
+		case herbs = 7
+		case cancelled = 8
+	}
+}
+
+protocol MonthSelectedDelegate: AnyObject {
 	func updateMonth(to month: Month?)
 }
-// TODO: DO I need a parent coordinator here?
+
+// TODO: check how deinit is working in James Haville videos
+// TODO: accessibility - https://medium.com/capital-one-tech/building-accessible-ios-apps-827c3469a3e9
 
 final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
+	var parentCoordinator: _AppCoordinator?
 	private(set) var childCoordinators: [_Coordinator] = []
-	var navigationController: UINavigationController
-	private var modalNavigationController: UINavigationController?
-	var parentCoordinator: _AppEntryCoordinator?
-	var dataFetched: [Produce]?
-	var monthSelectedDelegate: MonthSelectedDelegate?
 
-	init(navigationController: UINavigationController, dataFetched: [Produce]) {
+	weak var monthSelectedDelegate: MonthSelectedDelegate?
+	private var dataFetched: [Produce]?
+	private var determinedLocation: StateLocation
+
+	private let navigationController: UINavigationController
+	private var modalNavigationController: UINavigationController?
+
+	init(navigationController: UINavigationController, dataFetched: [Produce], location: StateLocation) {
 		self.navigationController = navigationController
 		self.dataFetched = dataFetched
+		self.determinedLocation = location
 	}
 
 	func start() {
@@ -40,7 +63,7 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 											   viewDisplayed: .months,
 											   month: findCurrentMonth(),
 											   previousMonth: findCurrentMonth(),
-											   filter: .all,
+											   category: .all,
 											   searchString: "")
 
 		mainViewModel.coordinator = self
@@ -54,6 +77,8 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 		navigationController.pushViewController(mainViewController, animated: true)
 	}
 
+	// Handle all navigation options
+
 	func menuBarTappedForNavigation(at index: Int) {
 		switch index {
 		case ViewDisplayed.monthPicker.rawValue:
@@ -66,6 +91,10 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 			break
 		}
 	}
+
+	// MARK: Presenting ViewControllers
+
+	// Month Picker View Controller
 
 	func presentMonthPickerViewController() {
 		self.modalNavigationController = UINavigationController()
@@ -82,6 +111,8 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 		monthSelectedDelegate?.updateMonth(to: month ?? nil)
 	}
 
+	// Seasons View Controller
+
 	//https://benoitpasquier.com/coordinator-pattern-navigation-back-button-swift/
 	func presentSeasonsViewController() {
 		let seasonsViewController: _SeasonsViewController = .instantiate()
@@ -91,7 +122,7 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 
 		let seasonsViewModel = _SeasonsViewModel(produceData: produceData.sortIntoSeasons(),
 												 season: findCurrentSeason() ,
-												 filter: .all,
+												 category: .all,
 												 searchString: "")
 
 		seasonsViewModel.coordinator = self
@@ -103,6 +134,27 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 		self.navigationController.interactivePopGestureRecognizer?.delegate = self
 		self.navigationController.interactivePopGestureRecognizer?.isEnabled = true
 		self.navigationController.pushViewController(seasonsViewController, animated: true)
+	}
+
+	func presentInfoViewController() {
+		self.modalNavigationController = UINavigationController()
+		let infoViewController: _InfoViewController = .instantiate()
+		infoViewController.viewModel = _InfoViewModel(location: determinedLocation)
+		modalNavigationController?.setViewControllers([infoViewController], animated: false)
+
+		if let modalNavigationController = modalNavigationController {
+			self.navigationController.present(modalNavigationController, animated: true, completion: nil)
+		}
+	}
+
+	// View will slide up rather than default animation
+	func setUpNavigationTransition() -> CATransition {
+		let transition = CATransition()
+		transition.duration = 0.5
+		transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+		transition.type = CATransitionType.reveal
+		transition.subtype = CATransitionSubtype.fromTop
+		return transition
 	}
 
 	func findCurrentMonth() -> Month {
@@ -117,45 +169,5 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 
 	func seasonsBackButtonTapped() {
 		self.navigationController.popViewController(animated: true)
-	}
-
-	// view will slide up rather than default animation
-	func setUpNavigationTransition() -> CATransition {
-		let transition = CATransition()
-		transition.duration = 0.5
-		transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-		transition.type = CATransitionType.reveal
-		transition.subtype = CATransitionSubtype.fromTop
-		return transition
-	}
-
-	// TODO: only need this for child coordinators
-
-	func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
-		// Read the view controller we’re moving from.
-		guard let fromViewController = navigationController.transitionCoordinator?.viewController(forKey: .from) else {
-			return
-		}
-
-		print(navigationController.viewControllers)
-
-		// Check whether our view controller array already contains that view controller. If it does it means we’re pushing a different view controller on top rather than popping it, so exit.
-		if navigationController.viewControllers.contains(fromViewController) {
-			print(fromViewController)
-			return
-		}
-
-		if let window = UIApplication.shared.delegate?.window {
-			if var viewController = window?.rootViewController {
-				// handle navigation controllers
-				if(viewController is UINavigationController){
-					viewController = (viewController as! UINavigationController).visibleViewController!
-				}
-				print(viewController)
-			}
-		}
-
-		// We’re still here – it means we’re popping the view controller, so we can check whether it’s a buy view controller
-
 	}
  }

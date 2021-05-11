@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol _MenuBarDelegate: class {
+protocol _MenuBarDelegate: AnyObject {
 	func menuBarTapped(at index: Int)
 	func menuBarScrollFinished()
 }
@@ -21,7 +21,7 @@ final class _MenuBarViewModel {
 	var onUpdate = {}
 	var selectedView: ViewDisplayed?
 	var mainViewIconSelected: ViewDisplayed?
-	var selectedFilter: ViewDisplayed.ProduceFilter?
+	var selectedCategory: ViewDisplayed.ProduceCategory?
 
 	init(month: Month?, season: Season?, viewDisplayed: ViewDisplayed) {
 		mainViewIconSelected = viewDisplayed
@@ -50,13 +50,16 @@ final class _MenuBarViewModel {
 				mainViewIconSelected = ViewDisplayed(rawValue: index)
 			}
 		} else {
-			selectedFilter = ViewDisplayed.ProduceFilter.init(rawValue: index)
+			selectedCategory = ViewDisplayed.ProduceCategory.init(rawValue: index)
 		}
 		delegate?.menuBarTapped(at: index)
 		onUpdate()
 	}
 
-	func filterWasCancelledAnimationFinished() {
+
+	/// This is called if cancel is tapped in the category slide over of the menu bar.
+	/// It's require to toggle the index back to the current selected view
+	func categoryWasCancelledAnimationFinished() {
 		if let index = selectedView?.rawValue {
 			toggleSelectedCells(indexSelected: index)
 		}
@@ -64,7 +67,6 @@ final class _MenuBarViewModel {
 
 	func toggleSelectedCells(indexSelected: Int) {
 		self.menuBarCells[indexSelected].isSelected = true
-
 		for index in 0..<self.menuBarCells.count where index != indexSelected {
 			self.menuBarCells[index].isSelected = false
 		}
@@ -91,8 +93,8 @@ extension _MenuBarViewModel {
 				constraints = ("H:[v0(61)]", "V:[v0(49)]")
 			}
 
-			guard let imageName = MenuBarItems.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
-			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName,
+			guard let imageName = _MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
+			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName,
 																		   selected: selectedCell,
 																		   constraints: constraints)))
 		}
@@ -110,8 +112,8 @@ extension _MenuBarViewModel {
 				}
 			}
 
-			guard let imageName = MenuBarItems.Seasons.init(rawValue: index)?.imageName else { return }
-			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(60)]", "V:[v0(48)]"))))
+			guard let imageName = _MenuBarModel.Seasons.init(rawValue: index)?.imageName else { return }
+			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(60)]", "V:[v0(48)]"))))
 		}
 	}
 }

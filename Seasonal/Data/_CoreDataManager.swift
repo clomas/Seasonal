@@ -5,15 +5,18 @@
 //  Created by Clint Thomas on 1/3/21.
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
-
+// TODO: make sure this is doing something
 import CoreData
 
 enum ManagedObjectError: String, Error {
 	case invalidID = "id wasn't found"
 	case response = "no response"
+	case saveFailed = "MOC save has failed"
+	case deleteFailed = "MOC delete has failed"
+	case getEntityFailed = "Unable to get entity values"
 }
 
-extension ManagedObjectError:LocalizedError {
+extension ManagedObjectError: LocalizedError {
 	var errorDescription: String? { return NSLocalizedString(rawValue, comment: "")}
 }
 
@@ -34,7 +37,7 @@ final class CoreDataManager {
 	}
 
 	// TODO: Error handling here
-	func delete(id: Int) {
+	func delete(id: Int) throws {
 
 		do {
 			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Favourites")
@@ -44,30 +47,30 @@ final class CoreDataManager {
 				for object in result {
 					managedObjectContext.delete(object as! NSManagedObject)
 				}
+			} else {
+				throw ManagedObjectError.invalidID
 			}
 			try managedObjectContext.save()
 		} catch _ {
-			// error handling
+			throw ManagedObjectError.deleteFailed
 		}
 	}
 
-	func save() {
+	func save() throws {
 		do {
 			try managedObjectContext.save()
 		} catch {
-			print(error)
+			throw ManagedObjectError.saveFailed
 		}
 	}
 
-	func getEntityValues<T: NSManagedObject>() -> [T] {
+	func getEntityValues<T: NSManagedObject>() throws -> [T] {
 		do {
 			let fetchRequest = NSFetchRequest<T>(entityName: "\(T.self)")
 			return try managedObjectContext.fetch(fetchRequest)
 		} catch {
-			print(error)
-			return []
+			throw ManagedObjectError.getEntityFailed
 		}
 	}
-
 }
 

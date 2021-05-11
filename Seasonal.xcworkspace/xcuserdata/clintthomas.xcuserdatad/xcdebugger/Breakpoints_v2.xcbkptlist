@@ -190,8 +190,8 @@
             filePath = "Seasonal/View Model/AppStateViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "181"
-            endingLineNumber = "181"
+            startingLineNumber = "180"
+            endingLineNumber = "180"
             landmarkName = "season"
             landmarkType = "24">
          </BreakpointContent>
@@ -208,7 +208,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "71"
             endingLineNumber = "71"
-            landmarkName = "filterMonthCellByCategory(searchString:filter:)"
+            landmarkName = "filterMonthCellByCategory(searchString:category:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -263,31 +263,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B5700DE0-E2EC-4E87-AA7E-D9AFE02E02E7"
+            uuid = "EE5C7141-F8E5-4D15-A5E0-5E63DFAD30E2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Controller/SeasonsViewController.swift"
+            filePath = "Seasonal/XIBs/_InfoViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "177"
-            endingLineNumber = "177"
-            landmarkName = "backButtonTapped(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9B5A2EEF-13D5-450D-89F7-4DCA09935778"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/Coordinator/_InitialViewCoordinator.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "77"
-            endingLineNumber = "77"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "deinit"
             landmarkType = "7">
          </BreakpointContent>

@@ -121,6 +121,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location not found \(error) - Use generalized Australian data")
         locationManager.stopUpdatingLocation()
+		locationDelegate?.locationReady(location: .noState)
     }
 }
 

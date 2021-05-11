@@ -9,7 +9,7 @@
 import UIKit
 import Network
 
-protocol InitialViewDelegate: class {
+protocol InitialViewDelegate: AnyObject {
 	func dataIsReady()
 	func networkFailed()
 	func locationNotFound()
@@ -17,12 +17,13 @@ protocol InitialViewDelegate: class {
 
 final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 
-	var parentCoordinator: _AppEntryCoordinator?
+	var parentCoordinator: _AppCoordinator?
 	private(set) var childCoordinators: [_Coordinator] = []
-	var initialViewDelegate: InitialViewDelegate?
 
-	var navigationController: UINavigationController
-	var firstRun: Bool
+	weak var initialViewDelegate: InitialViewDelegate?
+
+	private let navigationController: UINavigationController
+	private var firstRun: Bool
 
 	init(navigationController: UINavigationController, firstRun: Bool) {
 		self.navigationController = navigationController
@@ -35,18 +36,15 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func loadInitialViewController() {
-		print(UserDefaults.isFirstLaunch())
 		if firstRun == true {
 			let initialViewController: _WelcomeViewController = .instantiate()
 			let initialViewModel = _WelcomeViewModel()
 			initialViewModel.coordinator = self
-			//self.initialViewDelegate = initialViewController
 			initialViewController.viewModel = initialViewModel
 			navigationController.setViewControllers([initialViewController], animated: false)
 		} else if firstRun == false {
 			let splashScreenViewController: _SplashScreenViewController = .instantiate()
 			let initialViewModel = _SplashScreenViewModel()
-			//self.initialViewDelegate = splashScreenViewController
 			initialViewModel.coordinator = self
 			splashScreenViewController.viewModel = initialViewModel
 			navigationController.setViewControllers([splashScreenViewController], animated: false)
@@ -70,11 +68,15 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func readyToDismiss() {
+		if navigationController.viewControllers.first is _SplashScreenViewController ||
+			navigationController.viewControllers.first is _WelcomeViewController {
+			navigationController.viewControllers.removeFirst()
+		}
 		parentCoordinator?.childDidFinish(self)
 	}
 
 	deinit {
-		print("deinitialised yeh")
+		print("")
 	}
 }
 

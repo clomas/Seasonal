@@ -14,9 +14,9 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nothingToShowLabel: UILabel!
-    @IBOutlet weak var menuBar: _MenuBar!
+    @IBOutlet weak var menuBar: _MenuBarCollectionView!
     @IBOutlet weak var infoButton: UIBarButtonItem!
-    private var produceFilter: ViewDisplayed.ProduceFilter = .cancelled
+    private var produceCategory: ViewDisplayed.ProduceCategory = .cancelled
     private var searchController = UISearchController(searchResultsController: nil)
     private var searchString: String = ""
 
@@ -105,14 +105,13 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
         case Season.summer.rawValue...Season.spring.rawValue:
             let season = Season.init(rawValue: index)
             stateViewModel.status.season = season ?? .summer
-        case ViewDisplayed.ProduceFilter.all.rawValue...ViewDisplayed.ProduceFilter.cancelled.rawValue:
-            stateViewModel.status.filter = ViewDisplayed.ProduceFilter.init(rawValue: index)!
+        case ViewDisplayed.ProduceCategory.all.rawValue...ViewDisplayed.ProduceCategory.cancelled.rawValue:
+            stateViewModel.status.category = ViewDisplayed.ProduceCategory.init(rawValue: index)!
             switch index {
-            case ViewDisplayed.ProduceFilter.all.rawValue:
+            case ViewDisplayed.ProduceCategory.all.rawValue:
                 menuBar.scrollToItem(at: indexToScrollTo, at: .right, animated: true)
-            case ViewDisplayed.ProduceFilter.cancelled.rawValue:
+            case ViewDisplayed.ProduceCategory.cancelled.rawValue:
                 menuBar.scrollToItem(at: indexToScrollTo, at: .left, animated: true)
-                //menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.filter.rawValue].isSelected = false
             default: break
             }
         default: break
@@ -123,7 +122,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     }
 
     func menuBarScrollFinished() {
-        if stateViewModel.status.filter == .cancelled {
+        if stateViewModel.status.category == .cancelled {
             //menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.season.rawValue].isSelected = true
             menuBar.reloadData()
         }
@@ -133,9 +132,9 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
       var titleString = ""
       titleString = String(describing: stateViewModel.status.season).capitalized
 
-      switch stateViewModel.status.current.filter {
+      switch stateViewModel.status.current.category {
       case .fruit, .vegetables, .herbs:
-          titleString = "\(stateViewModel.status.current.filter.asString.capitalized) in \(titleString)"
+          titleString = "\(stateViewModel.status.current.category.asString.capitalized) in \(titleString)"
       default:
           break
       }
@@ -167,10 +166,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
 
     @IBAction func infoButtonTapped(_ sender: Any) {
-        let infoVC = InfoCardVC.instantiate()
-        infoVC.state = stateViewModel.status.location
-        infoVC.modalPresentationStyle = .popover
-        present(infoVC, animated: true, completion: nil)
+		
     }
 
 	@IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
@@ -182,7 +178,10 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 //        self.navigationController?.popViewController(animated: true)
 //
 //    }
-
+	deinit {
+		// TODO: 
+		print("seasons deinnit")
+	}
 
 }
 
@@ -191,7 +190,7 @@ extension SeasonsViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let season = stateViewModel.status.season
-        return viewModel.filterBySelectedCategories(season: Season(rawValue: season.rawValue)!, searchString: searchString, filter: stateViewModel.status.filter).count
+        return viewModel.filterBySelectedCategories(season: Season(rawValue: season.rawValue)!, searchString: searchString, category: stateViewModel.status.category).count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -204,7 +203,7 @@ extension SeasonsViewController: UITableViewDataSource {
 //            cell.updateViews(produce: produce)
 //            return cell
 //        } else {
-            return SelectedCategoryViewCell()
+            return _ProduceMonthInfoViewCell()
 //        }
     }
 }

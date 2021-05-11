@@ -16,7 +16,7 @@ protocol _ProduceDataServiceProtocol {
 class _ProduceDataService {
 
 	func updateLike(id: Int, liked: Bool) {
-		CloudKitDataHandler.instance.saveLikeToPrivateDatabaseInCloudKit(id: id)
+		CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: id)
 
 		// Update in local database
 		// TODO: Change to coredata

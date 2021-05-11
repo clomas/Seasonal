@@ -1,5 +1,5 @@
 //
-//  _MenuBarModel.swift
+//  MenuBarItems.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 21/4/21.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum MenuBarItems: String {
+enum _MenuBarModel: String {
 
 	case categories
 	case altLabel

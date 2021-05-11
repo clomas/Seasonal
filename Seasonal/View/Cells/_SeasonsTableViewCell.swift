@@ -15,7 +15,7 @@ protocol _SeasonsLikeButtonDelegate {
 class _SeasonsTableViewCell: UITableViewCell {
 
     var likeButtonDelegate: _SeasonsLikeButtonDelegate?
-
+	
     @IBOutlet weak var foodImage: UIImageView!
     @IBOutlet weak var foodLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
@@ -51,7 +51,7 @@ class _SeasonsTableViewCell: UITableViewCell {
 
     // MARK: Button
 
-    @IBAction func likeButtonPressed(_ sender: Any) {
+    @IBAction func likeButtonTapped(_ sender: Any) {
         self.likeButton.isSelected.toggle()
         self.likeButton.animateLikeButton(selected: self.likeButton.isSelected)
         likeButtonDelegate?.likeButtonTapped(cell: self)

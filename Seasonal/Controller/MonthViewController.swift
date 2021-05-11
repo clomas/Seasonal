@@ -13,7 +13,7 @@ import CoreLocation
 
 
 
-class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, Storyboarded, MenuBarDelegate, LikeButtonDelegate {
+class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBarDelegate, Storyboarded, MenuBarDelegate {
 
     weak var coordinator: MainCoordinator?
 
@@ -134,7 +134,7 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
         if index <= ViewDisplayed.seasons.rawValue {
             stateViewModel.status.onPage = ViewDisplayed.init(rawValue: index)!
         } else {
-            stateViewModel.status.filter = ViewDisplayed.ProduceFilter.init(rawValue: index)!
+            stateViewModel.status.category = ViewDisplayed.ProduceCategory.init(rawValue: index)!
         }
 
         switch index {
@@ -150,11 +150,11 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
             menuBar.menuBarViewModel.selectDeselectCells(indexSelected: previousViewDisplayed.rawValue)
         case ViewDisplayed.months.rawValue:
                 favouritesOrMonthSelected(favouritesPage: false)
-        case ViewDisplayed.ProduceFilter.all.rawValue...ViewDisplayed.ProduceFilter.cancelled.rawValue:
+        case ViewDisplayed.ProduceCategory.all.rawValue...ViewDisplayed.ProduceCategory.cancelled.rawValue:
             switch index {
-            case ViewDisplayed.ProduceFilter.all.rawValue:
+            case ViewDisplayed.ProduceCategory.all.rawValue:
                 menuBar.scrollToItem(at: indexToScrollTo, at: .right, animated: true)
-            case ViewDisplayed.ProduceFilter.cancelled.rawValue:
+            case ViewDisplayed.ProduceCategory.cancelled.rawValue:
                 menuBar.scrollToItem(at: indexToScrollTo, at: .left, animated: true)
             default: break
             }
@@ -169,7 +169,7 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
 
     // detect the end of scrolling animation before selecting cell
     func menuBarScrollFinished() {
-        if stateViewModel.status.filter == .cancelled {
+        if stateViewModel.status.category == .cancelled {
             menuBar.menuBarViewModel.menuBarCells[stateViewModel.status.onPage.rawValue].isSelected = true
             menuBar.reloadData()
         }
@@ -212,11 +212,11 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
             titleString = String(describing: stateViewModel.status.month).capitalized
         }
 
-        switch stateViewModel.status.current.filter {
+        switch stateViewModel.status.current.category {
         case .cancelled, .all:
             self.title = titleString
         case .fruit, .vegetables, .herbs:
-            self.title = "\(stateViewModel.status.current.filter.asString.capitalized) in \(titleString)"
+            self.title = "\(stateViewModel.status.current.category.asString.capitalized) in \(titleString)"
         }
     }
 
@@ -236,7 +236,7 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
 
     // MARK: Buttons
 
-    func likeButtonTapped(cell: SelectedCategoryViewCell) {
+    func likeButtonTapped(cell: _ProduceMonthInfoViewCell) {
 
         if let id = cell.id {
             viewModel.likedDatabaseHandler(id: id, liked: cell.likeButton.isSelected)
@@ -253,10 +253,10 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
     }
 
     @IBAction func inforButtonTapped(_ sender: Any) {
-        let infoVC = InfoCardVC.instantiate()
-        infoVC.state = stateViewModel.status.location
-        infoVC.modalPresentationStyle = .popover
-        present(infoVC, animated: true, completion: nil)
+//        let infoVC = _InfoViewController.instantiate()
+//        infoVC.state = stateViewModel.status.location
+//        infoVC.modalPresentationStyle = .popover
+//        present(infoVC, animated: true, completion: nil)
     }
 
     // MARK: Search controller setup
@@ -285,13 +285,13 @@ class MonthViewController: UIViewController, UISearchResultsUpdating, UISearchBa
 extension MonthViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.findFavourites(searchString: self.searchString, filter: self.stateViewModel.status.current.filter).count
+        return viewModel.findFavourites(searchString: self.searchString, category: self.stateViewModel.status.current.category).count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? SelectedCategoryViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? _ProduceMonthInfoViewCell {
             var produce: ProduceModel
-            produce = viewModel.findFavourites(searchString: self.searchString, filter: self.stateViewModel.status.current.filter)[indexPath.row]
+            produce = viewModel.findFavourites(searchString: self.searchString, category: self.stateViewModel.status.current.category)[indexPath.row]
 
             guard let image = UIImage(named: produce.imageName) else { return UITableViewCell() }
 
@@ -301,11 +301,11 @@ extension MonthViewController: UITableViewDataSource {
             cell.likeButton.isSelected = true
             cell.backgroundColor = UIColor.tableViewCell.tint
             //cell.updateViews(produce: produce)
-            cell.likeButtonDelegate = self
+//            cell.likeButtonDelegate = self
             return cell
 
         } else {
-            return SelectedCategoryViewCell()
+            return _ProduceMonthInfoViewCell()
         }
     }
 }

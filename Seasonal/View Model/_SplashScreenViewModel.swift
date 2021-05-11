@@ -10,12 +10,7 @@ import Foundation
 
 final class _SplashScreenViewModel {
 
-	var coordinator: _InitialViewCoordinator?
-
-	func dataIsReady() {
-		// TODO:
-	}
-
+	weak var coordinator: _InitialViewCoordinator?
 
 	func dismissTapped() {
 		coordinator?.readyToDismiss()

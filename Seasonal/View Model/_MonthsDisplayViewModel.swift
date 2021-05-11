@@ -13,10 +13,10 @@ import UIKit
 
 final class _MonthsDisplayViewModel {
 
-	var coordinator: _MainViewCoordinator?
+	weak var coordinator: _MainViewCoordinator?
 
 	let welcomeLabel = "Welcome to Seasonal"
-	var videoName = "lightwelcomevideo"
+	let videoName = "lightwelcomevideo"
 
 	//private let networkService: _NetworkServiceProtocol
 	//var networkCheck = _NetworkService.sharedInstance()

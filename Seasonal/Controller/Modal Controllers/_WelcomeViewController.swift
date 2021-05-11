@@ -144,7 +144,7 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 	}
 
 	func locationNotFound() {
-		// TODO: create a flag for this in userdefaults for boolean.
+		// TODO: create a flag for this in userDefaults for boolean.
 		if true {
 			func networkFailed() {
 				self.presentAlert(title: "Location Error",

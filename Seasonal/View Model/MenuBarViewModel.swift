@@ -11,7 +11,7 @@ import UIKit
 
 final class MenuBarViewModel {
 
-	var menuBarCells: [_MenuBarCellViewModel] = []
+	var menuBarCells: [_MenuBarCellModel] = []
 
 	init(selected: Int, month: Month, viewDisplayed: ViewDisplayed) {
 		switch viewDisplayed {
@@ -53,8 +53,8 @@ extension MenuBarViewModel {
 				constraints = ("H:[v0(61)]", "V:[v0(49)]")
 			}
 
-			guard let imageName = MenuBarItems.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
-			self.menuBarCells.append(_MenuBarCellViewModel(menuBarItem: MenuBarItem(imageName: imageName,
+			guard let imageName = _MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
+			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName,
 																				   selected: selectedCell,
 																				   constraints: constraints)))
 		}
@@ -62,17 +62,17 @@ extension MenuBarViewModel {
 
 	// For Seasons View
 	func layoutSeasonsViewMenuBar(selected: Int) {
-		var selectedCell: Bool
-
-		for index in 0...8 {
-
-			if index == selected {
-				selectedCell = true
-			} else {
-				selectedCell = false
-			}
+//		var selectedCell: Bool
+//
+//		for index in 0...8 {
+//
+//			if index == selected {
+//				selectedCell = true
+//			} else {
+//				selectedCell = false
+//			}
 			//self.menuBarCells.append(_MenuBarCellViewModel(menuBarItem: MenuBarItem(imageName: MenuBar.Seasons(rawValue: index)!.imageName(), selected: selectedCell, constraints: ("H:[v0(60)]", "V:[v0(48)]"))))
-		}
+//		}
 	}
 }
 

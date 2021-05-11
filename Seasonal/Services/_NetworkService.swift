@@ -10,7 +10,7 @@
 import Foundation
 import Network
 
-protocol NetworkObserver: class {
+protocol NetworkObserver: AnyObject {
 	func internetStatusDidChange(status: NWPath.Status)
 //	func startMonitoring()
 //	func internetStatus(connected: Bool)
@@ -30,7 +30,7 @@ final class _NetworkService {
 	}
 
 	private var monitor = NWPathMonitor()
-	// Remove undescore
+	// TODO: Remove undescore
 	private static let _sharedInstance = _NetworkService()
 	private var observations = [ObjectIdentifier: _NetworkChangeObservation]()
 	var currentStatus: NWPath.Status {
@@ -66,11 +66,6 @@ final class _NetworkService {
 		}
 		monitor.start(queue: DispatchQueue.global(qos: .background))
 	}
-
-//	func addObserver(observer: NetworkObserver) {
-//		let id = ObjectIdentifier(observer)
-//		observations[id] = _NetworkChangeObservation(observer: observer)
-//	}
 
 	func internetStatusDidChange(status: NWPath.Status) {
 		var internetStatus = false

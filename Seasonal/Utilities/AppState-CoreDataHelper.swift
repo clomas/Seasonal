@@ -6,7 +6,6 @@
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
 
-// TODO: https://www.advancedswift.com/save-swift-enum-in-core-data/
 // use location as a searate entity.
 
 // the rest can be Int16?

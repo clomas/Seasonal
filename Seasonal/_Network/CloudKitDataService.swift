@@ -13,18 +13,14 @@ import Foundation
 import UIKit
 import CloudKit
 
-// TODO: use core data
-// TODO: Rename to cloudkitdataservice.
-
-
 enum CloudKitError: Error {
     case databaseError
     case castingError
 }
 
-class CloudKitDataHandler {
+class CloudKitDataService {
     
-    static let instance = CloudKitDataHandler()
+    static let instance = CloudKitDataService()
     private let publicDatabase = CKContainer.default().publicCloudDatabase
     private let privateDatabase = CKContainer.default().privateCloudDatabase
     var currentLocation: StateLocation = .noState
@@ -88,7 +84,7 @@ class CloudKitDataHandler {
 
 			var name = Constants.apple
             var imageName = Constants.apple
-            var category = ViewDisplayed.ProduceFilter.fruit
+            var category = ViewDisplayed.ProduceCategory.fruit
             let description = ""
             var months = [Month]()
             var seasons = [Season]()
@@ -100,7 +96,7 @@ class CloudKitDataHandler {
                let seasonsRecord = record.object(forKey: "seasons_\(currentLocation.rawValue)") as? String {
                 name = nameRecord
                 imageName = nameRecord
-                category = ViewDisplayed.ProduceFilter.asArray.filter{$0.asString == categoryRecord}[0]
+                category = ViewDisplayed.ProduceCategory.asArray.filter{$0.asString == categoryRecord}[0]
                 months = monthsRecord.createMonthArray()
                 seasons = seasonsRecord.createSeasonArray()
             }
@@ -132,14 +128,14 @@ class CloudKitDataHandler {
     // Update cloudKit with local data if there is a disparity
     // local data should always be accurate
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
-        let likedArr = produceArray.filter{ $0.liked == true}
+        let likedArray = produceArray.filter{ $0.liked == true}
 
         for localLike in locallyStoredData {
-            if likedArr.firstIndex(where: {$0.id == localLike.id}) == nil {
+            if likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
                 if let index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
                     produceArray[index].liked = true
                 }
-                CloudKitDataHandler.instance.saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
+                CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
             }
         }
     }

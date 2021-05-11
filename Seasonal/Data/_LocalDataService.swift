@@ -38,18 +38,32 @@ final class _LocalDataService: LocalFavouritesProtocol {
 		case .add:
 			favourites = Favourites(context: coreDataManager.managedObjectContext)
 			favourites.setValue(data.id, forKey: "id")
-			coreDataManager.save()
+			do {
+				try coreDataManager.save()
+			} catch {
+				print(error.localizedDescription)
+				// TODO: Logging in all catches here
+			}
 		case .remove(let favouriteToRemove):
 			favourites = favouriteToRemove
 		}
 	}
 
-	func delete(id: Int) {
-		coreDataManager.delete(id: id)
+	func delete(id: Int) throws {
+		do {
+			try coreDataManager.delete(id: id)
+		} catch {
+			print(error.localizedDescription)
+		}
 	}
 
 	func getFavourites() -> [Favourites] {
-		coreDataManager.getEntityValues()
+		do {
+			return try coreDataManager.getEntityValues()
+		} catch {
+			print(error.localizedDescription)
+			return [Favourites]()
+		}
 	}
 }
 

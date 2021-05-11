@@ -67,8 +67,8 @@ final class ProduceCellViewModel {
 
 extension ProduceCellViewModel {
 
-    func filterMonthCellByCategory(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [[ProduceModel]] {
-        switch filter {
+    func filterMonthCellByCategory(searchString: String, category: ViewDisplayed.ProduceCategory) -> [[ProduceModel]] {
+        switch category {
         case .cancelled, .all:
             if searchString == "" {
                 return self.monthCellViewModel
@@ -79,17 +79,17 @@ extension ProduceCellViewModel {
         case .fruit, .vegetables, .herbs:
             if searchString == "" {
                 return self.monthCellViewModel.map ({
-                                                        return $0.filter({ $0.category == filter })})
+                                                        return $0.filter({ $0.category == category })})
             } else {
                 return self.monthCellViewModel.map ({
-                                                        return $0.filter({ $0.category == filter &&
+                                                        return $0.filter({ $0.category == category &&
                                                                             $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})})
             }
         }
     }
 
-    func filterBySelectedCategories(season: Season, searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceModel] {
-        switch filter {
+    func filterBySelectedCategories(season: Season, searchString: String, category: ViewDisplayed.ProduceCategory) -> [ProduceModel] {
+        switch category {
         case .cancelled, .all:
             if searchString == "" {
                 return self.seasonsCellVMs[season]!
@@ -98,9 +98,9 @@ extension ProduceCellViewModel {
             }
         case .fruit, .vegetables, .herbs:
             if searchString == "" {
-                return self.seasonsCellVMs[season]!.filter({ $0.category == filter })
+                return self.seasonsCellVMs[season]!.filter({ $0.category == category })
             } else {
-                return self.seasonsCellVMs[season]!.filter({ $0.category == filter &&
+                return self.seasonsCellVMs[season]!.filter({ $0.category == category &&
                                                              $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
             }
         }
@@ -119,7 +119,7 @@ extension ProduceCellViewModel {
 
         self.produceCellVMs[likedProduceIndex].liked = liked
 
-        CloudKitDataHandler.instance.saveLikeToPrivateDatabaseInCloudKit(id: id)
+        CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: id)
 
         // Update in local database
         let likedProduce = LikedProduce(id: id)
@@ -131,8 +131,8 @@ extension ProduceCellViewModel {
         }
     }
 
-    func findFavourites(searchString: String, filter: ViewDisplayed.ProduceFilter) -> [ProduceModel] {
-        switch filter {
+    func findFavourites(searchString: String, category: ViewDisplayed.ProduceCategory) -> [ProduceModel] {
+        switch category {
         case .cancelled, .all:
 
             if searchString == "" {
@@ -142,9 +142,9 @@ extension ProduceCellViewModel {
             }
         case .fruit, .vegetables, .herbs:
             if searchString == "" {
-                return self.produceCellVMs.filter({ $0.category == filter })
+                return self.produceCellVMs.filter({ $0.category == category })
             } else {
-                return self.produceCellVMs.filter({ $0.category == filter &&
+                return self.produceCellVMs.filter({ $0.category == category &&
                                                     $0.produceName?.lowercased().contains(searchString.lowercased()) ?? false})
             }
         }
@@ -173,7 +173,7 @@ struct ProduceModel {
     var imageName: String {
         return self.produce.imageName
     }
-    var category: ViewDisplayed.ProduceFilter? {
+    var category: ViewDisplayed.ProduceCategory? {
         return self.produce.category
     }
     var months: [Month] {

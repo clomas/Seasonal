@@ -35,9 +35,25 @@ class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
     // MARK: Like Button /////
 
-    func likeButtonTapped(cell: SelectedCategoryViewCell) {
+	func likeButtonTapped(cell: _ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
+		var updateLikeTo = false
         if let id = cell.id {
-            viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
+			// if
+			if cell.likeButton.isSelected == false {
+				updateLikeTo = true
+			}
+			viewModel.likeToggle(id: id, liked: updateLikeTo)
+			if viewDisplayed == .favourites {
+				if let indexPath = self.tableView.indexPath(for: cell) {
+					print(indexPath)
+					DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
+						self.tableView.beginUpdates()
+						self.tableView.deleteRows(at: [indexPath], with: .right)
+						self.tableView.endUpdates()
+						self.hideTableIfEmpty()
+					})
+				}
+			}
         }
     }
 
@@ -49,7 +65,7 @@ class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 			nothingToShowLabel.text = "No Search Results"
 		}
 		if numberOfRows != 0 {
-			nothingToShowLabel.text = ""
+			nothingToShowLabel.text = "" 
 		}
     }
 
@@ -75,11 +91,11 @@ extension _MonthTableCollectionViewCell: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		switch viewModel.viewDisplayed {
 		case .favourites:
-			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, filter: viewModel.filter).count
+			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category).count
 			hideTableIfEmpty()
 			return numberOfRows
 		case .months:
-			numberOfRows = viewModel.filter(by: viewModel.searchString, of: viewModel.filter)[self.tag].count
+			numberOfRows = viewModel.filter(by: viewModel.searchString, of: viewModel.category)[self.tag].count
 			hideTableIfEmpty()
 			return numberOfRows
 		default:
@@ -88,22 +104,22 @@ extension _MonthTableCollectionViewCell: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? SelectedCategoryViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SelectedCategoryCell) as? _ProduceMonthInfoViewCell {
             cell.likeButtonDelegate = self
 			switch viewModel.viewDisplayed {
 			case .favourites:
-				let produce = viewModel.filterFavourites(by: viewModel.searchString, filter: viewModel.filter)[indexPath.row]
-				cell.updateViews(produce: produce)
+				let produce = viewModel.filterFavourites(by: viewModel.searchString, category:  viewModel.category)[indexPath.row]
+				cell.updateViews(produce: produce, in: .favourites)
 				return cell
 			case .months:
-				let produce = viewModel.filter(by: viewModel.searchString , of: viewModel.filter)[self.tag][indexPath.row]
-				cell.updateViews(produce: produce)
+				let produce = viewModel.filter(by: viewModel.searchString , of: viewModel.category)[self.tag][indexPath.row]
+				cell.updateViews(produce: produce, in: .months)
 				return cell
 			default:
-				return SelectedCategoryViewCell()
+				return _ProduceMonthInfoViewCell()
 			}
         } else {
-            return SelectedCategoryViewCell()
+            return _ProduceMonthInfoViewCell()
         }
     }
 }

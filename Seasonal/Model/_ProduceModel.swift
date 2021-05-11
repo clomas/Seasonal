@@ -8,25 +8,6 @@
 
 import Foundation
 
-struct Produce {
-    let id: Int
-    let name: String
-    let category: ViewDisplayed.ProduceFilter
-    let imageName: String
-    let description: String // Not implemented yet
-    let months: [Month]
-    let seasons: [Season]
-    var liked: Bool
-}
-
-// TODO: Maybe move?
-
-extension Produce {
-	var produceId: Int {
-		return id
-	}
-}
-
 struct _ProduceModel {
 
 	var produce: Produce!
@@ -37,13 +18,13 @@ struct _ProduceModel {
 	var id: Int {
 		return self.produce.id
 	}
-	var produceName: String? {
+	var produceName: String {
 		return self.produce.name
 	}
 	var imageName: String {
 		return self.produce.imageName
 	}
-	var category: ViewDisplayed.ProduceFilter? {
+	var category: ViewDisplayed.ProduceCategory? {
 		return self.produce.category
 	}
 	var months: [Month] {
@@ -60,4 +41,22 @@ struct _ProduceModel {
 		}
 	}
 }
+
+struct Produce {
+    let id: Int
+    let name: String
+    let category: ViewDisplayed.ProduceCategory
+    let imageName: String
+    let description: String // Not implemented yet
+    let months: [Month]
+    let seasons: [Season]
+    var liked: Bool
+}
+
+extension Produce {
+	var produceId: Int {
+		return id
+	}
+}
+
 

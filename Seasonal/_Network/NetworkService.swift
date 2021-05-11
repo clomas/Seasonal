@@ -10,7 +10,7 @@
 import Foundation
 import Network
 
-protocol NetworkCheckObserver: class {
+protocol NetworkCheckObserver: AnyObject {
     func internetStatusDidChange(status: NWPath.Status)
 }
 

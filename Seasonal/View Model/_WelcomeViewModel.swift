@@ -11,7 +11,7 @@ import UIKit
 
 final class _WelcomeViewModel {
 
-	var coordinator: _InitialViewCoordinator?
+	weak var coordinator: _InitialViewCoordinator?
 
 	let welcomeLabel = "Welcome to Seasonal"
 	var videoName = "lightwelcomevideo"

@@ -1,5 +1,5 @@
 //
-//  _UIViewController+Extentions.swift
+//  Extensions-UIViewController.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 16/2/21.
@@ -9,15 +9,15 @@
 import UIKit
 
 extension UIViewController {
+
+	// Instantiating ViewControllers
 	static func instantiate<T>() -> T {
 		let storyboard = UIStoryboard(name: "Main", bundle: .main)
 		let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as! T
 		return controller
 	}
-}
 
-extension UIViewController {
-
+	// Presenting Alerts
 	public func presentAlert(title: String,
 							 message: String,
 							 alertStyle: UIAlertController.Style,

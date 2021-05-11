@@ -10,8 +10,7 @@
 import UIKit
 import Foundation
 
-// TODO: Rename this to View?
-class _MenuBar: UICollectionView {
+class _MenuBarCollectionView: UICollectionView {
 
 	weak var coordinator: _MainViewCoordinator?
 	//weak var menuBarSelectedDelegate: MenuBarDelegate?
@@ -48,12 +47,12 @@ class _MenuBar: UICollectionView {
 	///   - index: index that was tapped
 	func beginMenuBarAnimation(for index: Int) {
 		switch index {
-		case ViewDisplayed.ProduceFilter.all.rawValue:
+		case ViewDisplayed.ProduceCategory.all.rawValue:
 			self.scrollToItem(at: IndexPath(row: 8, section: 0),
 							  at: .right,
 							  animated: true
 			)
-		case ViewDisplayed.ProduceFilter.cancelled.rawValue:
+		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
 			self.scrollToItem(at: IndexPath(row: 0, section: 0),
 							  at: .left,
 							  animated: true
@@ -117,11 +116,11 @@ class _MenuBar: UICollectionView {
 	/// This determines which image to show in the menu bar
 	/// - Parameter categoryDisplayed: if category is tapped then display 'All' label, if cancel is tapped display 'Categories'
 	func updateCategoryIcon(categoryDisplayed: Bool) {
-		let indexPath = IndexPath(item: ViewDisplayed.ProduceFilter.all.rawValue, section: 0)
+		let indexPath = IndexPath(item: ViewDisplayed.ProduceCategory.all.rawValue, section: 0)
 		if categoryDisplayed {
-			viewModel.menuBarCells[indexPath.row].imageName = MenuBarItems.categories.imageName()
+			viewModel.menuBarCells[indexPath.row].imageName = _MenuBarModel.categories.imageName()
 		} else {
-			viewModel.menuBarCells[indexPath.row].imageName = MenuBarItems.altLabel.imageName()
+			viewModel.menuBarCells[indexPath.row].imageName = _MenuBarModel.altLabel.imageName()
 		}
 		self.reloadData()
 	}
@@ -154,7 +153,7 @@ class _MenuBar: UICollectionView {
 
 // MARK: CollectionView
 
-extension _MenuBar: UICollectionViewDataSource {
+extension _MenuBarCollectionView: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 		let height = 100
@@ -185,25 +184,25 @@ extension _MenuBar: UICollectionViewDataSource {
 	}
 }
 
-extension _MenuBar: UICollectionViewDelegate {
+extension _MenuBarCollectionView: UICollectionViewDelegate {
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		viewModel.menuBarTapped(at: indexPath.item)
 		beginMenuBarAnimation(for: indexPath.item)
-		if indexPath.item == ViewDisplayed.ProduceFilter.all.rawValue {
+		if indexPath.item == ViewDisplayed.ProduceCategory.all.rawValue {
 			updateCategoryIcon(categoryDisplayed: false)
-		} else if indexPath.item == ViewDisplayed.ProduceFilter.cancelled.rawValue {
+		} else if indexPath.item == ViewDisplayed.ProduceCategory.cancelled.rawValue {
 			updateCategoryIcon(categoryDisplayed: true)
 		}
 		self.reloadData()
 	}
 }
 
-extension _MenuBar: UICollectionViewDelegateFlowLayout {
+extension _MenuBarCollectionView: UICollectionViewDelegateFlowLayout {
 
 	func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
-		if viewModel.selectedFilter == ViewDisplayed.ProduceFilter.cancelled {
-			viewModel.filterWasCancelledAnimationFinished()
+		if viewModel.selectedCategory == ViewDisplayed.ProduceCategory.cancelled {
+			viewModel.categoryWasCancelledAnimationFinished()
 			self.reloadData()
 		}
 	}

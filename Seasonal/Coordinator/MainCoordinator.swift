@@ -6,7 +6,7 @@
 //  Copyright © 2020 Clint Thomas. All rights reserved.
 //
 
-// TODO: accessibility - https://medium.com/capital-one-tech/building-accessible-ios-apps-827c3469a3e9
+
 
 import Foundation
 import Network

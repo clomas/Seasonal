@@ -231,7 +231,7 @@
                                                     <color key="separatorColor" name="cellColour"/>
                                                     <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <prototypes>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectedCategoryViewCell" rowHeight="76" id="CKm-as-YkX" customClass="SelectedCategoryViewCell" customModule="Seasonal" customModuleProvider="target">
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SelectedCategoryViewCell" rowHeight="76" id="CKm-as-YkX" customClass="_ProduceMonthInfoViewCell" customModule="Seasonal" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="28" width="411" height="76"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CKm-as-YkX" id="HvF-nR-oqk">
@@ -392,7 +392,7 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isItemPagingEnabled" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="_MenuBar" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="_MenuBar" customModule="Seasonal" customModuleProvider="target">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="_MenuBar" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="_MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="718" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -444,7 +444,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Item" image="info.circle" catalog="system" id="n9K-RG-jhk">
                             <color key="tintColor" name="fontDefault"/>
                             <connections>
-                                <action selector="inforButtonTapped:" destination="BYZ-38-t0r" id="U8Y-2R-goB"/>
+                                <action selector="infoButtonTapped:" destination="BYZ-38-t0r" id="99X-gF-MRE"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -453,6 +453,7 @@
                         <outlet property="menuBar" destination="VOO-Qb-bpF" id="NgP-kU-RKz"/>
                         <segue destination="T39-76-m2i" kind="presentation" identifier="initialModalSegue" modalPresentationStyle="fullScreen" id="ikf-zY-JlU"/>
                         <segue destination="TPe-FU-VCA" kind="presentation" identifier="WelcomeVCSegue" modalPresentationStyle="fullScreen" id="Khz-mi-3b0"/>
+                        <segue destination="Jgy-2b-pnD" kind="show" identifier="DummySegue" id="9bf-Lj-tJh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -514,6 +515,9 @@
                                                     <color key="tintColor" name="likeButtonTint"/>
                                                     <state key="normal" backgroundImage="unliked"/>
                                                     <state key="selected" backgroundImage="liked"/>
+                                                    <connections>
+                                                        <action selector="likeButtonTapped:" destination="Fmz-5n-u9N" eventType="touchUpInside" id="yoK-s2-hDL"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -532,12 +536,12 @@
                                         <connections>
                                             <outlet property="foodImage" destination="0RV-Gx-L7j" id="7Hg-QG-XPm"/>
                                             <outlet property="foodLabel" destination="Uff-BV-JtK" id="VXr-tf-z7C"/>
-                                            <outlet property="likeButton" destination="sXm-TJ-5gf" id="oPu-cb-S49"/>
+                                            <outlet property="likeButton" destination="sXm-TJ-5gf" id="EDG-A2-l8O"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XM5-Vh-Nr5" customClass="_MenuBar" customModule="Seasonal" customModuleProvider="target">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XM5-Vh-Nr5" customClass="_MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="806" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -592,6 +596,9 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="info.circle" catalog="system" id="8W3-yE-8xY">
                             <color key="tintColor" name="fontDefault"/>
+                            <connections>
+                                <action selector="infoButtonTapped:" destination="FTr-h4-Wv5" id="VpS-pR-FxF"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -673,10 +680,10 @@
             </objects>
             <point key="canvasLocation" x="-175" y="180"/>
         </scene>
-        <!--Info CardVC-->
+        <!--Info View Controller-->
         <scene sceneID="egt-IQ-d41">
             <objects>
-                <viewController storyboardIdentifier="InfoCardVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CQN-xA-24t" customClass="InfoCardVC" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="_InfoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CQN-xA-24t" customClass="_InfoViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4SY-pY-qlN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -691,7 +698,7 @@
                                             <color key="titleColor" name="fontDefault"/>
                                         </state>
                                         <connections>
-                                            <action selector="emailButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="W3Z-V2-9zn"/>
+                                            <action selector="emailButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="UJT-n1-fTQ"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="16" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="tgQ-rB-so6">
@@ -713,7 +720,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                                             <color key="titleColor" name="fontDefault"/>
                                         </state>
                                         <connections>
-                                            <action selector="privacyPolicyButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="9SK-y9-CeU"/>
+                                            <action selector="privacyPolicyButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="bXd-HF-R2Y"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -756,8 +763,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="emailButton" destination="x5B-bj-4vF" id="ZMb-kH-Hs6"/>
-                        <outlet property="infoTextBlock" destination="tgQ-rB-so6" id="UJo-Nu-qcE"/>
+                        <outlet property="infoTextBlock" destination="tgQ-rB-so6" id="kw9-6f-0pg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tqx-iq-wSI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -767,6 +773,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
         <!--Seasonal Produce-->
         <scene sceneID="QcI-6K-oYU">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ozX-am-OGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController storyboardIdentifier="NavigationController" title="Seasonal Produce" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oNH-9P-vZ4" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" opaque="NO" alpha="0.75" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Lsf-Wy-Xfi">
@@ -790,7 +797,6 @@ I’m always looking to improve the accuracy of the application, so get in conta
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="f8F-Zq-HGl"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ozX-am-OGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1717" y="-237"/>
         </scene>
@@ -799,6 +805,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jgy-2b-pnD" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="MBK-p5-X7b"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="t9h-Ux-aQv">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

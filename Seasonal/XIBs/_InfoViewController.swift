@@ -76,8 +76,9 @@ class _InfoViewController: UIViewController {
         UIApplication.shared.open(url)
     }
 
+	// TODO: Check this is working
 	deinit {
-		print("")
+		print("INFO VIEW DEINIT")
 	}
 }
 

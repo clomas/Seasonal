@@ -11,7 +11,6 @@ import UIKit
 
 protocol _MenuBarDelegate: AnyObject {
 	func menuBarTapped(at index: Int)
-	func menuBarScrollFinished()
 }
 
 final class _MenuBarViewModel {

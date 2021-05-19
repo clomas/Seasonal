@@ -79,12 +79,10 @@ class _MenuBarCollectionView: UICollectionView {
 				// jump icon back to the opposite side before sliding back into the cell.
 				var jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 
-				// I need the 4th option - I honestly can't figure out why, maths hurts.
-
-				if previousMonth.rawValue ==  Month.december.rawValue && monthToScrollTo.rawValue == Month.january.rawValue {
+				if previousMonth == Month.december && monthToScrollTo == Month.january {
 					jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 					slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-				} else if previousMonth.rawValue == Month.january.rawValue && monthToScrollTo.rawValue == Month.december.rawValue{
+				} else if previousMonth == Month.january && monthToScrollTo == Month.december {
 					slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
 					jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
 					// if page slideTo left
@@ -138,15 +136,17 @@ class _MenuBarCollectionView: UICollectionView {
 //	}
 
 	func findNextMonthImage(month: Month) -> UIImage {
-		let month = month
-		return UIImage(named: "cal_\(month.shortMonthName).png")!.withRenderingMode(.alwaysTemplate)
+		if let monthImage = UIImage(named: month.calendarImageName) {
+			return monthImage.withRenderingMode(.alwaysTemplate)
+		}
+		return UIImage()
 	}
 
 	// After selecting a month from the MonthPickerViewController, this will update the icon
 	// to the current month
 	func updateMonthIconImage(to month: Month) {
 		let indexPath = IndexPath(item: ViewDisplayed.months.rawValue, section: 0)
-		viewModel.menuBarCells[indexPath.row].imageName = "cal_\(month.shortMonthName).png"
+		viewModel.menuBarCells[indexPath.row].imageName = month.calendarImageName
 		self.reloadData()
 	}
 }

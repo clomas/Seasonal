@@ -83,6 +83,11 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 	@IBAction func infoButtonTapped(_ sender: Any) {
 		viewModel.infoButtonTapped()
 	}
+
+	// TODO: Check this is working
+	deinit {
+		print("SEASONS VIEW DEINIT")
+	}
 }
 
 // MARK: Table View

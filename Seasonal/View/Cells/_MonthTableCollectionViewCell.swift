@@ -38,14 +38,13 @@ class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 	func likeButtonTapped(cell: _ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
 		var updateLikeTo = false
         if let id = cell.id {
-			// if
+
 			if cell.likeButton.isSelected == false {
 				updateLikeTo = true
 			}
 			viewModel.likeToggle(id: id, liked: updateLikeTo)
 			if viewDisplayed == .favourites {
 				if let indexPath = self.tableView.indexPath(for: cell) {
-					print(indexPath)
 					DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
 						self.tableView.beginUpdates()
 						self.tableView.deleteRows(at: [indexPath], with: .right)
@@ -74,14 +73,14 @@ class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
         self.tableView.reloadData()
     }
     
-    // this resolves the green flash when horizontally scrolling with no search results
-    @objc func alertScrollViewPaged(_ notification: Notification) {
-        self.tableView.reloadData()
-
-        if self.tableView.numberOfRows(inSection: 0) != 0 {
-            self.tableView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: false)
-        }
-    }
+//    // this resolves the green flash when horizontally scrolling with no search results
+//    @objc func alertScrollViewPaged(_ notification: Notification) {
+//        self.tableView.reloadData()
+//
+//        if self.tableView.numberOfRows(inSection: 0) != 0 {
+//            self.tableView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: false)
+//        }
+//    }
 }
 
 // MARK: Tableview
@@ -89,6 +88,7 @@ class _MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 extension _MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
 		switch viewModel.viewDisplayed {
 		case .favourites:
 			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category).count
@@ -108,12 +108,16 @@ extension _MonthTableCollectionViewCell: UITableViewDataSource {
             cell.likeButtonDelegate = self
 			switch viewModel.viewDisplayed {
 			case .favourites:
-				let produce = viewModel.filterFavourites(by: viewModel.searchString, category:  viewModel.category)[indexPath.row]
+				let produce = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category)[indexPath.row]
 				cell.updateViews(produce: produce, in: .favourites)
 				return cell
 			case .months:
 				let produce = viewModel.filter(by: viewModel.searchString , of: viewModel.category)[self.tag][indexPath.row]
 				cell.updateViews(produce: produce, in: .months)
+//				// TODO: Month tables
+//				if let monthTag = Month.init(rawValue: self.tag) {
+//					cell.foodLabel.text = Month.init(rawValue: monthTag.rawValue)?.calendarImageName
+//				}
 				return cell
 			default:
 				return _ProduceMonthInfoViewCell()
@@ -130,5 +134,3 @@ extension _MonthTableCollectionViewCell: UITableViewDelegate {
         tableView.reloadData()
     }
 }
-
-

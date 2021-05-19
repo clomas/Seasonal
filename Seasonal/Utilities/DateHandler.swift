@@ -33,7 +33,10 @@ func findMonthAndSeason() -> (Month, Season) {
         //        let second = dateFormatter.string(from: finaldate!)
         //        ///////// FOR TESTING///////
 
-        let month = Month.asArray[(currentPageDate.firstIndex(of: currMonth) ?? 0) as Int]
+		let monthString = Month.asArray[(currentPageDate.firstIndex(of: currMonth) ?? 0) as Int]
+
+		// Infinite CollectionView means the month in Month.asArray will be 1 less
+		let month = Month.init(rawValue: (monthString.rawValue + 1)) ?? Month.december
 
         switch month {
         case .december, .january, .february:
@@ -44,7 +47,9 @@ func findMonthAndSeason() -> (Month, Season) {
             return (month, .winter)
         case .september, .october, .november:
             return (month, .spring)
-        }
+		default:
+			return (Month.december, .summer)
+		}
     }
 
 }

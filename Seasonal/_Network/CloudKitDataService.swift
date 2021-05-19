@@ -190,12 +190,17 @@ extension String {
         while searchStartIndex < self.endIndex,
               // find 1 in month string which indicates the produce is in season
               let range = self.range(of: "1", range: searchStartIndex..<self.endIndex),
-              !range.isEmpty
+			  !range.isEmpty
         {
             let index = distance(from: self.startIndex, to: range.lowerBound)
-            months.append(Month(rawValue: index)!)
+
+			// add 1 here for infiniteCollectionView offset
+			if let month = Month.init(rawValue: index + 1) {
+				months.append(month)
+			}
             searchStartIndex = range.upperBound
         }
+
         return months
     }
 }

@@ -92,7 +92,6 @@
 //			mainViewCoordinator.parentCoordinator = self
 //			mainViewCoordinator.start()
 //		} else {
-//		// TODO: Error handling here
 //			fatalError("error fetching data")
 //		}
 //	}

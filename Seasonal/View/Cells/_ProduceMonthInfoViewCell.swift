@@ -30,6 +30,7 @@ class _ProduceMonthInfoViewCell: UITableViewCell {
 	func updateViews(produce: _ProduceModel,in view: ViewDisplayed) {
 		self.id = produce.id
 		self.viewDisplayed = view
+
         foodLabel.text = produce.produceName
         guard let image = UIImage(named: produce.imageName) else { return }
         foodImage.image = image
@@ -55,7 +56,7 @@ class _ProduceMonthInfoViewCell: UITableViewCell {
 
         // find month
         let dateIndex = DateHandler.instance.findMonthAndSeason()
-        var monthIndex = 0
+        var monthIndex = 1
 
         // loop through images
         for uiView in monthImages {

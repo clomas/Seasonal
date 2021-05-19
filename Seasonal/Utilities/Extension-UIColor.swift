@@ -1,5 +1,5 @@
 //
-//  Extensions-UIColor.swift
+//  Extension-UIColor.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 29/4/21.

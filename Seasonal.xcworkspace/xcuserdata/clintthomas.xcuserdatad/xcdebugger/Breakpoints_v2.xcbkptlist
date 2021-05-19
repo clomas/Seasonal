@@ -270,8 +270,8 @@
             filePath = "Seasonal/XIBs/_InfoViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
+            startingLineNumber = "81"
+            endingLineNumber = "81"
             landmarkName = "deinit"
             landmarkType = "7">
          </BreakpointContent>

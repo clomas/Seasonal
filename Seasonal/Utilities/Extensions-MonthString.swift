@@ -8,24 +8,26 @@
 
 import Foundation
 
+
 extension Month {
 
 	static var asArray: [Month] {return self.allCases}
 
-	var shortMonthName: String {
+	var calendarImageName: String {
 		switch self {
-		case .january: return "jan"
-		case .february: return "feb"
-		case .march: return "mar"
-		case .april: return "apr"
-		case .may: return "may"
-		case .june: return "jun"
-		case .july: return "jul"
-		case .august: return "aug"
-		case .september: return "sep"
-		case .october: return  "oct"
-		case .november: return "nov"
-		case .december: return "dec"
+		case .january: return "cal_jan.png"
+		case .february: return "cal_feb.png"
+		case .march: return "cal_mar.png"
+		case .april: return "cal_apr.png"
+		case .may: return "cal_may.png"
+		case .june: return "cal_jun.png"
+		case .july: return "cal_jul.png"
+		case .august: return "cal_aug.png"
+		case .september: return "cal_sep.png"
+		case .october: return  "cal_oct.png"
+		case .november: return "cal_nov.png"
+		case .december: return "cal_dec.png"
+		default: return "cal_dec.png"
 		}
 	}
 
@@ -43,6 +45,7 @@ extension Month {
 		case .october: return "oct_curr.png"
 		case .november: return "nov_curr.png"
 		case .december: return "dec_curr.png"
+		default: return "dec_curr.png"
 		}
 	}
 }

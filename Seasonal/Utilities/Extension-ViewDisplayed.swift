@@ -1,5 +1,5 @@
 //
-//  Extensions-ViewDisplayed.swift
+//  Extension-ViewDisplayed.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 29/4/21.

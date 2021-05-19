@@ -9,19 +9,20 @@
 import UIKit
 import InfiniteLayout
 
-// TODO: make all delegates weak.
+// TODO: swift lint after deleting irrelevant files
+// TODO remove cocoa pod - Infinite
 
 class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
 
 	var viewModel: _MainViewModel!
-	@IBOutlet weak var infiniteMonthCollectionView: InfiniteCollectionView!
+	//@IBOutlet weak var infiniteMonthCollectionView: InfiniteCollectionView!
+	@IBOutlet weak var infiniteMonthCollectionView: UICollectionView!
 	@IBOutlet weak var menuBar: _MenuBarCollectionView!
 	var searchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		setUpView()
-
 		viewModel.reloadTableView = { [weak self] in
 			if let month = self?.viewModel.month {
 				self?.infiniteMonthCollectionView.scrollToItem(at: .init(row: month.rawValue, section: 0),
@@ -46,8 +47,9 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
     }
 
 	private func setUpView() {
-		self.infiniteMonthCollectionView.delegate = self
-		self.infiniteMonthCollectionView.dataSource = self
+		infiniteMonthCollectionView.delegate = self
+		infiniteMonthCollectionView.dataSource = self
+		infiniteMonthCollectionView.isPrefetchingEnabled = false
 		setUpNavigationControllerView()
 		setupMenuBar()
 		setupCollectionView()
@@ -76,10 +78,10 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 		if let flowLayout = infiniteMonthCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
 			flowLayout.scrollDirection = .horizontal
 			flowLayout.minimumLineSpacing = 0
+			infiniteMonthCollectionView.collectionViewLayout = flowLayout
 		}
 		infiniteMonthCollectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 		infiniteMonthCollectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-		infiniteMonthCollectionView?.isPagingEnabled = true
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -90,7 +92,7 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		if viewModel.monthsProduce.count > 0 {
-			let indexPath = IndexPath(item: viewModel.month.rawValue, section: 0)
+			let indexPath = IndexPath(item: (viewModel.month.rawValue), section: 0)
 			infiniteMonthCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
 		}
 	}
@@ -163,25 +165,20 @@ extension _MainViewController: UICollectionViewDataSource {
 			return 1
 		case .months:
 			self.infiniteMonthCollectionView.isScrollEnabled = true
-			return 12
+			return 14
 		default:
-			return 12
+			return 14
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants._MonthTableCell, for: indexPath) as! _MonthTableCollectionViewCell
-		cell.tag = (indexPath.item % 12)
+		// for my implementation of the infinite collectionView I need to change the subview cell tag
+		// based on the indexPath
+		cell.tag = (indexPath.item)
 		cell.viewModel = viewModel
-		cell.collectionReloadData()
+		cell.tableView.reloadData()
 		return cell
-	}
-}
-
-extension _MainViewController: UICollectionViewDelegate {
-
-	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-		collectionView.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
 	}
 }
 
@@ -208,28 +205,37 @@ extension _MainViewController: UICollectionViewDelegateFlowLayout {
 	// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-
+		let pageFloat = (scrollView.contentOffset.x / scrollView.frame.size.width)
+		let pageInt = Int(round(pageFloat))
+		//onPageInt = pageInt + 1
+		switch pageInt {
+		case 0:
+			//pageInt = 12
+			infiniteMonthCollectionView.scrollToItem(at: [0, 12], at: .left, animated: false)
+		case viewModel.monthsProduce.count - 1:
+		//	pageInt = 0
+			infiniteMonthCollectionView.scrollToItem(at: [0, 1], at: .right, animated: false)
+		default:
+			break
+		}
 		// this is the page currently displayed
-		let page = scrollView.contentOffset.x / scrollView.bounds.size.width
-		if let updatedMonth = Month.init(rawValue: (Int(page) % 12)) {
+		//let page = scrollView.contentOffset.x / scrollView.bounds.size.width
+		if var updatedMonth = Month.init(rawValue: pageInt) {
 			// update menubar before calling method for animation of month icon
-			// TODO: Need this?
-			//menuBar.currentMonth = updatedMonth
 			if viewModel.previousMonth != updatedMonth {
+				if updatedMonth == Month.januaryOverflow {
+					updatedMonth = Month.january
+				} else if updatedMonth ==  Month.decemberOverflow {
+					updatedMonth = Month.december
+				}
 				menuBar.monthIconCarouselAnimation(from: viewModel.month, to: updatedMonth)
 				viewModel.previousMonth = updatedMonth
 			}
 			viewModel.month = updatedMonth
+			let newTitle = String(describing: viewModel.month).capitalized
+			// override the title because it can be wrong if not scrolled properly
+			setTitleFromScrollViewPaged(newTitle: newTitle)
 		}
-
-		// override the title because it can be wrong if not scrolled properly
-		var visibleRect = CGRect()
-		visibleRect.origin = infiniteMonthCollectionView.contentOffset
-		visibleRect.size = infiniteMonthCollectionView.bounds.size
-		let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
-		guard let indexPathItem = self.infiniteMonthCollectionView.indexPathForItem(at: visiblePoint)?.item else { return }
-		let newTitle = String(describing: Month.asArray[indexPathItem % 12]).capitalized
-		setTitleFromScrollViewPaged(newTitle: newTitle)
 	}
 }
 
@@ -237,7 +243,6 @@ extension _MainViewController: UICollectionViewDelegateFlowLayout {
 extension _MainViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {
-
 		self.viewModel.searchString = searchController.searchBar.text!
 		infiniteMonthCollectionView.reloadData()
 	}

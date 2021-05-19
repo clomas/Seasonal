@@ -74,9 +74,5 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 		}
 		parentCoordinator?.childDidFinish(self)
 	}
-
-	deinit {
-		print("")
-	}
 }
 

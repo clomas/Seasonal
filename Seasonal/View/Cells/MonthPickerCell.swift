@@ -24,11 +24,14 @@ class MonthPickerCell: UICollectionViewCell {
     }
     
     func updateViews(month: Month) {
-        addConstraint(NSLayoutConstraint(item: monthLabel!, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
-        addConstraint(NSLayoutConstraint(item: monthLabel!, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
 
-        monthLabel.text = String(describing: month).capitalized
-        self.index(ofAccessibilityElement: self)
+		if let label = monthLabel {
+			addConstraint(NSLayoutConstraint(item: label, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
+			addConstraint(NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
+
+			monthLabel.text = String(describing: month).capitalized
+			self.index(ofAccessibilityElement: self)
+		}
     }
     
     override func layoutSubviews() {

@@ -10,6 +10,8 @@ import Foundation
 
 
 enum Month: Int, CaseIterable {
+
+	case decemberOverflow
 	case january
 	case february
 	case march
@@ -22,6 +24,8 @@ enum Month: Int, CaseIterable {
 	case october
 	case november
 	case december
+	case januaryOverflow
+
 }
 
 final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
@@ -36,7 +40,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 	var searchString: String
 	var reloadTableView = {}
 	var updateMenuBar = {}
-	
+
 	private let produceDataService: _ProduceDataService
 
 	init(monthsProduce: [[_ProduceModel]],
@@ -94,7 +98,6 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		}
 	}
 
-
 	/// Update Month after another ViewController was displayed.
 	/// - Parameter month: month can be nil - if it is no need to update.
 	func updateMonth(to month: Month?) {
@@ -104,16 +107,6 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 		updateMenuBar()
 		reloadTableView()
 	}
-
-	func menuBarScrollFinished() {
-		// up to here
-	}
-
-//	func updateVisibleMonth(to visibleMonth: Month) {
-//		if appStatus.month != visibleMonth {
-//			appStatus.month = visibleMonth
-//		}
-//	}
 
 	func likeToggle(id: Int, liked: Bool) {
 		print(liked)
@@ -135,8 +128,6 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 				// get the liked produce, insert into array at the correct index by id
 				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
 				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
-
-				
 			} else {
 				favouritesProduce.removeAll{$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
 			}
@@ -147,12 +138,11 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 	func infoButtonTapped() {
 		coordinator?.presentInfoViewController()
 	}
-
-	func insertSorted<T: Comparable>( seq: inout [T], newItem item: T) {
-		let index = seq.reduce(0) { $1 < item ? $0 + 1 : $0 }
-		seq.insert(item, at: index)
-	}
-
+//
+//	func insertSorted<T: Comparable>( seq: inout [T], newItem item: T) {
+//		let index = seq.reduce(0) { $1 < item ? $0 + 1 : $0 }
+//		seq.insert(item, at: index)
+//	}
 }
 
 extension Collection {
@@ -178,14 +168,36 @@ extension Array where Element == Produce {
 		for monthIndex in 0...11 {
 			var monthArray = [_ProduceModel]()
 			self.forEach({ item in
-				if item.months.contains(Month.init(rawValue: monthIndex)!) {
-					monthArray.append(_ProduceModel.init(produce: item))
+
+				if let month = Month.init(rawValue: (monthIndex	+ 1)) {
+					if item.months.contains(month) {
+						monthArray.append(_ProduceModel.init(produce: item))
+					}
 				}
 			})
 			monthProduceArray[monthIndex] = monthArray
 		}
+		monthProduceArray.insert(monthProduceArray[11], at: 0)
+		monthProduceArray.append(monthProduceArray[1])
 		return monthProduceArray
 	}
+
+//	func sortIntoMonths() -> [[_ProduceModel]] {
+//		// create array of 12 months
+//		var monthProduceArray: [[_ProduceModel]] = .init(repeating: [], count: 12)
+//
+//		for monthIndex in 0...11 {
+//			var monthArray = [_ProduceModel]()
+//			self.forEach({ item in
+//				monthArray.append(_ProduceModel.init(produce: item))
+//			})
+//			monthProduceArray[monthIndex] = monthArray
+//		}
+////		monthProduceArray.insert(monthProduceArray[11], at: 0)
+////		monthProduceArray.append(monthProduceArray[0])
+//		print(monthProduceArray)
+//		return monthProduceArray
+//	}
 }
 
 // filter by search fields and produce categories selected

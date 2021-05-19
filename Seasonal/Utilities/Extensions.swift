@@ -8,8 +8,7 @@
 import UIKit
 
 
-// MARK: global UIAlerts
-// credit - https://stackoverflow.com/questions/38144019/how-to-create-uialertcontroller-in-global-swift/42622755
+
 
 extension UIViewController {
 

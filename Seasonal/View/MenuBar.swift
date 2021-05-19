@@ -55,7 +55,10 @@ class MenuBar: UICollectionView {
 
 	func findNextMonthImage(month: Month) -> UIImage {
 		let month = month
-		return UIImage(named: "cal_\(month.shortMonthName).png")!.withRenderingMode(.alwaysTemplate)
+		if let monthImage = UIImage(named: month.calendarImageName) {
+			return monthImage.withRenderingMode(.alwaysTemplate)
+		}
+		return UIImage()
 	}
 
     // MARK: Animations
@@ -138,7 +141,7 @@ extension MenuBar: UICollectionViewDataSource {
                              selected: menuBarViewModel.menuBarCells[indexPath.row].isSelected)
 
             if cell.isSelected {
-                //print("cell selected index = \(indexPath.row)")
+
                 cell.isUserInteractionEnabled = false
             } else {
                 cell.isUserInteractionEnabled = true

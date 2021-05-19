@@ -36,7 +36,7 @@ enum _MenuBarModel: String {
 			switch self {
 			case .favourites: return "\(Constants.favourites).png"
 			case .calendar: return "\(Constants.months).png"
-			case .currentMonth: return "cal_\(currentMonth.shortMonthName).png"
+			case .currentMonth: return currentMonth.calendarImageName
 			case .seasons: return "\(Constants.seasons).png"
 			case .all: return "\(Constants.categories).png"
 			case .fruit: return "\(Constants.fruit).png"

@@ -40,12 +40,14 @@ class _MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate 
 extension _MonthPickerViewController: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		return Month.allCases.count
+		// Less 2 given overflow Months
+		return (Month.allCases.count - 2)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.SelectMonthCell, for: indexPath) as? MonthPickerCell {
-			cell.updateViews(month: Month.asArray[indexPath.row])
+			// Plus 1 given overflow Months
+			cell.updateViews(month: Month.asArray[(indexPath.row + 1)])
 			return cell
 		} else {
 			return MonthPickerCell()
@@ -55,11 +57,11 @@ extension _MonthPickerViewController: UICollectionViewDataSource {
 
 //MARK: UICollectionView Delegate Methods
 
-extension _MonthPickerViewController: UICollectionViewDelegate {
+extension _MonthPickerViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-		if let month = Month(rawValue: indexPath.row) {
+		// Plus 1 given overflow Months
+		if let month = Month(rawValue: (indexPath.row + 1)) {
 			coordinator?.monthPickerFinished(display: month)
 		}
 		self.dismiss(animated: true, completion: nil)
@@ -67,10 +69,9 @@ extension _MonthPickerViewController: UICollectionViewDelegate {
 
 	// MARK: Collection View Sizing
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-		let yourWidth = collectionView.bounds.width / 2.0
-		let yourHeight = collectionView.bounds.height / 6.0
-
-		return CGSize(width: yourWidth, height: yourHeight)
+		let cellWidth = collectionView.bounds.width / 2.0
+		let cellHeight = collectionView.bounds.height / 6.0
+		return CGSize(width: cellWidth, height: cellHeight)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

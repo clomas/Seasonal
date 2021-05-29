@@ -10,9 +10,9 @@ import UIKit
 import Network
 
 protocol InitialViewDelegate: AnyObject {
-	func dataIsReady()
 	func networkFailed()
 	func locationNotFound()
+	func dataIsReady()
 }
 
 final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
@@ -37,23 +37,35 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 
 	func loadInitialViewController() {
 		if firstRun == true {
-			let initialViewController: _WelcomeViewController = .instantiate()
-			let initialViewModel = _WelcomeViewModel()
-			initialViewModel.coordinator = self
-			initialViewController.viewModel = initialViewModel
-			navigationController.setViewControllers([initialViewController], animated: false)
+			loadWelcomeViewController()
 		} else if firstRun == false {
-			let splashScreenViewController: _SplashScreenViewController = .instantiate()
-			let initialViewModel = _SplashScreenViewModel()
-			initialViewModel.coordinator = self
-			splashScreenViewController.viewModel = initialViewModel
-			navigationController.setViewControllers([splashScreenViewController], animated: false)
+			loadSplashScreenViewController()
 		}
+	}
+
+	func loadWelcomeViewController() {
+		let welcomeViewController: _WelcomeViewController = .instantiate()
+		let welcomeViewModel = _WelcomeViewModel()
+		welcomeViewModel.coordinator = self
+		welcomeViewController.viewModel = welcomeViewModel
+		navigationController.setViewControllers([welcomeViewController], animated: false)
+	}
+
+	func loadSplashScreenViewController() {
+		let splashScreenViewController: _SplashScreenViewController = .instantiate()
+		let initialViewModel = _SplashScreenViewModel()
+		initialViewModel.coordinator = self
+		splashScreenViewController.viewModel = initialViewModel
+		navigationController.setViewControllers([splashScreenViewController], animated: false)
 	}
 
 	// Delegate methods to pass down to the viewControllers
 	func dataIsReady() {
-		if firstRun == false {
+		// If first run, I need to present a dismiss button
+		if firstRun == true {
+			initialViewDelegate?.dataIsReady()
+		// Else SplashScreen will just dismiss
+		} else {
 			parentCoordinator?.loadMainViewCoordinator()
 			readyToDismiss()
 		}
@@ -64,15 +76,25 @@ final class _InitialViewCoordinator: _Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func locationNotFound() {
-		initialViewDelegate?.locationNotFound()
+		DispatchQueue.main.async {
+			self.initialViewDelegate?.locationNotFound()
+		}
 	}
 
 	func readyToDismiss() {
-		if navigationController.viewControllers.first is _SplashScreenViewController ||
-			navigationController.viewControllers.first is _WelcomeViewController {
-			navigationController.viewControllers.removeFirst()
+		if self.navigationController.viewControllers.first is _SplashScreenViewController {
+			self.navigationController.viewControllers.removeFirst()
+			parentCoordinator?.childDidFinish(self)
+		} else if self.navigationController.viewControllers.first is _WelcomeViewController {
+			// Load main here after dismiss is tapped on WelcomeViewController
+			parentCoordinator?.loadMainViewCoordinator()
+			self.navigationController.viewControllers.removeFirst()
+			parentCoordinator?.childDidFinish(self)
 		}
-		parentCoordinator?.childDidFinish(self)
+	}
+
+	func userChoseLocation(state: StateLocation) {
+		parentCoordinator?.updateChosenLocationUserDefaults(to: state)
 	}
 }
 

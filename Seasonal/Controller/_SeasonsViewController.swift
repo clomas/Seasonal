@@ -10,16 +10,12 @@ import UIKit
 
 class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, _SeasonsLikeButtonDelegate {
 
-		// TODO: maybe bubble up to coordinator instead of calling it here.
-		weak var coordinator: _MainViewCoordinator?
 	private var searchController = UISearchController(searchResultsController: nil)
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var nothingToShowLabel: UILabel!
 	@IBOutlet weak var menuBar: _MenuBarCollectionView!
 
-	// View models
 	var viewModel: _SeasonsViewModel!
-	// var menuBarViewModel: MenuBarCellViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,18 +26,6 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 			self?.title = self?.viewModel.updateTitle()
 		}
     }
-
-	private func setUpView() {
-		self.tableView.dataSource = self
-		self.title = viewModel.updateTitle()
-		setUpNavigationControllerView()
-		setupMenuBar()
-	}
-
-	func setupMenuBar() {
-		menuBar.viewModel = .init(month: nil, season: viewModel.season, viewDisplayed: .seasons)
-		menuBar.viewModel.delegate = viewModel.self
-	}
 
 	func likeButtonTapped(cell: _SeasonsTableViewCell) {
 		if let id = cell.id {
@@ -56,6 +40,28 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		if self.tableView.numberOfRows(inSection: 0) == 0 {
 			nothingToShowLabel.text = ""
 		}
+	}
+
+	@IBAction func backButtonTapped(_ sender: Any) {
+		viewModel.backButtonTapped()
+	}
+
+	@IBAction func infoButtonTapped(_ sender: Any) {
+		viewModel.infoButtonTapped()
+	}
+
+	// MARK: Setup
+
+	private func setUpView() {
+		self.tableView.dataSource = self
+		self.title = viewModel.updateTitle()
+		setUpNavigationControllerView()
+		setupMenuBar()
+	}
+
+	func setupMenuBar() {
+		menuBar.viewModel = .init(month: nil, season: viewModel.season, viewDisplayed: .seasons)
+		menuBar.viewModel.delegate = viewModel.self
 	}
 
 	private func setUpNavigationControllerView() {
@@ -75,27 +81,14 @@ class _SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchRes
 		navigationItem.hidesSearchBarWhenScrolling = false
 		self.definesPresentationContext = true
 	}
-
-	@IBAction func backButtonTapped(_ sender: Any) {
-		coordinator?.seasonsBackButtonTapped()
-	}
-
-	@IBAction func infoButtonTapped(_ sender: Any) {
-		viewModel.infoButtonTapped()
-	}
-
-	// TODO: Check this is working
-	deinit {
-		print("SEASONS VIEW DEINIT")
-	}
 }
 
 // MARK: Table View
+
 extension _SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if let season =  Season(rawValue: viewModel.season.rawValue) {
-			print(viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count)
 			return viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
 		} else {
 			return 0

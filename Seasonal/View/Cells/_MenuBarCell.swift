@@ -50,7 +50,7 @@ class _MenuBarCell: UICollectionViewCell {
 										 relatedBy: .equal,
 										 toItem: self,
 										 attribute: .centerY,
-										 multiplier: 1,
+										 multiplier: 1.15,
 										 constant: 0))
 
 		self.index(ofAccessibilityElement: self)

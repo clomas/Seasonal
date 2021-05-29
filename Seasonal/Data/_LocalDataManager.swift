@@ -10,6 +10,23 @@ import Foundation
 
 public class LocalDataManager {
 
+	// MARK: UserDefaults for location
+
+	static func locationFoundIsStored(_ location: StateLocation) -> Bool {
+		let defaults = UserDefaults.standard
+		let foundLocation = defaults.string(forKey: "Location")
+		print("stored \(String(describing: foundLocation))")
+		if location.rawValue == foundLocation { return true }
+		return false
+	}
+
+	static func updateLocation(to location: StateLocation) {
+		let defaults = UserDefaults.standard
+		defaults.set(location.rawValue, forKey: "Location")
+	}
+
+	// MARK: For like / unlike produce locally
+
     // Get document directory
     static fileprivate func getDocumentDirectory () -> URL {
         if let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {

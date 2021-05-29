@@ -92,6 +92,10 @@ final class _SeasonsViewModel: _MenuBarDelegate {
 		
 	}
 
+	func backButtonTapped() {
+		coordinator?.seasonsBackButtonTapped()
+	}
+
 	func infoButtonTapped() {
 		coordinator?.presentInfoViewController()
 	}

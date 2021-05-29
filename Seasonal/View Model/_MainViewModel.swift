@@ -103,6 +103,7 @@ final class _MainViewModel: _MenuBarDelegate, MonthSelectedDelegate {
 	func updateMonth(to month: Month?) {
 		if let month = month {
 			self.month = month
+			self.viewDisplayed = .months
 		}
 		updateMenuBar()
 		reloadTableView()

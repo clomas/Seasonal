@@ -10,11 +10,11 @@ import Foundation
 
 final class _InfoViewModel {
 
+	weak var coordinator: _MainViewCoordinator?
 	var location: StateLocation
 	
 	init(location: StateLocation) {
 		self.location = location
 	}
-
 }
 

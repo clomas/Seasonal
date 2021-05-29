@@ -51,13 +51,13 @@ struct Constants {
 	// Cells
 	static let SeasonsTableViewCell = "_SeasonsTableViewCell"
 	static let MenuBarCellSeason = "MenuBarCellSeason"
-	static let SelectedCategoryCell = "SelectedCategoryViewCell"
+	static let _ProduceMonthInfoViewCell = "_ProduceMonthInfoViewCell"
 	static let MenuBarCell = "_MenuBarCell"
 	static let SelectMonthCell = "SelectMonthCollectionViewCell"
 	static let _MonthTableCell = "_MonthTableCollectionViewCell"
 
 	// Colours / Tints
-	static let tableViewCellColor = "tableViewCell"
+	static let tableViewCellColor = "cellColor"
 	static let searchBarColor = "searchBar"
 	static let likeButtonColor = "likeButton"
 	static let inSeasonColor = "inSeason"
@@ -74,5 +74,4 @@ struct Constants {
 	static let infoPageSpiel = "Location of Produce Displayed: Australia.\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!"
 
 	static let apple = "apple"
-
 }

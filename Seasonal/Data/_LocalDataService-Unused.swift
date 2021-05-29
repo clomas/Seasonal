@@ -5,6 +5,7 @@
 //  Created by Clint Thomas on 1/3/21.
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
+// Not using this class, but was an option for local variables.
 
 import Foundation
 import CoreData

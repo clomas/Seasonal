@@ -9,15 +9,31 @@
 import Foundation
 import CoreLocation
 
-enum StateLocation: String {
+enum StateLocation: String, CaseIterable {
+	
     case noState = "aus"
     case westernAustralia = "wa"
     case southAustralia = "sa"
     case northernTerritory = "nt"
     case newSouthWales = "nsw"
-    case Victoria = "vic"
-    case Tasmania = "tas"
+    case victoria = "vic"
+    case tasmania = "tas"
+	case queensland = "qld"
     case act
+
+	func fullName() -> String {
+		switch self {
+		case .westernAustralia: return "Western Australia"
+		case .southAustralia: return "South Australia"
+		case .northernTerritory: return "Northern Territory"
+		case .newSouthWales: return "New South Wales"
+		case .victoria: return "Victoria"
+		case .tasmania: return "Tasmania"
+		case .queensland: return "Queensland"
+		default:
+			return "Error"
+		}
+	}
 }
 
 protocol LocationDelegate {
@@ -29,6 +45,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     private let locationManager : CLLocationManager
     private let locationInfo = LocationInformation()
 	var locationDelegate: LocationDelegate?
+	var authStatus: CLAuthorizationStatus?
 
     override init() {
         locationManager = CLLocationManager()
@@ -93,7 +110,9 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 stateFound = StateLocation.noState
             }  else {
 				if locationInfo.country != Constants.straya {
-					stateFound = StateLocation.init(rawValue: StateLocation.noState.rawValue)!
+					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
+						stateFound = state
+					}
 				} else if state != "" {
                     stateFound = StateLocation.init(rawValue: state)!
                 }
@@ -106,14 +125,17 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: Location Updated
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) -> Void{
-        switch status {
-        case .authorizedAlways, .authorizedWhenInUse, .notDetermined:
-                locationManager.startUpdatingLocation()
-            case .denied, .restricted:
-                stop()
-            default:
-                stop()
-        }
+		authStatus = status
+		switch status {
+		case .notDetermined:
+			break
+		case .authorizedAlways, .authorizedWhenInUse:
+			locationManager.startUpdatingLocation()
+		case .denied, .restricted:
+			stop()
+		default:
+			stop()
+		}
     }
 
     // MARK: Failure

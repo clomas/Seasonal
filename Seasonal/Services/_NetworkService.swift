@@ -81,8 +81,6 @@ final class _NetworkService {
 		if let networkUpdateCallback = networkUpdate {
 			// callback to viewModel
 			networkUpdateCallback(internetStatus)
-		} else {
-			// TODO: Update with alert
 		}
 	}
 

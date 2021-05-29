@@ -12,8 +12,12 @@ final class _SplashScreenViewModel {
 
 	weak var coordinator: _InitialViewCoordinator?
 
-	func dismissTapped() {
-		coordinator?.readyToDismiss()
+//	func dismissTapped() {
+//		coordinator?.readyToDismiss()
+//	}
+
+	func userChoseLocation(state: StateLocation) {
+		coordinator?.userChoseLocation(state: state)
 	}
 }
 

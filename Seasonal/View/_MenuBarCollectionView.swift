@@ -103,8 +103,7 @@ class _MenuBarCollectionView: UICollectionView {
 					cell.imageView.image = self.findNextMonthImage(month: monthToScrollTo)
 					// slide in
 					UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-						// TODO: adding 20 here, might change if I change constraints
-						cell.imageView.frame = CGRect(x: originX + 20, y: cell.imageView.frame.origin.y , width: cell.imageView.frame.width, height:  cell.imageView.frame.height)
+						cell.imageView.frame = CGRect(x: originX + 15, y: cell.imageView.frame.origin.y , width: cell.imageView.frame.width, height:  cell.imageView.frame.height)
 					})
 				})
 			}
@@ -178,6 +177,15 @@ extension _MenuBarCollectionView: UICollectionViewDataSource {
 			} else {
 				cell.isUserInteractionEnabled = true
 			}
+
+			#if DEBUG
+			if CommandLine.arguments.contains("enable-testing") {
+				if indexPath == [0, 8] {
+					cell.accessibilityIdentifier = "cancelCell"
+				}
+			}
+			#endif
+
 			return cell
 		}
 		return _MenuBarCell()

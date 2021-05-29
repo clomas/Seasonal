@@ -10,8 +10,6 @@ import Foundation
 
 extension Season {
 
-	static var asArray: [Season] {return self.allCases}
-
 	var asString: String {
 		switch self {
 		case .summer: return "summer"
@@ -30,4 +28,6 @@ extension Season {
 		case .cancelled: return "can"
 		}
 	}
+
+	static var asArray: [Season] {return self.allCases}
 }

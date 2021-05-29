@@ -21,6 +21,7 @@ class _ProduceMonthInfoViewCell: UITableViewCell {
     @IBOutlet weak var foodImage: UIImageView!
     @IBOutlet weak var foodLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
+
 	var viewDisplayed: ViewDisplayed?
     var id: Int?
 

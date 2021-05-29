@@ -19,6 +19,7 @@ class _MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate 
 		setUpNavigationController()
 		monthCollectionView.delegate = self
 		monthCollectionView.dataSource = self
+		monthCollectionView.accessibilityIdentifier = "monthPicker"
 	}
 
 	func setUpNavigationController() {

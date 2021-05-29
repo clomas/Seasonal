@@ -7,10 +7,8 @@
 //
 
 import UIKit
-import InfiniteLayout
 
 // TODO: swift lint after deleting irrelevant files
-// TODO remove cocoa pod - Infinite
 
 class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
 
@@ -60,6 +58,7 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 	private func setupMenuBar() {
 		menuBar.viewModel = .init(month: viewModel.month, season: nil, viewDisplayed: viewModel.viewDisplayed)
 		menuBar.viewModel.delegate = viewModel.self
+		menuBar.accessibilityIdentifier = "menuBar"
 	}
 
 	// If navigating to SeasonsViewController I need to toggle the selected menuBar after it disappears.
@@ -128,7 +127,6 @@ class _MainViewController: UIViewController, UISearchBarDelegate, UISearchResult
 		}
 	}
 
-	// TODO: this from coord
 	@IBAction func infoButtonTapped(_ sender: Any) {
 		viewModel.infoButtonTapped()
 	}

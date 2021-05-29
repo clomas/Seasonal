@@ -11,7 +11,6 @@ import AVFoundation
 
 class _WelcomeViewController: UIViewController, InitialViewDelegate {
 
-	var parentCoordinator: _InitialViewCoordinator?
 	var viewModel: _WelcomeViewModel!
 
     @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
@@ -24,8 +23,8 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		viewModel.coordinator?.initialViewDelegate = self
         setupViews()
-		parentCoordinator?.initialViewDelegate = self
     }
 
     private func setupViews() {
@@ -75,10 +74,12 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
         if let playerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
         }
+		playVideo()
     }
 
     // MARK: Animations
 
+	// TODO: nothing happens here
     private func animateLabel() {
         if self.dismissButton.isHidden == false {
             self.activityMonitor.isHidden = true
@@ -123,8 +124,7 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 		navigationController?.setNavigationBarHidden(true, animated: animated)
 	}
 
-	// Delegates passed down from the AppEntryCoordinator.
-
+	// Delegates passed down from the InitialViewCoordinator.
 	func dataIsReady() {
 		dismissButton.isHidden.toggle()
 		dismissArrowButton.isHidden.toggle()
@@ -144,18 +144,43 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 	}
 
 	func locationNotFound() {
-		// TODO: create a flag for this in userDefaults for boolean.
-		if true {
-			func networkFailed() {
-				self.presentAlert(title: "Location Error",
-								  message: "Unable to detect which state in Australia you live in, you will be shown general data for Australian Produce.",
-								  alertStyle: .alert,
-								  actionTitles: [],
-								  actionStyles: [.default],
-								  actions: []
-				)
-			}
-		}
+		self.presentAlert(title: "Undetermined Location",
+						  message: "Choose your location",
+						  alertStyle: .actionSheet,
+						  actionTitles:  [
+							StateLocation.westernAustralia.fullName().capitalized,
+							StateLocation.southAustralia.fullName().capitalized,
+							StateLocation.northernTerritory.fullName().capitalized,
+							StateLocation.queensland.fullName().capitalized,
+							StateLocation.newSouthWales.fullName().capitalized,
+							StateLocation.victoria.fullName().capitalized,
+							StateLocation.tasmania.fullName().capitalized
+						  ],
+						  actionStyles: [.default, .default, .default, .default, .default, .default, .default],
+						  actions: [
+							{_ in
+								self.viewModel.userChoseLocation(state: .westernAustralia)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .southAustralia)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .northernTerritory)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .queensland)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .newSouthWales)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .victoria)
+							},
+							{_ in
+								self.viewModel.userChoseLocation(state: .tasmania)
+							}
+						  ]
+		)
 	}
 }
 

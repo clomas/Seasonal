@@ -13,6 +13,14 @@ import Foundation
 import UIKit
 import CloudKit
 
+/// A protocol to allow mocking a CKDatabase.
+protocol CKDatabaseProtocol {
+	func perform(_ query: CKQuery, inZoneWith zoneID: CKRecordZone.ID?, completionHandler: @escaping ([CKRecord]?, Error?) -> Void)
+	func save(_ record: CKRecord, completionHandler: @escaping (CKRecord?, Error?) -> Void)
+}
+
+extension CKDatabase: CKDatabaseProtocol { }
+
 enum CloudKitError: Error {
     case databaseError
     case castingError
@@ -21,12 +29,10 @@ enum CloudKitError: Error {
 class CloudKitDataService {
     
     static let instance = CloudKitDataService()
-    private let publicDatabase = CKContainer.default().publicCloudDatabase
-    private let privateDatabase = CKContainer.default().privateCloudDatabase
     var currentLocation: StateLocation = .noState
+	let container = CKContainer.default()
 
     private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> ()) {
-        let container = CKContainer.default()
         container.fetchUserRecordID() {
             recordID, error in
             if error != nil {
@@ -41,7 +47,7 @@ class CloudKitDataService {
 
     // MARK: CloudKit Database
 
-    func getData(locationFound: StateLocation, dataFetched: @escaping([Produce]) -> (Void)) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping([Produce]) -> (Void)) {
         currentLocation = locationFound
         let predicate = NSPredicate(value: true)
 		let publicQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
@@ -148,7 +154,7 @@ class CloudKitDataService {
 			let newPrivateRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: newPrivateRecordID)
             newPrivateRecord.setValue(id, forKey: Constants.id)
 
-            privateDatabase.save(newPrivateRecord) { (record, error) in
+			CKContainer.default().privateCloudDatabase.save(newPrivateRecord) { (record, error) in
                 guard record != nil else {
                     print(error as Any)
                     return

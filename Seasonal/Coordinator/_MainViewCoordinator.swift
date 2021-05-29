@@ -31,7 +31,6 @@ protocol MonthSelectedDelegate: AnyObject {
 }
 
 // TODO: accessibility - https://medium.com/capital-one-tech/building-accessible-ios-apps-827c3469a3e9
-
 final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
 	var parentCoordinator: _AppCoordinator?
@@ -123,10 +122,8 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 												 season: findCurrentSeason() ,
 												 category: .all,
 												 searchString: "")
-
 		seasonsViewModel.coordinator = self
 		seasonsViewController.viewModel = seasonsViewModel
-		seasonsViewController.coordinator = self
 
 		// change animation to slide up
 		//navigationController.
@@ -139,6 +136,7 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 		self.modalNavigationController = UINavigationController()
 		let infoViewController: _InfoViewController = .instantiate()
 		infoViewController.viewModel = _InfoViewModel(location: determinedLocation)
+		infoViewController.viewModel.coordinator = self
 		modalNavigationController?.setViewControllers([infoViewController], animated: false)
 
 		if let modalNavigationController = modalNavigationController {
@@ -167,6 +165,8 @@ final class _MainViewCoordinator: NSObject, _Coordinator, UINavigationController
 	}
 
 	func seasonsBackButtonTapped() {
+		print(self.navigationController.viewControllers)
 		self.navigationController.popViewController(animated: true)
+		print(self.navigationController.viewControllers)
 	}
  }

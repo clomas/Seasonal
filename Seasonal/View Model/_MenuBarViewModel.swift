@@ -94,7 +94,7 @@ extension _MenuBarViewModel {
 
 			guard let imageName = _MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
 			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName,
-																		   selected: selectedCell,
+																		selected: selectedCell,
 																		   constraints: constraints)))
 		}
 	}
@@ -112,7 +112,7 @@ extension _MenuBarViewModel {
 			}
 
 			guard let imageName = _MenuBarModel.Seasons.init(rawValue: index)?.imageName else { return }
-			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(60)]", "V:[v0(48)]"))))
+			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(61)]", "V:[v0(49)]"))))
 		}
 	}
 }

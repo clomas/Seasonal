@@ -8,13 +8,13 @@
 
 import UIKit
 
-protocol _SeasonsLikeButtonDelegate {
+protocol _SeasonsLikeButtonDelegate: AnyObject {
     func likeButtonTapped(cell: _SeasonsTableViewCell)
 }
 
 class _SeasonsTableViewCell: UITableViewCell {
 
-    var likeButtonDelegate: _SeasonsLikeButtonDelegate?
+    weak var likeButtonDelegate: _SeasonsLikeButtonDelegate?
 	
     @IBOutlet weak var foodImage: UIImageView!
     @IBOutlet weak var foodLabel: UILabel!
@@ -49,11 +49,11 @@ class _SeasonsTableViewCell: UITableViewCell {
         }
     }
 
-    // MARK: Button
+    // MARK: Like Button
 
     @IBAction func likeButtonTapped(_ sender: Any) {
-        self.likeButton.isSelected.toggle()
         self.likeButton.animateLikeButton(selected: self.likeButton.isSelected)
         likeButtonDelegate?.likeButtonTapped(cell: self)
+		self.likeButton.isSelected.toggle()
     }
 }

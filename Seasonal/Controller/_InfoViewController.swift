@@ -13,6 +13,7 @@ class _InfoViewController: UIViewController {
 
 	// TODO: get the order of this the same everywhere.
     @IBOutlet weak var infoTextBlock: UILabel!
+
 	var viewModel: _InfoViewModel!
 
     override func viewDidLoad() {
@@ -30,6 +31,8 @@ class _InfoViewController: UIViewController {
             infoTextBlock.text = Constants.infoPageSpiel
         }
     }
+
+	// MARK: Setup
 
 	func setUpNavigationController() {
 		self.navigationController?.navigationBar.isHidden = true
@@ -58,7 +61,7 @@ class _InfoViewController: UIViewController {
             return
         }
 
-		// Mail modal form
+		// Compose an email form.
         let composer = MFMailComposeViewController()
         composer.mailComposeDelegate = self
         composer.setToRecipients(["clint.thomas@me.com"])
@@ -67,6 +70,7 @@ class _InfoViewController: UIViewController {
         present(composer, animated: true)
     }
 
+	// Copy my email address to the clipboard (if no email client)
     private func copyEmailToClipboard() {
         UIPasteboard.general.string = "clint.thomas@me.com"
     }
@@ -75,11 +79,6 @@ class _InfoViewController: UIViewController {
         guard let url = URL(string: "https://clomas.github.io/seasonal/") else { return }
         UIApplication.shared.open(url)
     }
-
-	// TODO: Check this is working
-	deinit {
-		print("INFO VIEW DEINIT")
-	}
 }
 
 extension _InfoViewController: MFMailComposeViewControllerDelegate {

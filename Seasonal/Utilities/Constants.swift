@@ -6,7 +6,6 @@
 //  Copyright © 2019 Clint Thomas. All rights reserved.
 //
 
-
 // Change this shit to camelcase?
 import Foundation
 
@@ -44,17 +43,17 @@ struct Constants {
 
 	// Titles
 	static let Seasons = "Seasons"
-	//static let Calendar = "Calendar"
+	// static let Calendar = "Calendar"
 	static let Months = "Months"
 	static let selectAMonth = "Select a Month"
 
 	// Cells
-	static let SeasonsTableViewCell = "_SeasonsTableViewCell"
+	static let SeasonsTableViewCell = "SeasonsTableViewCell"
 	static let MenuBarCellSeason = "MenuBarCellSeason"
-	static let _ProduceMonthInfoViewCell = "_ProduceMonthInfoViewCell"
-	static let MenuBarCell = "_MenuBarCell"
+	static let _ProduceMonthInfoViewCell = "ProduceMonthInfoViewCell"
+	static let MenuBarCell = "MenuBarCell"
 	static let SelectMonthCell = "SelectMonthCollectionViewCell"
-	static let _MonthTableCell = "_MonthTableCollectionViewCell"
+	static let _MonthTableCell = "MonthTableCollectionViewCell"
 
 	// Colours / Tints
 	static let tableViewCellColor = "cellColor"

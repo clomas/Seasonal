@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 extension Month {
 
 	static var asArray: [Month] {return self.allCases}

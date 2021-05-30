@@ -34,10 +34,10 @@ extension UIButton {
 			self.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
 			self.layoutIfNeeded()
 			UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-				self.frame = CGRect(x: self.frame.origin.x , y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)
+				self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
 			}, completion: { _ in
 				UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-					self.frame = CGRect(x: self.frame.origin.x + 100, y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)
+					self.frame = CGRect(x: self.frame.origin.x + 100, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
 				}, completion: { _ in
 
 					let image = UIImage(named: "\(Constants.unliked).png")?.withRenderingMode(.alwaysTemplate)
@@ -45,7 +45,7 @@ extension UIButton {
 					self.imageView?.tintColor = UIColor.LikeButton.tint
 
 					UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
-						self.frame = CGRect(x: self.frame.origin.x - 100, y: self.frame.origin.y , width: self.frame.width, height: self.frame.height)
+						self.frame = CGRect(x: self.frame.origin.x - 100, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
 
 					})
 				})

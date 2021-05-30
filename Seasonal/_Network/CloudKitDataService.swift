@@ -27,13 +27,13 @@ enum CloudKitError: Error {
 }
 
 class CloudKitDataService {
-    
+
     static let instance = CloudKitDataService()
     var currentLocation: StateLocation = .noState
 	let container = CKContainer.default()
 
-    private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> ()) {
-        container.fetchUserRecordID() {
+    private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> Void) {
+        container.fetchUserRecordID {
             recordID, error in
             if error != nil {
                 print(error!.localizedDescription)
@@ -47,7 +47,7 @@ class CloudKitDataService {
 
     // MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping([Produce]) -> (Void)) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping([Produce]) -> Void) {
         currentLocation = locationFound
         let predicate = NSPredicate(value: true)
 		let publicQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
@@ -102,7 +102,7 @@ class CloudKitDataService {
                let seasonsRecord = record.object(forKey: "seasons_\(currentLocation.rawValue)") as? String {
                 name = nameRecord
                 imageName = nameRecord
-                category = ViewDisplayed.ProduceCategory.asArray.filter{$0.asString == categoryRecord}[0]
+                category = ViewDisplayed.ProduceCategory.asArray.filter {$0.asString == categoryRecord}[0]
                 months = monthsRecord.createMonthArray()
                 seasons = seasonsRecord.createSeasonArray()
             }
@@ -127,14 +127,13 @@ class CloudKitDataService {
         if localLikedData.count > 0 {
             compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
         }
-
         return produceArray
     }
 
     // Update cloudKit with local data if there is a disparity
     // local data should always be accurate
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
-        let likedArray = produceArray.filter{ $0.liked == true}
+        let likedArray = produceArray.filter { $0.liked == true}
 
         for localLike in locallyStoredData {
             if likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
@@ -163,7 +162,6 @@ class CloudKitDataService {
         }
     }
 }
-
 
 // On creating the database I made some questionable decisions, I could have maybe handled it better.
 // string matching is required to convert database data to useable app data.
@@ -196,8 +194,7 @@ extension String {
         while searchStartIndex < self.endIndex,
               // find 1 in month string which indicates the produce is in season
               let range = self.range(of: "1", range: searchStartIndex..<self.endIndex),
-			  !range.isEmpty
-        {
+			  !range.isEmpty {
             let index = distance(from: self.startIndex, to: range.lowerBound)
 
 			// add 1 here for infiniteCollectionView offset
@@ -206,7 +203,6 @@ extension String {
 			}
             searchStartIndex = range.upperBound
         }
-
         return months
     }
 }

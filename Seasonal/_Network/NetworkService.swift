@@ -1,41 +1,44 @@
 //
-//  NewtworkService.swift
+//  _NetworkService.swift
 //  Seasonal
 //
-//  Created by Clint Thomas on 31/7/20.
-//  Copyright © 2020 Clint Thomas. All rights reserved.
+//  Created by Clint Thomas on 16/2/21.
+//  Copyright © 2021 Clint Thomas. All rights reserved.
 //
 // thank you - https://stackoverflow.com/questions/59245501/ios13-check-for-internet-connection-instantly
 
 import Foundation
 import Network
 
-protocol NetworkCheckObserver: AnyObject {
-    func internetStatusDidChange(status: NWPath.Status)
+protocol NetworkObserver: AnyObject {
+	func internetStatusDidChange(status: NWPath.Status)
 }
 
-class NetworkService {
+final class NetworkService {
 
-    struct NetworkChangeObservation {
-        weak var observer: NetworkCheckObserver?
-    }
+	struct NetworkChangeObservation {
+		weak var observer: NetworkObserver?
+	}
 
-    private var monitor = NWPathMonitor()
-    private static let _sharedInstance = NetworkService()
-    private var observations = [ObjectIdentifier: NetworkChangeObservation]()
-    var currentStatus: NWPath.Status {
-        get {
-            return monitor.currentPath.status
-        }
-    }
+	private var monitor = NWPathMonitor()
+	// TODO: Remove undescore
+	private static let _sharedInstance = NetworkService()
+	private var observations = [ObjectIdentifier: NetworkChangeObservation]()
+	var currentStatus: NWPath.Status {
+		get {
+			return monitor.currentPath.status
+		}
+	}
 
-    class func sharedInstance() -> NetworkService {
-        return _sharedInstance
-    }
+	class func sharedInstance() -> NetworkService {
+		return _sharedInstance
+	}
 
-    init() {
+	var networkUpdate: ((Bool) -> Void)?
+
+	init() {
 		startMonitoring()
-    }
+	}
 
 	func startMonitoring() {
 		monitor.pathUpdateHandler = { [unowned self] path in
@@ -55,14 +58,25 @@ class NetworkService {
 		monitor.start(queue: DispatchQueue.global(qos: .background))
 	}
 
-    func addObserver(observer: NetworkCheckObserver) {
-        let id = ObjectIdentifier(observer)
-        observations[id] = NetworkChangeObservation(observer: observer)
-    }
+	func internetStatusDidChange(status: NWPath.Status) {
+		var internetStatus = false
 
-    func removeObserver(observer: NetworkCheckObserver) {
-        let id = ObjectIdentifier(observer)
-        observations.removeValue(forKey: id)
-    }
+		switch status {
+		case .satisfied:
+			internetStatus = true
+		case .unsatisfied:
+			internetStatus = false
+		default:
+			internetStatus = false
+		}
+		if let networkUpdateCallback = networkUpdate {
+			// callback to viewModel
+			networkUpdateCallback(internetStatus)
+		}
+	}
+
+	func removeObserver(observer: NetworkObserver) {
+		let id = ObjectIdentifier(observer)
+		observations.removeValue(forKey: id)
+	}
 }
-

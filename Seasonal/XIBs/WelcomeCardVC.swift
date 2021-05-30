@@ -9,28 +9,28 @@
 import UIKit
 
 class WelcomeCardVC: UIViewController {
-    
+
     @IBOutlet weak var cardView: UIView!
     var runningAnimations = [UIViewPropertyAnimator]()
     var animationProgressWhenInterrupted: CGFloat = 0
     var interactor: Interactor
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        //let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleCardPan(recognizer:)))
-        //let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(recognizer:)))
-        
-        //cardView.addGestureRecognizer(panGestureRecognizer)
-        
+        // let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handleCardPan(recognizer:)))
+        // let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(recognizer:)))
+
+        // cardView.addGestureRecognizer(panGestureRecognizer)
+
         self.view.clipsToBounds = true
         cardView.clipsToBounds = true
         cardView.layer.cornerRadius = 20
         self.definesPresentationContext = true
         self.providesPresentationContextTransitionStyle = true
-        
+
     }
     @IBAction func handleGesture(_ sender: UIPanGestureRecognizer) {
-        
+
         let percentThreshold: CGFloat = 0.3
 
         // convert y-position to downward pull progress (percentage)
@@ -61,7 +61,7 @@ class WelcomeCardVC: UIViewController {
             break
         }
     }
-    
+
     @IBAction func downArrowPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }

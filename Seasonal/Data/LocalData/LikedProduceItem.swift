@@ -9,16 +9,14 @@
 import Foundation
 
 struct LikedProduce: Codable {
-    
+
     var id: Int
 
     func saveItem() {
         DataManager.save(self, with: "\(id)")
     }
-    
+
     func deleteItem() {
         DataManager.delete("\(id)")
     }
 }
-
-

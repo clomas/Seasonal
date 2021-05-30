@@ -11,9 +11,9 @@ import UIKit
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-	
+
 	var window: UIWindow?
-	var appCoordinator: _AppCoordinator?
+	var appCoordinator: AppCoordinator?
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
@@ -21,9 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let window = UIWindow(windowScene: scene)
 		self.window = window
 
-		self.appCoordinator = _AppCoordinator(window: window)
+		self.appCoordinator = AppCoordinator(window: window)
 		appCoordinator?.start()
 	}
 }
-
-

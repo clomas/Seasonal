@@ -9,39 +9,80 @@
 import Foundation
 import UIKit
 
+protocol MenuBarDelegate: AnyObject {
+	func menuBarTapped(at index: Int)
+}
+
 final class MenuBarViewModel {
 
-	var menuBarCells: [_MenuBarCellModel] = []
+	var menuBarCells: [MenuBarCellModel] = []
 
-	init(selected: Int, month: Month, viewDisplayed: ViewDisplayed) {
+	var selectedView: ViewDisplayed?
+	var mainViewIconSelected: ViewDisplayed? // for nav backwards
+	var selectedCategory: ViewDisplayed.ProduceCategory?
+
+	weak var delegate: MenuBarDelegate?
+
+	var onUpdate = {}
+
+	init(month: Month?, season: Season?, viewDisplayed: ViewDisplayed) {
+		mainViewIconSelected = viewDisplayed
+		selectedView = viewDisplayed
 		switch viewDisplayed {
-		case .months:
-			layoutMainViewMenuBar(selected: selected, month: month)
+		case .months, .favourites:
+			if let month = month {
+				setupMainViewMenuBar(selected: viewDisplayed, month: month)
+			}
 		case .seasons:
-			layoutSeasonsViewMenuBar(selected: selected)
-		default:
-			layoutMainViewMenuBar(selected: selected, month: month)
+			if let season = season {
+				setupSeasonsViewMenuBar(season: season)
+			}
+		case .monthPicker:
+			break
 		}
-    }
+	}
 
-    func selectDeselectCells(indexSelected: Int) {
-        self.menuBarCells[indexSelected].isSelected = true
+	func menuBarTapped(at index: Int) {
+		toggleSelectedCells(indexSelected: index)
+		// keep track of the current view for when cancel is tapped
+		if index <= ViewDisplayed.seasons.rawValue {
+			selectedView = ViewDisplayed.init(rawValue: index)
+			// Hold value in mainViewIconSelected for navigating backwards to mainViewController
+			if index == ViewDisplayed.months.rawValue || index == ViewDisplayed.favourites.rawValue {
+				mainViewIconSelected = ViewDisplayed(rawValue: index)
+			}
+		} else {
+			selectedCategory = ViewDisplayed.ProduceCategory.init(rawValue: index)
+		}
+		delegate?.menuBarTapped(at: index)
+		onUpdate()
+	}
 
-        for index in 0..<self.menuBarCells.count where index != indexSelected {
-            self.menuBarCells[index].isSelected = false
-        }
-    }
+	/// This is called if cancel is tapped in the category slide over of the menu bar.
+	/// It's require to toggle the index back to the current selected view
+	func categoryWasCancelledAnimationFinished() {
+		if let index = selectedView?.rawValue {
+			toggleSelectedCells(indexSelected: index)
+		}
+	}
+
+	func toggleSelectedCells(indexSelected: Int) {
+		self.menuBarCells[indexSelected].isSelected = true
+		for index in 0..<self.menuBarCells.count where index != indexSelected {
+			self.menuBarCells[index].isSelected = false
+		}
+	}
 }
 
 extension MenuBarViewModel {
 
 	// For MainView
-	func layoutMainViewMenuBar(selected: Int, month: Month) {
+	func setupMainViewMenuBar(selected: ViewDisplayed, month: Month) {
 		var constraints: (String, String)
 		var selectedCell = false
 
 		for index in 0...8 {
-			if index == selected {
+			if index == selected.rawValue {
 				selectedCell = true
 			} else {
 				selectedCell = false
@@ -53,27 +94,27 @@ extension MenuBarViewModel {
 				constraints = ("H:[v0(61)]", "V:[v0(49)]")
 			}
 
-			guard let imageName = _MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
-			self.menuBarCells.append(_MenuBarCellModel(menuBarItem: _MenuBarItem(imageName: imageName,
-																				   selected: selectedCell,
-																				   constraints: constraints)))
+			guard let imageName = MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
+			self.menuBarCells.append(MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName,
+																		selected: selectedCell,
+																		   constraints: constraints)))
 		}
 	}
 
 	// For Seasons View
-	func layoutSeasonsViewMenuBar(selected: Int) {
-//		var selectedCell: Bool
-//
-//		for index in 0...8 {
-//
-//			if index == selected {
-//				selectedCell = true
-//			} else {
-//				selectedCell = false
-//			}
-			//self.menuBarCells.append(_MenuBarCellViewModel(menuBarItem: MenuBarItem(imageName: MenuBar.Seasons(rawValue: index)!.imageName(), selected: selectedCell, constraints: ("H:[v0(60)]", "V:[v0(48)]"))))
-//		}
+	func setupSeasonsViewMenuBar(season: Season?) {
+		for index in 0...8 {
+			var selectedCell: Bool = false
+			if index < Season.allCases.count {
+				if let season = season {
+					if index == season.rawValue {
+						selectedCell = true
+					}
+				}
+			}
+
+			guard let imageName = MenuBarModel.Seasons.init(rawValue: index)?.imageName else { return }
+			self.menuBarCells.append(MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(61)]", "V:[v0(49)]"))))
+		}
 	}
 }
-
-

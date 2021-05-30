@@ -13,7 +13,7 @@ import UIKit
 extension UIColor {
 
 	struct MonthIcon {
-		static var inSeasonTint: UIColor  { return UIColor(named: Constants.inSeasonColor)! }
+		static var inSeasonTint: UIColor { return UIColor(named: Constants.inSeasonColor)! }
 		static var nonSeasonTint: UIColor { return UIColor(named: Constants.nonSeasonColor)! }
 	}
 

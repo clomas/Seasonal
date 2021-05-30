@@ -11,7 +11,7 @@ import Foundation
 class DateHandler {
 
     static let instance = DateHandler()
-    
+
 func findMonthAndSeason() -> (Month, Season) {
 
         // find the current month and store the index

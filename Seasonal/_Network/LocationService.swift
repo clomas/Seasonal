@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 enum StateLocation: String, CaseIterable {
-	
+
     case noState = "aus"
     case westernAustralia = "wa"
     case southAustralia = "sa"
@@ -42,9 +42,9 @@ protocol LocationDelegate {
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
     static let sharedInstance = LocationManager()
-    private let locationManager : CLLocationManager
+    private let locationManager: CLLocationManager
     private let locationInfo = LocationInformation()
-	var locationDelegate: LocationDelegate?
+	weak var locationDelegate: LocationDelegate?
 	var authStatus: CLAuthorizationStatus?
 
     override init() {
@@ -83,7 +83,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         // now fill address as well for complete information through lat long ..
         let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(mostRecentLocation) { (placemarks, error) in
+        geocoder.reverseGeocodeLocation(mostRecentLocation) { (placemarks, _) in
             guard let placemarks = placemarks, let placemark = placemarks.first else { return }
             if let state = placemark.administrativeArea,
                 let country = placemark.country {
@@ -108,7 +108,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
                 stateFound = StateLocation.newSouthWales
             } else if state == "ca" {
                 stateFound = StateLocation.noState
-            }  else {
+            } else {
 				if locationInfo.country != Constants.straya {
 					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
 						stateFound = state
@@ -123,8 +123,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     // MARK: Location Updated
-    
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) -> Void{
+
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		authStatus = status
 		switch status {
 		case .notDetermined:

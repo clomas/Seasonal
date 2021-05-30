@@ -7,60 +7,18 @@
 //
 
 import UIKit
-import CoreData   
+import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    // NEW FROM HERE
-//    var coordinator: MainCoordinator?
-    // TO HERE
-//    var window: UIWindow?
-    
-//    lazy var persistentContainer: NSPersistentContainer = {
-//        let container = NSPersistentContainer(name: "Seasonal")
-//        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-//            if let error = error as NSError? {
-//                fatalError("Unresolved error \(error), \(error.userInfo)")
-//            }
-//        })
-//        return container
-//    }()
-//
-//    // Mark:   - Core Data Saving Support
-//    func saveContext() {
-//        let context = persistentContainer.viewContext
-//        if context.hasChanges {
-//            do {
-//                try context.save()
-//                print("saved successfully")
-//            } catch {
-//                let nserror = error as NSError
-//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-//            }
-//        }
-//    }
-//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-//
-//        // NEW FROM HERE
-//        let navController = CustomNavigationController()
-//        coordinator = MainCoordinator(navigationController: navController)
-//        coordinator?.start()
-//
-//        window = UIWindow(frame: UIScreen.main.bounds)
-//        window?.rootViewController = navController
-//        window?.makeKeyAndVisible()
-//
-//        // TO HERE
-//        // Override point for customization after application launch.
-//        return true
-//    }
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
+		// Override point for customisation after application launch.
 		return true
 	}
 
 	// MARK: UISceneSession Lifecycle
+	/// I've converted this Application to Scene Delegate model.
 
 	func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
 		// Called when a new scene session is being created.
@@ -74,7 +32,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Use this method to release any resources that were specific to the discarded scenes, as they will not return.
 	}
 
+//    var window: UIWindow?
 
+//    lazy var persistentContainer: NSPersistentContainer = {
+//        let container = NSPersistentContainer(name: "Seasonal")
+//        container.loadPersistentStores(completionHandler: { (storeDescription, error) in
+//            if let error = error as NSError? {
+//                fatalError("Unresolved error \(error), \(error.userInfo)")
+//            }
+//        })
+//        return container
+//    }()
+//
+// MARK:   - Core Data Saving Support
+//    func saveContext() {
+//        let context = persistentContainer.viewContext
+//        if context.hasChanges {
+//            do {
+//                try context.save()
+//                print("saved successfully")
+//            } catch {
+//                let nserror = error as NSError
+//                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+//            }
+//        }
+//    }
+//    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+//        // Override point for customization after application launch.
+//        return true
+//    }
 //
 //    func applicationWillResignActive(_ application: UIApplication) {
 //        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -99,6 +85,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //    }
 //
 //
-
 }
-

@@ -12,7 +12,7 @@
         <!--Splash Screen View Controller-->
         <scene sceneID="p34-q3-Nmz">
             <objects>
-                <viewController storyboardIdentifier="_SplashScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="T39-76-m2i" customClass="_SplashScreenViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SplashScreenViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="T39-76-m2i" customClass="SplashScreenViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Rwc-Rz-8bB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -95,7 +95,7 @@
         <!--Welcome View Controller-->
         <scene sceneID="w2l-Ci-X3G">
             <objects>
-                <viewController storyboardIdentifier="_WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TPe-FU-VCA" customClass="_WelcomeViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WelcomeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="TPe-FU-VCA" customClass="WelcomeViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="SLC-Mj-Ahe">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -192,7 +192,7 @@
         <!--Seasonal Produce-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="_MainViewController" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="_MainViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MainViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -212,7 +212,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="_MonthTableCollectionViewCell" reuseIdentifier="_MonthTableCollectionViewCell" id="uu7-Xg-blf" customClass="_MonthTableCollectionViewCell" customModule="Seasonal" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MonthTableCollectionViewCell" reuseIdentifier="MonthTableCollectionViewCell" id="uu7-Xg-blf" customClass="MonthTableCollectionViewCell" customModule="Seasonal" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="-0.5" width="411" height="719"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -232,7 +232,7 @@
                                                     <color key="separatorColor" name="cellColor"/>
                                                     <color key="sectionIndexBackgroundColor" name="cellColor"/>
                                                     <prototypes>
-                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="_ProduceMonthInfoViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="_ProduceMonthInfoViewCell" rowHeight="76" id="CKm-as-YkX" customClass="_ProduceMonthInfoViewCell" customModule="Seasonal" customModuleProvider="target">
+                                                        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ProduceMonthInfoViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProduceMonthInfoViewCell" rowHeight="76" id="CKm-as-YkX" customClass="ProduceMonthInfoViewCell" customModule="Seasonal" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="24.5" width="411" height="76"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CKm-as-YkX" id="HvF-nR-oqk">
@@ -390,7 +390,7 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="_MenuBar" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="_MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="MenuBar" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="718" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -404,7 +404,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MenuBarCell" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="_MenuBarCell" id="KNj-oY-hRF" customClass="_MenuBarCell" customModule="Seasonal" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MenuBarCell" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="MenuBarCell" id="KNj-oY-hRF" customClass="MenuBarCollectionViewCell" customModule="Seasonal" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="95" height="58"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -461,7 +461,7 @@
         <!--Season-->
         <scene sceneID="NLB-nL-f7k">
             <objects>
-                <viewController storyboardIdentifier="_SeasonsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FTr-h4-Wv5" customClass="_SeasonsViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SeasonsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FTr-h4-Wv5" customClass="SeasonsViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xhg-lO-jab">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -476,28 +476,28 @@
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="highlightedColor" name="fontDefault"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SPs-xc-l3z">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SPs-xc-l3z">
                                 <rect key="frame" x="0.0" y="88" width="414" height="718"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" name="cellColour"/>
                                 <color key="sectionIndexBackgroundColor" name="cellColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="_SeasonsTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="_SeasonsTableViewCell" rowHeight="63" id="Fmz-5n-u9N" customClass="_SeasonsTableViewCell" customModule="Seasonal" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="63"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SeasonsTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SeasonsTableViewCell" id="Fmz-5n-u9N" customClass="SeasonsTableViewCell" customModule="Seasonal" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="24.5" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fmz-5n-u9N" id="0Us-dx-Vbf">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="63"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" image="Apples" translatesAutoresizingMaskIntoConstraints="NO" id="0RV-Gx-L7j">
-                                                    <rect key="frame" x="10" y="0.0" width="57" height="57.5"/>
+                                                    <rect key="frame" x="10" y="0.0" width="57" height="60"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="57" id="8Ji-ba-DWS"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Apple" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uff-BV-JtK">
-                                                    <rect key="frame" x="58" y="13" width="303" height="37"/>
+                                                    <rect key="frame" x="58" y="13" width="303" height="34"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="23"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -521,12 +521,12 @@
                                                 <constraint firstItem="0RV-Gx-L7j" firstAttribute="top" secondItem="0Us-dx-Vbf" secondAttribute="top" id="0Xk-mQ-auI"/>
                                                 <constraint firstItem="Uff-BV-JtK" firstAttribute="centerY" secondItem="0Us-dx-Vbf" secondAttribute="centerY" id="22L-GL-QXy"/>
                                                 <constraint firstAttribute="trailing" secondItem="sXm-TJ-5gf" secondAttribute="trailing" constant="12" id="EO3-pq-cp8"/>
-                                                <constraint firstAttribute="bottom" secondItem="0RV-Gx-L7j" secondAttribute="bottom" constant="5.5" id="On4-bo-TWY"/>
+                                                <constraint firstAttribute="bottom" secondItem="0RV-Gx-L7j" secondAttribute="bottom" id="On4-bo-TWY"/>
                                                 <constraint firstItem="Uff-BV-JtK" firstAttribute="centerX" secondItem="0Us-dx-Vbf" secondAttribute="centerX" constant="2.5" id="RCl-yO-3m0"/>
                                                 <constraint firstItem="Uff-BV-JtK" firstAttribute="leading" secondItem="0Us-dx-Vbf" secondAttribute="leadingMargin" constant="38" id="W50-SR-wwR"/>
                                                 <constraint firstItem="0RV-Gx-L7j" firstAttribute="leading" secondItem="0Us-dx-Vbf" secondAttribute="leading" constant="10" id="iAf-AF-yc9"/>
+                                                <constraint firstItem="sXm-TJ-5gf" firstAttribute="centerY" secondItem="0Us-dx-Vbf" secondAttribute="centerY" id="jxS-qN-xlj"/>
                                                 <constraint firstItem="Uff-BV-JtK" firstAttribute="top" secondItem="0Us-dx-Vbf" secondAttribute="topMargin" constant="2" id="o2W-w4-qbl"/>
-                                                <constraint firstItem="sXm-TJ-5gf" firstAttribute="top" secondItem="0Us-dx-Vbf" secondAttribute="topMargin" constant="2" id="ygU-il-zuK"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="cellColor"/>
@@ -538,7 +538,7 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XM5-Vh-Nr5" customClass="_MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="XM5-Vh-Nr5" customClass="MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="806" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -552,7 +552,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="_MenuBarCell" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="_MenuBarCell" id="HxS-dJ-Ik0" customClass="_MenuBarCell" customModule="Seasonal" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MenuBarCell" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="MenuBarCell" id="HxS-dJ-Ik0" customClass="MenuBarCollectionViewCell" customModule="Seasonal" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="95" height="58"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -611,7 +611,7 @@
         <!--Select Month-->
         <scene sceneID="IF6-Mv-EX8">
             <objects>
-                <viewController storyboardIdentifier="_MonthPickerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="olc-Jv-hRP" customClass="_MonthPickerViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MonthPickerViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="olc-Jv-hRP" customClass="MonthPickerViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="paw-R5-qCc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -680,7 +680,7 @@
         <!--Info View Controller-->
         <scene sceneID="egt-IQ-d41">
             <objects>
-                <viewController storyboardIdentifier="_InfoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CQN-xA-24t" customClass="_InfoViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InfoViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="CQN-xA-24t" customClass="InfoViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4SY-pY-qlN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -7,15 +7,13 @@
 //
 
 import Foundation
-import UIKit
 
 final class _WelcomeViewModel {
 
 	weak var coordinator: _InitialViewCoordinator?
 
 	// TODO: Constants
-	let welcomeLabel = "Welcome to Seasonal"
-	var videoName = "lightwelcomevideo"
+	let welcomeLabel = Constants.welcomeToSeasonal
 
 	func dismissTapped() {
 		coordinator?.readyToDismiss()

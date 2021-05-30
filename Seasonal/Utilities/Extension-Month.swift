@@ -5,9 +5,8 @@
 //  Created by Clint Thomas on 29/4/21.
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
-// TODO: Rename Extensions to Extension
-import Foundation
 
+import Foundation
 
 extension Month {
 

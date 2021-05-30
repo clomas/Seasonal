@@ -36,7 +36,6 @@ final class CoreDataManager {
 		persistentContainer.viewContext // main context
 	}
 
-	// TODO: Error handling here
 	func delete(id: Int) throws {
 
 		do {

@@ -178,7 +178,7 @@ final class _AppCoordinator: LocationDelegate {
 			mainViewCoordinator.parentCoordinator = self
 			mainViewCoordinator.start()
 		} else {
-			// TODO: Error handling here
+			// Bail out, the app isn't going to work without produceData
 			fatalError("error fetching data")
 		}
 	}

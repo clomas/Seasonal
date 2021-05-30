@@ -21,6 +21,14 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 
     private var player: AVPlayer!
 
+	var videoName: String {
+		if traitCollection.userInterfaceStyle == .dark {
+			return Constants.darkWelcomeVideo
+		} else {
+			return Constants.lightWelcomeVideo
+		}
+	}
+
     override func viewDidLoad() {
         super.viewDidLoad()
 		viewModel.coordinator?.initialViewDelegate = self
@@ -36,18 +44,14 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
 		dismissButton.isEnabled = false
 		dismissArrowButton.isEnabled = false
 
-		// check if dark mode
-		if traitCollection.userInterfaceStyle == .dark {
-			viewModel.videoName = "darkwelcomevideo"
-		}
+
 		playVideo()
     }
 
     // MARK: Video
 
     private func playVideo() {
-        guard let path = Bundle.main.path(forResource: viewModel.videoName, ofType: "mp4") else {
-            debugPrint("video not found")
+        guard let path = Bundle.main.path(forResource: videoName, ofType: "mp4") else {
             return
         }
         player = AVPlayer(url: URL(fileURLWithPath: path))
@@ -62,10 +66,7 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
         let castedLayer = AVPlayerView.layer as! AVPlayerLayer
         castedLayer.player = player
         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
-        //player.volume = 0
-        //player.actionAtItemEnd = .none
         player.play()
-
         NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
     }
 
@@ -73,8 +74,8 @@ class _WelcomeViewController: UIViewController, InitialViewDelegate {
     @objc func playerItemDidReachEnd(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
+			playVideo()
         }
-		playVideo()
     }
 
     // MARK: Animations

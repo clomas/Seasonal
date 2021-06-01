@@ -13,7 +13,7 @@ extension UIViewController {
 	// Instantiating ViewControllers
 	static func instantiate<T>() -> T {
 		let storyboard = UIStoryboard(name: "Main", bundle: .main)
-		let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as! T
+		let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as! T // swiftlint:disable:this force_cast
 		return controller
 	}
 

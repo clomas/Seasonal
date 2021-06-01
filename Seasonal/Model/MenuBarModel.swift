@@ -15,8 +15,8 @@ enum MenuBarModel: String {
 
 	func imageName() -> String {
 		switch self {
-			case .categories: return "\(Constants.categories).png"
-			case .altLabel: return "\(Constants.allCategories).png"
+		case .categories: return "\(Constants.categories).png"
+		case .altLabel: return "\(Constants.allCategories).png"
 		}
 	}
 

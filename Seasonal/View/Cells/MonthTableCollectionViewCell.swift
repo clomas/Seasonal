@@ -95,7 +95,7 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants._ProduceMonthInfoViewCell) as? ProduceMonthInfoViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ProduceMonthInfoViewCell) as? ProduceMonthInfoViewCell {
             cell.likeButtonDelegate = self
 			switch viewModel.viewDisplayed {
 			case .favourites:

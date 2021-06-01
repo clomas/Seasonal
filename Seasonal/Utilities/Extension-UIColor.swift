@@ -34,7 +34,7 @@ extension UIColor {
 		static var tint: UIColor { return UIColor(named: Constants.searchBarColor)! }
 	}
 
-	struct tableViewCell {
+	struct TableViewCell {
 		static var tint: UIColor { return UIColor(named: Constants.tableViewCellColor)! }
 	}
 }

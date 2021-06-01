@@ -10,7 +10,7 @@
 
 import UIKit
 
-protocol LikeButtonDelegate {
+protocol LikeButtonDelegate: AnyObject {
 	func likeButtonTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed)
 }
 
@@ -42,7 +42,7 @@ class ProduceMonthInfoViewCell: UITableViewCell {
             self.likeButton.isSelected = false
         }
 
-        self.backgroundColor = UIColor.tableViewCell.tint
+        self.backgroundColor = UIColor.TableViewCell.tint
 
         if produce.liked == false {
 			let likeImage = UIImage(named: "\(Constants.unliked).png")

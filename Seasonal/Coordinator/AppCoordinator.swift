@@ -34,7 +34,7 @@ final class AppCoordinator: LocationDelegate {
 
 	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
 
-	private var networkService = NetworkService.sharedInstance()
+	private var networkService = NetworkService.instance()
 	private var locationManager: LocationManager! = LocationManager.sharedInstance
 	private var currentLocation: StateLocation = .noState
 	private var produceData: [Produce]?
@@ -65,7 +65,7 @@ final class AppCoordinator: LocationDelegate {
 		if UserDefaults.isFirstLaunch() == true {
 			return true
 		} else {
-			return false
+			return true
 		}
 	}
 

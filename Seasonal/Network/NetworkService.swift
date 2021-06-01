@@ -16,22 +16,20 @@ protocol NetworkObserver: AnyObject {
 
 final class NetworkService {
 
+	class func instance() -> NetworkService {
+		return sharedInstance
+	}
+
 	struct NetworkChangeObservation {
 		weak var observer: NetworkObserver?
 	}
 
 	private var monitor = NWPathMonitor()
-	// TODO: Remove undescore
-	private static let _sharedInstance = NetworkService()
+	private static let sharedInstance = NetworkService()
 	private var observations = [ObjectIdentifier: NetworkChangeObservation]()
-	var currentStatus: NWPath.Status {
-		get {
-			return monitor.currentPath.status
-		}
-	}
 
-	class func sharedInstance() -> NetworkService {
-		return _sharedInstance
+	var currentStatus: NWPath.Status {
+		return monitor.currentPath.status
 	}
 
 	var networkUpdate: ((Bool) -> Void)?

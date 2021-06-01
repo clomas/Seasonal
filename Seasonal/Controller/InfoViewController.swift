@@ -81,9 +81,9 @@ class InfoViewController: UIViewController {
 
 extension InfoViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-
-        if let _ = error {
+        if let mailError = error {
             // TODO: Show error alert
+			print(mailError)
             controller.dismiss(animated: true)
             return
         }

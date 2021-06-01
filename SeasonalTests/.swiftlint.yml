@@ -1,0 +1,11 @@
+line_length: 160
+
+disabled_rules:
+  - todo
+  - function_parameter_count
+  - vertical_parameter_alignment #this is disabled due to CollectionView layout delegates complaining
+
+identifier_name:
+  allowed_symbols: "_"
+  excluded:
+    - id

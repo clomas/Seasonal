@@ -35,7 +35,7 @@ class SeasonsTableViewCell: UITableViewCell {
             self.likeButton.isSelected = false
         }
 
-        self.backgroundColor = UIColor.tableViewCell.tint
+        self.backgroundColor = UIColor.TableViewCell.tint
 
         if produce.liked == false {
 			let likeImage = UIImage(named: "\(Constants.unliked).png")

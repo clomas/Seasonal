@@ -33,8 +33,7 @@ class CloudKitDataService {
 	let container = CKContainer.default()
 
     private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> Void) {
-        container.fetchUserRecordID {
-            recordID, error in
+        container.fetchUserRecordID { recordID, error in
             if error != nil {
                 print(error!.localizedDescription)
                 complete(nil, error as NSError?)
@@ -88,6 +87,7 @@ class CloudKitDataService {
 
         for record in publicRecords {
 
+			var id = 0
 			var name = Constants.apple
             var imageName = Constants.apple
             var category = ViewDisplayed.ProduceCategory.fruit
@@ -96,10 +96,12 @@ class CloudKitDataService {
             var seasons = [Season]()
             var liked = false
 
-			if let nameRecord = record.object(forKey: Constants.name) as? String,
+			if let recordID = record.object(forKey: Constants.id) as? Int,
+			   let nameRecord = record.object(forKey: Constants.name) as? String,
 			   let categoryRecord = record.object(forKey: Constants.category) as? String,
                let monthsRecord = record.object(forKey: "months_\(currentLocation.rawValue)") as? String,
                let seasonsRecord = record.object(forKey: "seasons_\(currentLocation.rawValue)") as? String {
+				id = recordID
                 name = nameRecord
                 imageName = nameRecord
                 category = ViewDisplayed.ProduceCategory.asArray.filter {$0.asString == categoryRecord}[0]
@@ -108,19 +110,19 @@ class CloudKitDataService {
             }
 
 			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
-                liked = Bool(truncating: (record.object(forKey: Constants.id) as! Int) as NSNumber)
-            }
+				liked = Bool(truncating: id as NSNumber)
+			}
 
-            let produce = Produce(id: record.object(forKey: Constants.id) as! Int,
-                                   name: name,
-                                   category: category,
-                                   imageName: imageName,
-                                   description: description, // Not implemented yet
-                                   months: months,
-                                   seasons: seasons,
-                                   liked: liked)
+			let produce = Produce(id: id,
+								  name: name,
+								  category: category,
+								  imageName: imageName,
+								  description: description, // Not implemented yet
+								  months: months,
+								  seasons: seasons,
+								  liked: liked)
 
-            produceArray.append(produce)
+			produceArray.append(produce)
         }
 
         let localLikedData = LocalDataManager.loadAll(LikedProduce.self)
@@ -168,7 +170,7 @@ class CloudKitDataService {
 
 extension String {
 
-    // Parse seasons
+    // Parse Seasons
     func createSeasonArray() -> [Season] {
         var seasons = [Season]()
 
@@ -187,6 +189,7 @@ extension String {
         return seasons
     }
 
+	// Parse Months
     func createMonthArray() -> [Month] {
         var months = [Month]()
         var searchStartIndex = self.startIndex

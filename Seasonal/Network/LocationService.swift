@@ -36,7 +36,7 @@ enum StateLocation: String, CaseIterable {
 	}
 }
 
-protocol LocationDelegate {
+protocol LocationDelegate: AnyObject {
     func locationReady(location: StateLocation)
 }
 
@@ -60,15 +60,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     func start() {
         if CLLocationManager.locationServicesEnabled() {
-            switch CLLocationManager.authorizationStatus() {
-                case .notDetermined:
-                    locationManager.requestWhenInUseAuthorization()
-                    locationManager.startUpdatingLocation()
-                case .authorizedAlways, .authorizedWhenInUse:
-                    locationManager.startUpdatingLocation()
-                default:
-                break
-            }
+			switch CLLocationManager.authorizationStatus() {
+			case .notDetermined:
+				locationManager.requestWhenInUseAuthorization()
+				locationManager.startUpdatingLocation()
+			case .authorizedAlways, .authorizedWhenInUse:
+				locationManager.startUpdatingLocation()
+			default:
+				break
+			}
         }
     }
 

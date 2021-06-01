@@ -5,13 +5,13 @@
 //  Created by Clint Thomas on 29/4/21.
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
+// For like button animations
 
 import UIKit
 
-// Button Animations
-
 extension UIButton {
 
+	// Button Animations
 	func animateLikeButton(selected: Bool) {
 		// this removed a bug where the button jumped if I pressed like then pressed unlike - boom jump to the left.
 		self.translatesAutoresizingMaskIntoConstraints = true

@@ -164,7 +164,6 @@ extension MenuBarCollectionView: UICollectionViewDataSource {
 		self.layoutIfNeeded()
 
 		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MenuBarCell, for: indexPath) as? MenuBarCollectionViewCell {
-			// TODO: Move this to viewModel
 			cell.updateViews(imageName: viewModel.menuBarCells[indexPath.row].imageName,
 							 constraints: viewModel.menuBarCells[indexPath.row].constraints,
 							 selected: viewModel.menuBarCells[indexPath.row].isSelected)

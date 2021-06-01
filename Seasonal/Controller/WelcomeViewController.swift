@@ -45,6 +45,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 		dismissArrowButton.isEnabled = false
 
 		playVideo()
+		animateWelcomeLabel()
     }
 
     // MARK: Video
@@ -62,11 +63,15 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
              print(error)
         }
 
-        let castedLayer = AVPlayerView.layer as! AVPlayerLayer
+		if let castedLayer = AVPlayerView.layer as? AVPlayerLayer {
         castedLayer.player = player
         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         player.play()
-        NotificationCenter.default.addObserver(self, selector: #selector(playerItemDidReachEnd(notification:)), name: .AVPlayerItemDidPlayToEndTime, object: player.currentItem)
+        NotificationCenter.default.addObserver(self,
+											   selector: #selector(playerItemDidReachEnd(notification:)),
+											   name: .AVPlayerItemDidPlayToEndTime,
+											   object: player.currentItem)
+		}
     }
 
     // Start video over after completion
@@ -80,34 +85,12 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
     // MARK: Animations
 
 	// TODO: nothing happens here
-    private func animateLabel() {
-        if self.dismissButton.isHidden == false {
-            self.activityMonitor.isHidden = true
-        }
-        self.welcomeLabel.alpha = 0.0
-        UIView.animate(withDuration: 0.9, animations: {() -> Void in
-			self.welcomeLabel.text = self.viewModel.welcomeLabel
-            self.welcomeLabel.alpha = 1
-        }, completion: { finished in
-            UIView.animate(withDuration: 3, animations: {() -> Void in
-            }, completion: { finished in
-                UIView.animate(withDuration: 2, animations: {() -> Void in
-                    self.welcomeLabel.alpha = 0.0
-                }, completion: { finished in
-                    if finished {
-                        self.welcomeLabel.text = "Swipe between months and\n filter by category"
-                        UIView.animate(withDuration: 0.3, animations: {
-                            self.welcomeLabel.alpha = 1
-                        })
-                        DispatchQueue.global(qos: .utility).async {
-                            DispatchQueue.global(qos: .default).async {
-                            }
-                        }
-                    }
-                })
-            })
-        })
-    }
+	private func animateWelcomeLabel() {
+		if self.dismissButton.isHidden == false {
+			self.activityMonitor.isHidden = true
+		}
+		self.welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel.welcomeLabel)
+	}
 
     // MARK: Buttons
 
@@ -185,12 +168,12 @@ class AVPlayerView: UIView {
 
 public extension UIAlertController {
     func show() {
-        let win = UIWindow(frame: UIScreen.main.bounds)
-        let vc = UIViewController()
-        vc.view.backgroundColor = .clear
-        win.rootViewController = vc
-        win.windowLevel = UIWindow.Level.alert + 1
-        win.makeKeyAndVisible()
-        vc.present(self, animated: true, completion: nil)
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        let viewController = UIViewController()
+		viewController.view.backgroundColor = .clear
+		window.rootViewController = viewController
+		window.windowLevel = UIWindow.Level.alert + 1
+		window.makeKeyAndVisible()
+		viewController.present(self, animated: true, completion: nil)
     }
 }

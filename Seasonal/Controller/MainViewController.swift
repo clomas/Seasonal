@@ -8,8 +8,6 @@
 
 import UIKit
 
-// TODO: swift lint after deleting irrelevant files
-
 class MainViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating {
 
 	var viewModel: MainViewModel!
@@ -169,13 +167,17 @@ extension MainViewController: UICollectionViewDataSource {
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants._MonthTableCell, for: indexPath) as! MonthTableCollectionViewCell
-		// for my implementation of the infinite collectionView I need to change the subview cell tag
-		// based on the indexPath
-		cell.tag = (indexPath.item)
-		cell.viewModel = viewModel
-		cell.tableView.reloadData()
-		return cell
+		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
+														 for: indexPath) as? MonthTableCollectionViewCell {
+			// for my implementation of the infinite collectionView I need to change the subview cell tag
+			// based on the indexPath
+			cell.tag = (indexPath.item)
+			cell.viewModel = viewModel
+			cell.tableView.reloadData()
+			return cell
+		} else {
+			return MonthTableCollectionViewCell()
+		}
 	}
 }
 
@@ -187,11 +189,15 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		return CGSize(width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)
 	}
 
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
 		return collectionView.frame.height
 	}
 
-	func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+	func collectionView(_ collectionView: UICollectionView,
+						layout collectionViewLayout: UICollectionViewLayout,
+						minimumLineSpacingForSectionAt section: Int) -> CGFloat {
 		return 0
 	}
 

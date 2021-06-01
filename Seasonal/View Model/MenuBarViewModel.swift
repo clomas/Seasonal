@@ -88,7 +88,7 @@ extension MenuBarViewModel {
 				selectedCell = false
 			}
 
-			if index == 2 {
+			if index == ViewDisplayed.months.rawValue {
 				constraints = ("H:[v0(45)]", "V:[v0(43)]")
 			} else {
 				constraints = ("H:[v0(61)]", "V:[v0(49)]")
@@ -96,13 +96,16 @@ extension MenuBarViewModel {
 
 			guard let imageName = MenuBarModel.Months.init(rawValue: index)?.imageName(currentMonth: month) else { return }
 			self.menuBarCells.append(MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName,
-																		selected: selectedCell,
-																		   constraints: constraints)))
+																			   selected: selectedCell,
+																			   constraints: constraints))
+			)
 		}
 	}
 
 	// For Seasons View
 	func setupSeasonsViewMenuBar(season: Season?) {
+		let constraints = ("H:[v0(61)]", "V:[v0(49)]")
+
 		for index in 0...8 {
 			var selectedCell: Bool = false
 			if index < Season.allCases.count {
@@ -114,7 +117,10 @@ extension MenuBarViewModel {
 			}
 
 			guard let imageName = MenuBarModel.Seasons.init(rawValue: index)?.imageName else { return }
-			self.menuBarCells.append(MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName(), selected: selectedCell, constraints: ("H:[v0(61)]", "V:[v0(49)]"))))
+			self.menuBarCells.append(MenuBarCellModel(menuBarItem: MenuBarItem(imageName: imageName(),
+																			   selected: selectedCell,
+																			   constraints: constraints))
+			)
 		}
 	}
 }

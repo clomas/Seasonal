@@ -22,6 +22,8 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	var produceData: [Season: [ProduceModel]]
 
+	private let produceDataService: ProduceDataService
+
 	var season: Season
 	var category: ViewDisplayed.ProduceCategory
 	var searchString: String
@@ -31,12 +33,13 @@ final class SeasonsViewModel: MenuBarDelegate {
 	init(produceData: [Season: [ProduceModel]],
 		 season: Season,
 		 category: ViewDisplayed.ProduceCategory,
-		 searchString: String
-	) {
+		 searchString: String,
+		 dataService: ProduceDataService = ProduceDataService()) {
 		self.produceData = produceData
 		self.season = season
 		self.category = category
 		self.searchString = searchString
+		self.produceDataService = dataService
 	}
 
 	func menuBarTapped(at index: Int) {
@@ -62,35 +65,45 @@ final class SeasonsViewModel: MenuBarDelegate {
 		return String(describing: season).createTitleString(with: category)
 	}
 
-	func menuBarScrollFinished() {
-		// <#code#>Butt
-	}
-
+	// TODO:
 	func likeToggle(id: Int, liked: Bool) {
+		print(liked)
 
-		// UP TO HERE - likeToggle
-//		// reference for favourites array manipulation
-//		var lastMonthIndex = 0
-//		var produceIndex = 0
-//		produceDataService.updateLike(id: id, liked: liked)
-//		// update viewModel array
-//		for (monthIndex, month) in self.monthsProduce.enumerated() {
-//			if let likedProduceIndex = month.firstIndex(where: { $0.id == id }) {
-//				self.monthsProduce[monthIndex][likedProduceIndex].liked = liked
-//				lastMonthIndex = monthIndex
-//				produceIndex = likedProduceIndex
-//			} else {
-//				print("like index not found")
-//			}
-//		}
-//
+		// reference for favourites array manipulation
+	//	var lastMonthIndex = 0
+	//	var produceIndex = 0
+		// produceDataService.updateLike(id: id, liked: liked)
+		// update viewModel array
+		var updateLikeTo = false
+
+		if liked == false {
+			updateLikeTo = true
+		}
+
+		// Update in CloudKit and on disk
+		produceDataService.updateLike(id: id, liked: liked)
+
+		for seasonProduce in self.produceData {
+			let season = seasonProduce.key
+			if let index = self.produceData[season]?.firstIndex(where: { $0.id == id}) {
+				self.produceData[season]?[index].liked = updateLikeTo
+				print(self.produceData[season]?[index].liked ?? "")
+			}
+		}
+		// The MainViewController has to know about liked produce
+		// bubble up the id and like to coordinator
+		coordinator?.updateDataModels(for: id, liked: liked)
+
 //		func addRemoveFavourites() {
 //			if liked == true {
-//				favouritesProduce.append(self.monthsProduce[lastMonthIndex][produceIndex])
+//				// get the liked produce, insert into array at the correct index by id
+//				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
+//				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
 //			} else {
-//				favouritesProduce.removeAll{$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
+//				favouritesProduce.removeAll {$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
 //			}
-//
+//		}
+//		addRemoveFavourites()
 
 	}
 

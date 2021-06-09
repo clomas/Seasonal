@@ -11,10 +11,10 @@ import MessageUI
 
 class InfoViewController: UIViewController {
 
+	var viewModel: InfoViewModel!
+
 	// TODO: get the order of this the same everywhere.
     @IBOutlet weak var infoTextBlock: UILabel!
-
-	var viewModel: InfoViewModel!
 
     override func viewDidLoad() {
         super.viewDidLoad()

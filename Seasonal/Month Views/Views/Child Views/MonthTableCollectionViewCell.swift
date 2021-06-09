@@ -36,13 +36,8 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
     // MARK: Like Button /////
 
 	func likeButtonTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
-		var updateLikeTo = false
         if let id = cell.id {
-
-			if cell.likeButton.isSelected == false {
-				updateLikeTo = true
-			}
-			viewModel.likeToggle(id: id, liked: updateLikeTo)
+			viewModel.likeToggle(id: id, liked: cell.isSelected)
 			if viewDisplayed == .favourites {
 				if let indexPath = self.tableView.indexPath(for: cell) {
 					DispatchQueue.main.asyncAfter(deadline: .now(), execute: {

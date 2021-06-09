@@ -45,6 +45,10 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 	private var dataFetched: [Produce]?
 	private var determinedLocation: StateLocation
+	private var monthAndSeason = DateHandler().findMonthAndSeason()
+
+	let mainViewController: MainViewController = .instantiate()
+	let produceDataService = ProduceDataService()
 
 	init(navigationController: UINavigationController, dataFetched: [Produce], location: StateLocation) {
 		self.navigationController = navigationController
@@ -54,7 +58,6 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 	func start() {
 		self.navigationController.delegate = self
-		let mainViewController: MainViewController = .instantiate()
 		guard let produceData = dataFetched else {
 			return
 		}
@@ -135,6 +138,18 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		self.navigationController.pushViewController(seasonsViewController, animated: true)
 	}
 
+	func updateDataModels(for id: Int, liked: Bool) {
+		// Update MainViewController's viewModel here
+		// Would love to know if theres a better way to do this
+		// MainViewController is never removed from the NavigationController
+		mainViewController.viewModel.likeToggle(id: id, liked: liked)
+		// update master produce away for navigating back to seasonsView
+		// SeasonsViewController is pushed and popped.
+		if let index = dataFetched?.firstIndex(where: { $0.id == id}) {
+			dataFetched?[index].liked = liked
+		}
+	}
+
 	func presentInfoViewController() {
 		self.modalNavigationController = UINavigationController()
 		let infoViewController: InfoViewController = .instantiate()
@@ -158,12 +173,10 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	func findCurrentMonth() -> Month {
-		let monthAndSeason = DateHandler().findMonthAndSeason()
 		return monthAndSeason.0
 	}
 
 	func findCurrentSeason() -> Season {
-		let monthAndSeason = DateHandler().findMonthAndSeason()
 		return monthAndSeason.1
 	}
 

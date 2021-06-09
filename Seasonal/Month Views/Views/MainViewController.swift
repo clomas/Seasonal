@@ -82,6 +82,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
+		infiniteMonthCollectionView.reloadData()
 		self.navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
 

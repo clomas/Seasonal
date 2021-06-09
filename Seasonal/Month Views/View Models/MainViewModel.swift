@@ -9,7 +9,6 @@
 import Foundation
 
 enum Month: Int, CaseIterable {
-
 	case decemberOverflow
 	case january
 	case february
@@ -24,7 +23,6 @@ enum Month: Int, CaseIterable {
 	case november
 	case december
 	case januaryOverflow
-
 }
 
 final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
@@ -36,6 +34,8 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	var monthsProduce: [[ProduceModel]]
 	var favouritesProduce: [ProduceModel]
 
+	private let produceDataService: ProduceDataService
+
 	var month: Month
 	var previousMonth: Month // Keep track of - for animation
 	var category: ViewDisplayed.ProduceCategory
@@ -43,8 +43,6 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 
 	var reloadTableView = {}
 	var updateMenuBar = {}
-
-	private let produceDataService: ProduceDataService
 
 	init(monthsProduce: [[ProduceModel]],
 		 favouritesProduce: [ProduceModel],
@@ -64,7 +62,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		self.searchString = searchString
 		self.produceDataService = dataService
 	}
-
+	test //likes workin! esp. between classes
 	func menuBarTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
@@ -111,17 +109,24 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		updateMenuBar()
 		reloadTableView()
 	}
-
+	// TODO: 
 	func likeToggle(id: Int, liked: Bool) {
-		print(liked)
 		// reference for favourites array manipulation
 		var lastMonthIndex = 0
 		var produceIndex = 0
-		produceDataService.updateLike(id: id, liked: liked)
 		// update viewModel array
-		for (monthIndex, month) in self.monthsProduce.enumerated() {
-			if let likedProduceIndex = month.firstIndex(where: { $0.id == id }) {
-				self.monthsProduce[monthIndex][likedProduceIndex].liked = liked
+		var updateLikeTo = false
+
+		if liked == false {
+			updateLikeTo = true
+		}
+
+		// Update in CloudKit and on disk
+		produceDataService.updateLike(id: id, liked: liked)
+
+		for (monthIndex, monthProduce) in self.monthsProduce.enumerated() {
+			if let likedProduceIndex = monthProduce.firstIndex(where: { $0.id == id }) {
+				self.monthsProduce[monthIndex][likedProduceIndex].liked = updateLikeTo
 				lastMonthIndex = monthIndex
 				produceIndex = likedProduceIndex
  			}
@@ -142,7 +147,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	func infoButtonTapped() {
 		coordinator?.presentInfoViewController()
 	}
-//
+
 //	func insertSorted<T: Comparable>( seq: inout [T], newItem item: T) {
 //		let index = seq.reduce(0) { $1 < item ? $0 + 1 : $0 }
 //		seq.insert(item, at: index)
@@ -213,6 +218,7 @@ extension MainViewModel {
 		switch category {
 		case .cancelled, .all:
 			if searchString == "" {
+
 				return self.favouritesProduce.filter {$0.liked == true}
 			} else {
 				return self.favouritesProduce.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })

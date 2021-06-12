@@ -37,9 +37,10 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
 	func likeButtonTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
         if let id = cell.id {
-			viewModel.likeToggle(id: id, liked: cell.isSelected)
+			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
 			if viewDisplayed == .favourites {
 				if let indexPath = self.tableView.indexPath(for: cell) {
+					print(indexPath)
 					DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
 						self.tableView.beginUpdates()
 						self.tableView.deleteRows(at: [indexPath], with: .right)

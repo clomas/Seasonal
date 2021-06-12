@@ -62,7 +62,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		self.searchString = searchString
 		self.produceDataService = dataService
 	}
-	test //likes workin! esp. between classes
+
 	func menuBarTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
@@ -111,6 +111,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	}
 	// TODO: 
 	func likeToggle(id: Int, liked: Bool) {
+		print("toggle = \(id) \(liked)" )
 		// reference for favourites array manipulation
 		var lastMonthIndex = 0
 		var produceIndex = 0
@@ -121,9 +122,6 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 			updateLikeTo = true
 		}
 
-		// Update in CloudKit and on disk
-		produceDataService.updateLike(id: id, liked: liked)
-
 		for (monthIndex, monthProduce) in self.monthsProduce.enumerated() {
 			if let likedProduceIndex = monthProduce.firstIndex(where: { $0.id == id }) {
 				self.monthsProduce[monthIndex][likedProduceIndex].liked = updateLikeTo
@@ -133,7 +131,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		}
 
 		func addRemoveFavourites() {
-			if liked == true {
+			if updateLikeTo == true {
 				// get the liked produce, insert into array at the correct index by id
 				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
 				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
@@ -141,7 +139,13 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 				favouritesProduce.removeAll {$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
 			}
 		}
+		// Call here to update before tableView updates
 		addRemoveFavourites()
+
+		// Update in CloudKit and on disk
+		produceDataService.updateLike(id: id, liked: updateLikeTo)
+		// Update data model for syncing between views
+		coordinator?.updateDataModels(for: id, liked: updateLikeTo, from: .months)
 	}
 
 	func infoButtonTapped() {

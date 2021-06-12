@@ -11,7 +11,9 @@ import Foundation
 class ProduceDataService {
 
 	func updateLike(id: Int, liked: Bool) {
-		CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: id)
+		CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: id) { result in
+			print(result, "liked in CloudKit")
+		}
 
 		// Update in local database
 		let likedProduce = LikedProduce(id: id)

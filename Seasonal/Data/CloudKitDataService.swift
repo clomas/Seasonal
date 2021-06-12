@@ -23,7 +23,8 @@ extension CKDatabase: CKDatabaseProtocol { }
 
 enum CloudKitError: Error {
     case databaseError
-    case castingError
+	case invalidID
+	case likesError
 }
 
 class CloudKitDataService {
@@ -32,46 +33,46 @@ class CloudKitDataService {
     var currentLocation: StateLocation = .noState
 	let container = CKContainer.default()
 
-    private func iCloudUserIDAsync(complete: @escaping (_ instance: CKRecord.ID?, _ error: NSError?) -> Void) {
+	private func iCloudUserIDAsync(completion: @escaping (Result<CKRecord.ID?, CloudKitError>) -> Void) {
         container.fetchUserRecordID { recordID, error in
             if error != nil {
                 print(error!.localizedDescription)
-                complete(nil, error as NSError?)
+				completion(.failure(.invalidID))
             } else {
                 print("fetched ID \(String(describing: recordID?.recordName))")
-                complete(recordID, nil)
+				completion(.success(recordID))
             }
         }
     }
 
     // MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping([Produce]) -> Void) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[Produce], CloudKitError>) -> Void) {
         currentLocation = locationFound
         let predicate = NSPredicate(value: true)
 		let publicQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
-        let privateQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
+        let privateQuery = CKQuery(recordType: Constants.australianProduceLikes, predicate: predicate)
 		publicQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
         privateQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
         var publicData = [CKRecord]()
-        var privateData = [CKRecord]()
 
         CKContainer.default().publicCloudDatabase.perform(publicQuery, inZoneWith: .default) { [unowned self] results, error in
             if let error = error {
                 print(error.localizedDescription)
+				dataFetched(.failure(.databaseError))
             } else {
-                if results != nil && results!.count > 0 {
-                    publicData = results!
+				if let publicResults = results {
+                    publicData = publicResults
                 }
                 CKContainer.default().privateCloudDatabase.perform(privateQuery, inZoneWith: .default) { [unowned self] results, error in
                     if let error = error {
-                        dataFetched(addDataToArray(publicRecords: publicData, privateRecords: privateData))
-
+						// continue if private error
+						let privateData = [CKRecord]()
+						dataFetched(.success(addDataToArray(publicRecords: publicData, privateRecords: privateData)))
                         print(error.localizedDescription)
                     } else {
-                        if results != nil {
-                            privateData = results!
-                            dataFetched(addDataToArray(publicRecords: publicData, privateRecords: privateData))
+                        if let privateData = results {
+							dataFetched(.success(addDataToArray(publicRecords: publicData, privateRecords: privateData)))
                         }
                     }
                 }
@@ -86,7 +87,6 @@ class CloudKitDataService {
 		let likedArray = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
         for record in publicRecords {
-
 			var id = 0
 			var name = Constants.apple
             var imageName = Constants.apple
@@ -126,6 +126,7 @@ class CloudKitDataService {
         }
 
         let localLikedData = LocalDataManager.loadAll(LikedProduce.self)
+		print(localLikedData)
         if localLikedData.count > 0 {
             compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
         }
@@ -137,29 +138,37 @@ class CloudKitDataService {
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
         let likedArray = produceArray.filter { $0.liked == true}
 
+		for prod in produceArray where prod.liked {
+			print(prod.id, prod.liked)
+		}
+
         for localLike in locallyStoredData {
             if likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
                 if let index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
                     produceArray[index].liked = true
                 }
-                CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
+				CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { _ in
+
+				}
             }
         }
     }
 
     // MARK: Save
+//	(for locationFound: StateLocation, dataFetched: @escaping(Result<[Produce], CloudKitError>) -> Void) {
 
-    func saveLikeToPrivateDatabaseInCloudKit(id: Int) {
+	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
         if FileManager.default.ubiquityIdentityToken != nil {
             let newPrivateRecordID = CKRecord.ID(recordName: "\(id)_")
 			let newPrivateRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: newPrivateRecordID)
             newPrivateRecord.setValue(id, forKey: Constants.id)
 
-			CKContainer.default().privateCloudDatabase.save(newPrivateRecord) { (record, error) in
-                guard record != nil else {
-                    print(error as Any)
-                    return
-                }
+			CKContainer.default().privateCloudDatabase.save(newPrivateRecord) { (_, error) in
+				if error != nil {
+					result(.failure(.likesError))
+				} else {
+					result(.success(true))
+				}
             }
         }
     }

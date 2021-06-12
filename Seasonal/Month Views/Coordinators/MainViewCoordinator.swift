@@ -138,15 +138,17 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		self.navigationController.pushViewController(seasonsViewController, animated: true)
 	}
 
-	func updateDataModels(for id: Int, liked: Bool) {
-		// Update MainViewController's viewModel here
-		// Would love to know if theres a better way to do this
+	func updateDataModels(for id: Int, liked: Bool, from view: ViewDisplayed) {
+		// Update MainViewController's viewModel here - produce data is shared between
+		// the two views Would love to know if theres a better way to do this
 		// MainViewController is never removed from the NavigationController
-		mainViewController.viewModel.likeToggle(id: id, liked: liked)
-		// update master produce away for navigating back to seasonsView
-		// SeasonsViewController is pushed and popped.
-		if let index = dataFetched?.firstIndex(where: { $0.id == id}) {
-			dataFetched?[index].liked = liked
+		if view == .seasons {
+			mainViewController.viewModel.likeToggle(id: id, liked: liked)
+		} else {
+			// update the struct array that is passed to SeasonsView which is pushed and popped
+			if let index = dataFetched?.firstIndex(where: { $0.id == id}) {
+				dataFetched?[index].liked = liked
+			}
 		}
 	}
 

@@ -92,7 +92,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 		}
 		// The MainViewController has to know about liked produce
 		// bubble up the id and like to coordinator
-		coordinator?.updateDataModels(for: id, liked: liked)
+		coordinator?.updateDataModels(for: id, liked: liked, from: .seasons)
 
 //		func addRemoveFavourites() {
 //			if liked == true {

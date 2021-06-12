@@ -65,7 +65,7 @@ final class AppCoordinator: LocationDelegate {
 		if UserDefaults.isFirstLaunch() == true {
 			return true
 		} else {
-			return true
+			return false
 		}
 	}
 
@@ -132,7 +132,11 @@ final class AppCoordinator: LocationDelegate {
 
 	func getData(for location: StateLocation, dataFetched: @escaping([Produce]) -> Void) {
 		CloudKitDataService.instance.getData(for: location, dataFetched: { data in
-			dataFetched(data)
+			do {
+				dataFetched(try data.get())
+			} catch {
+				fatalError() // well I can't do much from here.
+			}
 		})
 	}
 

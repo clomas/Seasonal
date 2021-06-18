@@ -36,7 +36,8 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 
 	private let produceDataService: ProduceDataService
 
-	var month: Month
+	var monthToDisplay: Month
+	var currentMonth: Month // For displaying the circle in cell of current month.
 	var previousMonth: Month // Keep track of - for animation
 	var category: ViewDisplayed.ProduceCategory
 	var searchString: String
@@ -47,7 +48,8 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	init(monthsProduce: [[ProduceModel]],
 		 favouritesProduce: [ProduceModel],
 		 viewDisplayed: ViewDisplayed,
-		 month: Month,
+		 monthToDisplay: Month,
+		 currentMonth: Month,
 		 previousMonth: Month,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
@@ -56,8 +58,9 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		self.monthsProduce = monthsProduce
 		self.favouritesProduce = favouritesProduce
 		self.viewDisplayed = viewDisplayed
-		self.month = month
-		self.previousMonth = month
+		self.monthToDisplay = monthToDisplay
+		self.currentMonth = currentMonth
+		self.previousMonth = monthToDisplay
 		self.category = category
 		self.searchString = searchString
 		self.produceDataService = dataService
@@ -68,10 +71,12 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
 			 ViewDisplayed.ProduceCategory.vegetables.rawValue,
 			 ViewDisplayed.ProduceCategory.herbs.rawValue:
-			 category = ViewDisplayed.ProduceCategory.init(rawValue: index) ?? .all
+			category = ViewDisplayed.ProduceCategory.init(rawValue: index) ?? .all
+			reloadTableView()
 		case ViewDisplayed.ProduceCategory.cancelled.rawValue,
 			 ViewDisplayed.ProduceCategory.all.rawValue:
-			 category = .cancelled
+			category = .cancelled
+			reloadTableView()
 		// navigation
 		case ViewDisplayed.monthPicker.rawValue,
 			 ViewDisplayed.seasons.rawValue:
@@ -91,7 +96,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		case .monthPicker:
 			return Constants.selectAMonth
 		case .months:
-			return String(describing: month).createTitleString(with: category)
+			return String(describing: monthToDisplay).createTitleString(with: category)
 		case .favourites:
 			return Constants.favourites.createTitleString(with: category)
 		default:
@@ -103,7 +108,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	/// - Parameter month: month can be nil - if it is no need to update.
 	func updateMonth(to month: Month?) {
 		if let month = month {
-			self.month = month
+			self.monthToDisplay = month
 			self.viewDisplayed = .months
 		}
 		updateMenuBar()

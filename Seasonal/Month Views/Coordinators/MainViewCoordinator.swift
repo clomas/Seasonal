@@ -41,17 +41,26 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	private let navigationController: UINavigationController
 	private var modalNavigationController: UINavigationController?
 
+	var cloudKitDataService: CloudKitDataService?
+
 	weak var monthSelectedDelegate: MonthSelectedDelegate?
 
 	private var dataFetched: [Produce]?
 	private var determinedLocation: StateLocation
 	private var monthAndSeason = DateHandler().findMonthAndSeason()
 
+	var currentMonth: Month { return monthAndSeason.0 }
+	var currentSeason: Season { return monthAndSeason.1	}
+
 	let mainViewController: MainViewController = .instantiate()
 	let produceDataService = ProduceDataService()
 
-	init(navigationController: UINavigationController, dataFetched: [Produce], location: StateLocation) {
+	init(navigationController: UINavigationController,
+		 cloudKitDataService: CloudKitDataService,
+		 dataFetched: [Produce],
+		 location: StateLocation) {
 		self.navigationController = navigationController
+		self.cloudKitDataService = cloudKitDataService
 		self.dataFetched = dataFetched
 		self.determinedLocation = location
 	}
@@ -61,12 +70,14 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		guard let produceData = dataFetched else {
 			return
 		}
+		let monthNow = currentMonth
 
 		let mainViewModel = MainViewModel(monthsProduce: produceData.sortIntoMonths(),
 											   favouritesProduce: produceData.sortIntoFavourites(),
 											   viewDisplayed: .months,
-											   month: findCurrentMonth(),
-											   previousMonth: findCurrentMonth(),
+											   monthToDisplay: monthNow,
+											   currentMonth: monthNow,
+											   previousMonth: monthNow,
 											   category: .all,
 											   searchString: "")
 
@@ -86,11 +97,11 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	func menuBarTappedForNavigation(at index: Int) {
 		switch index {
 		case ViewDisplayed.monthPicker.rawValue:
-			presentMonthPickerViewController()
+			self.presentMonthPickerViewController()
 		case ViewDisplayed.monthPicker.rawValue:
-			presentMonthPickerViewController()
+			self.presentMonthPickerViewController()
 		case ViewDisplayed.seasons.rawValue:
-			presentSeasonsViewController()
+			self.presentSeasonsViewController()
 		default:
 			break
 		}
@@ -124,15 +135,15 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 			return
 		}
 
-		let seasonsViewModel = SeasonsViewModel(produceData: produceData.sortIntoSeasons(),
-												 season: findCurrentSeason() ,
-												 category: .all,
-												 searchString: "")
+		let seasonsViewModel = SeasonsViewModel(
+			produceData: produceData.sortIntoSeasons(),
+			season: currentSeason,
+			category: .all,
+			searchString: ""
+		)
 		seasonsViewModel.coordinator = self
 		seasonsViewController.viewModel = seasonsViewModel
-
-		// change animation to slide up
-		// navigationController.
+		print("present")
 		self.navigationController.interactivePopGestureRecognizer?.delegate = self
 		self.navigationController.interactivePopGestureRecognizer?.isEnabled = true
 		self.navigationController.pushViewController(seasonsViewController, animated: true)
@@ -149,6 +160,10 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 			if let index = dataFetched?.firstIndex(where: { $0.id == id}) {
 				dataFetched?[index].liked = liked
 			}
+		}
+
+		cloudKitDataService?.saveLikeToPrivateDatabaseInCloudKit(id: id) { result in
+			print(result, "liked in CloudKit")
 		}
 	}
 
@@ -172,14 +187,6 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		transition.type = CATransitionType.reveal
 		transition.subtype = CATransitionSubtype.fromTop
 		return transition
-	}
-
-	func findCurrentMonth() -> Month {
-		return monthAndSeason.0
-	}
-
-	func findCurrentSeason() -> Season {
-		return monthAndSeason.1
 	}
 
 	func seasonsBackButtonTapped() {

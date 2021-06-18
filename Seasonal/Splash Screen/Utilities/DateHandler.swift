@@ -9,7 +9,6 @@
 import Foundation
 
 class DateHandler {
-	static let instance = DateHandler()
 
 	func findMonthAndSeason() -> (Month, Season) {
 

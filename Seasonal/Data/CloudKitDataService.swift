@@ -29,7 +29,6 @@ enum CloudKitError: Error {
 
 class CloudKitDataService {
 
-    static let instance = CloudKitDataService()
     var currentLocation: StateLocation = .noState
 	let container = CKContainer.default()
 
@@ -147,7 +146,7 @@ class CloudKitDataService {
                 if let index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
                     produceArray[index].liked = true
                 }
-				CloudKitDataService.instance.saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { _ in
+				saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { _ in
 
 				}
             }

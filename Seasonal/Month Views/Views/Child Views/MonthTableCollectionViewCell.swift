@@ -37,6 +37,7 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
 	func likeButtonTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
         if let id = cell.id {
+			UINotificationFeedbackGenerator().notificationOccurred(.success)
 			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
 			if viewDisplayed == .favourites {
 				if let indexPath = self.tableView.indexPath(for: cell) {
@@ -45,22 +46,27 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 						self.tableView.beginUpdates()
 						self.tableView.deleteRows(at: [indexPath], with: .right)
 						self.tableView.endUpdates()
-						self.hideTableIfEmpty()
+						self.updateLabelBehindTableView()
 					})
 				}
 			}
         }
     }
 
-	private func hideTableIfEmpty() {
-		if viewModel.viewDisplayed == .favourites {
-			nothingToShowLabel.text = "No Favourites Selected"
-		}
-		if viewModel.searchString.count > 0 {
-			nothingToShowLabel.text = "No Search Results"
-		}
-		if numberOfRows != 0 {
+	/// Contextual label updating.
+	/// numberOfRows is needed to keep track of row numbers, given the table has two functions
+	/// favourites or months, the variable is updated in multiple places.
+	private func updateLabelBehindTableView() {
+		if numberOfRows > 0 {
 			nothingToShowLabel.text = ""
+		} else {
+			if viewModel.viewDisplayed == .favourites {
+				nothingToShowLabel.text = "No Favourites Selected"
+			}
+			if viewModel.searchString.count > 0 {
+				nothingToShowLabel.text = "No Search Results"
+			}
+			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
     }
 
@@ -79,11 +85,11 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
 		switch viewModel.viewDisplayed {
 		case .favourites:
 			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category).count
-			hideTableIfEmpty()
+			updateLabelBehindTableView()
 			return numberOfRows
 		case .months:
 			numberOfRows = viewModel.filter(by: viewModel.searchString, of: viewModel.category)[self.tag].count
-			hideTableIfEmpty()
+			updateLabelBehindTableView()
 			return numberOfRows
 		default:
 			return 0
@@ -96,15 +102,11 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
 			switch viewModel.viewDisplayed {
 			case .favourites:
 				let produce = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category)[indexPath.row]
-				cell.updateViews(produce: produce, in: .favourites)
+				cell.updateViews(produce: produce, currentMonth: viewModel.currentMonth, in: .favourites)
 				return cell
 			case .months:
 				let produce = viewModel.filter(by: viewModel.searchString, of: viewModel.category)[self.tag][indexPath.row]
-				cell.updateViews(produce: produce, in: .months)
-//				// TODO: Month tables
-//				if let monthTag = Month.init(rawValue: self.tag) {
-//					cell.foodLabel.text = Month.init(rawValue: monthTag.rawValue)?.calendarImageName
-//				}
+				cell.updateViews(produce: produce, currentMonth: viewModel.currentMonth, in: .months)
 				return cell
 			default:
 				return ProduceMonthInfoViewCell()

@@ -101,8 +101,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private func parseLocation() {
         var stateFound = StateLocation.noState
-        print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
-
+		print(locationInfo.locationFound)
         if let state = locationInfo.state?.lowercased() {
             if state == StateLocation.act.rawValue {
                 stateFound = StateLocation.newSouthWales
@@ -112,11 +111,15 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 				if locationInfo.country != Constants.straya {
 					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
 						stateFound = state
+						print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
 					}
 				} else if state != "" {
-                    stateFound = StateLocation.init(rawValue: state)!
+					if let locationInit = StateLocation.init(rawValue: state) {
+						stateFound = locationInit
+					}
                 }
             }
+			print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
         }
         locationManager.stopUpdatingLocation()
         locationDelegate?.locationReady(location: stateFound)

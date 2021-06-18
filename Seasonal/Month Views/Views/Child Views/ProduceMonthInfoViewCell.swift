@@ -23,13 +23,15 @@ class ProduceMonthInfoViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
 
 	var viewDisplayed: ViewDisplayed?
+	var currentMonth: Month?
     var id: Int?
 
     // Array of monthImages - https://stackoverflow.com/questions/24805180/swift-put-multiple-iboutlets-in-an-array
     @IBOutlet var monthImages: [UIImageView] = []
 
-	func updateViews(produce: ProduceModel, in view: ViewDisplayed) {
+	func updateViews(produce: ProduceModel, currentMonth: Month, in view: ViewDisplayed) {
 		self.id = produce.id
+		self.currentMonth = currentMonth
 		self.viewDisplayed = view
 
         foodLabel.text = produce.produceName
@@ -56,12 +58,11 @@ class ProduceMonthInfoViewCell: UITableViewCell {
         }
 
         // find month
-        let dateIndex = DateHandler.instance.findMonthAndSeason()
         var monthIndex = 1
 
         // loop through images
         for uiView in monthImages {
-            if monthIndex == dateIndex.0.rawValue {
+            if monthIndex == currentMonth.rawValue {
                 guard let image = UIImage(named: Month.asArray[monthIndex].imageName) else { return }
                 uiView.image = image
             }

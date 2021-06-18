@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreHaptics
 
-class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UIGestureRecognizerDelegate, SeasonsLikeButtonDelegate {
+class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, SeasonsLikeButtonDelegate {
 
 	private var searchController = UISearchController(searchResultsController: nil)
 	@IBOutlet weak var tableView: UITableView!
@@ -30,15 +31,18 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 	func likeButtonTapped(cell: SeasonsTableViewCell) {
 		if let id = cell.id {
 			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
+			UINotificationFeedbackGenerator().notificationOccurred(.success)
 		}
 	}
 
-	private func hideTableIfEmpty() {
+	private func updateLabelBehindTableView(numberOfRows: Int) {
 		if viewModel.searchString.count > 0 {
 			nothingToShowLabel.text = "No Search Results"
 		}
-		if self.tableView.numberOfRows(inSection: 0) == 0 {
+		if numberOfRows > 0 {
 			nothingToShowLabel.text = ""
+		} else {
+			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
 	}
 
@@ -75,7 +79,6 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
 		self.navigationController?.navigationBar.isTranslucent = false
-		// self.navigationController?.navigationBar.tintColor = UIColor.NavigationBar.searchBarTint
 		self.navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
@@ -88,8 +91,13 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 extension SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+		print(Season(rawValue: viewModel.season.rawValue)!)
+
 		if let season =  Season(rawValue: viewModel.season.rawValue) {
-			return viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
+			let rowsCount = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
+			updateLabelBehindTableView(numberOfRows: rowsCount) //
+			return rowsCount
 		} else {
 			return 0
 		}

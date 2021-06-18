@@ -37,6 +37,8 @@ final class AppCoordinator: LocationDelegate {
 	private var networkService = NetworkService.instance()
 	private var locationManager: LocationManager! = LocationManager.sharedInstance
 	private var currentLocation: StateLocation = .noState
+
+	let cloudKitDataService = CloudKitDataService()
 	private var produceData: [Produce]?
 
 	init(window: UIWindow) {
@@ -131,7 +133,7 @@ final class AppCoordinator: LocationDelegate {
 	}
 
 	func getData(for location: StateLocation, dataFetched: @escaping([Produce]) -> Void) {
-		CloudKitDataService.instance.getData(for: location, dataFetched: { data in
+		cloudKitDataService.getData(for: location, dataFetched: { data in
 			do {
 				dataFetched(try data.get())
 			} catch {
@@ -151,7 +153,11 @@ final class AppCoordinator: LocationDelegate {
 
 	func loadMainViewCoordinator() {
 		if let produce = produceData {
-			let mainViewCoordinator = MainViewCoordinator(navigationController: navigationController, dataFetched: produce, location: currentLocation )
+			let mainViewCoordinator = MainViewCoordinator(navigationController: navigationController,
+														  cloudKitDataService: cloudKitDataService,
+														  dataFetched: produce,
+														  location: currentLocation
+			)
 			childCoordinators.append(mainViewCoordinator)
 			mainViewCoordinator.parentCoordinator = self
 			mainViewCoordinator.start()

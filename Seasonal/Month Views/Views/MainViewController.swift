@@ -20,7 +20,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
         super.viewDidLoad()
 		setUpView()
 		viewModel.reloadTableView = { [weak self] in
-			if let month = self?.viewModel.month {
+			if let month = self?.viewModel.monthToDisplay {
 				self?.infiniteMonthCollectionView.scrollToItem(at: .init(row: month.rawValue, section: 0),
 															   at: .centeredHorizontally,
 															   animated: false)
@@ -35,7 +35,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		viewModel.updateMenuBar = { [weak self] in
 			if let index = self?.viewModel.viewDisplayed.rawValue {
 				self?.menuBar.viewModel.toggleSelectedCells(indexSelected: index)
-				if let month = self?.viewModel.month {
+				if let month = self?.viewModel.monthToDisplay {
 					self?.menuBar.updateMonthIconImage(to: month)
 				}
 			}
@@ -54,7 +54,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 
 	// Init child viewModel & assign delegate between child and parent viewModel
 	private func setupMenuBar() {
-		menuBar.viewModel = .init(month: viewModel.month, season: nil, viewDisplayed: viewModel.viewDisplayed)
+		menuBar.viewModel = .init(month: viewModel.monthToDisplay, season: nil, viewDisplayed: viewModel.viewDisplayed)
 		menuBar.viewModel.delegate = viewModel.self
 		menuBar.accessibilityIdentifier = "menuBar"
 	}
@@ -90,7 +90,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		if viewModel.monthsProduce.count > 0 {
-			let indexPath = IndexPath(item: (viewModel.month.rawValue), section: 0)
+			let indexPath = IndexPath(item: (viewModel.monthToDisplay.rawValue), section: 0)
 			infiniteMonthCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
 		}
 	}
@@ -232,11 +232,11 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 				} else if updatedMonth ==  Month.decemberOverflow {
 					updatedMonth = Month.december
 				}
-				menuBar.monthIconCarouselAnimation(from: viewModel.month, to: updatedMonth)
+				menuBar.monthIconCarouselAnimation(from: viewModel.monthToDisplay, to: updatedMonth)
 				viewModel.previousMonth = updatedMonth
 			}
-			viewModel.month = updatedMonth
-			let newTitle = String(describing: viewModel.month).capitalized
+			viewModel.monthToDisplay = updatedMonth
+			let newTitle = String(describing: viewModel.monthToDisplay).capitalized
 			// override the title because it can be wrong if not scrolled properly
 			setTitleFromScrollViewPaged(newTitle: newTitle)
 		}

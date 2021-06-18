@@ -67,11 +67,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	// TODO:
 	func likeToggle(id: Int, liked: Bool) {
-		print(liked)
-
 		// reference for favourites array manipulation
-	//	var lastMonthIndex = 0
-	//	var produceIndex = 0
 		// produceDataService.updateLike(id: id, liked: liked)
 		// update viewModel array
 		var updateLikeTo = false
@@ -93,18 +89,6 @@ final class SeasonsViewModel: MenuBarDelegate {
 		// The MainViewController has to know about liked produce
 		// bubble up the id and like to coordinator
 		coordinator?.updateDataModels(for: id, liked: liked, from: .seasons)
-
-//		func addRemoveFavourites() {
-//			if liked == true {
-//				// get the liked produce, insert into array at the correct index by id
-//				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
-//				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
-//			} else {
-//				favouritesProduce.removeAll {$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
-//			}
-//		}
-//		addRemoveFavourites()
-
 	}
 
 	func backButtonTapped() {

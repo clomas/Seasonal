@@ -3,275 +3,107 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		186DC38DD52FF3C5D978EE10A9B48629 /* InfiniteLayout-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 17C8B514E41A38EFE96C41B6438C0982 /* InfiniteLayout-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		40E665872E2E599A19B1E7737B049B30 /* InfiniteLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3575001EB6B23B92C76B1DBCB5C99C43 /* InfiniteLayout.swift */; };
-		4145338CFDA04456DE392424AD896400 /* CocoaProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = BBE89279144188C84A243F21F384BABE /* CocoaProxy.m */; };
-		503CBE77251FEE3282649985D4202F35 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49D153097E86A30BD58B6B23B4338E6 /* Foundation.framework */; };
-		58C94BE3FB964AD12D02B4A996BC2E39 /* InfiniteDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA364ED1D5072656E7C297C2880AB82A /* InfiniteDataSource.swift */; };
-		687A178EACE110AA2B7B53E8F41DB026 /* CocoaProxy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 940F9EA0AEB137ED09AF4EBEEC3AEA23 /* CocoaProxy.framework */; };
-		A740FE359CBAFDA4D77C961AD0F4F6A2 /* Pods-Seasonal-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A454C3DDD05AEA50D5E2C692103962E1 /* Pods-Seasonal-dummy.m */; };
-		AE6B3EF5DCE8506714A3C169527ADC79 /* InfiniteLayout-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = FACDE88B29616F93FB9DA0B90B4DB23D /* InfiniteLayout-dummy.m */; };
-		B035E3A039338DA627114D4E359C1A30 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49D153097E86A30BD58B6B23B4338E6 /* Foundation.framework */; };
-		BE8F0B5553F69FFE0C941AD4ACB1A119 /* CocoaProxy-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C2139226530E36C8787C4D75E214C26F /* CocoaProxy-dummy.m */; };
-		CCC9AEF7EFDC7BBB3F6443D032791F1E /* InfiniteCollectionViewProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0501CF89C564A595D9D6EFF72D1441C /* InfiniteCollectionViewProxy.swift */; };
-		DC4FF8B9E81F259C6F5115B9C128B240 /* Pods-Seasonal-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 9FA93C8C9CAE5F5E3557D35CACE2EC78 /* Pods-Seasonal-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E568DD18F0501CF81175556E1FC4BCB6 /* InfiniteCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A120CBA61108BD36B7C79CAFE13A2C /* InfiniteCollectionView.swift */; };
-		E77938E866CA3B1029C54B5BEEAE9FB6 /* CocoaProxy-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 62E2326BB290190280EC4C0376B9EB7F /* CocoaProxy-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E7C2E363B22120CD5FB9D61F64B98148 /* InfiniteCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC9F268269D2448772015A0643C10B00 /* InfiniteCollectionViewController.swift */; };
-		EF3972B5C8BD16957D999202EE379735 /* CocoaProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC5A6737FE5F72BE41F754151402B4E /* CocoaProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FACF22E26B21309AA1FB46C6C60E0942 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49D153097E86A30BD58B6B23B4338E6 /* Foundation.framework */; };
+		055DE8EDF288B8A924BAC19C562F3EDC /* Pods-Seasonal-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 48A572943910B4C3D003419E4F5C9387 /* Pods-Seasonal-dummy.m */; };
+		67844C497FAE9B12B96FED1A19BEC09B /* Pods-Seasonal-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A243010F86B2B77BE8A724C9612E4FF6 /* Pods-Seasonal-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FC2FB5F9FCC335F0A380EBE7D2C809A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		2DC656AA914FD49E3F86866C280EB66E /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D34D96BEC2472E464F78E8C7C5511547;
-			remoteInfo = CocoaProxy;
-		};
-		C0F6562DAA13623DE386ABF79C566C64 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D34D96BEC2472E464F78E8C7C5511547;
-			remoteInfo = CocoaProxy;
-		};
-		FB837857629E6EEB81F257DE39BD6FE1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F431B0C3A1EBB813B423AB6806B500A6;
-			remoteInfo = InfiniteLayout;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
-		0B18CD650E8347B4320DE6EB089DE478 /* CocoaProxy-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "CocoaProxy-Info.plist"; sourceTree = "<group>"; };
-		0CCF473828797967D3FC2EDFFB3AA072 /* InfiniteLayout.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = InfiniteLayout.modulemap; sourceTree = "<group>"; };
-		17C8B514E41A38EFE96C41B6438C0982 /* InfiniteLayout-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InfiniteLayout-umbrella.h"; sourceTree = "<group>"; };
-		24EC123E375238CFF81B1EC9FF3250ED /* InfiniteLayout.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InfiniteLayout.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3575001EB6B23B92C76B1DBCB5C99C43 /* InfiniteLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InfiniteLayout.swift; path = InfiniteLayout/Classes/InfiniteLayout.swift; sourceTree = "<group>"; };
-		4369F0B5060BF5C37DE4BF128AB04568 /* Pods-Seasonal-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Seasonal-acknowledgements.plist"; sourceTree = "<group>"; };
-		4A1CA732EA723ABF7CD2F89E38D3BEE7 /* Pods-Seasonal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Seasonal.debug.xcconfig"; sourceTree = "<group>"; };
-		500AB3DBCE203F13BFFEDCEBCA454426 /* Pods-Seasonal-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Seasonal-acknowledgements.markdown"; sourceTree = "<group>"; };
-		5ACF380B814B85C3E5CF487C05CE7FA5 /* CocoaProxy.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CocoaProxy.xcconfig; sourceTree = "<group>"; };
-		62E2326BB290190280EC4C0376B9EB7F /* CocoaProxy-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaProxy-umbrella.h"; sourceTree = "<group>"; };
+		13B098C36DA3B1C5A9D13D5F6FAB18C3 /* Pods-Seasonal.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Seasonal.modulemap"; sourceTree = "<group>"; };
+		31BD7CC8F6FF4903B2D9A7FD80513E9B /* Pods-Seasonal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Seasonal.release.xcconfig"; sourceTree = "<group>"; };
+		48A572943910B4C3D003419E4F5C9387 /* Pods-Seasonal-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Seasonal-dummy.m"; sourceTree = "<group>"; };
 		6A48862F3EFC6F82ECBEFF2A4893C12E /* Pods_Seasonal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Seasonal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7481409D2CA1FE51D6F5B57245EED042 /* CocoaProxy.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = CocoaProxy.modulemap; sourceTree = "<group>"; };
-		7B8928BD835675093378FDBE36F7EA9D /* InfiniteLayout-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "InfiniteLayout-Info.plist"; sourceTree = "<group>"; };
-		89F0B0DFE3415A043BFF6D027896A570 /* Pods-Seasonal.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Seasonal.modulemap"; sourceTree = "<group>"; };
-		9339A55FE14FA3AFD825C4C31DB9CCCB /* InfiniteLayout.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = InfiniteLayout.xcconfig; sourceTree = "<group>"; };
-		940F9EA0AEB137ED09AF4EBEEC3AEA23 /* CocoaProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		97E69DCB8F1CDA17E775661BFA362262 /* CocoaProxy-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CocoaProxy-prefix.pch"; sourceTree = "<group>"; };
+		6C9D08F6936F4C0060DDE3BF2984B4EC /* Pods-Seasonal-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Seasonal-acknowledgements.markdown"; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		933EA461F30909EC716BF856723BFBB6 /* Pods-Seasonal-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Seasonal-Info.plist"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9FA93C8C9CAE5F5E3557D35CACE2EC78 /* Pods-Seasonal-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Seasonal-umbrella.h"; sourceTree = "<group>"; };
-		A454C3DDD05AEA50D5E2C692103962E1 /* Pods-Seasonal-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Seasonal-dummy.m"; sourceTree = "<group>"; };
-		B08182475B83C2F4FEF0BDC560C4ABA9 /* Pods-Seasonal-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Seasonal-Info.plist"; sourceTree = "<group>"; };
-		B9EED8108DF5DB2A7822820B00D4108F /* CocoaProxy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CocoaProxy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BBE89279144188C84A243F21F384BABE /* CocoaProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CocoaProxy.m; path = CocoaProxy/Classes/CocoaProxy.m; sourceTree = "<group>"; };
-		C2139226530E36C8787C4D75E214C26F /* CocoaProxy-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CocoaProxy-dummy.m"; sourceTree = "<group>"; };
-		C49D153097E86A30BD58B6B23B4338E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		C6826F1566F77AD96D12D3932E601363 /* Pods-Seasonal-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Seasonal-frameworks.sh"; sourceTree = "<group>"; };
-		CC9F268269D2448772015A0643C10B00 /* InfiniteCollectionViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InfiniteCollectionViewController.swift; path = InfiniteLayout/Classes/InfiniteCollectionViewController.swift; sourceTree = "<group>"; };
-		D0501CF89C564A595D9D6EFF72D1441C /* InfiniteCollectionViewProxy.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InfiniteCollectionViewProxy.swift; path = InfiniteLayout/Classes/InfiniteCollectionViewProxy.swift; sourceTree = "<group>"; };
-		D8B30204B68433638959FF632B3E3A5E /* InfiniteLayout-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "InfiniteLayout-prefix.pch"; sourceTree = "<group>"; };
-		DCC5A6737FE5F72BE41F754151402B4E /* CocoaProxy.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CocoaProxy.h; path = CocoaProxy/Classes/CocoaProxy.h; sourceTree = "<group>"; };
-		E1A120CBA61108BD36B7C79CAFE13A2C /* InfiniteCollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InfiniteCollectionView.swift; path = InfiniteLayout/Classes/InfiniteCollectionView.swift; sourceTree = "<group>"; };
-		F4909EB5E1D1D74502472119F6EBF4F8 /* Pods-Seasonal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Seasonal.release.xcconfig"; sourceTree = "<group>"; };
-		FA364ED1D5072656E7C297C2880AB82A /* InfiniteDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InfiniteDataSource.swift; path = InfiniteLayout/Classes/InfiniteDataSource.swift; sourceTree = "<group>"; };
-		FACDE88B29616F93FB9DA0B90B4DB23D /* InfiniteLayout-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "InfiniteLayout-dummy.m"; sourceTree = "<group>"; };
+		A243010F86B2B77BE8A724C9612E4FF6 /* Pods-Seasonal-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Seasonal-umbrella.h"; sourceTree = "<group>"; };
+		CBFB0072718D29901C4380FD8DBE73C1 /* Pods-Seasonal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Seasonal.debug.xcconfig"; sourceTree = "<group>"; };
+		D6F525E2B3A113616775962BF182C0EE /* Pods-Seasonal-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Seasonal-acknowledgements.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		898C81C5CEFC65DD263E6E1E61377786 /* Frameworks */ = {
+		F1D5EA1ABA37BCAB70CF8F73BF28902E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FACF22E26B21309AA1FB46C6C60E0942 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B583DC73030E4560E1E71FF19ECEFFC0 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B035E3A039338DA627114D4E359C1A30 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		FD6FFA390B6B05E19D09962F0A4E93F9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				687A178EACE110AA2B7B53E8F41DB026 /* CocoaProxy.framework in Frameworks */,
-				503CBE77251FEE3282649985D4202F35 /* Foundation.framework in Frameworks */,
+				FC2FB5F9FCC335F0A380EBE7D2C809A1 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		07117074479AB4F7EE53375E3D36BADA /* Core */ = {
+		3025C4A5D8697F85086E652C49D66227 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1A120CBA61108BD36B7C79CAFE13A2C /* InfiniteCollectionView.swift */,
-				CC9F268269D2448772015A0643C10B00 /* InfiniteCollectionViewController.swift */,
-				D0501CF89C564A595D9D6EFF72D1441C /* InfiniteCollectionViewProxy.swift */,
-				FA364ED1D5072656E7C297C2880AB82A /* InfiniteDataSource.swift */,
-				3575001EB6B23B92C76B1DBCB5C99C43 /* InfiniteLayout.swift */,
+				6A48862F3EFC6F82ECBEFF2A4893C12E /* Pods_Seasonal.framework */,
 			);
-			name = Core;
+			name = Products;
 			sourceTree = "<group>";
 		};
-		0ED923A4D5FF86D77D5874ABF73E983F /* InfiniteLayout */ = {
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				07117074479AB4F7EE53375E3D36BADA /* Core */,
-				4F2C6D8D9DF6F048ED07E77F996E61BF /* Support Files */,
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
 			);
-			path = InfiniteLayout;
+			name = iOS;
 			sourceTree = "<group>";
 		};
-		14BC5D881CEC552DBE0521EC7902C139 /* Support Files */ = {
+		716881F3443FF6504CDDEF58E8F564DD /* Pods-Seasonal */ = {
 			isa = PBXGroup;
 			children = (
-				7481409D2CA1FE51D6F5B57245EED042 /* CocoaProxy.modulemap */,
-				5ACF380B814B85C3E5CF487C05CE7FA5 /* CocoaProxy.xcconfig */,
-				C2139226530E36C8787C4D75E214C26F /* CocoaProxy-dummy.m */,
-				0B18CD650E8347B4320DE6EB089DE478 /* CocoaProxy-Info.plist */,
-				97E69DCB8F1CDA17E775661BFA362262 /* CocoaProxy-prefix.pch */,
-				62E2326BB290190280EC4C0376B9EB7F /* CocoaProxy-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/CocoaProxy";
-			sourceTree = "<group>";
-		};
-		3210E99E2DBE5023807B9109DF37D690 /* Pods-Seasonal */ = {
-			isa = PBXGroup;
-			children = (
-				89F0B0DFE3415A043BFF6D027896A570 /* Pods-Seasonal.modulemap */,
-				500AB3DBCE203F13BFFEDCEBCA454426 /* Pods-Seasonal-acknowledgements.markdown */,
-				4369F0B5060BF5C37DE4BF128AB04568 /* Pods-Seasonal-acknowledgements.plist */,
-				A454C3DDD05AEA50D5E2C692103962E1 /* Pods-Seasonal-dummy.m */,
-				C6826F1566F77AD96D12D3932E601363 /* Pods-Seasonal-frameworks.sh */,
-				B08182475B83C2F4FEF0BDC560C4ABA9 /* Pods-Seasonal-Info.plist */,
-				9FA93C8C9CAE5F5E3557D35CACE2EC78 /* Pods-Seasonal-umbrella.h */,
-				4A1CA732EA723ABF7CD2F89E38D3BEE7 /* Pods-Seasonal.debug.xcconfig */,
-				F4909EB5E1D1D74502472119F6EBF4F8 /* Pods-Seasonal.release.xcconfig */,
+				13B098C36DA3B1C5A9D13D5F6FAB18C3 /* Pods-Seasonal.modulemap */,
+				6C9D08F6936F4C0060DDE3BF2984B4EC /* Pods-Seasonal-acknowledgements.markdown */,
+				D6F525E2B3A113616775962BF182C0EE /* Pods-Seasonal-acknowledgements.plist */,
+				48A572943910B4C3D003419E4F5C9387 /* Pods-Seasonal-dummy.m */,
+				933EA461F30909EC716BF856723BFBB6 /* Pods-Seasonal-Info.plist */,
+				A243010F86B2B77BE8A724C9612E4FF6 /* Pods-Seasonal-umbrella.h */,
+				CBFB0072718D29901C4380FD8DBE73C1 /* Pods-Seasonal.debug.xcconfig */,
+				31BD7CC8F6FF4903B2D9A7FD80513E9B /* Pods-Seasonal.release.xcconfig */,
 			);
 			name = "Pods-Seasonal";
 			path = "Target Support Files/Pods-Seasonal";
 			sourceTree = "<group>";
 		};
-		4F2C6D8D9DF6F048ED07E77F996E61BF /* Support Files */ = {
+		94985E8AB17B181F0243F7E5AEF19E1A /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				0CCF473828797967D3FC2EDFFB3AA072 /* InfiniteLayout.modulemap */,
-				9339A55FE14FA3AFD825C4C31DB9CCCB /* InfiniteLayout.xcconfig */,
-				FACDE88B29616F93FB9DA0B90B4DB23D /* InfiniteLayout-dummy.m */,
-				7B8928BD835675093378FDBE36F7EA9D /* InfiniteLayout-Info.plist */,
-				D8B30204B68433638959FF632B3E3A5E /* InfiniteLayout-prefix.pch */,
-				17C8B514E41A38EFE96C41B6438C0982 /* InfiniteLayout-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/InfiniteLayout";
-			sourceTree = "<group>";
-		};
-		7ABC03D505633190178C40A8C04D4125 /* Targets Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				3210E99E2DBE5023807B9109DF37D690 /* Pods-Seasonal */,
+				716881F3443FF6504CDDEF58E8F564DD /* Pods-Seasonal */,
 			);
 			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		BECF770BCB9BC6EF38522C423EEB448E /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				940F9EA0AEB137ED09AF4EBEEC3AEA23 /* CocoaProxy.framework */,
-				C5385F41183F13E391AC45BE7C1C3341 /* iOS */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C4FFEDDD4F911C300A6E51F7EBE08040 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				E9ADBF2499A306711E54541A1BB2BAF4 /* CocoaProxy */,
-				0ED923A4D5FF86D77D5874ABF73E983F /* InfiniteLayout */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		C5385F41183F13E391AC45BE7C1C3341 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				C49D153097E86A30BD58B6B23B4338E6 /* Foundation.framework */,
-			);
-			name = iOS;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				BECF770BCB9BC6EF38522C423EEB448E /* Frameworks */,
-				C4FFEDDD4F911C300A6E51F7EBE08040 /* Pods */,
-				DFB75AA432022D8FE5268CCD5B386FE1 /* Products */,
-				7ABC03D505633190178C40A8C04D4125 /* Targets Support Files */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				3025C4A5D8697F85086E652C49D66227 /* Products */,
+				94985E8AB17B181F0243F7E5AEF19E1A /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		DFB75AA432022D8FE5268CCD5B386FE1 /* Products */ = {
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B9EED8108DF5DB2A7822820B00D4108F /* CocoaProxy.framework */,
-				24EC123E375238CFF81B1EC9FF3250ED /* InfiniteLayout.framework */,
-				6A48862F3EFC6F82ECBEFF2A4893C12E /* Pods_Seasonal.framework */,
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
 			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		E9ADBF2499A306711E54541A1BB2BAF4 /* CocoaProxy */ = {
-			isa = PBXGroup;
-			children = (
-				DCC5A6737FE5F72BE41F754151402B4E /* CocoaProxy.h */,
-				BBE89279144188C84A243F21F384BABE /* CocoaProxy.m */,
-				14BC5D881CEC552DBE0521EC7902C139 /* Support Files */,
-			);
-			path = CocoaProxy;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		4CB2649A24E0BE4B4B5957A131BDB63F /* Headers */ = {
+		ACB5BC6CBFB68E51BEBBBF39852CEA79 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E77938E866CA3B1029C54B5BEEAE9FB6 /* CocoaProxy-umbrella.h in Headers */,
-				EF3972B5C8BD16957D999202EE379735 /* CocoaProxy.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		71C87BCEF4FA2E89EB2E11E077E9E1A4 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				DC4FF8B9E81F259C6F5115B9C128B240 /* Pods-Seasonal-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A45D66246EFE2BD64D7E3CE45B23093C /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				186DC38DD52FF3C5D978EE10A9B48629 /* InfiniteLayout-umbrella.h in Headers */,
+				67844C497FAE9B12B96FED1A19BEC09B /* Pods-Seasonal-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -280,59 +112,20 @@
 /* Begin PBXNativeTarget section */
 		99384FACC08F0AE9B2D4E8C8F52321E3 /* Pods-Seasonal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D104BACADE95F9D59BCD14A5390AD054 /* Build configuration list for PBXNativeTarget "Pods-Seasonal" */;
+			buildConfigurationList = D8442B4FD18D8EC4B5150E4EBA7B2282 /* Build configuration list for PBXNativeTarget "Pods-Seasonal" */;
 			buildPhases = (
-				71C87BCEF4FA2E89EB2E11E077E9E1A4 /* Headers */,
-				C18C9F6F925B3562BE2F30146BA26CC7 /* Sources */,
-				898C81C5CEFC65DD263E6E1E61377786 /* Frameworks */,
-				12756CB1877568DB34504E85EB59465B /* Resources */,
+				ACB5BC6CBFB68E51BEBBBF39852CEA79 /* Headers */,
+				BCBD4FC7A1070F206D6F66AAB81B083B /* Sources */,
+				F1D5EA1ABA37BCAB70CF8F73BF28902E /* Frameworks */,
+				921776F95277E66514B752F203ADBA9E /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				E33251C37CA07DB26D0945C6045B7546 /* PBXTargetDependency */,
-				DBCB618C723EE9EF93B195A0487F4AEF /* PBXTargetDependency */,
 			);
 			name = "Pods-Seasonal";
 			productName = "Pods-Seasonal";
 			productReference = 6A48862F3EFC6F82ECBEFF2A4893C12E /* Pods_Seasonal.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		D34D96BEC2472E464F78E8C7C5511547 /* CocoaProxy */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 610072A1F238154BB8CEC443CF889FAD /* Build configuration list for PBXNativeTarget "CocoaProxy" */;
-			buildPhases = (
-				4CB2649A24E0BE4B4B5957A131BDB63F /* Headers */,
-				33ADA3A889A81718F098A9F7FCD1C48D /* Sources */,
-				B583DC73030E4560E1E71FF19ECEFFC0 /* Frameworks */,
-				2397FF775701C5F97CFC43D0BA5152C3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CocoaProxy;
-			productName = CocoaProxy;
-			productReference = B9EED8108DF5DB2A7822820B00D4108F /* CocoaProxy.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		F431B0C3A1EBB813B423AB6806B500A6 /* InfiniteLayout */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6755906BDA6B37748CDF811E166F9105 /* Build configuration list for PBXNativeTarget "InfiniteLayout" */;
-			buildPhases = (
-				A45D66246EFE2BD64D7E3CE45B23093C /* Headers */,
-				37697E655D7E07779FD2458C546B79F3 /* Sources */,
-				FD6FFA390B6B05E19D09962F0A4E93F9 /* Frameworks */,
-				2D228F900A8220F3DF691F771FE14895 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				54DC96601355815C06B8B88A33C606C5 /* PBXTargetDependency */,
-			);
-			name = InfiniteLayout;
-			productName = InfiniteLayout;
-			productReference = 24EC123E375238CFF81B1EC9FF3250ED /* InfiniteLayout.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -342,10 +135,10 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1100;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
-			compatibilityVersion = "Xcode 11.0";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -353,33 +146,17 @@
 				Base,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = DFB75AA432022D8FE5268CCD5B386FE1 /* Products */;
+			productRefGroup = 3025C4A5D8697F85086E652C49D66227 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D34D96BEC2472E464F78E8C7C5511547 /* CocoaProxy */,
-				F431B0C3A1EBB813B423AB6806B500A6 /* InfiniteLayout */,
 				99384FACC08F0AE9B2D4E8C8F52321E3 /* Pods-Seasonal */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		12756CB1877568DB34504E85EB59465B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2397FF775701C5F97CFC43D0BA5152C3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D228F900A8220F3DF691F771FE14895 /* Resources */ = {
+		921776F95277E66514B752F203ADBA9E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -389,64 +166,97 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		33ADA3A889A81718F098A9F7FCD1C48D /* Sources */ = {
+		BCBD4FC7A1070F206D6F66AAB81B083B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BE8F0B5553F69FFE0C941AD4ACB1A119 /* CocoaProxy-dummy.m in Sources */,
-				4145338CFDA04456DE392424AD896400 /* CocoaProxy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		37697E655D7E07779FD2458C546B79F3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E568DD18F0501CF81175556E1FC4BCB6 /* InfiniteCollectionView.swift in Sources */,
-				E7C2E363B22120CD5FB9D61F64B98148 /* InfiniteCollectionViewController.swift in Sources */,
-				CCC9AEF7EFDC7BBB3F6443D032791F1E /* InfiniteCollectionViewProxy.swift in Sources */,
-				58C94BE3FB964AD12D02B4A996BC2E39 /* InfiniteDataSource.swift in Sources */,
-				AE6B3EF5DCE8506714A3C169527ADC79 /* InfiniteLayout-dummy.m in Sources */,
-				40E665872E2E599A19B1E7737B049B30 /* InfiniteLayout.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C18C9F6F925B3562BE2F30146BA26CC7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				A740FE359CBAFDA4D77C961AD0F4F6A2 /* Pods-Seasonal-dummy.m in Sources */,
+				055DE8EDF288B8A924BAC19C562F3EDC /* Pods-Seasonal-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		54DC96601355815C06B8B88A33C606C5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CocoaProxy;
-			target = D34D96BEC2472E464F78E8C7C5511547 /* CocoaProxy */;
-			targetProxy = C0F6562DAA13623DE386ABF79C566C64 /* PBXContainerItemProxy */;
-		};
-		DBCB618C723EE9EF93B195A0487F4AEF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = InfiniteLayout;
-			target = F431B0C3A1EBB813B423AB6806B500A6 /* InfiniteLayout */;
-			targetProxy = FB837857629E6EEB81F257DE39BD6FE1 /* PBXContainerItemProxy */;
-		};
-		E33251C37CA07DB26D0945C6045B7546 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CocoaProxy;
-			target = D34D96BEC2472E464F78E8C7C5511547 /* CocoaProxy */;
-			targetProxy = 2DC656AA914FD49E3F86866C280EB66E /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin XCBuildConfiguration section */
-		13967C5C8F4B10B3EE4D6C208A0A7BEB /* Debug */ = {
+		826A5B167B81347CAAB3366C9B7F4E94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CBFB0072718D29901C4380FD8DBE73C1 /* Pods-Seasonal.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		87E0B1B39460EDE64F52DB8484C988F9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 31BD7CC8F6FF4903B2D9A7FD80513E9B /* Pods-Seasonal.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		95607A856795A398FFB76177B56DE3A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -508,194 +318,11 @@
 			};
 			name = Debug;
 		};
-		175C966B63DBB4707973F41B66C7232C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A1CA732EA723ABF7CD2F89E38D3BEE7 /* Pods-Seasonal.debug.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		4E9329DF49D3773E1B071A992A8A5636 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9339A55FE14FA3AFD825C4C31DB9CCCB /* InfiniteLayout.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/InfiniteLayout/InfiniteLayout-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/InfiniteLayout/InfiniteLayout-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/InfiniteLayout/InfiniteLayout.modulemap";
-				PRODUCT_MODULE_NAME = InfiniteLayout;
-				PRODUCT_NAME = InfiniteLayout;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		54F8EAA3B13958DB536D9410F77CE192 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5ACF380B814B85C3E5CF487C05CE7FA5 /* CocoaProxy.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/CocoaProxy/CocoaProxy-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CocoaProxy/CocoaProxy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/CocoaProxy/CocoaProxy.modulemap";
-				PRODUCT_MODULE_NAME = CocoaProxy;
-				PRODUCT_NAME = CocoaProxy;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		5AF2AEF573D69C8B483DBE2E8EB098D1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9339A55FE14FA3AFD825C4C31DB9CCCB /* InfiniteLayout.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/InfiniteLayout/InfiniteLayout-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/InfiniteLayout/InfiniteLayout-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/InfiniteLayout/InfiniteLayout.modulemap";
-				PRODUCT_MODULE_NAME = InfiniteLayout;
-				PRODUCT_NAME = InfiniteLayout;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		6CFA80107D414D9593C58D46AA628766 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F4909EB5E1D1D74502472119F6EBF4F8 /* Pods-Seasonal.release.xcconfig */;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
-				CLANG_ENABLE_OBJC_WEAK = NO;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Seasonal/Pods-Seasonal.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		871B6E28ABA34DAE69824AB9D22D3B7D /* Release */ = {
+		D6EECBCE91072E1A06BA3BD2D8E3C244 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -753,76 +380,23 @@
 			};
 			name = Release;
 		};
-		FBED7166955E161F2FF0C0A7FA664D33 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5ACF380B814B85C3E5CF487C05CE7FA5 /* CocoaProxy.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/CocoaProxy/CocoaProxy-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/CocoaProxy/CocoaProxy-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULEMAP_FILE = "Target Support Files/CocoaProxy/CocoaProxy.modulemap";
-				PRODUCT_MODULE_NAME = CocoaProxy;
-				PRODUCT_NAME = CocoaProxy;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				13967C5C8F4B10B3EE4D6C208A0A7BEB /* Debug */,
-				871B6E28ABA34DAE69824AB9D22D3B7D /* Release */,
+				95607A856795A398FFB76177B56DE3A8 /* Debug */,
+				D6EECBCE91072E1A06BA3BD2D8E3C244 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		610072A1F238154BB8CEC443CF889FAD /* Build configuration list for PBXNativeTarget "CocoaProxy" */ = {
+		D8442B4FD18D8EC4B5150E4EBA7B2282 /* Build configuration list for PBXNativeTarget "Pods-Seasonal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FBED7166955E161F2FF0C0A7FA664D33 /* Debug */,
-				54F8EAA3B13958DB536D9410F77CE192 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6755906BDA6B37748CDF811E166F9105 /* Build configuration list for PBXNativeTarget "InfiniteLayout" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				4E9329DF49D3773E1B071A992A8A5636 /* Debug */,
-				5AF2AEF573D69C8B483DBE2E8EB098D1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D104BACADE95F9D59BCD14A5390AD054 /* Build configuration list for PBXNativeTarget "Pods-Seasonal" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				175C966B63DBB4707973F41B66C7232C /* Debug */,
-				6CFA80107D414D9593C58D46AA628766 /* Release */,
+				826A5B167B81347CAAB3366C9B7F4E94 /* Debug */,
+				87E0B1B39460EDE64F52DB8484C988F9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

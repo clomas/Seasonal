@@ -8,26 +8,79 @@
 
 import XCTest
 
+import CloudKit
+@testable import Seasonal
+
 class CloudKitTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+	// Test private CloudKit, not sure how to test data in my public database
+	// I cannot figure out how to get my data, or save data to CloudKit
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+//	func testPublicCLoudKitDataFetch() {
+//		var record = [CKRecord]()
+//
+//		let container = CKContainer.default()
+//
+//		let mockContainer = MockCloudKit(container: container)
+//
+//		mockContainer.getData( dataFetched: { results in
+//			print("IN?")
+//			print(results)
+//			record = results
+//		})
+//		XCTAssertEqual(record.count, 94)
+//	}
+}
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
+class MockCloudKit: CKDatabaseProtocol {
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
+	private let container: CKContainer
 
+	init(container: CKContainer) {
+		self.container = container
+	}
+
+	fileprivate var database: CKDatabase {
+		return self.container.publicCloudDatabase
+	}
+
+	func perform(_ query: CKQuery, inZoneWith zoneID: CKRecordZone.ID?, completionHandler: @escaping ([CKRecord]?, Error?) -> Void) {
+		self.database.perform(query, inZoneWith: zoneID, completionHandler: completionHandler)
+	}
+
+	func save(_ record: CKRecord, completionHandler: @escaping (CKRecord?, Error?) -> Void) {
+		self.database.save(record, completionHandler: completionHandler)
+	}
+
+	func getData(dataFetched: @escaping([CKRecord]) -> Void) {
+		let predicate = NSPredicate(value: true)
+		let publicQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
+		publicQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
+		var publicData = [CKRecord]()
+
+		_ = CKQueryOperation(query: publicQuery)
+
+//		operation.recordFetchedBlock = { record in
+//			print(record) 
+//		}
+//
+//
+//		operation.queryCompletionBlock = { cursor, error in
+//			print("completion block")
+//			print(cursor, error)
+//		}
+
+		perform(publicQuery, inZoneWith: .default) { results, error in
+			dataFetched([CKRecord]())
+			print("won't get in here :(")
+			if let error = error {
+				print(error.localizedDescription)
+			} else {
+				if results != nil && results!.count > 0 {
+					publicData = results!
+					dataFetched(publicData)
+				}
+			}
+		}
+	}
 }

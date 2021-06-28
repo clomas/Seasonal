@@ -3,7 +3,6 @@
 
 use_frameworks!
 target 'Seasonal' do
-pod 'InfiniteLayout'
 
 end
 

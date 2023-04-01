@@ -1,6 +1,0 @@
-framework module Pods_Seasonal {
-  umbrella header "Pods-Seasonal-umbrella.h"
-
-  export *
-  module * { export * }
-}

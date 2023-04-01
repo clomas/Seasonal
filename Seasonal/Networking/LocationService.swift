@@ -101,7 +101,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     private func parseLocation() {
         var stateFound = StateLocation.noState
-		print(locationInfo.locationFound)
+		#if DEBUG
+			print(locationInfo.locationFound == true)
+		#endif
+
         if let state = locationInfo.state?.lowercased() {
             if state == StateLocation.act.rawValue {
                 stateFound = StateLocation.newSouthWales

@@ -141,15 +141,15 @@ class CloudKitDataService {
 			print(prod.id, prod.liked)
 		}
 
-        for localLike in locallyStoredData {
-            if likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
-                if let index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
-                    produceArray[index].liked = true
-                }
-				saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { _ in
+        for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
 
-				}
-            }
+			if let index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
+				produceArray[index].liked = true
+			}
+			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { _ in
+
+			}
+
         }
     }
 

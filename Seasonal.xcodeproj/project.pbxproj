@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 53;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -64,7 +64,6 @@
 		27FCA54225DB952E00AD2020 /* WelcomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA54125DB952E00AD2020 /* WelcomeViewModel.swift */; };
 		27FCA54425DB992300AD2020 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA54325DB992300AD2020 /* NetworkService.swift */; };
 		27FCA54825DBA27E00AD2020 /* Extension-UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA54725DBA27E00AD2020 /* Extension-UIViewController.swift */; };
-		E90E10B91FB7E12B29754A3B /* Pods_Seasonal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 576720D123F0C4D8E8B2ACAD /* Pods_Seasonal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,9 +173,6 @@
 		27FCA54125DB952E00AD2020 /* WelcomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewModel.swift; sourceTree = "<group>"; };
 		27FCA54325DB992300AD2020 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		27FCA54725DBA27E00AD2020 /* Extension-UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIViewController.swift"; sourceTree = "<group>"; };
-		576720D123F0C4D8E8B2ACAD /* Pods_Seasonal.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Seasonal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A23B632384DCEC87E870367E /* Pods-Seasonal.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seasonal.release.xcconfig"; path = "Target Support Files/Pods-Seasonal/Pods-Seasonal.release.xcconfig"; sourceTree = "<group>"; };
-		C0659DB6C9C8A7F3B598321E /* Pods-Seasonal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Seasonal.debug.xcconfig"; path = "Target Support Files/Pods-Seasonal/Pods-Seasonal.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,7 +196,6 @@
 			files = (
 				27B4E45B22D99930003D51B8 /* CoreLocation.framework in Frameworks */,
 				2765920D223D2B1C00A2C9C8 /* CloudKit.framework in Frameworks */,
-				E90E10B91FB7E12B29754A3B /* Pods_Seasonal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,17 +226,8 @@
 			isa = PBXGroup;
 			children = (
 				2794134C238F4047003D16E2 /* Videos */,
-				27F4218E22328FA40009922C /* Assets.xcassets */,
-				27045D4C2200826700B57D8B /* Settings.bundle */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		27216E1A21E8001B0042B4F4 /* XIBs */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = XIBs;
 			sourceTree = "<group>";
 		};
 		272D84D6266B7202002CEE1A /* Splash Screen */ = {
@@ -449,7 +435,6 @@
 				27B4E44D22D99930003D51B8 /* CoreLocation.framework */,
 				2765920C223D2B1C00A2C9C8 /* CloudKit.framework */,
 				27A8C54721D105D70083AE09 /* Seasonal.xcodeproj */,
-				576720D123F0C4D8E8B2ACAD /* Pods_Seasonal.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -473,7 +458,6 @@
 				27468372265D182B000C5456 /* SeasonalUITests */,
 				27EFF3C5215A5C1500CFB31D /* Products */,
 				27A916CF21AD138B00C6B365 /* Frameworks */,
-				5BEA03800F8A2174B1A02B4E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -498,11 +482,12 @@
 				27157E7925529FA60001CD4D /* Networking */,
 				2718E2CE225F808700B802F9 /* Data */,
 				278611BB25687F8900E8021B /* Utilities */,
-				27216E1A21E8001B0042B4F4 /* XIBs */,
 				271E69AB216DDF7400E7C126 /* Services */,
 				27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */,
 				27EFF3CB215A5C1500CFB31D /* Main.storyboard */,
 				27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */,
+				27F4218E22328FA40009922C /* Assets.xcassets */,
+				27045D4C2200826700B57D8B /* Settings.bundle */,
 				27EFF3D3215A5C1700CFB31D /* Info.plist */,
 				2706C40E2374C685006CB989 /* Seasonal.xcdatamodeld */,
 				2765920B223D2AE900A2C9C8 /* Seasonal.entitlements */,
@@ -510,15 +495,6 @@
 				2746838726665B98000C5456 /* .swiftlint.yml */,
 			);
 			path = Seasonal;
-			sourceTree = "<group>";
-		};
-		5BEA03800F8A2174B1A02B4E /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				C0659DB6C9C8A7F3B598321E /* Pods-Seasonal.debug.xcconfig */,
-				A23B632384DCEC87E870367E /* Pods-Seasonal.release.xcconfig */,
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -564,7 +540,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27EFF3D6215A5C1700CFB31D /* Build configuration list for PBXNativeTarget "Seasonal" */;
 			buildPhases = (
-				A807FA28B117EFC22AF08108 /* [CP] Check Pods Manifest.lock */,
 				27EFF3C0215A5C1500CFB31D /* Sources */,
 				27EFF3C1215A5C1500CFB31D /* Frameworks */,
 				27EFF3C2215A5C1500CFB31D /* Resources */,
@@ -587,8 +562,9 @@
 		27EFF3BC215A5C1500CFB31D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1200;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Clint Thomas";
 				TargetAttributes = {
 					27468370265D182B000C5456 = {
@@ -687,28 +663,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Adds support for Apple Silicon brew directory\nexport PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint; then\n    swiftlint autocorrect && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-		A807FA28B117EFC22AF08108 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Seasonal-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1019,7 +973,6 @@
 		};
 		27EFF3D7215A5C1700CFB31D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C0659DB6C9C8A7F3B598321E /* Pods-Seasonal.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;
@@ -1047,7 +1000,6 @@
 		};
 		27EFF3D8215A5C1700CFB31D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A23B632384DCEC87E870367E /* Pods-Seasonal.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;

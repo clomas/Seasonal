@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oNH-9P-vZ4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oNH-9P-vZ4">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -196,11 +196,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vUa-NH-8pC">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
                                 <color key="backgroundColor" name="cellColour"/>
                             </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" prefetchingEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hqv-Hz-VSU">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
                                 <color key="backgroundColor" name="cellColor"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="daY-yE-id8">
@@ -211,7 +211,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="MonthTableCollectionViewCell" reuseIdentifier="MonthTableCollectionViewCell" id="uu7-Xg-blf" customClass="MonthTableCollectionViewCell" customModule="Seasonal" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="-0.5" width="411" height="719"/>
+                                        <rect key="frame" x="0.0" y="-2.5" width="411" height="719"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                             <rect key="frame" x="0.0" y="0.0" width="411" height="719"/>
@@ -231,7 +231,7 @@
                                                     <color key="sectionIndexBackgroundColor" name="cellColor"/>
                                                     <prototypes>
                                                         <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="ProduceMonthInfoViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ProduceMonthInfoViewCell" rowHeight="76" id="CKm-as-YkX" customClass="ProduceMonthInfoViewCell" customModule="Seasonal" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="24.5" width="411" height="76"/>
+                                                            <rect key="frame" x="0.0" y="50" width="411" height="76"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <tableViewCellContentView key="contentView" clipsSubviews="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CKm-as-YkX" id="HvF-nR-oqk">
                                                                 <rect key="frame" x="0.0" y="0.0" width="411" height="76"/>
@@ -389,7 +389,7 @@
                                 </cells>
                             </collectionView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" restorationIdentifier="MenuBar" bounces="NO" scrollEnabled="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VOO-Qb-bpF" customClass="MenuBarCollectionView" customModule="Seasonal" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="718" width="414" height="56"/>
+                                <rect key="frame" x="0.0" y="806" width="414" height="56"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
@@ -465,7 +465,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="raN-Et-Y8P">
-                                <rect key="frame" x="0.0" y="88" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
                                 <color key="backgroundColor" name="cellColor"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Search Results" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptR-XM-Vgt">
@@ -475,14 +475,14 @@
                                 <color key="highlightedColor" name="fontDefault"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SPs-xc-l3z">
-                                <rect key="frame" x="0.0" y="88" width="414" height="718"/>
+                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" name="cellColour"/>
                                 <color key="sectionIndexBackgroundColor" name="cellColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="SeasonsTableViewCell" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="SeasonsTableViewCell" id="Fmz-5n-u9N" customClass="SeasonsTableViewCell" customModule="Seasonal" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="60"/>
+                                        <rect key="frame" x="0.0" y="50" width="414" height="60"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fmz-5n-u9N" id="0Us-dx-Vbf">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
@@ -615,7 +615,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ykG-ze-T1R" customClass="MonthsCollectionView" customModule="Seasonal" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="73" width="414" height="750"/>
+                                <rect key="frame" x="0.0" y="77" width="414" height="746"/>
                                 <color key="backgroundColor" name="cellColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="xOj-5l-7yL">
                                     <size key="itemSize" width="118" height="81"/>
@@ -684,10 +684,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c7g-Qd-vRh">
-                                <rect key="frame" x="0.0" y="44" width="414" height="852"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="848"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x5B-bj-4vF">
-                                        <rect key="frame" x="107.5" y="586.5" width="199" height="33"/>
+                                        <rect key="frame" x="107.5" y="584.5" width="199" height="33"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                         <state key="normal" title="Tap here to get in contact">
                                             <color key="titleColor" name="fontDefault"/>
@@ -697,7 +697,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="16" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="tgQ-rB-so6">
-                                        <rect key="frame" x="10" y="171.5" width="394" height="415"/>
+                                        <rect key="frame" x="10" y="169.5" width="394" height="415"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="415" id="1Ae-ud-4QI"/>
                                         </constraints>
@@ -709,7 +709,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tsz-Da-Zzt">
-                                        <rect key="frame" x="152.5" y="633.5" width="109" height="33"/>
+                                        <rect key="frame" x="152.5" y="631.5" width="109" height="33"/>
                                         <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
                                         <state key="normal" title="Privacy Policy">
                                             <color key="titleColor" name="fontDefault"/>
@@ -770,8 +770,8 @@ I’m always looking to improve the accuracy of the application, so get in conta
             <objects>
                 <navigationController storyboardIdentifier="NavigationController" title="Seasonal Produce" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oNH-9P-vZ4" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" alpha="0.75" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Lsf-Wy-Xfi">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <navigationBar key="navigationBar" opaque="NO" alpha="0.75" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Lsf-Wy-Xfi">
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" name="navigationBar"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -802,7 +802,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="MBK-p5-X7b"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="t9h-Ux-aQv">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -825,7 +825,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
         <image name="dec" width="25" height="25"/>
         <image name="downarrow" width="11.5" height="11.5"/>
         <image name="feb" width="25" height="25"/>
-        <image name="info.circle" catalog="system" width="128" height="121"/>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="jan" width="25" height="25"/>
         <image name="jul" width="25" height="25"/>
         <image name="jun" width="25" height="25"/>

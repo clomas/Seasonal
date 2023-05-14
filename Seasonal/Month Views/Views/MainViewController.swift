@@ -39,7 +39,8 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	}
 
 	private func setUpView() {
-		setUpNavigationControllerView()
+		setupNavigationControllerView()
+		setupSearchController()
 		setupMenuBar()
 		setupCollectionView()
 
@@ -139,23 +140,9 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 
 	// MARK: Search controller setup
 
-	// TODO: make a custom navigation controller - this is duplicate code
-	private func setUpNavigationControllerView() {
-		let searchController: UISearchController = UISearchController(searchResultsController: nil)
-		searchController.hidesNavigationBarDuringPresentation = false
-		searchController.obscuresBackgroundDuringPresentation = false
-		searchController.searchBar.searchBarStyle = .minimal
-		searchController.searchBar.isTranslucent = false
-		searchController.searchResultsUpdater = self
-
-		// for cancel button
-		searchController.searchBar.tintColor = UIColor.SearchBar.tint
-		searchController.hidesNavigationBarDuringPresentation = false
+	private func setupNavigationControllerView() {
 		navigationController?.navigationBar.isTranslucent = false
 		navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
-		navigationItem.searchController = searchController
-		navigationItem.hidesSearchBarWhenScrolling = false
-		definesPresentationContext = true
 
 		if #available(iOS 15, *) {
 			let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
@@ -164,6 +151,22 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 			UINavigationBar.appearance().standardAppearance = appearance
 			UINavigationBar.appearance().scrollEdgeAppearance = appearance
 		}
+	}
+
+	private func setupSearchController() {
+		let searchController: UISearchController = UISearchController(searchResultsController: nil)
+		searchController.hidesNavigationBarDuringPresentation = false
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.searchBar.searchBarStyle = .minimal
+		searchController.searchBar.isTranslucent = false
+		searchController.searchResultsUpdater = self
+		// for cancel button
+		searchController.searchBar.tintColor = UIColor.SearchBar.tint
+		searchController.hidesNavigationBarDuringPresentation = false
+
+		navigationItem.searchController = searchController
+		navigationItem.hidesSearchBarWhenScrolling = false
+		definesPresentationContext = true
 	}
 }
 

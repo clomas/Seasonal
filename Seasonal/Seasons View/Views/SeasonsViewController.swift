@@ -64,7 +64,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		tableView.dataSource = self
 		title = viewModel?.updateTitle()
 
-		setUpNavigationControllerView()
+		setUpSearchController()
 		setupMenuBar()
 	}
 
@@ -73,7 +73,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		menuBar.viewModel?.delegate = viewModel.self
 	}
 
-	private func setUpNavigationControllerView() {
+	private func setUpSearchController() {
 		let searchController: UISearchController = UISearchController(searchResultsController: nil)
 		searchController.hidesNavigationBarDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -83,19 +83,9 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		// for cancel button
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
-		navigationController?.navigationBar.isTranslucent = false
-		navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
+
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
-		definesPresentationContext = true
-
-		if #available(iOS 15, *) {
-			let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
-			appearance.configureWithOpaqueBackground()
-			appearance.backgroundColor = UIColor.NavigationBar.tint
-			UINavigationBar.appearance().standardAppearance = appearance
-			UINavigationBar.appearance().scrollEdgeAppearance = appearance
-		}
 	}
 }
 

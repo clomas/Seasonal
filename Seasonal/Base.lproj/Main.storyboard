@@ -449,7 +449,6 @@
                         <outlet property="menuBar" destination="VOO-Qb-bpF" id="NgP-kU-RKz"/>
                         <segue destination="T39-76-m2i" kind="presentation" identifier="initialModalSegue" modalPresentationStyle="fullScreen" id="ikf-zY-JlU"/>
                         <segue destination="TPe-FU-VCA" kind="presentation" identifier="WelcomeVCSegue" modalPresentationStyle="fullScreen" id="Khz-mi-3b0"/>
-                        <segue destination="Jgy-2b-pnD" kind="show" identifier="DummySegue" id="9bf-Lj-tJh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -465,7 +464,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="raN-Et-Y8P">
-                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="758"/>
                                 <color key="backgroundColor" name="cellColor"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Search Results" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ptR-XM-Vgt">
@@ -475,7 +474,7 @@
                                 <color key="highlightedColor" name="fontDefault"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="60" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SPs-xc-l3z">
-                                <rect key="frame" x="0.0" y="92" width="414" height="714"/>
+                                <rect key="frame" x="0.0" y="48" width="414" height="758"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" name="cellColour"/>
@@ -604,7 +603,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mah-YV-ZIm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="734.78260869565224" y="-498.88392857142856"/>
+            <point key="canvasLocation" x="375" y="-396"/>
         </scene>
         <!--Select Month-->
         <scene sceneID="IF6-Mv-EX8">
@@ -794,37 +793,6 @@ I’m always looking to improve the accuracy of the application, so get in conta
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozX-am-OGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1923" y="-232"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="lZR-Q5-T1O">
-            <objects>
-                <navigationController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" id="Jgy-2b-pnD" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="MBK-p5-X7b"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="t9h-Ux-aQv">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" name="navigationBar"/>
-                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <color key="barTintColor" name="navigationBar"/>
-                        <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                            <color key="textColor" name="fontDefault"/>
-                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" name="fontDefault"/>
-                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="FTr-h4-Wv5" kind="relationship" relationship="rootViewController" id="qon-w1-6PH"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="GS1-fy-RqM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-59" y="-499"/>
         </scene>
     </scenes>
     <color key="tintColor" name="cellColour"/>

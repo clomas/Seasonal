@@ -6,17 +6,6 @@
 //  Copyright © 2020 Clint Thomas. All rights reserved.
 //
 
-//
-// struct Produce {
-//	var id: Int
-//	var produceName: String
-//	var imageName: String
-//	var category: ViewDisplayed.ProduceCategory
-//	var months: [Month]
-//	var seasons: [Season]
-//	var liked: Bool
-// }
-
 import Foundation
 
 struct Produce {

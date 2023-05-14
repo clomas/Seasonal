@@ -6,8 +6,6 @@
 //  Copyright © 2019 Clint Thomas. All rights reserved.
 //
 
-// TODO: fix alignment of December with like button. 
-
 import UIKit
 
 protocol LikeButtonDelegate: AnyObject {
@@ -38,29 +36,22 @@ class ProduceMonthInfoViewCell: UITableViewCell {
         guard let image = UIImage(named: produce.imageName) else { return }
         foodImage.image = image
 
-        if produce.liked == true {
-            self.likeButton.isSelected = true
-        } else {
-            self.likeButton.isSelected = false
-        }
-
         self.backgroundColor = UIColor.TableViewCell.tint
 
-        if produce.liked == false {
-			let likeImage = UIImage(named: "\(Constants.unliked).png")
-            let tintedImage = likeImage?.withRenderingMode(.alwaysTemplate)
-            self.likeButton.setImage(tintedImage, for: .normal)
-            self.likeButton.tintColor = UIColor.LikeButton.tint
-            self.likeButton.isSelected = false
-        } else {
+        if produce.liked == true {
 			likeButton.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
-            self.likeButton.isSelected = true
+			self.likeButton.isSelected = true
+        } else {
+			let likeImage = UIImage(named: "\(Constants.unliked).png")
+			let tintedImage = likeImage?.withRenderingMode(.alwaysTemplate)
+			self.likeButton.setImage(tintedImage, for: .normal)
+			self.likeButton.tintColor = UIColor.LikeButton.tint
+			self.likeButton.isSelected = false
         }
 
         // find month
         var monthIndex = 1
 
-        // loop through images
         for uiView in monthImages {
             if monthIndex == currentMonth.rawValue {
                 guard let image = UIImage(named: Month.asArray[monthIndex].imageName) else { return }

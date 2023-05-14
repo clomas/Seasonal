@@ -10,11 +10,11 @@ import UIKit
 
 class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
-    var viewModel: MainViewModel!
-
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nothingToShowLabel: UILabel!
-	var numberOfRows: Int = 0
+
+	var viewModel: MainViewModel?
+	private var numberOfRows: Int = 0
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,20 +38,24 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 	func likeButtonTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
         if let id = cell.id {
 			UINotificationFeedbackGenerator().notificationOccurred(.success)
-			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
+			viewModel?.likeToggle(id: id, liked: cell.likeButton.isSelected)
+
 			if viewDisplayed == .favourites {
-				if let indexPath = self.tableView.indexPath(for: cell) {
-					print(indexPath)
-					DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
-						self.tableView.beginUpdates()
-						self.tableView.deleteRows(at: [indexPath], with: .right)
-						self.tableView.endUpdates()
-						self.updateLabelBehindTableView()
+				if let indexPath = tableView.indexPath(for: cell) {
+					DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
+						self?.deleteRowOnMainThread(at: indexPath)
 					})
 				}
 			}
         }
     }
+
+	private func deleteRowOnMainThread(at indexPath: IndexPath) {
+		tableView.beginUpdates()
+		tableView.deleteRows(at: [indexPath], with: .right)
+		tableView.endUpdates()
+		updateLabelBehindTableView()
+	}
 
 	/// Contextual label updating.
 	/// numberOfRows is needed to keep track of row numbers, given the table has two functions
@@ -60,19 +64,22 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 		if numberOfRows > 0 {
 			nothingToShowLabel.text = ""
 		} else {
-			if viewModel.viewDisplayed == .favourites {
+
+			if viewModel?.viewDisplayed == .favourites {
 				nothingToShowLabel.text = "No Favourites Selected"
 			}
-			if viewModel.searchString.count > 0 {
+
+			if viewModel?.searchString.isEmpty == false {
 				nothingToShowLabel.text = "No Search Results"
 			}
+
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
     }
 
     // this is called from cell update on parent
     func collectionReloadData() {
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
 }
 
@@ -82,32 +89,43 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-		switch viewModel.viewDisplayed {
+		switch viewModel?.viewDisplayed {
 		case .favourites:
-			numberOfRows = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category).count
+			numberOfRows = viewModel?.numberOfRows ?? 0
 			updateLabelBehindTableView()
 			return numberOfRows
+
 		case .months:
-			numberOfRows = viewModel.filter(by: viewModel.searchString, of: viewModel.category)[self.tag].count
+			numberOfRows = viewModel?.numberOfRows ?? 0
 			updateLabelBehindTableView()
 			return numberOfRows
+
 		default:
 			return 0
 		}
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ProduceMonthInfoViewCell) as? ProduceMonthInfoViewCell {
+		if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.ProduceMonthInfoViewCell) as? ProduceMonthInfoViewCell,
+		   let category = viewModel?.category,
+		   let thisMonthForProduceCell: Month = viewModel?.thisMonthForProduceCell,
+		   let searchString: String = viewModel?.searchString {
+
             cell.likeButtonDelegate = self
-			switch viewModel.viewDisplayed {
+
+			switch viewModel?.viewDisplayed {
 			case .favourites:
-				let produce = viewModel.filterFavourites(by: viewModel.searchString, category: viewModel.category)[indexPath.row]
-				cell.updateViews(produce: produce, currentMonth: viewModel.currentMonth, in: .favourites)
+				guard let produce: ProduceModel = viewModel?.filterFavourites(by: viewModel?.searchString, category: category)[indexPath.row] else { return cell }
+
+				cell.updateViews(produce: produce, currentMonth: thisMonthForProduceCell, in: .favourites)
 				return cell
+
 			case .months:
-				let produce = viewModel.filter(by: viewModel.searchString, of: viewModel.category)[self.tag][indexPath.row]
-				cell.updateViews(produce: produce, currentMonth: viewModel.currentMonth, in: .months)
+				guard let produce: ProduceModel = viewModel?.filter(by: searchString, of: category)[tag][indexPath.row] else { return cell }
+
+				cell.updateViews(produce: produce, currentMonth: thisMonthForProduceCell, in: .months)
 				return cell
+
 			default:
 				return ProduceMonthInfoViewCell()
 			}

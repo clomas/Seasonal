@@ -1,4 +1,3 @@
-// TODO: Check for underscores urrwhere
 //  SplashScreenViewController.swift
 //  Seasonal
 //
@@ -20,7 +19,7 @@ class SplashScreenViewController: UIViewController, InitialViewDelegate {
         super.viewDidLoad()
 		viewModel.coordinator?.initialViewDelegate = self
         internetLabel.text = ""
-        self.activityMonitor.startAnimating()
+        activityMonitor.startAnimating()
     }
 
     private func goToiCloudSettings(alert: UIAlertAction!) {
@@ -38,11 +37,11 @@ class SplashScreenViewController: UIViewController, InitialViewDelegate {
 	}
 
 	func networkFailed() {
-		self.presentAlert(title: "Network Error",
+		presentAlert(title: "Network Error",
 						  message: "Unable to connect to the internet",
 						  alertStyle: .alert,
 						  actionTitles: ["OK"],
-						  actionStyles: [.default ],
+						  actionStyles: [.default],
 						  actions: []
 		)
 	}
@@ -51,35 +50,8 @@ class SplashScreenViewController: UIViewController, InitialViewDelegate {
 	func dataIsReady() {}
 
 	func locationNotFound() {
-		self.presentAlert(title: "Undetermined Location",
-					   message: "Choose your location",
-					   alertStyle: .actionSheet,
-					   actionTitles: [
-						StateLocation.westernAustralia.fullName().capitalized,
-						StateLocation.southAustralia.fullName().capitalized,
-							StateLocation.northernTerritory.fullName().capitalized,
-							StateLocation.queensland.fullName().capitalized,
-							StateLocation.newSouthWales.fullName().capitalized,
-							StateLocation.victoria.fullName().capitalized,
-							StateLocation.tasmania.fullName().capitalized
-					   ],
-					   actionStyles: [.default, .default, .default, .default, .default, .default, .default],
-					   actions: [ {_ in
-								self.viewModel.userChoseLocation(state: .westernAustralia)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .southAustralia)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .northernTerritory)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .queensland)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .newSouthWales)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .victoria)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .tasmania)
-							}
-					   ]
-		)
+		presentLocationNotFoundAlert { [weak self] (state: StateLocation) in
+			self?.viewModel.userChoseLocation(state: state)
+		}
 	}
 }

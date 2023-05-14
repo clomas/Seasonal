@@ -11,21 +11,23 @@ import MessageUI
 
 class InfoViewController: UIViewController {
 
-	var viewModel: InfoViewModel!
+	var viewModel: InfoViewModel?
 
-	// TODO: get the order of this the same everywhere.
     @IBOutlet weak var infoTextBlock: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		setUpNavigationController()
+
 		self.definesPresentationContext = true
 		self.providesPresentationContextTransitionStyle = true
 
+		setUpNavigationController()
+
 		// If a location was detected, replace "Australia" with the state
-		if viewModel.location != StateLocation.noState {
-			let usersStateInAustralia = String(describing: viewModel.location).uppercased()
+		if viewModel?.location != StateLocation.noState {
+			let usersStateInAustralia = String(describing: viewModel?.location.fullName())
 			infoTextBlock.text = Constants.infoPageSpiel.replacingOccurrences(of: Constants.straya, with: "\(usersStateInAustralia)")
+
 		// else display "Australia" in default spiel
         } else {
             infoTextBlock.text = Constants.infoPageSpiel
@@ -34,9 +36,11 @@ class InfoViewController: UIViewController {
 
 	// MARK: Setup
 
-	func setUpNavigationController() {
+	private func setUpNavigationController() {
 		self.navigationController?.navigationBar.isHidden = true
 	}
+
+	// MARK: IBActions
 
     @IBAction func downArrowPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -68,24 +72,29 @@ class InfoViewController: UIViewController {
         present(composer, animated: true)
     }
 
+	@IBAction func privacyPolicyButtonPressed(_ sender: Any) {
+		guard let url = URL(string: "https://clomas.github.io/seasonal/") else { return }
+		UIApplication.shared.open(url)
+	}
+
 	// Copy my email address to the clipboard (if no email client)
     private func copyEmailToClipboard() {
         UIPasteboard.general.string = "clint.thomas@me.com"
-    }
-
-    @IBAction func privacyPolicyButtonPressed(_ sender: Any) {
-        guard let url = URL(string: "https://clomas.github.io/seasonal/") else { return }
-        UIApplication.shared.open(url)
     }
 }
 
 extension InfoViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
-        if let mailError = error {
-            // TODO: Show error alert
-			print(mailError)
-            controller.dismiss(animated: true)
-            return
+		if let mailError: Error = error {
+			presentAlert(title: "Unable to compose mail",
+						 message: mailError.localizedDescription,
+						 alertStyle: .alert,
+						 actionTitles: ["Ok"],
+						 actionStyles: [.default],
+						 actions: [ { _ in
+						     controller.dismiss(animated: true)
+						 }]
+			)
         }
         controller.dismiss(animated: true)
     }

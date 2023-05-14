@@ -28,6 +28,10 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		}
     }
 
+	override func viewWillAppear(_ animated: Bool) {
+		navigationController?.setNavigationBarHidden(false, animated: animated)
+	}
+
 	func likeButtonTapped(cell: SeasonsTableViewCell) {
 		if let id = cell.id {
 			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
@@ -59,13 +63,14 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 	private func setUpView() {
 		self.tableView.dataSource = self
 		self.title = viewModel.updateTitle()
+
 		setUpNavigationControllerView()
 		setupMenuBar()
 	}
 
-	func setupMenuBar() {
-		menuBar.viewModel = .init(month: nil, season: viewModel.season, viewDisplayed: .seasons)
-		menuBar.viewModel.delegate = viewModel.self
+	private func setupMenuBar() {
+		menuBar.viewModel = .init(season: viewModel.season)// , viewDisplayed: viewModel.viewDisplayed)
+		menuBar.viewModel?.delegate = viewModel.self
 	}
 
 	private func setUpNavigationControllerView() {
@@ -83,6 +88,14 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
 		self.definesPresentationContext = true
+
+		if #available(iOS 15, *) {
+			let appearance = UINavigationBarAppearance()
+			appearance.configureWithOpaqueBackground()
+			appearance.backgroundColor = UIColor.NavigationBar.tint
+			UINavigationBar.appearance().standardAppearance = appearance
+			UINavigationBar.appearance().scrollEdgeAppearance = appearance
+		}
 	}
 }
 
@@ -91,8 +104,6 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 extension SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-		print(Season(rawValue: viewModel.season.rawValue)!)
 
 		if let season =  Season(rawValue: viewModel.season.rawValue) {
 			let rowsCount = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count

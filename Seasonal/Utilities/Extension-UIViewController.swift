@@ -10,27 +10,52 @@ import UIKit
 
 extension UIViewController {
 
-	// Instantiating ViewControllers
-	static func instantiate<T>() -> T {
+	// MARK: Instantiating ViewControllers from storyboard
+
+	static func instantiate<T>() -> T? {
 		let storyboard = UIStoryboard(name: "Main", bundle: .main)
-		let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as! T // swiftlint:disable:this force_cast
-		return controller
+		if let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as? T {
+			return controller
+		}
+		return nil
 	}
 
-	// Presenting Alerts
-	public func presentAlert(title: String,
-							 message: String,
-							 alertStyle: UIAlertController.Style,
-							 actionTitles: [String],
-							 actionStyles: [UIAlertAction.Style],
-							 actions: [((UIAlertAction) -> Void)]) {
+	// MARK: Present Alerts
+
+	func presentAlert(title: String,
+					  message: String,
+					  alertStyle: UIAlertController.Style,
+					  actionTitles: [String],
+					  actionStyles: [UIAlertAction.Style],
+					  actions: [((UIAlertAction) -> Void)]? = nil) {
 
 		let alertController = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
-		for(index, indexTitle) in actionTitles.enumerated() {
-			let action = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actions[index])
+
+		for (index, indexTitle) in actionTitles.enumerated() {
+			let action = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actions?[index])
+
 			alertController.addAction(action)
 		}
+
 		self.present(alertController, animated: true)
 	}
 
+	func presentLocationNotFoundAlert(chosenState: @escaping ((StateLocation) -> Void)) {
+		presentAlert(title: "Undetermined Location",
+					 message: "Choose your location",
+					 alertStyle: .actionSheet,
+					 actionTitles: Constants.allLocationsForAlert,
+					 actionStyles: [.default, .default, .default, .default, .default, .default, .default],
+					 // formatting here is freaking out
+					 actions: [ { _ in
+									chosenState(.westernAustralia) }, { _ in
+									chosenState(.southAustralia) }, { _ in
+									chosenState(.northernTerritory) }, { _ in
+									chosenState(.queensland) }, { _ in
+									chosenState(.newSouthWales) }, { _ in
+									chosenState(.victoria) }, { _ in
+									chosenState(.tasmania) }
+					 ]
+		)
+	}
 }

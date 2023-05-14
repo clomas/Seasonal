@@ -16,6 +16,20 @@ protocol NetworkObserver: AnyObject {
 
 final class NetworkService {
 
+	private static let sharedInstance = NetworkService()
+
+	var currentStatus: NWPath.Status {
+		return monitor.currentPath.status
+	}
+	var networkUpdate: ((Bool) -> Void)?
+
+	private var monitor = NWPathMonitor()
+	private var observations = [ObjectIdentifier: NetworkChangeObservation]()
+
+	init() {
+		startMonitoring()
+	}
+
 	class func instance() -> NetworkService {
 		return sharedInstance
 	}
@@ -24,27 +38,15 @@ final class NetworkService {
 		weak var observer: NetworkObserver?
 	}
 
-	private var monitor = NWPathMonitor()
-	private static let sharedInstance = NetworkService()
-	private var observations = [ObjectIdentifier: NetworkChangeObservation]()
-
-	var currentStatus: NWPath.Status {
-		return monitor.currentPath.status
-	}
-
-	var networkUpdate: ((Bool) -> Void)?
-
-	init() {
-		startMonitoring()
-	}
-
 	func startMonitoring() {
-		monitor.pathUpdateHandler = { [unowned self] path in
-			for (id, observations) in self.observations {
+		monitor.pathUpdateHandler = { [weak self] path in
+			guard let observations = self?.observations else { return }
+
+			for (id, observations) in observations {
 
 				// If any observer is nil, remove it from the list of observers
 				guard let observer = observations.observer else {
-					self.observations.removeValue(forKey: id)
+					self?.observations.removeValue(forKey: id)
 					continue
 				}
 

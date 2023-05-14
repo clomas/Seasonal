@@ -45,7 +45,7 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func loadWelcomeViewController() {
-		let welcomeViewController: WelcomeViewController = .instantiate()
+		guard let welcomeViewController: WelcomeViewController = .instantiate() else { return }
 		let welcomeViewModel = WelcomeViewModel()
 		welcomeViewModel.coordinator = self
 		welcomeViewController.viewModel = welcomeViewModel
@@ -53,7 +53,7 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func loadSplashScreenViewController() {
-		let splashScreenViewController: SplashScreenViewController = .instantiate()
+		guard let splashScreenViewController: SplashScreenViewController = .instantiate() else { return }
 		let initialViewModel = SplashScreenViewModel()
 		initialViewModel.coordinator = self
 		splashScreenViewController.viewModel = initialViewModel

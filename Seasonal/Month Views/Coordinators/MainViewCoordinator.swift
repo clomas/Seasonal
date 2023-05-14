@@ -32,32 +32,26 @@ protocol MonthSelectedDelegate: AnyObject {
 	func updateMonth(to month: Month?)
 }
 
-// TODO: accessibility - https://medium.com/capital-one-tech/building-accessible-ios-apps-827c3469a3e9
 final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
-
-	var parentCoordinator: AppCoordinator?
-	private(set) var childCoordinators: [Coordinator] = [] // No Children
 
 	private let navigationController: UINavigationController
 	private var modalNavigationController: UINavigationController?
 
+	var parentCoordinator: AppCoordinator?
 	var cloudKitDataService: CloudKitDataService?
 
 	weak var monthSelectedDelegate: MonthSelectedDelegate?
 
+	private var mainViewController: MainViewController?
 	private var dataFetched: [Produce]?
 	private var determinedLocation: StateLocation
 	private var monthAndSeason = DateHandler().findMonthAndSeason()
-
-	var currentMonth: Month { return monthAndSeason.0 }
-	var currentSeason: Season { return monthAndSeason.1	}
-
-	let mainViewController: MainViewController = .instantiate()
-	let produceDataService = ProduceDataService()
+	private var currentMonth: Month { return monthAndSeason.0 } // TODO: Change this
+	private var currentSeason: Season { return monthAndSeason.1	}
 
 	init(navigationController: UINavigationController,
 		 cloudKitDataService: CloudKitDataService,
-		 dataFetched: [Produce],
+		 dataFetched: [Produce]?,
 		 location: StateLocation) {
 		self.navigationController = navigationController
 		self.cloudKitDataService = cloudKitDataService
@@ -66,59 +60,60 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	func start() {
-		self.navigationController.delegate = self
-		guard let produceData = dataFetched else {
-			return
-		}
-		let monthNow = currentMonth
+		navigationController.delegate = self
+		mainViewController = .instantiate()
 
-		let mainViewModel = MainViewModel(monthsProduce: produceData.sortIntoMonths(),
-											   favouritesProduce: produceData.sortIntoFavourites(),
-											   viewDisplayed: .months,
-											   monthToDisplay: monthNow,
-											   currentMonth: monthNow,
-											   previousMonth: monthNow,
-											   category: .all,
-											   searchString: "")
+		let monthNow = currentMonth
+			// TODO: These pass unwrapped through
+		let mainViewModel = MainViewModel(monthsProduce: dataFetched?.sortIntoMonths(),
+										  favouritesProduce: dataFetched?.sortIntoFavourites(),
+										  viewDisplayed: .months,
+										  monthToDisplay: monthNow,
+										  previousMonth: monthNow,
+										  thisMonthForProduceCell: monthNow,
+										  category: .all,
+										  searchString: "")
 
 		mainViewModel.coordinator = self
-		mainViewController.viewModel = mainViewModel
+		mainViewController?.viewModel = mainViewModel
 
 		// change animation to slide up
 		// navigationController.
 
 		let fromTopTransition = setUpNavigationTransition()
 		navigationController.view.layer.add(fromTopTransition, forKey: kCATransition)
-		navigationController.pushViewController(mainViewController, animated: true)
+
+		if let mainViewControllerToPresent: UIViewController = mainViewController {
+			navigationController.pushViewController(mainViewControllerToPresent, animated: true)
+		}
 	}
 
 	// Handle all navigation options
-
 	func menuBarTappedForNavigation(at index: Int) {
 		switch index {
 		case ViewDisplayed.monthPicker.rawValue:
-			self.presentMonthPickerViewController()
+			presentMonthPickerViewController()
 		case ViewDisplayed.monthPicker.rawValue:
-			self.presentMonthPickerViewController()
+			presentMonthPickerViewController()
 		case ViewDisplayed.seasons.rawValue:
-			self.presentSeasonsViewController()
+			presentSeasonsViewController()
 		default:
 			break
 		}
 	}
 
 	// MARK: Presenting ViewControllers
-
 	// Month Picker View Controller
 
-	func presentMonthPickerViewController() {
-		self.modalNavigationController = UINavigationController()
-		let monthPickerViewController: MonthPickerViewController = .instantiate()
+	private func presentMonthPickerViewController() {
+		guard let monthPickerViewController: MonthPickerViewController = .instantiate() else { return }
+		modalNavigationController = UINavigationController()
+
 		modalNavigationController?.setViewControllers([monthPickerViewController], animated: false)
 		monthPickerViewController.coordinator = self
 
 		if let modalNavigationController = modalNavigationController {
-			self.navigationController.present(modalNavigationController, animated: true, completion: nil)
+			navigationController.present(modalNavigationController, animated: true, completion: nil)
 		}
 	}
 
@@ -130,10 +125,8 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 	//https://benoitpasquier.com/coordinator-pattern-navigation-back-button-swift/
 	func presentSeasonsViewController() {
-		let seasonsViewController: SeasonsViewController = .instantiate()
-		guard let produceData = dataFetched else {
-			return
-		}
+		guard let seasonsViewController: SeasonsViewController = .instantiate(),
+			  let produceData = dataFetched else { return }
 
 		let seasonsViewModel = SeasonsViewModel(
 			produceData: produceData.sortIntoSeasons(),
@@ -143,18 +136,16 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		)
 		seasonsViewModel.coordinator = self
 		seasonsViewController.viewModel = seasonsViewModel
-		print("present")
-		self.navigationController.interactivePopGestureRecognizer?.delegate = self
-		self.navigationController.interactivePopGestureRecognizer?.isEnabled = true
-		self.navigationController.pushViewController(seasonsViewController, animated: true)
+
+		navigationController.interactivePopGestureRecognizer?.delegate = self
+		navigationController.interactivePopGestureRecognizer?.isEnabled = true
+		navigationController.pushViewController(seasonsViewController, animated: true)
 	}
 
 	func updateDataModels(for id: Int, liked: Bool, from view: ViewDisplayed) {
-		// Update MainViewController's viewModel here - produce data is shared between
-		// the two views Would love to know if theres a better way to do this
-		// MainViewController is never removed from the NavigationController
+
 		if view == .seasons {
-			mainViewController.viewModel.likeToggle(id: id, liked: liked)
+			mainViewController?.viewModel.likeToggle(id: id, liked: liked)
 		} else {
 			// update the struct array that is passed to SeasonsView which is pushed and popped
 			if let index = dataFetched?.firstIndex(where: { $0.id == id}) {
@@ -163,19 +154,22 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		}
 
 		cloudKitDataService?.saveLikeToPrivateDatabaseInCloudKit(id: id) { result in
+			#if DEBUG
 			print(result, "liked in CloudKit")
+			#endif
+			// TODO: Handle result
 		}
 	}
 
 	func presentInfoViewController() {
 		self.modalNavigationController = UINavigationController()
-		let infoViewController: InfoViewController = .instantiate()
+		guard let infoViewController: InfoViewController = .instantiate() else { return }
 		infoViewController.viewModel = InfoViewModel(location: determinedLocation)
-		infoViewController.viewModel.coordinator = self
+		infoViewController.viewModel?.coordinator = self
 		modalNavigationController?.setViewControllers([infoViewController], animated: false)
 
 		if let modalNavigationController = modalNavigationController {
-			self.navigationController.present(modalNavigationController, animated: true, completion: nil)
+			navigationController.present(modalNavigationController, animated: true, completion: nil)
 		}
 	}
 
@@ -190,8 +184,6 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	func seasonsBackButtonTapped() {
-		print(self.navigationController.viewControllers)
-		self.navigationController.popViewController(animated: true)
-		print(self.navigationController.viewControllers)
+		navigationController.popViewController(animated: true)
 	}
  }

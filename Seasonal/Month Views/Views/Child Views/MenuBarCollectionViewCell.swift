@@ -11,14 +11,7 @@ import UIKit
 
 class MenuBarCollectionViewCell: UICollectionViewCell {
 
-	var imageView = UIImageView()
-
-	override var isSelected: Bool {
-		didSet {
-			imageView.tintColor = isSelected ? UIColor.MenuBar.selectedTint : UIColor.MenuBar.tint
-			self.backgroundColor = isSelected ? #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0) : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0)
-		}
-	}
+	let imageView = UIImageView()
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
@@ -29,14 +22,24 @@ class MenuBarCollectionViewCell: UICollectionViewCell {
 		}
 	}
 
-	func updateViews(imageName: String, constraints: (String, String), selected: Bool) {
+	func updateViews(viewModel: MenuBarCellModel?) {
+		guard let menuBarViewModel: MenuBarCellModel = viewModel else { return }
+
 		addSubview(imageView)
-		self.imageView.image = UIImage(named: imageName)?.withRenderingMode(.alwaysTemplate)
-		imageView.tintColor = UIColor.MenuBar.tint
-		self.backgroundColor = UIColor.NavigationBar.tint
-		self.isSelected = selected
-		addConstraintsWithFormat(constraints.0, views: imageView)
-		addConstraintsWithFormat(constraints.1, views: imageView)
+		imageView.image = UIImage(named: menuBarViewModel.imageName)?.withRenderingMode(.alwaysTemplate)
+
+		if menuBarViewModel.isSelected == true {
+			isUserInteractionEnabled = false
+			imageView.tintColor = UIColor.MenuBar.selectedTint
+		} else {
+			isUserInteractionEnabled = true
+			imageView.tintColor = UIColor.MenuBar.tint
+		}
+		backgroundColor = UIColor.NavigationBar.tint
+
+		addConstraintsWithFormat(menuBarViewModel.constraints.0, views: imageView)
+		addConstraintsWithFormat(menuBarViewModel.constraints.1, views: imageView)
+
 		addConstraint(NSLayoutConstraint(item: imageView,
 										 attribute: .centerX,
 										 relatedBy: .equal,
@@ -52,26 +55,28 @@ class MenuBarCollectionViewCell: UICollectionViewCell {
 										 multiplier: 1.15,
 										 constant: 0))
 
-		self.index(ofAccessibilityElement: self)
+		index(ofAccessibilityElement: self)
 	}
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		self.contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
+		contentView.frame = contentView.frame.inset(by: .allZero)
 	}
 }
 
 // MARK: Constraints
 
-extension UIView {
+private extension UIView {
 
 	func addConstraintsWithFormat(_ format: String, views: UIView...) {
 		var viewsDictionary = [String: UIView]()
+
 		for (index, view) in views.enumerated() {
 			let key = "v\(index)"
 			view.translatesAutoresizingMaskIntoConstraints = false
 			viewsDictionary[key] = view
 		}
+
 		addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDictionary))
 	}
 }

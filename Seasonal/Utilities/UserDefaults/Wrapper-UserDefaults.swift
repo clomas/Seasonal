@@ -22,26 +22,16 @@ struct UserDefault<T: Codable> {
 
 	var wrappedValue: T {
 		get {
-			if let data = UserDefaults.standard.object(forKey: key) as? Data,
-			   let user = try? JSONDecoder().decode(T.self, from: data) {
+			if let data: Data = UserDefaults.standard.object(forKey: key) as? Data,
+			   let user: T = try? JSONDecoder().decode(T.self, from: data) {
 				return user
 			}
 			return defaultValue
 		}
 		set {
-			print(newValue)
-			if let encoded = try? JSONEncoder().encode(newValue) {
+			if let encoded: Data = try? JSONEncoder().encode(newValue) {
 				UserDefaults.standard.set(encoded, forKey: key)
 			}
 		}
 	}
-}
-
-// Storing location (Australian State) into User Defaults
-enum GlobalSettings {
-	@UserDefault("state", defaultValue: Location(state: "")) static var location: Location
-}
-
-struct Location: Codable {
-	let state: String
 }

@@ -29,6 +29,14 @@ class MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate {
 		self.navigationItem.hidesBackButton = true
 		self.navigationItem.leftBarButtonItem = nil
 		self.navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
+
+		if #available(iOS 15, *) {
+			let appearance = UINavigationBarAppearance()
+			appearance.configureWithOpaqueBackground()
+			appearance.backgroundColor = UIColor.NavigationBar.tint
+			UINavigationBar.appearance().standardAppearance = appearance
+			UINavigationBar.appearance().scrollEdgeAppearance = appearance
+		}
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {

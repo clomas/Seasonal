@@ -10,9 +10,7 @@ import UIKit
 import Network
 
 protocol Coordinator: AnyObject {
-	var childCoordinators: [Coordinator] { get }
 	func start()
-	func childDidFinish(_ childCoordinator: Coordinator)
 }
 
 protocol InitialCoordinatorDelegate: AnyObject {
@@ -21,25 +19,26 @@ protocol InitialCoordinatorDelegate: AnyObject {
 	func locationNotFound()
 }
 
-extension Coordinator {
-	func childDidFinish(_ childCoordinator: Coordinator) {}
-}
-
 final class AppCoordinator: LocationDelegate {
+
+	let cloudKitDataService = CloudKitDataService()
 
 	private let window: UIWindow
 	private let navigationController = UINavigationController()
 
 	private(set) var childCoordinators: [Coordinator] = []
-
-	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
-
 	private var networkService = NetworkService.instance()
 	private var locationManager: LocationManager! = LocationManager.sharedInstance
 	private var currentLocation: StateLocation = .noState
-
-	let cloudKitDataService = CloudKitDataService()
 	private var produceData: [Produce]?
+	private var isFirstRun: Bool {
+		UserDefaults.isFirstLaunch()
+	}
+	private var networkAvailable: Bool {
+		networkService.currentStatus == .satisfied
+	}
+
+	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
 
 	init(window: UIWindow) {
 		self.window = window
@@ -55,28 +54,15 @@ final class AppCoordinator: LocationDelegate {
 	func start() {
 		loadInitialViewCoordinator()
 		locationManager.locationDelegate = self
+
 		if !networkAvailable {
 			networkService.startMonitoring()
-			print(networkService.currentStatus)
+		} else {
+			locationManager.start()
 		}
+
 		window.rootViewController = navigationController
 		window.makeKeyAndVisible()
-	}
-
-	var isFirstRun: Bool {
-		if UserDefaults.isFirstLaunch() == true {
-			return true
-		} else {
-			return false
-		}
-	}
-
-	var networkAvailable: Bool {
-		if networkService.currentStatus != .satisfied {
-			return false
-		} else {
-			return true
-		}
 	}
 
 	// Called from location manager
@@ -104,7 +90,7 @@ final class AppCoordinator: LocationDelegate {
 				getDataFromCloudKit(for: currentLocation)
 			// If location services is denied and nothing stored - prompt user for state
 			} else if locationManager.authStatus == .denied && currentLocation == .noState {
-				self.initialCoordinatorDelegate?.locationNotFound()
+				initialCoordinatorDelegate?.locationNotFound()
 			// If current location is stored - proceed
 			} else if currentLocation != .noState {
 				getDataFromCloudKit(for: currentLocation)
@@ -112,11 +98,23 @@ final class AppCoordinator: LocationDelegate {
 		}
 	}
 
-	func getDataFromCloudKit(for location: StateLocation) {
-		self.getData(for: location, dataFetched: { produce in
-			self.produceData = produce
+	func loadMainViewCoordinator() {
+		let mainViewCoordinator = MainViewCoordinator(navigationController: navigationController,
+													  cloudKitDataService: cloudKitDataService,
+													  dataFetched: produceData,
+													  location: currentLocation
+		)
+		childCoordinators.append(mainViewCoordinator)
+		mainViewCoordinator.parentCoordinator = self
+		mainViewCoordinator.start()
+	}
+
+	private func getDataFromCloudKit(for location: StateLocation) {
+		getData(for: location, dataFetched: { [weak self] (produce: [Produce]) in
+		    self?.produceData = produce
+
 			DispatchQueue.main.async {
-				self.initialCoordinatorDelegate?.dataIsReady()
+				self?.initialCoordinatorDelegate?.dataIsReady()
 			}
 		})
 	}
@@ -132,17 +130,19 @@ final class AppCoordinator: LocationDelegate {
 		getDataFromCloudKit(for: location)
 	}
 
-	func getData(for location: StateLocation, dataFetched: @escaping([Produce]) -> Void) {
+	private func getData(for location: StateLocation, dataFetched: @escaping ([Produce]) -> Void) {
 		cloudKitDataService.getData(for: location, dataFetched: { data in
 			do {
 				dataFetched(try data.get())
 			} catch {
 				fatalError() // well I can't do much from here.
+				#warning("crashing here on no internet")
+				// TODO:
 			}
 		})
 	}
 
-	func loadInitialViewCoordinator() {
+	private func loadInitialViewCoordinator() {
 		let initialViewCoordinator = InitialViewCoordinator(navigationController: navigationController,
 															 firstRun: isFirstRun
 		)
@@ -151,30 +151,14 @@ final class AppCoordinator: LocationDelegate {
 		initialViewCoordinator.start()
 	}
 
-	func loadMainViewCoordinator() {
-		if let produce = produceData {
-			let mainViewCoordinator = MainViewCoordinator(navigationController: navigationController,
-														  cloudKitDataService: cloudKitDataService,
-														  dataFetched: produce,
-														  location: currentLocation
-			)
-			childCoordinators.append(mainViewCoordinator)
-			mainViewCoordinator.parentCoordinator = self
-			mainViewCoordinator.start()
-		} else {
-			// Bail out, the app isn't going to work without produceData
-			fatalError("error fetching data")
-		}
-	}
-
 	func internetStatusDidChange(status: NWPath.Status) {
-		if status == .unsatisfied {
-			self.initialCoordinatorDelegate?.networkFailed()
+
+		switch status {
+		case .satisfied:
+			locationManager.start()
+		default:
+			initialCoordinatorDelegate?.networkFailed()
 		}
-		// FOR TESTING
-		// TODO: run and make sure this fires
-		self.initialCoordinatorDelegate?.networkFailed()
-		print("internet changed")
 	}
 
 	func childDidFinish(_ childCoordinator: Coordinator) {

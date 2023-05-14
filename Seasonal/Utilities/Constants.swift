@@ -43,7 +43,6 @@ struct Constants {
 
 	// Titles
 	static let Seasons = "Seasons"
-	// static let Calendar = "Calendar"
 	static let Months = "Months"
 	static let selectAMonth = "Select a Month"
 
@@ -81,4 +80,14 @@ struct Constants {
 	static let infoPageSpiel = "Location of Produce Displayed: Australia.\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!"
 
 	static let apple = "apple"
+
+	static let allLocationsForAlert: [String] = [
+		StateLocation.westernAustralia.fullName().capitalized,
+		StateLocation.southAustralia.fullName().capitalized,
+		StateLocation.northernTerritory.fullName().capitalized,
+		StateLocation.queensland.fullName().capitalized,
+		StateLocation.newSouthWales.fullName().capitalized,
+		StateLocation.victoria.fullName().capitalized,
+		StateLocation.tasmania.fullName().capitalized
+	]
 }

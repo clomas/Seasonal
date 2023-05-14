@@ -13,15 +13,14 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
 	var viewModel: WelcomeViewModel!
 
-    @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var dismissArrowButton: UIButton!
     @IBOutlet weak var welcomeLabel: UILabel!
     @IBOutlet weak var AVPlayerView: AVPlayerView!
 
     private var player: AVPlayer!
-
-	var videoName: String {
+	private var videoName: String {
 		if traitCollection.userInterfaceStyle == .dark {
 			return Constants.darkWelcomeVideo
 		} else {
@@ -35,10 +34,17 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
         setupViews()
     }
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		navigationController?.setNavigationBarHidden(true, animated: animated)
+	}
+
     private func setupViews() {
 		welcomeLabel.text = viewModel.welcomeLabel
-		activityMonitor.startAnimating()
-		activityMonitor.hidesWhenStopped = true
+
+		activityIndicator.startAnimating()
+		activityIndicator.hidesWhenStopped = true
+
 		dismissButton.isHidden = true
 		dismissArrowButton.isHidden = true
 		dismissButton.isEnabled = false
@@ -75,7 +81,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
     }
 
     // Start video over after completion
-    @objc func playerItemDidReachEnd(notification: Notification) {
+    @objc private func playerItemDidReachEnd(notification: Notification) {
         if let playerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
 			playVideo()
@@ -86,10 +92,10 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
 	// TODO: nothing happens here
 	private func animateWelcomeLabel() {
-		if self.dismissButton.isHidden == false {
-			self.activityMonitor.isHidden = true
+		if dismissButton.isHidden == false {
+			activityIndicator.isHidden = true
 		}
-		self.welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel.welcomeLabel)
+		welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel.welcomeLabel)
 	}
 
     // MARK: Buttons
@@ -102,22 +108,17 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 		viewModel.dismissTapped()
     }
 
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		navigationController?.setNavigationBarHidden(true, animated: animated)
-	}
-
 	// Delegates passed down from the InitialViewCoordinator.
 	func dataIsReady() {
 		dismissButton.isHidden.toggle()
 		dismissArrowButton.isHidden.toggle()
 		dismissButton.isEnabled.toggle()
 		dismissArrowButton.isEnabled.toggle()
-		activityMonitor.stopAnimating()
+		activityIndicator.stopAnimating()
 	}
 
 	func networkFailed() {
-		self.presentAlert(title: "Network Error",
+		presentAlert(title: "Network Error",
 						  message: "Unable to connect to the internet",
 						  alertStyle: .alert,
 						  actionTitles: [],
@@ -127,36 +128,9 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 	}
 
 	func locationNotFound() {
-		self.presentAlert(title: "Undetermined Location",
-						  message: "Choose your location",
-						  alertStyle: .actionSheet,
-						  actionTitles: [
-							StateLocation.westernAustralia.fullName().capitalized,
-							StateLocation.southAustralia.fullName().capitalized,
-							StateLocation.northernTerritory.fullName().capitalized,
-							StateLocation.queensland.fullName().capitalized,
-							StateLocation.newSouthWales.fullName().capitalized,
-							StateLocation.victoria.fullName().capitalized,
-							StateLocation.tasmania.fullName().capitalized
-						  ],
-						  actionStyles: [.default, .default, .default, .default, .default, .default, .default],
-						  actions: [ {_ in
-								self.viewModel.userChoseLocation(state: .westernAustralia)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .southAustralia)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .northernTerritory)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .queensland)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .newSouthWales)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .victoria)
-							}, {_ in
-								self.viewModel.userChoseLocation(state: .tasmania)
-							}
-						  ]
-		)
+		presentLocationNotFoundAlert { [weak self] (state: StateLocation) in
+			self?.viewModel.userChoseLocation(state: state)
+		}
 	}
 }
 

@@ -10,10 +10,10 @@ import Foundation
 
 enum Season: Int, CaseIterable {
 	    case summer = 0
-	    case autumn
-	    case winter
-	    case spring
-	    case cancelled
+	    case autumn = 1
+	    case winter = 2
+	    case spring = 3
+	    case cancelled = 4
 }
 
 final class SeasonsViewModel: MenuBarDelegate {
@@ -42,7 +42,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 		self.produceDataService = dataService
 	}
 
-	func menuBarTapped(at index: Int) {
+	func menuBarWasTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
 			 ViewDisplayed.ProduceCategory.vegetables.rawValue,
@@ -65,12 +65,11 @@ final class SeasonsViewModel: MenuBarDelegate {
 		return String(describing: season).createTitleString(with: category)
 	}
 
-	// TODO:
+	/// reference for favourites array manipulation
+	/// produceDataService.updateLike(id: id, liked: liked)
+	/// update viewModel array
 	func likeToggle(id: Int, liked: Bool) {
-		// reference for favourites array manipulation
-		// produceDataService.updateLike(id: id, liked: liked)
-		// update viewModel array
-		var updateLikeTo = false
+		var updateLikeTo = liked
 
 		if liked == false {
 			updateLikeTo = true
@@ -81,6 +80,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 		for seasonProduce in self.produceData {
 			let season = seasonProduce.key
+
 			if let index = self.produceData[season]?.firstIndex(where: { $0.id == id}) {
 				self.produceData[season]?[index].liked = updateLikeTo
 				print(self.produceData[season]?[index].liked ?? "")

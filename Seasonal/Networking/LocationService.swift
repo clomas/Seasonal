@@ -41,25 +41,29 @@ protocol LocationDelegate: AnyObject {
 }
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
-    static let sharedInstance = LocationManager()
-    private let locationManager: CLLocationManager
+
+	static let sharedInstance = LocationManager()
+
+	private let locationManager: CLLocationManager
     private let locationInfo = LocationInformation()
-	weak var locationDelegate: LocationDelegate?
+
 	var authStatus: CLAuthorizationStatus?
+
+	weak var locationDelegate: LocationDelegate?
 
     override init() {
         locationManager = CLLocationManager()
+		super.init()
+
         if #available(iOS 14.0, *) {
             locationManager.desiredAccuracy = kCLLocationAccuracyReduced
         }
         locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
-        super.init()
         locationManager.delegate = self
-		start()
     }
 
     func start() {
-        if CLLocationManager.locationServicesEnabled() {
+		if CLLocationManager.locationServicesEnabled() {
 			switch CLLocationManager.authorizationStatus() {
 			case .notDetermined:
 				locationManager.requestWhenInUseAuthorization()
@@ -69,12 +73,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 			default:
 				break
 			}
-        }
-    }
-
-    func stop() {
-        locationManager.stopUpdatingLocation()
-        locationDelegate?.locationReady(location: StateLocation.noState)
+		}
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -82,11 +81,12 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         // now fill address as well for complete information through lat long ..
-        let geocoder = CLGeocoder()
-        geocoder.reverseGeocodeLocation(mostRecentLocation) { (placemarks, _) in
-            guard let placemarks = placemarks, let placemark = placemarks.first else { return }
-            if let state = placemark.administrativeArea,
-                let country = placemark.country {
+        let geoCoder = CLGeocoder()
+		geoCoder.reverseGeocodeLocation(mostRecentLocation) { (placeMarks, _) in
+            guard let placeMarks = placeMarks, let placeMark = placeMarks.first else { return }
+
+            if let state = placeMark.administrativeArea,
+                let country = placeMark.country {
                 self.locationInfo.state = state
                 self.locationInfo.country = country
                 self.locationInfo.locationFound = true
@@ -95,37 +95,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             }
             self.parseLocation()
         }
-    }
-
-    // MARK: States in Aus
-
-    private func parseLocation() {
-        var stateFound = StateLocation.noState
-		#if DEBUG
-			print(locationInfo.locationFound == true)
-		#endif
-
-        if let state = locationInfo.state?.lowercased() {
-            if state == StateLocation.act.rawValue {
-                stateFound = StateLocation.newSouthWales
-            } else if state == "ca" {
-                stateFound = StateLocation.noState
-            } else {
-				if locationInfo.country != Constants.straya {
-					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
-						stateFound = state
-						print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
-					}
-				} else if state != "" {
-					if let locationInit = StateLocation.init(rawValue: state) {
-						stateFound = locationInit
-					}
-                }
-            }
-			print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
-        }
-        locationManager.stopUpdatingLocation()
-        locationDelegate?.locationReady(location: stateFound)
     }
 
     // MARK: Location Updated
@@ -151,6 +120,46 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
 		locationDelegate?.locationReady(location: .noState)
     }
+
+	private func stop() {
+		locationManager.stopUpdatingLocation()
+		locationDelegate?.locationReady(location: StateLocation.noState)
+	}
+
+		// MARK: States in Aus
+
+	private func parseLocation() {
+		var stateFound = StateLocation.noState
+
+		#if DEBUG
+			print(locationInfo.locationFound == true)
+		#endif
+
+		if let state = locationInfo.state?.lowercased() {
+			if state == StateLocation.act.rawValue {
+				stateFound = StateLocation.newSouthWales
+			} else if state == "ca" {
+				stateFound = StateLocation.noState
+			} else {
+				if locationInfo.country != Constants.straya {
+					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
+						stateFound = state
+						print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
+					}
+				} else if state != "" {
+					if let locationInit = StateLocation.init(rawValue: state) {
+						stateFound = locationInit
+					}
+				}
+			}
+			#if DEBUG
+				print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
+			#endif
+		}
+		locationManager.stopUpdatingLocation()
+		locationDelegate?.locationReady(location: stateFound)
+	}
+
 }
 
 class LocationInformation {

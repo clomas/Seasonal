@@ -177,7 +177,7 @@
                     <navigationItem key="navigationItem" id="ge6-pM-73x"/>
                     <connections>
                         <outlet property="AVPlayerView" destination="rNd-d8-yzq" id="6lc-Q6-gxZ"/>
-                        <outlet property="activityMonitor" destination="ghd-Je-7a0" id="WC8-hq-Glz"/>
+                        <outlet property="activityIndicator" destination="ghd-Je-7a0" id="WC8-hq-Glz"/>
                         <outlet property="dismissArrowButton" destination="6Vw-8H-anz" id="3ZC-aO-CtT"/>
                         <outlet property="dismissButton" destination="aoe-Br-6a5" id="vNu-Td-Qbd"/>
                         <outlet property="welcomeLabel" destination="ScC-1k-tvR" id="zVA-k4-bUN"/>
@@ -190,7 +190,7 @@
         <!--Seasonal Produce-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="MainViewController" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MainViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainViewController" extendedLayoutIncludesOpaqueBars="YES" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="MainViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" opaque="NO" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -393,6 +393,7 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstAttribute="width" constant="414" id="3Q9-U8-n9M"/>
                                     <constraint firstAttribute="height" constant="56" id="79D-WL-DFO"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="eSp-De-OGo">
@@ -460,7 +461,7 @@
         <scene sceneID="NLB-nL-f7k">
             <objects>
                 <viewController storyboardIdentifier="SeasonsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="FTr-h4-Wv5" customClass="SeasonsViewController" customModule="Seasonal" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Xhg-lO-jab">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="Xhg-lO-jab">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -543,8 +544,8 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="56" id="1MA-Ld-g03"/>
                                 </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="qoM-vL-HR7">
-                                    <size key="itemSize" width="95" height="55"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="pld-aM-4kk">
+                                    <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -597,7 +598,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="menuBar" destination="XM5-Vh-Nr5" id="hjd-Wy-4xS"/>
+                        <outlet property="menuBar" destination="XM5-Vh-Nr5" id="uI7-Xk-GQD"/>
                         <outlet property="nothingToShowLabel" destination="ptR-XM-Vgt" id="a4R-GJ-dPf"/>
                         <outlet property="tableView" destination="SPs-xc-l3z" id="gcS-pi-O8n"/>
                     </connections>
@@ -652,7 +653,7 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="c3w-ny-7Ku"/>
                         <color key="backgroundColor" name="cellColor"/>
-                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="tintColor" name="cellColor"/>
                         <constraints>
                             <constraint firstItem="ykG-ze-T1R" firstAttribute="trailing" secondItem="c3w-ny-7Ku" secondAttribute="trailing" id="2DM-oh-lHf"/>
                             <constraint firstItem="ykG-ze-T1R" firstAttribute="leading" secondItem="c3w-ny-7Ku" secondAttribute="leading" id="Blk-gV-jNJ"/>
@@ -673,7 +674,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8LF-iW-EGP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-175" y="180"/>
+            <point key="canvasLocation" x="100" y="362"/>
         </scene>
         <!--Info View Controller-->
         <scene sceneID="egt-IQ-d41">
@@ -763,14 +764,14 @@ I’m always looking to improve the accuracy of the application, so get in conta
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tqx-iq-wSI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1591.304347826087" y="-143.97321428571428"/>
+            <point key="canvasLocation" x="3411.594202898551" y="-143.97321428571428"/>
         </scene>
         <!--Seasonal Produce-->
         <scene sceneID="QcI-6K-oYU">
             <objects>
-                <navigationController storyboardIdentifier="NavigationController" title="Seasonal Produce" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oNH-9P-vZ4" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="NavigationController" title="Seasonal Produce" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="oNH-9P-vZ4" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" opaque="NO" alpha="0.75" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Lsf-Wy-Xfi">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Lsf-Wy-Xfi">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" name="navigationBar"/>
@@ -779,11 +780,11 @@ I’m always looking to improve the accuracy of the application, so get in conta
                         <textAttributes key="titleTextAttributes">
                             <fontDescription key="fontDescription" type="system" pointSize="20"/>
                             <color key="textColor" name="fontDefault"/>
-                            <color key="textShadowColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </textAttributes>
                         <textAttributes key="largeTitleTextAttributes">
                             <color key="textColor" name="fontDefault"/>
-                            <color key="textShadowColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -793,17 +794,29 @@ I’m always looking to improve the accuracy of the application, so get in conta
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ozX-am-OGz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1717" y="-237"/>
+            <point key="canvasLocation" x="-1923" y="-232"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="lZR-Q5-T1O">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Jgy-2b-pnD" sceneMemberID="viewController">
+                <navigationController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" definesPresentationContext="YES" providesPresentationContextTransitionStyle="YES" id="Jgy-2b-pnD" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="MBK-p5-X7b"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="t9h-Ux-aQv">
                         <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" name="navigationBar"/>
+                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" name="navigationBar"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <color key="textColor" name="fontDefault"/>
+                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" name="fontDefault"/>
+                            <color key="textShadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>

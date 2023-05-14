@@ -8,65 +8,57 @@
 
 import Foundation
 
-enum Month: Int, CaseIterable {
-	case decemberOverflow
-	case january
-	case february
-	case march
-	case april
-	case may
-	case june
-	case july
-	case august
-	case september
-	case october
-	case november
-	case december
-	case januaryOverflow
-}
-
 final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
-
-	weak var coordinator: MainViewCoordinator?
-
-	var viewDisplayed: ViewDisplayed
-
-	var monthsProduce: [[ProduceModel]]
-	var favouritesProduce: [ProduceModel]
 
 	private let produceDataService: ProduceDataService
 
+	var viewDisplayed: ViewDisplayed
+	var allMonthsAndTheirProduce: [[ProduceModel]]?
+	var favouritesProduce: [ProduceModel]?
 	var monthToDisplay: Month
-	var currentMonth: Month // For displaying the circle in cell of current month.
+	var thisMonthForProduceCell: Month // For displaying the circle in cell of current month.
 	var previousMonth: Month // Keep track of - for animation
 	var category: ViewDisplayed.ProduceCategory
 	var searchString: String
+	var numberOfRows: Int {
+
+		switch viewDisplayed {
+		case .favourites:
+			return filter(by: searchString, of: category).count
+		case .months:
+			return filter(by: searchString, of: category)[monthToDisplay.rawValue].count
+		default:
+			return 0
+		}
+	}
 
 	var reloadTableView = {}
 	var updateMenuBar = {}
 
-	init(monthsProduce: [[ProduceModel]],
-		 favouritesProduce: [ProduceModel],
+	weak var coordinator: MainViewCoordinator?
+
+	init(monthsProduce: [[ProduceModel]]?,
+		 favouritesProduce: [ProduceModel]?,
 		 viewDisplayed: ViewDisplayed,
 		 monthToDisplay: Month,
-		 currentMonth: Month,
 		 previousMonth: Month,
+		 thisMonthForProduceCell: Month,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
 		 dataService: ProduceDataService = ProduceDataService()) {
 
-		self.monthsProduce = monthsProduce
+		self.allMonthsAndTheirProduce = monthsProduce
 		self.favouritesProduce = favouritesProduce
 		self.viewDisplayed = viewDisplayed
 		self.monthToDisplay = monthToDisplay
-		self.currentMonth = currentMonth
 		self.previousMonth = monthToDisplay
+		self.thisMonthForProduceCell = thisMonthForProduceCell
 		self.category = category
 		self.searchString = searchString
 		self.produceDataService = dataService
 	}
 
-	func menuBarTapped(at index: Int) {
+	func menuBarWasTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
 			 ViewDisplayed.ProduceCategory.vegetables.rawValue,
@@ -108,59 +100,56 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	/// - Parameter month: month can be nil - if it is no need to update.
 	func updateMonth(to month: Month?) {
 		if let month = month {
-			self.monthToDisplay = month
-			self.viewDisplayed = .months
+			monthToDisplay = month
+			viewDisplayed = .months
 		}
 		updateMenuBar()
 		reloadTableView()
 	}
-	// TODO: 
+
 	func likeToggle(id: Int, liked: Bool) {
-		print("toggle = \(id) \(liked)" )
-		// reference for favourites array manipulation
-		var lastMonthIndex = 0
-		var produceIndex = 0
-		// update viewModel array
-		var updateLikeTo = false
+//		var lastMonthIndex = 0
+//		var produceIndex = 0
+// TODO: this?
+//		var updateLikeTo = false
+//
+//		if liked == false {
+//			updateLikeTo = true
+//		}
+		var produceToToggle: ProduceModel?
 
-		if liked == false {
-			updateLikeTo = true
-		}
+		if var produce: [[ProduceModel]] = allMonthsAndTheirProduce, var favourites: [ProduceModel] = favouritesProduce {
 
-		for (monthIndex, monthProduce) in self.monthsProduce.enumerated() {
-			if let likedProduceIndex = monthProduce.firstIndex(where: { $0.id == id }) {
-				self.monthsProduce[monthIndex][likedProduceIndex].liked = updateLikeTo
-				lastMonthIndex = monthIndex
-				produceIndex = likedProduceIndex
- 			}
-		}
+			for (monthIndex, monthProduce) in produce.enumerated() {
 
-		func addRemoveFavourites() {
-			if updateLikeTo == true {
+				if let likedProduceIndex = monthProduce.firstIndex(where: { $0.id == id }) {
+					produceToToggle = produce[monthIndex][likedProduceIndex]
+					produce[monthIndex][likedProduceIndex].liked = liked
+//					lastMonthIndex = monthIndex
+//					produceIndex = likedProduceIndex
+				}
+			}
+
+			if let selectedProduce: ProduceModel = produceToToggle, liked == true {
 				// get the liked produce, insert into array at the correct index by id
-				let newFavourite = self.monthsProduce[lastMonthIndex][produceIndex]
-				favouritesProduce.insert(newFavourite, at: favouritesProduce.firstIndex(where: {$0.produceName > newFavourite.produceName}) ?? favouritesProduce.endIndex)
+
+//				let newFavourite = monthsProduce?[lastMonthIndex][produceIndex]
+
+				favourites.insert(selectedProduce, at: favourites.firstIndex(where: { $0.produceName > selectedProduce.produceName }) ?? favourites.endIndex)
 			} else {
-				favouritesProduce.removeAll {$0.id == self.monthsProduce[lastMonthIndex][produceIndex].id}
+				favourites.removeAll { $0.id == produceToToggle?.id }
 			}
 		}
-		// Call here to update before tableView updates
-		addRemoveFavourites()
 
 		// Update in CloudKit and on disk
-		produceDataService.updateLike(id: id, liked: updateLikeTo)
+		produceDataService.updateLike(id: id, liked: liked)
 		// Update data model for syncing between views
-		coordinator?.updateDataModels(for: id, liked: updateLikeTo, from: .months)
+		coordinator?.updateDataModels(for: id, liked: liked, from: .months)
 	}
 
 	func infoButtonTapped() {
 		coordinator?.presentInfoViewController()
 	}
-
-//	func insertSorted<T: Comparable>( seq: inout [T], newItem item: T) {
-//		let index = seq.reduce(0) { $1 < item ? $0 + 1 : $0 }
-//		seq.insert(item, at: index)
-//	}
 }
 
 extension Collection {
@@ -170,74 +159,48 @@ extension Collection {
 	}
 }
 
-// Sort produce into viewModel arrays
-
-extension Array where Element == Produce {
-	func sortIntoFavourites() -> [ProduceModel] {
-		return self.map {ProduceModel.init(produce: $0)}.filter {
-			$0.liked == true
-		}
-	}
-
-	func sortIntoMonths() -> [[ProduceModel]] {
-		// create array of 12 months
-		var monthProduceArray: [[ProduceModel]] = .init(repeating: [], count: 12)
-
-		for monthIndex in 0...11 {
-			var monthArray = [ProduceModel]()
-			self.forEach({ item in
-
-				if let month = Month.init(rawValue: (monthIndex	+ 1)) {
-					if item.months.contains(month) {
-						monthArray.append(ProduceModel.init(produce: item))
-					}
-				}
-			})
-			monthProduceArray[monthIndex] = monthArray
-		}
-		monthProduceArray.insert(monthProduceArray[11], at: 0)
-		monthProduceArray.append(monthProduceArray[1])
-		return monthProduceArray
-	}
-
-}
-
 extension MainViewModel {
 
 	// Filter by search fields and produce categories selected
 	func filter(by searchString: String, of category: ViewDisplayed.ProduceCategory) -> [[ProduceModel]] {
+		guard let monthsProduce: [[ProduceModel]] = allMonthsAndTheirProduce else { return [] }
+
 		switch category {
 		case .cancelled, .all:
 			if searchString == "" {
-				return self.monthsProduce
+				return monthsProduce
 			} else {
-				return self.monthsProduce.map({ return $0.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })})
+				return monthsProduce.map({ $0.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })})
 			}
 		case .fruit, .vegetables, .herbs:
 			if searchString == "" {
-				return self.monthsProduce.map({ return $0.filter({ $0.category == category })})
+				return monthsProduce.map({ $0.filter({ $0.category == category })})
 			} else {
-				return self.monthsProduce.map({ return $0.filter({ $0.category == category &&
+				return monthsProduce.map({ return $0.filter({ $0.category == category &&
 																	$0.produceName.lowercased().contains(searchString.lowercased()) })})
 			}
 		}
 	}
 
-	func filterFavourites(by searchString: String, category: ViewDisplayed.ProduceCategory) -> [ProduceModel] {
+	func filterFavourites(by searchString: String?, category: ViewDisplayed.ProduceCategory) -> [ProduceModel] {
+		guard let produce: [ProduceModel] = favouritesProduce else { return [] }
+
 		switch category {
 		case .cancelled, .all:
-			if searchString == "" {
-
-				return self.favouritesProduce.filter {$0.liked == true}
-			} else {
-				return self.favouritesProduce.filter({ $0.produceName.lowercased().contains(searchString.lowercased()) })
+			guard let searchString else {
+				return produce.filter { $0.liked == true }
 			}
+
+			return produce.filter { $0.produceName.lowercased().contains(searchString.lowercased()) }
+
 		case .fruit, .vegetables, .herbs:
-			if searchString == "" {
-				return self.favouritesProduce.filter({ $0.category == category })
-			} else {
-				return self.favouritesProduce.filter({ $0.category == category &&
-													   $0.produceName.lowercased().contains(searchString.lowercased()) })
+			guard let searchString else {
+				return produce.filter { $0.category == category }
+			}
+
+			return produce.filter { $0.category == category &&
+											   $0.produceName.lowercased().contains(searchString.lowercased())
+
 			}
 		}
 	}

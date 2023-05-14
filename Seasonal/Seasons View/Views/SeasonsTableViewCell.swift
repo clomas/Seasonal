@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SeasonsLikeButtonDelegate: AnyObject {
-    func likeButtonTapped(cell: SeasonsTableViewCell)
+    func likeButtonWasTapped(cell: SeasonsTableViewCell)
 }
 
 class SeasonsTableViewCell: UITableViewCell {
@@ -22,38 +22,34 @@ class SeasonsTableViewCell: UITableViewCell {
 
     var id: Int?
 
-    func updateViews(produce: ProduceModel) {
+    func updateViews(produce: Produce) {
+		guard let image = UIImage(named: produce.imageName) else { return }
+		backgroundColor = UIColor.TableViewCell.tint
 
-        self.id = produce.id
-        guard let image = UIImage(named: produce.imageName) else { return }
-        foodLabel.text = produce.produceName
+		id = produce.id
+		foodLabel.text = produce.produceName
         foodImage.image = image
 
-        if produce.liked == true {
-            self.likeButton.isSelected = true
-        } else {
-            self.likeButton.isSelected = false
-        }
-
-        self.backgroundColor = UIColor.TableViewCell.tint
+		likeButton.isSelected = produce.liked
 
         if produce.liked == false {
-			let likeImage = UIImage(named: "\(Constants.unliked).png")
-            let tintedImage = likeImage?.withRenderingMode(.alwaysTemplate)
-            self.likeButton.setImage(tintedImage, for: .normal)
-            self.likeButton.tintColor = UIColor.LikeButton.tint
-            self.likeButton.isSelected = false
+			let likeImage: UIImage? = UIImage(named: "\(Constants.unliked).png")
+			let tintedImage: UIImage? = likeImage?.withRenderingMode(.alwaysTemplate)
+
+            likeButton.setImage(tintedImage, for: .normal)
+            likeButton.tintColor = UIColor.LikeButton.tint
+            likeButton.isSelected = false
         } else {
 			likeButton.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
-            self.likeButton.isSelected = true
+            likeButton.isSelected = true
         }
     }
 
     // MARK: Like Button
 
-    @IBAction func likeButtonTapped(_ sender: Any) {
-        self.likeButton.animateLikeButton(selected: self.likeButton.isSelected)
-        likeButtonDelegate?.likeButtonTapped(cell: self)
-		self.likeButton.isSelected.toggle()
+    @IBAction func likeButtonWasTapped(_ sender: Any) {
+        likeButton.animateLikeButton(selected: likeButton.isSelected)
+        likeButtonDelegate?.likeButtonWasTapped(cell: self)
+		likeButton.isSelected.toggle()
     }
 }

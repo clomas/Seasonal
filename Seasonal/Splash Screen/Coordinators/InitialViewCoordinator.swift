@@ -9,22 +9,32 @@
 import UIKit
 import Network
 
-protocol InitialViewDelegate: AnyObject {
-	func networkFailed()
-	func locationNotFound()
-	func dataIsReady()
-}
-
 final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
-
-	var parentCoordinator: AppCoordinator?
-	private(set) var childCoordinators: [Coordinator] = [] // No Children
 
 	private let navigationController: UINavigationController
 
-	weak var initialViewDelegate: InitialViewDelegate?
+	var parentCoordinator: AppCoordinator?
 
+	private(set) var childCoordinators: [Coordinator] = [] // No Children at this stage
+
+	weak var initialViewDelegate: InitialViewDelegate?
 	private var firstRun: Bool
+
+	private lazy var welcomeViewController: WelcomeViewController? = {
+		guard let welcomeViewController: WelcomeViewController = .instantiate() else { return nil }
+		let welcomeViewModel: WelcomeViewModel = WelcomeViewModel()
+		welcomeViewModel.coordinator = self
+		welcomeViewController.viewModel = welcomeViewModel
+		return welcomeViewController
+	}()
+
+	private lazy var splashScreenViewController: SplashScreenViewController? = {
+		guard let splashScreenViewController: SplashScreenViewController = .instantiate() else { return nil }
+		let initialViewModel: SplashScreenViewModel = SplashScreenViewModel()
+		initialViewModel.coordinator = self
+		splashScreenViewController.viewModel = initialViewModel
+		return splashScreenViewController
+	}()
 
 	init(navigationController: UINavigationController, firstRun: Bool) {
 		self.navigationController = navigationController
@@ -32,32 +42,11 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func start() {
-		loadInitialViewController()
-		parentCoordinator?.initialCoordinatorDelegate = self
-	}
-
-	func loadInitialViewController() {
-		if firstRun == true {
-			loadWelcomeViewController()
-		} else if firstRun == false {
-			loadSplashScreenViewController()
+		if let initialViewController: UIViewController = firstRun == true ? welcomeViewController : splashScreenViewController {
+			navigationController.setViewControllers([initialViewController], animated: false)
 		}
-	}
 
-	func loadWelcomeViewController() {
-		guard let welcomeViewController: WelcomeViewController = .instantiate() else { return }
-		let welcomeViewModel = WelcomeViewModel()
-		welcomeViewModel.coordinator = self
-		welcomeViewController.viewModel = welcomeViewModel
-		navigationController.setViewControllers([welcomeViewController], animated: false)
-	}
-
-	func loadSplashScreenViewController() {
-		guard let splashScreenViewController: SplashScreenViewController = .instantiate() else { return }
-		let initialViewModel = SplashScreenViewModel()
-		initialViewModel.coordinator = self
-		splashScreenViewController.viewModel = initialViewModel
-		navigationController.setViewControllers([splashScreenViewController], animated: false)
+		parentCoordinator?.initialCoordinatorDelegate = self
 	}
 
 	// Delegate methods to pass down to the viewControllers
@@ -77,19 +66,19 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 	}
 
 	func locationNotFound() {
-		DispatchQueue.main.async {
-			self.initialViewDelegate?.locationNotFound()
-		}
+		DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
+			self?.initialViewDelegate?.locationNotFound()
+		})
 	}
 
 	func readyToDismiss() {
-		if self.navigationController.viewControllers.first is SplashScreenViewController {
-			self.navigationController.viewControllers.removeFirst()
+		if navigationController.viewControllers.first is SplashScreenViewController {
+			navigationController.viewControllers.removeFirst()
 			parentCoordinator?.childDidFinish(self)
-		} else if self.navigationController.viewControllers.first is WelcomeViewController {
+		} else if navigationController.viewControllers.first is WelcomeViewController {
 			// Load main here after dismiss is tapped on WelcomeViewController
 			parentCoordinator?.loadMainViewCoordinator()
-			self.navigationController.viewControllers.removeFirst()
+			navigationController.viewControllers.removeFirst()
 			parentCoordinator?.childDidFinish(self)
 		}
 	}

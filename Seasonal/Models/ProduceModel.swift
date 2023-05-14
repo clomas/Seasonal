@@ -6,43 +6,54 @@
 //  Copyright © 2020 Clint Thomas. All rights reserved.
 //
 
+//
+// struct Produce {
+//	var id: Int
+//	var produceName: String
+//	var imageName: String
+//	var category: ViewDisplayed.ProduceCategory
+//	var months: [Month]
+//	var seasons: [Season]
+//	var liked: Bool
+// }
+
 import Foundation
 
-struct ProduceModel {
+struct Produce {
 
-	var produce: Produce!
+	var produce: ProduceModel
 
-	init(produce: Produce) {
+	init(produce: ProduceModel) {
 		self.produce = produce
 	}
 	var id: Int {
-		return self.produce.id
+		produce.id
 	}
 	var produceName: String {
-		return self.produce.name
+		produce.name
 	}
 	var imageName: String {
-		return self.produce.imageName
+		produce.imageName
 	}
 	var category: ViewDisplayed.ProduceCategory? {
-		return self.produce.category
+		produce.category
 	}
 	var months: [Month] {
-		return self.produce.months
+		produce.months
 	}
 	var seasons: [Season] {
-		return self.produce.seasons
+		produce.seasons
 	}
 	var liked: Bool {
 		get {
-			return self.produce.liked
+			return produce.liked
 		} set(liked) {
-			self.produce.liked = liked
+			produce.liked = liked
 		}
 	}
 }
 
-struct Produce {
+struct ProduceModel {
     let id: Int
     let name: String
     let category: ViewDisplayed.ProduceCategory
@@ -53,7 +64,7 @@ struct Produce {
     var liked: Bool
 }
 
-extension Produce {
+extension ProduceModel {
 	var produceId: Int {
 		return id
 	}

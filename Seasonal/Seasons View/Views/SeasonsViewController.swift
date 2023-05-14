@@ -11,20 +11,20 @@ import CoreHaptics
 
 class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, SeasonsLikeButtonDelegate {
 
-	private var searchController = UISearchController(searchResultsController: nil)
+	private var searchController: UISearchController = UISearchController(searchResultsController: nil)
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var nothingToShowLabel: UILabel!
 	@IBOutlet weak var menuBar: MenuBarCollectionView!
 
-	var viewModel: SeasonsViewModel!
+	var viewModel: SeasonsViewModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		setUpView()
 
-		viewModel.reloadTableView = { [weak self] in
+		viewModel?.reloadTableView = { [weak self] in
 			self?.tableView.reloadData()
-			self?.title = self?.viewModel.updateTitle()
+			self?.title = self?.viewModel?.updateTitle()
 		}
     }
 
@@ -32,49 +32,49 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
 
-	func likeButtonTapped(cell: SeasonsTableViewCell) {
-		if let id = cell.id {
-			viewModel.likeToggle(id: id, liked: cell.likeButton.isSelected)
+	func likeButtonWasTapped(cell: SeasonsTableViewCell) {
+		if let id: Int = cell.id {
+			viewModel?.likeToggle(id: id, liked: cell.likeButton.isSelected)
 			UINotificationFeedbackGenerator().notificationOccurred(.success)
 		}
 	}
 
 	private func updateLabelBehindTableView(numberOfRows: Int) {
-		if viewModel.searchString.count > 0 {
+		if viewModel?.searchString.isEmpty == false {
 			nothingToShowLabel.text = "No Search Results"
-		}
-		if numberOfRows > 0 {
-			nothingToShowLabel.text = ""
-		} else {
 			UINotificationFeedbackGenerator().notificationOccurred(.error)
 		}
+
+		if numberOfRows > 0 {
+			nothingToShowLabel.text = ""
+		}
 	}
 
-	@IBAction func backButtonTapped(_ sender: Any) {
-		viewModel.backButtonTapped()
+	@IBAction func backButtonWasTapped(_ sender: Any) {
+		viewModel?.backButtonWasTapped()
 	}
 
-	@IBAction func infoButtonTapped(_ sender: Any) {
-		viewModel.infoButtonTapped()
+	@IBAction func infoButtonWasTapped(_ sender: Any) {
+		viewModel?.infoButtonWasTapped()
 	}
 
 	// MARK: Setup
 
 	private func setUpView() {
-		self.tableView.dataSource = self
-		self.title = viewModel.updateTitle()
+		tableView.dataSource = self
+		title = viewModel?.updateTitle()
 
 		setUpNavigationControllerView()
 		setupMenuBar()
 	}
 
 	private func setupMenuBar() {
-		menuBar.viewModel = .init(season: viewModel.season)// , viewDisplayed: viewModel.viewDisplayed)
+		menuBar.viewModel = .init(season: viewModel?.season ?? .summer)
 		menuBar.viewModel?.delegate = viewModel.self
 	}
 
 	private func setUpNavigationControllerView() {
-		let searchController = UISearchController(searchResultsController: nil)
+		let searchController: UISearchController = UISearchController(searchResultsController: nil)
 		searchController.hidesNavigationBarDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.searchBarStyle = .minimal
@@ -83,14 +83,14 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		// for cancel button
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
-		self.navigationController?.navigationBar.isTranslucent = false
-		self.navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
+		navigationController?.navigationBar.isTranslucent = false
+		navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
-		self.definesPresentationContext = true
+		definesPresentationContext = true
 
 		if #available(iOS 15, *) {
-			let appearance = UINavigationBarAppearance()
+			let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
 			appearance.configureWithOpaqueBackground()
 			appearance.backgroundColor = UIColor.NavigationBar.tint
 			UINavigationBar.appearance().standardAppearance = appearance
@@ -104,31 +104,28 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 extension SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		guard let viewModel, let season: Season = Season(rawValue: viewModel.season.rawValue) else { return 0 }
 
-		if let season =  Season(rawValue: viewModel.season.rawValue) {
-			let rowsCount = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
-			updateLabelBehindTableView(numberOfRows: rowsCount) //
-			return rowsCount
-		} else {
-			return 0
-		}
+		let rowsCount: Int = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
+		updateLabelBehindTableView(numberOfRows: rowsCount)
+
+		return rowsCount
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-		if let season = Season(rawValue: viewModel.season.rawValue) {
-
-			if let cell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? SeasonsTableViewCell {
-				cell.likeButtonDelegate = self
-				let produce = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category)[indexPath.row]
-				cell.updateViews(produce: produce)
-				return cell
-			} else {
-				return ProduceMonthInfoViewCell()
-			}
-		} else {
-			return ProduceMonthInfoViewCell()
+		guard let viewModel,
+			  let season: Season = Season(rawValue: viewModel.season.rawValue),
+	          let cell: SeasonsTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? SeasonsTableViewCell
+			else { return ProduceMonthInfoViewCell()
 		}
+
+		let produceModel: Produce = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category)[indexPath.row]
+
+		cell.updateViews(produce: produceModel)
+		cell.likeButtonDelegate = self
+
+		return cell
+
 	}
 }
 
@@ -136,11 +133,11 @@ extension SeasonsViewController: UITableViewDataSource {
 extension SeasonsViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {
-		self.viewModel.searchString = searchController.searchBar.text!
+		viewModel?.searchString = searchController.searchBar.text!
 		tableView.reloadData()
 	}
 
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		self.viewModel.searchString = searchText
+		viewModel?.searchString = searchText
 	}
 }

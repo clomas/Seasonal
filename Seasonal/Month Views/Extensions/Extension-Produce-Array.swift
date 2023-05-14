@@ -10,25 +10,26 @@ import Foundation
 
 // Sort produce into viewModel arrays
 
-extension Array where Element == Produce {
+extension Array where Element == ProduceModel {
 
-	func sortIntoFavourites() -> [ProduceModel] {
-		return self.map {ProduceModel.init(produce: $0)}.filter {
+	func sortIntoFavourites() -> [Produce] {
+		return self.map { Produce(produce: $0) }.filter {
 			$0.liked == true
 		}
 	}
 
-	func sortIntoMonths() -> [[ProduceModel]] {
+	func sortIntoMonths() -> [[Produce]] {
 			// create array of 12 months
-		var monthProduceArray: [[ProduceModel]] = .init(repeating: [], count: 12)
+		var monthProduceArray: [[Produce]] = .init(repeating: [], count: 12)
 
 		for monthIndex in 0...11 {
-			var monthArray = [ProduceModel]()
-			self.forEach({ item in
+			var monthArray: [Produce] = [Produce]()
 
-				if let month = Month.init(rawValue: (monthIndex	+ 1)) {
+			self.forEach({ (item: ProduceModel) in
+
+				if let month: Month = Month(rawValue: (monthIndex	+ 1)) {
 					if item.months.contains(month) {
-						monthArray.append(ProduceModel.init(produce: item))
+						monthArray.append(Produce(produce: item))
 					}
 				}
 			})
@@ -36,6 +37,7 @@ extension Array where Element == Produce {
 		}
 		monthProduceArray.insert(monthProduceArray[11], at: 0)
 		monthProduceArray.append(monthProduceArray[1])
+
 		return monthProduceArray
 	}
 }

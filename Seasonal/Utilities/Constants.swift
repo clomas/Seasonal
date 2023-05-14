@@ -11,75 +11,78 @@ import Foundation
 
 struct Constants {
 
-	static let seasonal = "Seasonal"
+	// User defaults
+	static let location: String = "Location"
+
+	static let seasonal: String = "Seasonal"
 
 	// Locations
-	static let straya = "Australia"
+	static let straya: String = "Australia"
 
 	// CloudKit db
-	static let australianProduce = "Australian_Produce"
-	static let australianProduceLikes = "Australian_Produce_Likes"
+	static let australianProduce: String = "Australian_Produce"
+	static let australianProduceLikes: String = "Australian_Produce_Likes"
 
 	// General
-	static let id = "id"
-	static let season = "season"
-	static let title = "title"
-	static let description = "description"
-	static let name = "name"
-	static let cancelled = "cancelled"
-	static let category = "category"
+	static let id: String = "id"
+	static let season: String = "season"
+	static let title: String = "title"
+	static let description: String = "description"
+	static let name: String = "name"
+	static let cancelled: String = "cancelled"
+	static let category: String = "category"
 
 	// Icons Images & Labels
-	static let allCategories = "allCategories"
-	static let favourites = "favourites"
-	static let seasons = "seasons"
-	static let categories = "categories"
-	static let months = "months"
-	static let all = "all"
-	static let fruit = "fruit"
-	static let vegetables = "vegetables"
-	static let herbs = "herbs"
-	static let cancel = "cancel"
+	static let allCategories: String = "allCategories"
+	static let favourites: String = "favourites"
+	static let seasons: String = "seasons"
+	static let categories: String = "categories"
+	static let months: String = "months"
+	static let all: String = "all"
+	static let fruit: String = "fruit"
+	static let vegetables: String = "vegetables"
+	static let herbs: String = "herbs"
+	static let cancel: String = "cancel"
 
 	// Titles
-	static let Seasons = "Seasons"
-	static let Months = "Months"
-	static let selectAMonth = "Select a Month"
+	static let Seasons: String = "Seasons"
+	static let Months: String = "Months"
+	static let selectAMonth: String = "Select a Month"
 
 	// Cells
-	static let SeasonsTableViewCell = "SeasonsTableViewCell"
-	static let MenuBarCellSeason = "MenuBarCellSeason"
-	static let ProduceMonthInfoViewCell = "ProduceMonthInfoViewCell"
-	static let MenuBarCell = "MenuBarCell"
-	static let SelectMonthCell = "SelectMonthCollectionViewCell"
-	static let MonthTableCell = "MonthTableCollectionViewCell"
+	static let SeasonsTableViewCell: String = "SeasonsTableViewCell"
+	static let MenuBarCellSeason: String = "MenuBarCellSeason"
+	static let ProduceMonthInfoViewCell: String = "ProduceMonthInfoViewCell"
+	static let MenuBarCell: String = "MenuBarCell"
+	static let SelectMonthCell: String = "SelectMonthCollectionViewCell"
+	static let MonthTableCell: String = "MonthTableCollectionViewCell"
 
 	// Colours / Tints
-	static let tableViewCellColor = "cellColor"
-	static let searchBarColor = "searchBar"
-	static let likeButtonColor = "likeButton"
-	static let inSeasonColor = "inSeason"
-	static let nonSeasonColor = "nonSeason"
-	static let menuBarColor = "menuBar"
-	static let menuBarSelectedColor = "menuBarSelected"
-	static let navigationBarColor = "navigationBar"
+	static let tableViewCellColor: String = "cellColor"
+	static let searchBarColor: String = "searchBar"
+	static let likeButtonColor: String = "likeButton"
+	static let inSeasonColor: String = "inSeason"
+	static let nonSeasonColor: String = "nonSeason"
+	static let menuBarColor: String = "menuBar"
+	static let menuBarSelectedColor: String = "menuBarSelected"
+	static let navigationBarColor: String = "navigationBar"
 
 	// Videos
-	static let lightWelcomeVideo = "lightwelcomevideo"
-	static let darkWelcomeVideo = "darkwelcomevideo"
+	static let lightWelcomeVideo: String = "lightwelcomevideo"
+	static let darkWelcomeVideo: String = "darkwelcomevideo"
 
 	// Likes
-	static let liked = "liked"
-	static let unliked = "unliked"
+	static let liked: String = "liked"
+	static let unliked: String = "unliked"
 
 	// Welcome
-	static let welcomeToSeasonal = "Welcome to Seasonal"
+	static let welcomeToSeasonal: String = "Welcome to Seasonal"
 
 	// Info page spiel
 	// swiftlint:disable:next line_length
-	static let infoPageSpiel = "Location of Produce Displayed: Australia.\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!"
+	static let infoPageSpiel: String = "Location of Produce Displayed: Australia.\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!"
 
-	static let apple = "apple"
+	static let apple: String = "apple"
 
 	static let allLocationsForAlert: [String] = [
 		StateLocation.westernAustralia.fullName().capitalized,

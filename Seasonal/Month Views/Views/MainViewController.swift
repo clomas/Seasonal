@@ -13,35 +13,43 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	@IBOutlet weak var infiniteMonthCollectionView: UICollectionView!
 	@IBOutlet weak var menuBar: MenuBarCollectionView!
 
-	var viewModel: MainViewModel!
-	var searchController = UISearchController(searchResultsController: nil)
+	var viewModel: MainViewModel?
+	var searchController: UISearchController = UISearchController(searchResultsController: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		setUpView()
 
-		viewModel.reloadTableView = { [weak self] in
+		viewModel?.reloadTableView = { [weak self] in
 			self?.reloadAndScrollToSelectedViewIndex()
 		}
 		// Called from MonthPickerViewController to update -
 		// month icon,
 		// month in the table view
 		// navigation bar title
-		viewModel.updateMenuBar = { [weak self] in
+		viewModel?.updateMenuBar = { [weak self] in
 			self?.menuBarNeedsUpdate()
 		}
     }
+
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+
+		setupMenuBar()
+	}
 
 	private func setUpView() {
 		setUpNavigationControllerView()
 		setupMenuBar()
 		setupCollectionView()
 
-		title = viewModel.updateTitle()
+		title = viewModel?.navigationBarTitleString
 	}
 
 	// Init child viewModel & assign delegate between child and parent viewModel
 	private func setupMenuBar() {
+		guard let viewModel else { return }
+
 		menuBar.viewModel = .init(month: viewModel.monthToDisplay, viewDisplayed: .currentMonth)
 		menuBar.viewModel?.delegate = viewModel.self
 
@@ -50,17 +58,17 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	}
 
 	private func reloadAndScrollToSelectedViewIndex() {
-		let indexToScrollTo: Int = viewModel.viewDisplayed == .favourites ? 0 : viewModel.monthToDisplay.rawValue
+		let indexToScrollTo: Int = viewModel?.viewDisplayed == .favourites ? 0 : viewModel?.monthToDisplay.rawValue ?? 0
 		infiniteMonthCollectionView.reloadData()
 		infiniteMonthCollectionView.scrollToItem(at: IndexPath(row: indexToScrollTo, section: 0),
 												 at: .centeredHorizontally,
 												 animated: false)
-		title = viewModel.updateTitle()
+		title = viewModel?.navigationBarTitleString
 	}
 
 	private func menuBarNeedsUpdate() {
-		menuBar.updateMenuBarFromNavigation(viewDisplayed: viewModel.viewDisplayed,
-											month: viewModel.monthToDisplay
+		menuBar.updateMenuBarFromNavigation(viewDisplayed: viewModel?.viewDisplayed,
+											month: viewModel?.monthToDisplay ?? .december
 		)
 	}
 
@@ -69,7 +77,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		infiniteMonthCollectionView.dataSource = self
 		infiniteMonthCollectionView.isPrefetchingEnabled = false
 
-		if let flowLayout = infiniteMonthCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
+		if let flowLayout: UICollectionViewFlowLayout = infiniteMonthCollectionView?.collectionViewLayout as? UICollectionViewFlowLayout {
 			flowLayout.scrollDirection = .horizontal
 			flowLayout.minimumLineSpacing = 0
 			infiniteMonthCollectionView.collectionViewLayout = flowLayout
@@ -87,8 +95,8 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
-		if viewModel.allMonthsAndTheirProduce?.isEmpty == false && viewModel.viewDisplayed != .favourites {
-			let indexPath = IndexPath(item: (viewModel.monthToDisplay.rawValue), section: 0)
+		if viewModel?.allMonthsAndTheirProduce?.isEmpty == false && viewModel?.viewDisplayed != .favourites {
+			let indexPath: IndexPath = IndexPath(item: (viewModel?.monthToDisplay.rawValue ?? 0), section: 0)
 			infiniteMonthCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
 		}
 	}
@@ -98,21 +106,22 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	/// Scrollview Paging changes the title
 	/// - Parameter newTitle: newTitle is the month determined from the index of the main tableView
 	/// this only runs if the infiniteMonthCollectionView is visible, otherwise the heading is "Favourites"
-	private func setTitleFromScrollViewPaged(newTitle: String) {
-		if viewModel.viewDisplayed == .months {
+	private func setTitleFromScrollViewPaged(newTitle: String?) {
+		if viewModel?.viewDisplayed == .months, let newTitle: String = newTitle, newTitle.isEmpty == false {
+
 			if (newTitle).isEmpty == false { // only proceed with a valid value for newTitle.
 				// CATransition code
-				let titleAnimation = CATransition()
+				let titleAnimation: CATransition = CATransition()
 				titleAnimation.duration = 0.5
 				titleAnimation.type = CATransitionType.fade
-				titleAnimation.timingFunction = CAMediaTimingFunction.init(name: CAMediaTimingFunctionName.easeInEaseOut)
+				titleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
 				// this is a detail view controller, so we must grab the reference
 				// to the parent view controller's navigation controller
 				// then cycle through until we find the title labels.
-				if let subviews = self.navigationController?.navigationBar.subviews {
+				if let subviews: [UIView] = navigationController?.navigationBar.subviews {
 					for navigationItem in subviews {
 						for itemSubView in navigationItem.subviews {
-							if let largeLabel = itemSubView as? UILabel {
+							if let largeLabel: UILabel = itemSubView as? UILabel {
 								largeLabel.layer.add(titleAnimation, forKey: "changeTitle")
 							}
 						}
@@ -124,14 +133,15 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		}
 	}
 
-	@IBAction func infoButtonTapped(_ sender: Any) {
-		viewModel.infoButtonTapped()
+	@IBAction func infoButtonWasTapped(_ sender: Any) {
+		viewModel?.infoButtonTapped()
 	}
 
 	// MARK: Search controller setup
-// TODO: custom navigation controller
+
+	// TODO: make a custom navigation controller - this is duplicate code
 	private func setUpNavigationControllerView() {
-		let searchController = UISearchController(searchResultsController: nil)
+		let searchController: UISearchController = UISearchController(searchResultsController: nil)
 		searchController.hidesNavigationBarDuringPresentation = false
 		searchController.obscuresBackgroundDuringPresentation = false
 		searchController.searchBar.searchBarStyle = .minimal
@@ -141,14 +151,14 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		// for cancel button
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
-		self.navigationController?.navigationBar.isTranslucent = false
-		self.navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
+		navigationController?.navigationBar.isTranslucent = false
+		navigationController?.navigationBar.barTintColor = UIColor.NavigationBar.tint
 		navigationItem.searchController = searchController
 		navigationItem.hidesSearchBarWhenScrolling = false
-		self.definesPresentationContext = true
+		definesPresentationContext = true
 
 		if #available(iOS 15, *) {
-			let appearance = UINavigationBarAppearance()
+			let appearance: UINavigationBarAppearance = UINavigationBarAppearance()
 			appearance.configureWithOpaqueBackground()
 			appearance.backgroundColor = UIColor.NavigationBar.tint
 			UINavigationBar.appearance().standardAppearance = appearance
@@ -161,35 +171,34 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 
 extension MainViewController: UICollectionViewDataSource {
 
-	private var favouritesNumberOfItems: Int { 2 }
-	private var infiniteMonthsNumberOfItems: Int { 14 }
+	static private var favouritesNumberOfItems: Int = 2
+	static private var infiniteMonthsNumberOfItems: Int = 14
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-		switch viewModel.viewDisplayed {
+
+		switch viewModel?.viewDisplayed {
 		case .favourites:
 			infiniteMonthCollectionView.isScrollEnabled = false
-			return favouritesNumberOfItems
+			return MainViewController.favouritesNumberOfItems
 		case .months:
 			infiniteMonthCollectionView.isScrollEnabled = true
-			return infiniteMonthsNumberOfItems
+			return MainViewController.infiniteMonthsNumberOfItems
 		default:
-			return favouritesNumberOfItems
+			return MainViewController.favouritesNumberOfItems
 		}
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
+		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
 														 for: indexPath) as? MonthTableCollectionViewCell {
 			// for my implementation of the infinite collectionView I need to change the subview cell tag
 			// based on the indexPath
 			cell.tag = indexPath.item
-
-			#warning("check this then get rid of it")
-			print("=== cell tag \(cell.tag)")
-
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
+
 			return cell
+
 		} else {
 			return MonthTableCollectionViewCell()
 		}
@@ -223,38 +232,38 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 	// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		let pageFloat = (scrollView.contentOffset.x / scrollView.frame.size.width)
-		let pageInt = Int(round(pageFloat))
+		let pageFloat: CGFloat = (scrollView.contentOffset.x / scrollView.frame.size.width)
+		let pageInt: Int = Int(round(pageFloat))
 
 		switch pageInt {
 		case 0:
 			infiniteMonthCollectionView.scrollToItem(at: [0, 12], at: .left, animated: false)
-		case (viewModel.allMonthsAndTheirProduce?.count ?? 0) - 1:
-
-			#warning("check this, add static var for count")
-			print("=== viewModel.allMonthsAndTheirProduce?.count \(viewModel.allMonthsAndTheirProduce?.count)")
-
+		case (viewModel?.allMonthsAndTheirProduce?.count ?? 0) - 1:
 			infiniteMonthCollectionView.scrollToItem(at: [0, 1], at: .right, animated: false)
 		default:
 			break
 		}
 		// this is the page currently displayed
 		// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
-		if var updatedMonth = Month.init(rawValue: pageInt) {
+		if var updatedMonth: Month = Month.init(rawValue: pageInt) {
+
 			// update menubar before calling method for animation of month icon
-			if viewModel.previousMonth != updatedMonth {
+			if viewModel?.previousMonth != updatedMonth {
+
 				if updatedMonth == Month.januaryOverflow {
 					updatedMonth = Month.january
+
 				} else if updatedMonth ==  Month.decemberOverflow {
 					updatedMonth = Month.december
 				}
-				menuBar.monthIconCarouselAnimation(from: viewModel.monthToDisplay, to: updatedMonth)
-				viewModel.previousMonth = updatedMonth
+				menuBar.monthIconCarouselAnimation(from: viewModel?.monthToDisplay ?? .december, to: updatedMonth)
+				viewModel?.previousMonth = updatedMonth
 			}
-			viewModel.monthToDisplay = updatedMonth
-			let newTitle = String(describing: viewModel.monthToDisplay).capitalized
+
+			viewModel?.monthToDisplay = updatedMonth
+
 			// override the title because it can be wrong if not scrolled properly
-			setTitleFromScrollViewPaged(newTitle: newTitle)
+			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)
 		}
 	}
 }
@@ -263,12 +272,12 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 extension MainViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {
-		self.viewModel.searchString = searchController.searchBar.text!
+		viewModel?.searchString = searchController.searchBar.text!
 		infiniteMonthCollectionView.reloadData()
 	}
 
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		self.viewModel.searchString = searchText
+		viewModel?.searchString = searchText
 	}
 }
 
@@ -281,8 +290,4 @@ extension IndexPath {
 	init(produceCategory: ViewDisplayed.ProduceCategory?) {
 		self.init(row: produceCategory?.rawValue ?? 0, section: 0)
 	}
-//
-//	init(month: Month) {
-//		self.init(row: month.rawValue, section: 0)
-//	}
 }

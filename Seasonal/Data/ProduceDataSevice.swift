@@ -12,12 +12,7 @@ class ProduceDataService {
 
 	func updateLike(id: Int, liked: Bool) {
 		// Update in local database
-		let likedProduce = LikedProduce(id: id)
-
-		if liked == true {
-			likedProduce.saveItem()
-		} else {
-			likedProduce.deleteItem()
-		}
+		let likedProduce: LikedProduce = LikedProduce(id: id)
+		liked ? likedProduce.saveItem() : likedProduce.deleteItem()
 	}
 }

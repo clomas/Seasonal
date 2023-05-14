@@ -27,7 +27,7 @@ extension String {
 	/// - Returns: complete string for title
 	func createTitleString(with category: ViewDisplayed.ProduceCategory) -> String {
 
-		var titleString = self.capitalized
+		var titleString: String = self.capitalized
 
 		if category != .cancelled && category != .all {
 			titleString = "\(category.asString.capitalized) in \(titleString)"

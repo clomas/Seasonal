@@ -84,7 +84,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="VLA-fY-BmB"/>
                     <connections>
-                        <outlet property="activityMonitor" destination="Br2-wC-kIq" id="8eQ-4U-wos"/>
+                        <outlet property="activityIndicator" destination="Br2-wC-kIq" id="5US-jY-Seu"/>
                         <outlet property="internetLabel" destination="w1r-iW-nll" id="S9r-Zn-fb5"/>
                     </connections>
                 </viewController>
@@ -135,7 +135,7 @@
                                                     <color key="titleColor" name="fontDefault"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="dismissButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="pRb-89-M6W"/>
+                                                    <action selector="dismissButtonWasTapped:" destination="TPe-FU-VCA" eventType="touchUpInside" id="goo-cg-qjR"/>
                                                 </connections>
                                             </button>
                                             <button contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Vw-8H-anz">
@@ -145,8 +145,7 @@
                                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="dismissButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="k95-FF-aR6"/>
-                                                    <action selector="downArrowButtonPressed:" destination="TPe-FU-VCA" eventType="touchUpInside" id="0sl-gY-LBt"/>
+                                                    <action selector="dismissButtonWasTapped:" destination="TPe-FU-VCA" eventType="touchUpInside" id="xbB-h5-8pC"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -327,7 +326,7 @@
                                                                         <state key="normal" backgroundImage="unliked"/>
                                                                         <state key="selected" backgroundImage="liked"/>
                                                                         <connections>
-                                                                            <action selector="monthsLikeButtonPressed:" destination="CKm-as-YkX" eventType="touchUpInside" id="ehk-2w-Das"/>
+                                                                            <action selector="monthsLikeButtonWasTapped:" destination="CKm-as-YkX" eventType="touchUpInside" id="yj8-v3-b2C"/>
                                                                         </connections>
                                                                     </button>
                                                                 </subviews>
@@ -441,7 +440,7 @@
                         <barButtonItem key="rightBarButtonItem" title="Item" image="info.circle" catalog="system" id="n9K-RG-jhk">
                             <color key="tintColor" name="fontDefault"/>
                             <connections>
-                                <action selector="infoButtonTapped:" destination="BYZ-38-t0r" id="99X-gF-MRE"/>
+                                <action selector="infoButtonWasTapped:" destination="BYZ-38-t0r" id="TUx-CK-pro"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -512,7 +511,7 @@
                                                     <state key="normal" backgroundImage="unliked"/>
                                                     <state key="selected" backgroundImage="liked"/>
                                                     <connections>
-                                                        <action selector="likeButtonTapped:" destination="Fmz-5n-u9N" eventType="touchUpInside" id="yoK-s2-hDL"/>
+                                                        <action selector="likeButtonWasTapped:" destination="Fmz-5n-u9N" eventType="touchUpInside" id="Lo3-52-eZu"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -587,13 +586,13 @@
                         <barButtonItem key="leftBarButtonItem" image="back" id="xWB-IZ-NeM">
                             <color key="tintColor" name="fontDefault"/>
                             <connections>
-                                <action selector="backButtonTapped:" destination="FTr-h4-Wv5" id="UYg-9v-RHE"/>
+                                <action selector="backButtonWasTapped:" destination="FTr-h4-Wv5" id="x7l-eo-JdH"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="info.circle" catalog="system" id="8W3-yE-8xY">
                             <color key="tintColor" name="fontDefault"/>
                             <connections>
-                                <action selector="infoButtonTapped:" destination="FTr-h4-Wv5" id="VpS-pR-FxF"/>
+                                <action selector="infoButtonWasTapped:" destination="FTr-h4-Wv5" id="MwM-LD-Jm7"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -694,7 +693,7 @@
                                             <color key="titleColor" name="fontDefault"/>
                                         </state>
                                         <connections>
-                                            <action selector="emailButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="UJT-n1-fTQ"/>
+                                            <action selector="emailButtonWasTapped:" destination="CQN-xA-24t" eventType="touchUpInside" id="hOO-UB-Qg6"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="16" baselineAdjustment="alignBaselines" minimumScaleFactor="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="tgQ-rB-so6">
@@ -716,7 +715,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                                             <color key="titleColor" name="fontDefault"/>
                                         </state>
                                         <connections>
-                                            <action selector="privacyPolicyButtonPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="bXd-HF-R2Y"/>
+                                            <action selector="privacyPolicyButtonWasTapped:" destination="CQN-xA-24t" eventType="touchUpInside" id="wek-zd-hGX"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -740,7 +739,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
                                 </constraints>
                                 <state key="normal" image="downarrow"/>
                                 <connections>
-                                    <action selector="downArrowPressed:" destination="CQN-xA-24t" eventType="touchUpInside" id="LmB-iU-1VR"/>
+                                    <action selector="downArrowWasTapped:" destination="CQN-xA-24t" eventType="touchUpInside" id="8D4-by-Pdj"/>
                                 </connections>
                             </button>
                         </subviews>

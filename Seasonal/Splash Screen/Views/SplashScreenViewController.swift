@@ -6,29 +6,20 @@
 //
 
 import UIKit
-import Network
 
 class SplashScreenViewController: UIViewController, InitialViewDelegate {
 
-	var viewModel: SplashScreenViewModel!
+	var viewModel: SplashScreenViewModel?
 
-    @IBOutlet weak var activityMonitor: UIActivityIndicatorView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var internetLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		viewModel.coordinator?.initialViewDelegate = self
+
+		viewModel?.coordinator?.initialViewDelegate = self
         internetLabel.text = ""
-        activityMonitor.startAnimating()
-    }
-
-    private func goToiCloudSettings(alert: UIAlertAction!) {
-        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else { return }
-
-        if UIApplication.shared.canOpenURL(settingsUrl) {
-            UIApplication.shared.open(settingsUrl, completionHandler: { (_) in
-            })
-        }
+		activityIndicator.startAnimating()
     }
 
 	override func viewWillAppear(_ animated: Bool) {
@@ -38,20 +29,19 @@ class SplashScreenViewController: UIViewController, InitialViewDelegate {
 
 	func networkFailed() {
 		presentAlert(title: "Network Error",
-						  message: "Unable to connect to the internet",
-						  alertStyle: .alert,
-						  actionTitles: ["OK"],
-						  actionStyles: [.default],
-						  actions: []
+					 message: "Unable to connect to the internet",
+					 alertStyle: .alert,
+					 actionTitles: ["Ok"],
+					 actionStyles: [.default ],
+					 actions: []
 		)
 	}
 
-	// not needed for this view
 	func dataIsReady() {}
 
 	func locationNotFound() {
 		presentLocationNotFoundAlert { [weak self] (state: StateLocation) in
-			self?.viewModel.userChoseLocation(state: state)
+			self?.viewModel?.userChoseLocation(state: state)
 		}
 	}
 }

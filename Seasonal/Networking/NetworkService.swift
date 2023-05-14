@@ -10,73 +10,37 @@
 import Foundation
 import Network
 
-protocol NetworkObserver: AnyObject {
+protocol NetworkObserverDelegate: AnyObject {
 	func internetStatusDidChange(status: NWPath.Status)
 }
 
 final class NetworkService {
 
-	private static let sharedInstance = NetworkService()
+	private var monitor: NWPathMonitor = NWPathMonitor()
 
-	var currentStatus: NWPath.Status {
-		return monitor.currentPath.status
-	}
-	var networkUpdate: ((Bool) -> Void)?
+	weak var delegate: NetworkObserverDelegate?
 
-	private var monitor = NWPathMonitor()
-	private var observations = [ObjectIdentifier: NetworkChangeObservation]()
+	init(delegate: NetworkObserverDelegate) {
+		self.delegate = delegate
 
-	init() {
 		startMonitoring()
 	}
 
-	class func instance() -> NetworkService {
-		return sharedInstance
+	func stop() {
+		monitor.cancel()
 	}
 
-	struct NetworkChangeObservation {
-		weak var observer: NetworkObserver?
-	}
-
-	func startMonitoring() {
+	private func startMonitoring() {
 		monitor.pathUpdateHandler = { [weak self] path in
-			guard let observations = self?.observations else { return }
 
-			for (id, observations) in observations {
-
-				// If any observer is nil, remove it from the list of observers
-				guard let observer = observations.observer else {
-					self?.observations.removeValue(forKey: id)
-					continue
-				}
-
-				DispatchQueue.main.async(execute: {
-					observer.internetStatusDidChange(status: path.status)
-				})
-			}
+			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
+				self?.internetStatusDidChange(status: path.status)
+			})
 		}
 		monitor.start(queue: DispatchQueue.global(qos: .background))
 	}
 
-	func internetStatusDidChange(status: NWPath.Status) {
-		var internetStatus = false
-
-		switch status {
-		case .satisfied:
-			internetStatus = true
-		case .unsatisfied:
-			internetStatus = false
-		default:
-			internetStatus = false
-		}
-		if let networkUpdateCallback = networkUpdate {
-			// callback to viewModel
-			networkUpdateCallback(internetStatus)
-		}
-	}
-
-	func removeObserver(observer: NetworkObserver) {
-		let id = ObjectIdentifier(observer)
-		observations.removeValue(forKey: id)
+	private func internetStatusDidChange(status: NWPath.Status) {
+		delegate?.internetStatusDidChange(status: status)
 	}
 }

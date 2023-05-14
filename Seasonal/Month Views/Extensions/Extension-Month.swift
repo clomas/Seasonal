@@ -10,7 +10,7 @@ import Foundation
 
 extension Month {
 
-	static var asArray: [Month] {return self.allCases}
+	static var asArray: [Month] { return self.allCases }
 
 	var calendarImageName: String {
 		switch self {

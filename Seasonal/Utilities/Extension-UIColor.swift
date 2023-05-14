@@ -13,28 +13,28 @@ import UIKit
 extension UIColor {
 
 	struct MonthIcon {
-		static var inSeasonTint: UIColor { return UIColor(named: Constants.inSeasonColor)! }
-		static var nonSeasonTint: UIColor { return UIColor(named: Constants.nonSeasonColor)! }
+		static var inSeasonTint: UIColor { return UIColor(named: Constants.inSeasonColor) ?? UIColor() }
+		static var nonSeasonTint: UIColor { return UIColor(named: Constants.nonSeasonColor) ?? UIColor() }
 	}
 
 	struct LikeButton {
-		static var tint: UIColor { return UIColor(named: Constants.likeButtonColor)! }
+		static var tint: UIColor { return UIColor(named: Constants.likeButtonColor) ?? UIColor() }
 	}
 
 	struct MenuBar {
-		static var tint: UIColor { return UIColor(named: Constants.menuBarColor)! }
-		static var selectedTint: UIColor { return UIColor(named: Constants.menuBarSelectedColor)! }
+		static var tint: UIColor { return UIColor(named: Constants.menuBarColor) ?? UIColor() }
+		static var selectedTint: UIColor { return UIColor(named: Constants.menuBarSelectedColor) ?? UIColor() }
 	}
 
 	struct NavigationBar {
-		static var tint: UIColor { return UIColor(named: Constants.navigationBarColor)! }
+		static var tint: UIColor { return UIColor(named: Constants.navigationBarColor) ?? UIColor() }
 	}
 
 	struct SearchBar {
-		static var tint: UIColor { return UIColor(named: Constants.searchBarColor)! }
+		static var tint: UIColor { return UIColor(named: Constants.searchBarColor) ?? UIColor() }
 	}
 
 	struct TableViewCell {
-		static var tint: UIColor { return UIColor(named: Constants.tableViewCellColor)! }
+		static var tint: UIColor { return UIColor(named: Constants.tableViewCellColor) ?? UIColor() }
 	}
 }

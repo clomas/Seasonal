@@ -11,12 +11,12 @@ import UIKit
 
 class MenuBarCollectionViewCell: UICollectionViewCell {
 
-	let imageView = UIImageView()
+	let imageView: UIImageView = UIImageView()
 
 	override func prepareForReuse() {
 		super.prepareForReuse()
 
-		for subView in self.subviews {
+		for subView in subviews {
 			subView.clearsContextBeforeDrawing = true
 			subView.removeFromSuperview()
 		}
@@ -31,10 +31,12 @@ class MenuBarCollectionViewCell: UICollectionViewCell {
 		if menuBarViewModel.isSelected == true {
 			isUserInteractionEnabled = false
 			imageView.tintColor = UIColor.MenuBar.selectedTint
+
 		} else {
 			isUserInteractionEnabled = true
 			imageView.tintColor = UIColor.MenuBar.tint
 		}
+
 		backgroundColor = UIColor.NavigationBar.tint
 
 		addConstraintsWithFormat(menuBarViewModel.constraints.0, views: imageView)
@@ -60,6 +62,7 @@ class MenuBarCollectionViewCell: UICollectionViewCell {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
+
 		contentView.frame = contentView.frame.inset(by: .allZero)
 	}
 }
@@ -69,10 +72,10 @@ class MenuBarCollectionViewCell: UICollectionViewCell {
 private extension UIView {
 
 	func addConstraintsWithFormat(_ format: String, views: UIView...) {
-		var viewsDictionary = [String: UIView]()
+		var viewsDictionary: [String: UIView] = [String: UIView]()
 
 		for (index, view) in views.enumerated() {
-			let key = "v\(index)"
+			let key: String = "v\(index)"
 			view.translatesAutoresizingMaskIntoConstraints = false
 			viewsDictionary[key] = view
 		}

@@ -42,10 +42,8 @@ protocol LocationDelegate: AnyObject {
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
 
-	static let sharedInstance = LocationManager()
-
 	private let locationManager: CLLocationManager
-    private let locationInfo = LocationInformation()
+	private let locationInfo: LocationInformation = LocationInformation()
 
 	var authStatus: CLAuthorizationStatus?
 
@@ -60,20 +58,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
         locationManager.delegate = self
-    }
 
-    func start() {
-		if CLLocationManager.locationServicesEnabled() {
-			switch CLLocationManager.authorizationStatus() {
-			case .notDetermined:
-				locationManager.requestWhenInUseAuthorization()
-				locationManager.startUpdatingLocation()
-			case .authorizedAlways, .authorizedWhenInUse:
-				locationManager.startUpdatingLocation()
-			default:
-				break
-			}
-		}
+		start()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -81,19 +67,18 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             return
         }
         // now fill address as well for complete information through lat long ..
-        let geoCoder = CLGeocoder()
-		geoCoder.reverseGeocodeLocation(mostRecentLocation) { (placeMarks, _) in
+		let geoCoder: CLGeocoder = CLGeocoder()
+		geoCoder.reverseGeocodeLocation(mostRecentLocation) { [weak self] (placeMarks: [CLPlacemark]?, _)  in
             guard let placeMarks = placeMarks, let placeMark = placeMarks.first else { return }
 
-            if let state = placeMark.administrativeArea,
-                let country = placeMark.country {
-                self.locationInfo.state = state
-                self.locationInfo.country = country
-                self.locationInfo.locationFound = true
+			if let state: String = placeMark.administrativeArea, let country: String = placeMark.country {
+				self?.locationInfo.state = state
+				self?.locationInfo.country = country
+				self?.locationInfo.locationFound = true
             } else {
-                self.locationInfo.locationFound = false
+				self?.locationInfo.locationFound = false
             }
-            self.parseLocation()
+			self?.parseLocation()
         }
     }
 
@@ -115,39 +100,58 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
     // MARK: Failure
 
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        print("Location not found \(error) - Use generalized Australian data")
-        locationManager.stopUpdatingLocation()
+	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+		locationManager.stopUpdatingLocation()
 		locationDelegate?.locationReady(location: .noState)
-    }
+
+		#if DEBUG
+		print("Location not found \(error) - Use generalized Australian data")
+		#endif
+	}
+
+	// MARK: Start
+
+	private func start() {
+
+		switch CLLocationManager.authorizationStatus() {
+		case .notDetermined:
+			locationManager.requestWhenInUseAuthorization()
+			locationManager.startUpdatingLocation()
+		case .authorizedAlways, .authorizedWhenInUse:
+			locationManager.startUpdatingLocation()
+		default:
+			break
+		}
+	}
+
+	// MARK: Stop
 
 	private func stop() {
 		locationManager.stopUpdatingLocation()
-		locationDelegate?.locationReady(location: StateLocation.noState)
+		locationDelegate?.locationReady(location: .noState)
 	}
 
-		// MARK: States in Aus
+	// MARK: States in Aus
 
 	private func parseLocation() {
-		var stateFound = StateLocation.noState
+		var stateFound: StateLocation = .noState
 
-		#if DEBUG
-			print(locationInfo.locationFound == true)
-		#endif
+		if let state: String = locationInfo.state?.lowercased() {
 
-		if let state = locationInfo.state?.lowercased() {
 			if state == StateLocation.act.rawValue {
 				stateFound = StateLocation.newSouthWales
 			} else if state == "ca" {
 				stateFound = StateLocation.noState
 			} else {
 				if locationInfo.country != Constants.straya {
-					if let state = StateLocation.init(rawValue: StateLocation.noState.rawValue) {
+					if let state: StateLocation = StateLocation(rawValue: StateLocation.noState.rawValue) {
 						stateFound = state
+						#if DEBUG
 						print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
+						#endif
 					}
 				} else if state != "" {
-					if let locationInit = StateLocation.init(rawValue: state) {
+					if let locationInit: StateLocation = StateLocation(rawValue: state) {
 						stateFound = locationInit
 					}
 				}
@@ -159,7 +163,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 		locationManager.stopUpdatingLocation()
 		locationDelegate?.locationReady(location: stateFound)
 	}
-
 }
 
 class LocationInformation {

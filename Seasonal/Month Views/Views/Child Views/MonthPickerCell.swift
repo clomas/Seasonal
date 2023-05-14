@@ -17,24 +17,26 @@ class MonthPickerCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        for currentView in self.subviews {
+        for currentView in subviews {
 			currentView.clearsContextBeforeDrawing = true
 			currentView.removeFromSuperview()
         }
     }
 
     func updateViews(month: Month) {
-		if let label = monthLabel {
+
+		if let label: UILabel = monthLabel {
 			addConstraint(NSLayoutConstraint(item: label, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))
 			addConstraint(NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0))
 
 			monthLabel.text = String(describing: month).capitalized
-			self.index(ofAccessibilityElement: self)
+			index(ofAccessibilityElement: self)
 		}
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-		self.contentView.frame = contentView.frame.inset(by: .allZero)
+
+		contentView.frame = contentView.frame.inset(by: .allZero)
     }
 }

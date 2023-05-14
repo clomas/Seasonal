@@ -41,15 +41,15 @@ class MockCloudKit: CKDatabaseProtocol {
 	}
 
 	fileprivate var database: CKDatabase {
-		return self.container.publicCloudDatabase
+		return container.publicCloudDatabase
 	}
 
 	func perform(_ query: CKQuery, inZoneWith zoneID: CKRecordZone.ID?, completionHandler: @escaping ([CKRecord]?, Error?) -> Void) {
-		self.database.perform(query, inZoneWith: zoneID, completionHandler: completionHandler)
+		database.perform(query, inZoneWith: zoneID, completionHandler: completionHandler)
 	}
 
 	func save(_ record: CKRecord, completionHandler: @escaping (CKRecord?, Error?) -> Void) {
-		self.database.save(record, completionHandler: completionHandler)
+		database.save(record, completionHandler: completionHandler)
 	}
 
 	func getData(dataFetched: @escaping([CKRecord]) -> Void) {
@@ -59,16 +59,6 @@ class MockCloudKit: CKDatabaseProtocol {
 		var publicData = [CKRecord]()
 
 		_ = CKQueryOperation(query: publicQuery)
-
-//		operation.recordFetchedBlock = { record in
-//			print(record) 
-//		}
-//
-//
-//		operation.queryCompletionBlock = { cursor, error in
-//			print("completion block")
-//			print(cursor, error)
-//		}
 
 		perform(publicQuery, inZoneWith: .default) { results, error in
 			dataFetched([CKRecord]())

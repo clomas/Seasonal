@@ -18,20 +18,20 @@ struct MenuBarCellModel {
 
 	var imageName: String {
 		get {
-			return self.menuBarItem.imageName
+			return menuBarItem.imageName
 		} set (imageUpdate) {
-			self.menuBarItem.imageName = imageUpdate
+			menuBarItem.imageName = imageUpdate
 		}
 	}
 	var constraints: (String, String) {
-		return self.menuBarItem.constraints
+		return menuBarItem.constraints
 	}
 
 	var isSelected: Bool {
 		get {
-			return self.menuBarItem.selected
+			return menuBarItem.selected
 		} set(selected) {
-			self.menuBarItem.selected = selected
+			menuBarItem.selected = selected
 		}
 	}
 }

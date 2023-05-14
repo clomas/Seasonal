@@ -4,8 +4,16 @@ disabled_rules:
   - todo
   - function_parameter_count
   - vertical_parameter_alignment #this is disabled due to CollectionView layout delegates complaining
+  - void_function_in_ternary
 
 identifier_name:
   allowed_symbols: "_"
   excluded:
     - id
+
+opt_in_rules:
+- empty_count
+- explicit_type_interface
+
+excluded:
+- SwiftLint/Common/3rdPartyLib

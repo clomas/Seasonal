@@ -8,13 +8,15 @@
 
 import UIKit
 
+typealias AlertActionCallback = (UIAlertAction) -> Void
+
 extension UIViewController {
 
 	// MARK: Instantiating ViewControllers from storyboard
 
 	static func instantiate<T>() -> T? {
-		let storyboard = UIStoryboard(name: "Main", bundle: .main)
-		if let controller = storyboard.instantiateViewController(identifier: "\(T.self)") as? T {
+		let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: .main)
+		if let controller: T = storyboard.instantiateViewController(identifier: "\(T.self)") as? T {
 			return controller
 		}
 		return nil
@@ -27,17 +29,18 @@ extension UIViewController {
 					  alertStyle: UIAlertController.Style,
 					  actionTitles: [String],
 					  actionStyles: [UIAlertAction.Style],
-					  actions: [((UIAlertAction) -> Void)]? = nil) {
+					  actions: [(UIAlertAction) -> Void]) {
 
-		let alertController = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
+		let alertController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: alertStyle)
 
 		for (index, indexTitle) in actionTitles.enumerated() {
-			let action = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actions?[index])
+			let actionHandler: ((UIAlertAction) -> Void)? = actions.isEmpty ? nil : actions[index]
+			let action: UIAlertAction = UIAlertAction(title: indexTitle, style: actionStyles[index], handler: actionHandler)
 
 			alertController.addAction(action)
 		}
 
-		self.present(alertController, animated: true)
+		present(alertController, animated: true)
 	}
 
 	func presentLocationNotFoundAlert(chosenState: @escaping ((StateLocation) -> Void)) {
@@ -46,16 +49,26 @@ extension UIViewController {
 					 alertStyle: .actionSheet,
 					 actionTitles: Constants.allLocationsForAlert,
 					 actionStyles: [.default, .default, .default, .default, .default, .default, .default],
-					 // formatting here is freaking out
+
 					 actions: [ { _ in
-									chosenState(.westernAustralia) }, { _ in
-									chosenState(.southAustralia) }, { _ in
-									chosenState(.northernTerritory) }, { _ in
-									chosenState(.queensland) }, { _ in
-									chosenState(.newSouthWales) }, { _ in
-									chosenState(.victoria) }, { _ in
-									chosenState(.tasmania) }
+						chosenState(.westernAustralia) }, { _ in
+						chosenState(.southAustralia) }, { _ in
+						chosenState(.northernTerritory) }, { _ in
+						chosenState(.queensland) }, { _ in
+						chosenState(.newSouthWales) }, { _ in
+						chosenState(.victoria) }, { _ in
+						chosenState(.tasmania) }
 					 ]
+		)
+	}
+
+	func presentGenericAlert() {
+		presentAlert(title: "Sorry",
+					 message: "Something went wrong",
+					 alertStyle: .alert,
+					 actionTitles: [],
+					 actionStyles: [.default],
+					 actions: []
 		)
 	}
 }

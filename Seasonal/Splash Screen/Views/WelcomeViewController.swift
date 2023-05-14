@@ -11,7 +11,7 @@ import AVFoundation
 
 class WelcomeViewController: UIViewController, InitialViewDelegate {
 
-	var viewModel: WelcomeViewModel!
+	var viewModel: WelcomeViewModel?
 
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var dismissButton: UIButton!
@@ -21,26 +21,49 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
     private var player: AVPlayer!
 	private var videoName: String {
-		if traitCollection.userInterfaceStyle == .dark {
-			return Constants.darkWelcomeVideo
-		} else {
-			return Constants.lightWelcomeVideo
-		}
+		return traitCollection.userInterfaceStyle == .dark ? Constants.darkWelcomeVideo : Constants.lightWelcomeVideo
 	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-		viewModel.coordinator?.initialViewDelegate = self
+
+		viewModel?.coordinator?.initialViewDelegate = self
         setupViews()
     }
 
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
+
 		navigationController?.setNavigationBarHidden(true, animated: animated)
 	}
 
+	// Delegates passed down from the InitialViewCoordinator.
+	func dataIsReady() {
+		dismissButton.isHidden.toggle()
+		dismissArrowButton.isHidden.toggle()
+		dismissButton.isEnabled.toggle()
+		dismissArrowButton.isEnabled.toggle()
+		activityIndicator.stopAnimating()
+	}
+
+	func networkFailed() {
+		presentAlert(title: "Network Error",
+					 message: "Unable to connect to the internet",
+					 alertStyle: .alert,
+					 actionTitles: ["Ok"],
+					 actionStyles: [.default],
+					 actions: []
+		)
+	}
+
+	func locationNotFound() {
+		presentLocationNotFoundAlert { [weak self] (state: StateLocation) in
+			self?.viewModel?.userChoseLocation(state: state)
+		}
+	}
+
     private func setupViews() {
-		welcomeLabel.text = viewModel.welcomeLabel
+		welcomeLabel.text = viewModel?.welcomeLabel
 
 		activityIndicator.startAnimating()
 		activityIndicator.hidesWhenStopped = true
@@ -64,12 +87,15 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
         do {
             try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default, options: .mixWithOthers)
-             try AVAudioSession.sharedInstance().setActive(true)
+			try AVAudioSession.sharedInstance().setActive(true)
         } catch {
-             print(error)
+			#if DEBUG
+			print(error)
+			#endif
+			presentGenericAlert()
         }
 
-		if let castedLayer = AVPlayerView.layer as? AVPlayerLayer {
+		if let castedLayer: AVPlayerLayer = AVPlayerView.layer as? AVPlayerLayer {
         castedLayer.player = player
         castedLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         player.play()
@@ -82,7 +108,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
     // Start video over after completion
     @objc private func playerItemDidReachEnd(notification: Notification) {
-        if let playerItem = notification.object as? AVPlayerItem {
+		if let playerItem: AVPlayerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
 			playVideo()
         }
@@ -90,48 +116,18 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
     // MARK: Animations
 
-	// TODO: nothing happens here
 	private func animateWelcomeLabel() {
 		if dismissButton.isHidden == false {
 			activityIndicator.isHidden = true
 		}
-		welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel.welcomeLabel)
+		welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel?.welcomeLabel ?? "")
 	}
 
     // MARK: Buttons
 
-    @IBAction func dismissButtonPressed(_ sender: Any) {
-		viewModel.dismissTapped()
+    @IBAction func dismissButtonWasTapped(_ sender: Any) {
+		viewModel?.dismissWasTapped()
     }
-
-    @IBAction func downArrowButtonPressed(_ sender: Any) {
-		viewModel.dismissTapped()
-    }
-
-	// Delegates passed down from the InitialViewCoordinator.
-	func dataIsReady() {
-		dismissButton.isHidden.toggle()
-		dismissArrowButton.isHidden.toggle()
-		dismissButton.isEnabled.toggle()
-		dismissArrowButton.isEnabled.toggle()
-		activityIndicator.stopAnimating()
-	}
-
-	func networkFailed() {
-		presentAlert(title: "Network Error",
-						  message: "Unable to connect to the internet",
-						  alertStyle: .alert,
-						  actionTitles: [],
-						  actionStyles: [.default],
-						  actions: []
-		)
-	}
-
-	func locationNotFound() {
-		presentLocationNotFoundAlert { [weak self] (state: StateLocation) in
-			self?.viewModel.userChoseLocation(state: state)
-		}
-	}
 }
 
 class AVPlayerView: UIView {
@@ -140,14 +136,40 @@ class AVPlayerView: UIView {
     }
 }
 
-public extension UIAlertController {
-    func show() {
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        let viewController = UIViewController()
-		viewController.view.backgroundColor = .clear
-		window.rootViewController = viewController
-		window.windowLevel = UIWindow.Level.alert + 1
-		window.makeKeyAndVisible()
-		viewController.present(self, animated: true, completion: nil)
-    }
+private extension UILabel {
+
+	// Pyramid of doom - not sure why I went with alpha = 0.999
+	func animatedWelcomeLabel(initialLabelText: String) {
+		alpha = 0.0
+
+		UIView.animate(withDuration: 0.9, animations: { () -> Void in
+			self.text = initialLabelText
+			self.alpha = 1
+		}, completion: { _ in
+			UIView.animate(withDuration: 2, animations: { () -> Void in
+				self.alpha = 0.999
+			}, completion: { _ in
+				UIView.animate(withDuration: 2, animations: { () -> Void in
+					self.alpha = 0.0
+				}, completion: { _ in
+					self.text = "Swipe between months and\n filter by category"
+					UIView.animate(withDuration: 0.3, animations: {
+						self.alpha = 1
+					}, completion: { _ in
+						UIView.animate(withDuration: 2, animations: {
+							self.alpha = 0.999
+						}, completion: { _ in
+							UIView.animate(withDuration: 2, animations: {
+								self.alpha = 0
+							}, completion: { finished in
+								if finished {
+									self.animatedWelcomeLabel(initialLabelText: initialLabelText)
+								}
+							})
+						})
+					})
+				})
+			})
+		})
+	}
 }

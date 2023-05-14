@@ -10,11 +10,11 @@ import Foundation
 
 final class WelcomeViewModel {
 
+	let welcomeLabel: String = Constants.welcomeToSeasonal
+
 	weak var coordinator: InitialViewCoordinator?
 
-	let welcomeLabel = Constants.welcomeToSeasonal
-
-	func dismissTapped() {
+	func dismissWasTapped() {
 		coordinator?.readyToDismiss()
 	}
 

@@ -13,10 +13,10 @@ struct LikedProduce: Codable {
     var id: Int
 
     func saveItem() {
-        LocalDataManager.save(self, with: "\(id)")
+        LocalDataHandler.save(self, with: "\(id)")
     }
 
     func deleteItem() {
-        LocalDataManager.delete("\(id)")
+        LocalDataHandler.delete("\(id)")
     }
 }

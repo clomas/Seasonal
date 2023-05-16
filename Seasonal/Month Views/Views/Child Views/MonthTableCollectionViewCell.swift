@@ -15,7 +15,7 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
 	var viewModel: MainViewModel?
 
-	private var numberOfRows: Int = 0
+	private var setFeedbackToOccur: Bool = false
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,7 +34,7 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
         tableView.dataSource = self
     }
 
-    // MARK: Like Button /////
+    // MARK: Like Button
 
 	func likeButtonWasTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
 		if let id: Int = cell.id {
@@ -63,8 +63,9 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 	/// numberOfRows is needed to keep track of row numbers, given the table has two functions
 	/// favourites or months, the variable is updated in multiple places.
 	private func updateLabelBehindTableView() {
-		if numberOfRows > 0 {
+		if let numberOfRows: Int = viewModel?.numberOfRows, numberOfRows > 0 {
 			nothingToShowLabel.text = ""
+			setFeedbackToOccur = true
 		} else {
 
 			if viewModel?.viewDisplayed == .favourites {
@@ -73,7 +74,11 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 
 			if viewModel?.searchString.isEmpty == false {
 				nothingToShowLabel.text = "No Search Results"
-				UINotificationFeedbackGenerator().notificationOccurred(.error)
+
+				if setFeedbackToOccur == true {
+					UINotificationFeedbackGenerator().notificationOccurred(.error)
+					setFeedbackToOccur = false
+				}
 			}
 		}
     }
@@ -84,10 +89,9 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 extension MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		numberOfRows = viewModel?.numberOfRows ?? 0
 		updateLabelBehindTableView()
 
-		return numberOfRows
+		return viewModel?.numberOfRows ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

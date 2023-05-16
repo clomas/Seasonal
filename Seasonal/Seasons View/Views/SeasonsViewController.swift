@@ -17,6 +17,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 	@IBOutlet weak var menuBar: MenuBarCollectionView!
 
 	var viewModel: SeasonsViewModel?
+	private var setFeedbackToOccur: Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,13 +41,21 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 	}
 
 	private func updateLabelBehindTableView(numberOfRows: Int) {
-		if viewModel?.searchString.isEmpty == false {
-			nothingToShowLabel.text = "No Search Results"
-			UINotificationFeedbackGenerator().notificationOccurred(.error)
-		}
 
 		if numberOfRows > 0 {
 			nothingToShowLabel.text = ""
+			setFeedbackToOccur = true
+		} else {
+
+			if viewModel?.searchString.isEmpty == false {
+				nothingToShowLabel.text = "No Search Results"
+
+				if setFeedbackToOccur == true {
+					UINotificationFeedbackGenerator().notificationOccurred(.error)
+					setFeedbackToOccur = false
+				}
+			}
+
 		}
 	}
 

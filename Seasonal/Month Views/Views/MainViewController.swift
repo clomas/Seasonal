@@ -263,7 +263,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 				viewModel?.previousMonth = updatedMonth
 			}
 
-			viewModel?.monthToDisplay = updatedMonth
+			viewModel?.updateMonth(to: updatedMonth)
 
 			// override the title because it can be wrong if not scrolled properly
 			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)

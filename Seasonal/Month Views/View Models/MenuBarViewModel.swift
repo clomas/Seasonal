@@ -32,7 +32,7 @@ final class MenuBarViewModel {
 		setupSelectedCell(selectedMenuBarIndex: selectedMonthView?.rawValue)
 	}
 
-	init(season: Season) {// , viewDisplayed: ViewDisplayed) {
+	init(season: Season) {
 		self.selectedSeasonView = MenuBarModel.Seasons(rawValue: season.rawValue)
 		self.selectedMonthView = nil
 
@@ -69,7 +69,6 @@ final class MenuBarViewModel {
 		}
 
 		toggleSelectedCells(indexSelected: indexToSelect)
-
 		delegate?.menuBarWasTapped(at: index)
 	}
 

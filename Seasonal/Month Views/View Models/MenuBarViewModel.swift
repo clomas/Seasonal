@@ -15,7 +15,6 @@ protocol MenuBarDelegate: AnyObject {
 
 final class MenuBarViewModel {
 
-	var onUpdate: Closure = {}
 	var menuBarCells: [MenuBarCellModel] = []
 
 	private var selectedMonthView: MenuBarModel.Months?
@@ -72,7 +71,6 @@ final class MenuBarViewModel {
 		toggleSelectedCells(indexSelected: indexToSelect)
 
 		delegate?.menuBarWasTapped(at: index)
-		onUpdate()
 	}
 
 	private func toggleSelectedCells(indexSelected: Int) {

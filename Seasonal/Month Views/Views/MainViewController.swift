@@ -96,7 +96,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
-		if viewModel?.allMonthsAndTheirProduce?.isEmpty == false && viewModel?.viewDisplayed != .favourites {
+		if viewModel?.allMonthsAndTheirProduceToDisplay?.isEmpty == false && viewModel?.viewDisplayed != .favourites {
 			let indexPath: IndexPath = IndexPath(item: (viewModel?.monthToDisplay.rawValue ?? 0), section: 0)
 			infiniteMonthCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
 		}
@@ -241,7 +241,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		switch pageInt {
 		case 0:
 			infiniteMonthCollectionView.scrollToItem(at: [0, 12], at: .left, animated: false)
-		case (viewModel?.allMonthsAndTheirProduce?.count ?? 0) - 1:
+		case (viewModel?.allMonthsAndTheirProduceToDisplay?.count ?? 0) - 1:
 			infiniteMonthCollectionView.scrollToItem(at: [0, 1], at: .right, animated: false)
 		default:
 			break
@@ -275,12 +275,8 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 extension MainViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {
-		viewModel?.searchString = searchController.searchBar.text!
+		viewModel?.filterProduce(by: searchController.searchBar.text)
 		infiniteMonthCollectionView.reloadData()
-	}
-
-	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		viewModel?.searchString = searchText
 	}
 }
 

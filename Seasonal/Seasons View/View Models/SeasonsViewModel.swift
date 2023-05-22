@@ -18,15 +18,21 @@ enum Season: Int, CaseIterable {
 
 final class SeasonsViewModel: MenuBarDelegate {
 
+	private let produceDataService: ProduceDataService
+
 	weak var coordinator: MainViewCoordinator?
 
 	var produceData: [Season: [Produce]]
-
-	private let produceDataService: ProduceDataService
-
 	var season: Season
 	var category: ViewDisplayed.ProduceCategory
+
+	var seasonProduceToDisplay: [Produce]? {
+		didSet {
+			numberOfRows = seasonProduceToDisplay?.count ?? 0
+		}
+	}
 	var searchString: String
+	var numberOfRows: Int?
 
 	var reloadTableView: Closure = {}
 
@@ -36,10 +42,12 @@ final class SeasonsViewModel: MenuBarDelegate {
 		 searchString: String,
 		 dataService: ProduceDataService = ProduceDataService()) {
 		self.produceData = produceData
+		self.seasonProduceToDisplay = produceData[season] ?? []
 		self.season = season
 		self.category = category
 		self.searchString = searchString
 		self.produceDataService = dataService
+		self.numberOfRows = seasonProduceToDisplay?.count
 	}
 
 	func menuBarWasTapped(at index: Int) {
@@ -49,21 +57,20 @@ final class SeasonsViewModel: MenuBarDelegate {
 			 ViewDisplayed.ProduceCategory.herbs.rawValue:
 
 			category = ViewDisplayed.ProduceCategory.init(rawValue: index) ?? .all
-
 		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
 
 			category = .cancelled
-
 		case Season.summer.rawValue,
 			 Season.autumn.rawValue,
 			 Season.winter.rawValue,
 			 Season.spring.rawValue:
 
 			season = Season(rawValue: index) ?? .summer
-
 		default:
 			return
 		}
+
+		filterProduce(by: searchString)
 		reloadTableView()
 	}
 
@@ -131,25 +138,29 @@ extension Array where Element == ProduceModel {
 
 extension SeasonsViewModel {
 
-	func filter(by season: Season, matching searchString: String, of category: ViewDisplayed.ProduceCategory) -> [Produce] {
-		guard let seasonData: [Produce] = produceData[season] else { return [Produce]() }
+	func filterProduce(by searchTextFieldString: String?) {
+		guard let seasonData: [Produce] = produceData[season] else { return }
+		searchString = searchTextFieldString ?? ""
 
 		switch category {
 		case .cancelled, .all:
-			if searchString == "" {
-				return seasonData
 
+			if searchString != "" {
+				seasonProduceToDisplay = seasonData.filter {
+					$0.produceName.lowercased().contains(searchString.lowercased())
+				}
 			} else {
-				return seasonData.filter { $0.produceName.lowercased().contains(searchString.lowercased()) }
+				seasonProduceToDisplay = seasonData
 			}
 		case .fruit, .vegetables, .herbs:
-			if searchString == "" {
-				return seasonData.filter { $0.category == category }
 
-			} else {
-				return seasonData.filter { $0.category == category
+			if searchString != "" {
+				seasonProduceToDisplay = seasonData.filter {
+					$0.category == category
 					&& $0.produceName.lowercased().contains(searchString.lowercased())
 				}
+			} else {
+				seasonProduceToDisplay = seasonData.filter { $0.category == category }
 			}
 		}
 	}

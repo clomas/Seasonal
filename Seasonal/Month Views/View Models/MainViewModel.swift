@@ -14,30 +14,34 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 
 	private let produceDataService: ProduceDataService
 
-	var viewDisplayed: ViewDisplayed
-	var allMonthsAndTheirProduce: [[Produce]]?
-	var favouritesProduce: [Produce]?
+	var category: ViewDisplayed.ProduceCategory
 	var monthToDisplay: Month
 	var thisMonthForProduceCell: Month // For displaying the circle in cell of current month.
 	var previousMonth: Month // Keep track of - for animation
-	var category: ViewDisplayed.ProduceCategory
-	var searchString: String
-	var numberOfRows: Int {
 
-		switch viewDisplayed {
-		case .favourites:
-			return filterFavourites(by: searchString, category: category).count
-		case .months:
-			return filter(by: searchString, of: category)[monthToDisplay.rawValue].count
-		default:
-			return 0
+	var viewDisplayed: ViewDisplayed
+
+	var allMonthsAndTheirProduceToDisplay: [[Produce]]? {
+		didSet {
+			numberOfRows = allMonthsAndTheirProduceToDisplay?[monthToDisplay.rawValue].count
 		}
 	}
+	var favouritesProduceToDisplay: [Produce]? {
+		didSet {
+			numberOfRows = favouritesProduceToDisplay?.count
+		}
+	}
+
+	var searchString: String
+	var numberOfRows: Int?
 
 	var reloadTableView: Closure = {}
 	var updateMenuBar: Closure = {}
 
 	weak var coordinator: MainViewCoordinator?
+
+	private var allMonthsAndTheirProduce: [[Produce]]?
+	private var favouritesProduce: [Produce]?
 
 	init(monthsProduce: [[Produce]]?,
 		 favouritesProduce: [Produce]?,
@@ -80,32 +84,29 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 			ViewDisplayed.ProduceCategory.herbs.rawValue:
 
 			category = ViewDisplayed.ProduceCategory(rawValue: index) ?? .all
-			reloadTableView()
-
 		case ViewDisplayed.ProduceCategory.cancelled.rawValue,
 			ViewDisplayed.ProduceCategory.all.rawValue:
 
 			category = .cancelled
-			reloadTableView()
-
-				// navigation
+		// navigate
 		case ViewDisplayed.monthPicker.rawValue,
 			ViewDisplayed.seasons.rawValue:
 
-				// only need this delegate if monthPicker is initialised
+			// only need this delegate if monthPicker is initialised
 			coordinator?.monthSelectedDelegate = self
 			coordinator?.menuBarTappedWasForNavigation(at: index)
-
 		default:
 			if let view: ViewDisplayed = ViewDisplayed(rawValue: index) {
 				viewDisplayed = view
 			}
 		}
+
+		filterProduce(by: searchString)
 		reloadTableView()
 	}
 
-		/// Update Month after another ViewController was displayed.
-		/// - Parameter month: month can be nil - if it is no need to update.
+	/// Update Month after another ViewController was displayed.
+	/// - Parameter month: month can be nil - if it is no need to update.
 	func updateMonth(to month: Month?) {
 		if let month: Month = month {
 			monthToDisplay = month
@@ -149,53 +150,73 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		} else {
 			favouritesProduce = favouritesProduce?.filter { $0.id != produce?.id }
 		}
+
+		filterProduce(by: searchString)
 	}
 }
 
 extension MainViewModel {
 
+	func filterProduce(by searchTextFieldString: String?) {
+		searchString = searchTextFieldString ?? ""
+
+		switch viewDisplayed {
+		case .months:
+			filterMonthsProduce()
+		case .favourites:
+			filterFavouritesProduce()
+		default:
+			break
+		}
+	}
+
 	// Filter by search fields and produce categories selected
-	func filter(by searchString: String, of category: ViewDisplayed.ProduceCategory) -> [[Produce]] {
-		guard let monthsProduce: [[Produce]] = allMonthsAndTheirProduce else { return [] }
+	private func filterMonthsProduce() {
 
 		switch category {
 		case .cancelled, .all:
-			if searchString == "" {
-				return monthsProduce
-			} else {
-				return monthsProduce.map { $0.filter {
+
+			if searchString != "" {
+				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter {
 					$0.produceName.lowercased().contains(searchString.lowercased()) }
 				}
+			} else {
+				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce
 			}
 		case .fruit, .vegetables, .herbs:
-			if searchString == "" {
-				return monthsProduce.map { $0.filter { $0.category == category }}
-			} else {
-				return monthsProduce.map { $0.filter {
-					$0.category == category && $0.produceName.lowercased().contains(searchString.lowercased()) }
+
+			if searchString != "" {
+				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter {
+					$0.category == category
+					&& $0.produceName.lowercased().contains(searchString.lowercased()) }
 				}
+			} else {
+				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter { $0.category == category }}
 			}
 		}
 	}
 
-	func filterFavourites(by searchString: String?, category: ViewDisplayed.ProduceCategory) -> [Produce] {
-		guard let favouritesProduce else { return [] }
+	private func filterFavouritesProduce() {
 
 		switch category {
 		case .cancelled, .all:
-			guard let searchString, searchString != "" else {
-				return favouritesProduce
-			}
 
-			return favouritesProduce.filter { $0.produceName.lowercased().contains(searchString.lowercased()) }
+			if searchString != "" {
+				favouritesProduceToDisplay = favouritesProduce?.filter {
+					$0.produceName.lowercased().contains(searchString.lowercased())
+				}
+			} else {
+				favouritesProduceToDisplay = favouritesProduce
+			}
 
 		case .fruit, .vegetables, .herbs:
-			guard let searchString, searchString != "" else {
-				return favouritesProduce
-			}
 
-			return favouritesProduce.filter { $0.category == category
-				&& $0.produceName.lowercased().contains(searchString.lowercased())
+			if searchString != "" {
+				favouritesProduceToDisplay = favouritesProduce?.filter { $0.category == category &&
+					$0.produceName.lowercased().contains(searchString.lowercased())
+				}
+			} else {
+				favouritesProduceToDisplay = favouritesProduce?.filter { $0.category == category }
 			}
 		}
 	}

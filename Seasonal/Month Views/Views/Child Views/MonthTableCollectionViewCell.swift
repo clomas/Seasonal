@@ -96,21 +96,20 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		if let cell: ProduceMonthInfoViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.ProduceMonthInfoViewCell) as? ProduceMonthInfoViewCell,
-		   let category: ViewDisplayed.ProduceCategory = viewModel?.category,
-		   let thisMonthForProduceCell: Month = viewModel?.thisMonthForProduceCell,
-		   let searchString: String = viewModel?.searchString {
+		   let thisMonthForProduceCell: Month = viewModel?.thisMonthForProduceCell {
 
             cell.likeButtonDelegate = self
 
 			switch viewModel?.viewDisplayed {
 			case .favourites:
-				guard let produce: Produce = viewModel?.filterFavourites(by: viewModel?.searchString, category: category)[indexPath.row] else { return cell }
+				guard let produce: Produce = viewModel?.favouritesProduceToDisplay?[indexPath.row] else { return cell }
 
 				cell.updateViews(produce: produce, monthNow: thisMonthForProduceCell, in: .favourites)
 				return cell
 
 			case .months:
-				guard let produce: Produce = viewModel?.filter(by: searchString, of: category)[tag][indexPath.row] else { return cell }
+
+				guard let produce: Produce = viewModel?.allMonthsAndTheirProduceToDisplay?[tag][indexPath.row] else { return cell }
 
 				cell.updateViews(produce: produce, monthNow: thisMonthForProduceCell, in: .months)
 				return cell

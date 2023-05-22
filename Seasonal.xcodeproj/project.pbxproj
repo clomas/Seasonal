@@ -989,7 +989,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
@@ -998,7 +998,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = clomas.Seasonal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1016,7 +1016,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
@@ -1025,7 +1025,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = clomas.Seasonal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

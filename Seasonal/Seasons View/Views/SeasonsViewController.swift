@@ -40,7 +40,8 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		}
 	}
 
-	private func updateLabelBehindTableView(numberOfRows: Int) {
+	private func updateLabelBehindTableView() {
+		guard let numberOfRows: Int = viewModel?.numberOfRows else { return }
 
 		if numberOfRows > 0 {
 			nothingToShowLabel.text = ""
@@ -103,24 +104,18 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 extension SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		guard let viewModel, let season: Season = Season(rawValue: viewModel.season.rawValue) else { return 0 }
+		guard let viewModel: SeasonsViewModel else { return 0 }
 
-		let rowsCount: Int = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category).count
-		updateLabelBehindTableView(numberOfRows: rowsCount)
-
-		return rowsCount
+		updateLabelBehindTableView()
+		return viewModel.numberOfRows ?? 0
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let viewModel,
-			  let season: Season = Season(rawValue: viewModel.season.rawValue),
-	          let cell: SeasonsTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? SeasonsTableViewCell
-			else { return ProduceMonthInfoViewCell()
-		}
+			  let cell: SeasonsTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? SeasonsTableViewCell,
+			  let produce: Produce = viewModel.seasonProduceToDisplay?[indexPath.row] else { return ProduceMonthInfoViewCell() }
 
-		let produceModel: Produce = viewModel.filter(by: season, matching: viewModel.searchString, of: viewModel.category)[indexPath.row]
-
-		cell.updateViews(produce: produceModel)
+		cell.updateViews(produce: produce)
 		cell.likeButtonDelegate = self
 
 		return cell
@@ -132,11 +127,7 @@ extension SeasonsViewController: UITableViewDataSource {
 extension SeasonsViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {
-		viewModel?.searchString = searchController.searchBar.text!
+		viewModel?.filterProduce(by: searchController.searchBar.text)
 		tableView.reloadData()
-	}
-
-	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		viewModel?.searchString = searchText
 	}
 }

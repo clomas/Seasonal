@@ -12,6 +12,18 @@ extension Month {
 
 	static var asArray: [Month] { return self.allCases }
 
+	var monthNameString: String {
+
+		switch self {
+		case .januaryOverflow:
+			return String(describing: Month.january)
+		case .decemberOverflow:
+			return String(describing: Month.december)
+		default:
+			return String(describing: self)
+		}
+	}
+
 	var calendarImageName: String {
 		switch self {
 		case .january: return "cal_jan.png"

@@ -63,7 +63,8 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
 	/// numberOfRows is needed to keep track of row numbers, given the table has two functions
 	/// favourites or months, the variable is updated in multiple places.
 	private func updateLabelBehindTableView() {
-		if let numberOfRows: Int = viewModel?.numberOfRows, numberOfRows > 0 {
+
+		if let numberOfRows: Int = viewModel?.numberOfRows(forIndex: viewModel?.monthToDisplay.rawValue ?? 0), numberOfRows > 0 {
 			nothingToShowLabel.text = ""
 			setFeedbackToOccur = true
 		} else {
@@ -91,7 +92,7 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		updateLabelBehindTableView()
 
-		return viewModel?.numberOfRows ?? 0
+		return viewModel?.numberOfRows(forIndex: tag) ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

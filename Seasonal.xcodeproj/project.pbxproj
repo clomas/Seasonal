@@ -989,7 +989,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
@@ -1016,7 +1016,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";

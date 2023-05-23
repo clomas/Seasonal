@@ -21,19 +21,10 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 
 	var viewDisplayed: ViewDisplayed
 
-	var allMonthsAndTheirProduceToDisplay: [[Produce]]? {
-		didSet {
-			numberOfRows = allMonthsAndTheirProduceToDisplay?[monthToDisplay.rawValue].count
-		}
-	}
-	var favouritesProduceToDisplay: [Produce]? {
-		didSet {
-			numberOfRows = favouritesProduceToDisplay?.count
-		}
-	}
+	var allMonthsAndTheirProduceToDisplay: [[Produce]]?
+	var favouritesProduceToDisplay: [Produce]?
 
 	var searchString: String
-	var numberOfRows: Int?
 
 	var reloadTableView: Closure = {}
 	var updateMenuBar: Closure = {}
@@ -69,11 +60,23 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		case .monthPicker:
 			return Constants.selectAMonth
 		case .months:
-			return String(describing: monthToDisplay).createTitleString(with: category)
+			return monthToDisplay.monthNameString.createTitleString(with: category)
 		case .favourites:
 			return Constants.favourites.createTitleString(with: category)
 		default:
 			return Constants.seasonal
+		}
+	}
+
+	func numberOfRows(forIndex tag: Int) -> Int {
+
+		switch viewDisplayed {
+		case .favourites:
+			return favouritesProduceToDisplay?.count ?? 0
+		case .months:
+			return allMonthsAndTheirProduceToDisplay?[tag].count ?? 0
+		default:
+			return 0
 		}
 	}
 
@@ -84,10 +87,14 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 			ViewDisplayed.ProduceCategory.herbs.rawValue:
 
 			category = ViewDisplayed.ProduceCategory(rawValue: index) ?? .all
-		case ViewDisplayed.ProduceCategory.cancelled.rawValue,
-			ViewDisplayed.ProduceCategory.all.rawValue:
 
+		case ViewDisplayed.ProduceCategory.all.rawValue:
+			category = .all
+
+		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
 			category = .cancelled
+			updateMenuBar()
+
 		// navigate
 		case ViewDisplayed.monthPicker.rawValue,
 			ViewDisplayed.seasons.rawValue:
@@ -112,6 +119,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 			monthToDisplay = month
 			viewDisplayed = .months
 		}
+
 		updateMenuBar()
 		reloadTableView()
 	}

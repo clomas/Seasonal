@@ -71,4 +71,17 @@ extension UIViewController {
 					 actions: []
 		)
 	}
+
+	func tapViewDismissesKeyboard() {
+		let tapAwayFromKeyboard: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+		tapAwayFromKeyboard.cancelsTouchesInView = false
+		view.addGestureRecognizer(tapAwayFromKeyboard)
+	}
+
+	@objc func dismissKeyboard() {
+
+		if let nav: UINavigationController = self.navigationController {
+			nav.view.endEditing(true)
+		}
+	}
 }

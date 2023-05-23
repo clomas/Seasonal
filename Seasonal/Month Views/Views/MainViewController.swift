@@ -41,6 +41,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	private func setUpView() {
 		setupNavigationControllerView()
 		setupSearchController()
+		tapViewDismissesKeyboard()
 		setupMenuBar()
 		setupCollectionView()
 
@@ -197,9 +198,9 @@ extension MainViewController: UICollectionViewDataSource {
 			// for my implementation of the infinite collectionView I need to change the subview cell tag
 			// based on the indexPath
 			cell.tag = indexPath.item
+			viewModel?.monthToDisplay = Month(rawValue: cell.tag) ?? .december
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
-
 			return cell
 
 		} else {
@@ -249,6 +250,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		// this is the page currently displayed
 		// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
 		if var updatedMonth: Month = Month.init(rawValue: pageInt) {
+			viewModel?.monthToDisplay = updatedMonth
 
 			// update menubar before calling method for animation of month icon
 			if viewModel?.previousMonth != updatedMonth {
@@ -259,11 +261,9 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 				} else if updatedMonth ==  Month.decemberOverflow {
 					updatedMonth = Month.december
 				}
-				menuBar.monthIconCarouselAnimation(from: viewModel?.monthToDisplay ?? .december, to: updatedMonth)
+				menuBar.monthIconCarouselAnimation(from: viewModel?.previousMonth ?? .december, to: updatedMonth)
 				viewModel?.previousMonth = updatedMonth
 			}
-
-			viewModel?.updateMonth(to: updatedMonth)
 
 			// override the title because it can be wrong if not scrolled properly
 			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)

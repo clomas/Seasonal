@@ -75,6 +75,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 		title = viewModel?.updateTitle()
 
 		setUpSearchController()
+		tapViewDismissesKeyboard()
 		setupMenuBar()
 	}
 

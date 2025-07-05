@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 protocol MenuBarDelegate: AnyObject {
 	func menuBarWasTapped(at index: Int)
 }
@@ -21,6 +22,7 @@ final class MenuBarViewModel {
 	private var selectedMonth: Month?
 	private var selectedSeasonView: MenuBarModel.Seasons?
 
+	@MainActor
 	weak var delegate: MenuBarDelegate?
 
 	init(month: Month, viewDisplayed: MenuBarModel.Months) {
@@ -40,7 +42,7 @@ final class MenuBarViewModel {
 		setupSelectedCell(selectedMenuBarIndex: selectedSeasonView?.rawValue)
 	}
 
-	func menuBarWasTapped(at index: Int) {
+	@MainActor func menuBarWasTapped(at index: Int) {
 		// if cancel is selected the indexToSelect needs to be the previous category
 		var indexToSelect: Int = index
 
@@ -69,7 +71,10 @@ final class MenuBarViewModel {
 		}
 
 		toggleSelectedCells(indexSelected: indexToSelect)
-		delegate?.menuBarWasTapped(at: index)
+
+//		Task { @MainActor in
+			delegate?.menuBarWasTapped(at: index)
+//		}
 	}
 
 	private func toggleSelectedCells(indexSelected: Int) {

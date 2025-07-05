@@ -21,17 +21,17 @@ enum StateLocation: String, CaseIterable {
 	case queensland = "qld"
     case act
 
-	func fullName() -> String {
+	var fullName: String {
 		switch self {
-		case .westernAustralia: return "Western Australia"
-		case .southAustralia: return "South Australia"
-		case .northernTerritory: return "Northern Territory"
-		case .newSouthWales: return "New South Wales"
-		case .victoria: return "Victoria"
-		case .tasmania: return "Tasmania"
-		case .queensland: return "Queensland"
+		case .westernAustralia:  "Western Australia"
+		case .southAustralia:  "South Australia"
+		case .northernTerritory:  "Northern Territory"
+		case .newSouthWales:  "New South Wales"
+		case .victoria:  "Victoria"
+		case .tasmania:  "Tasmania"
+		case .queensland:  "Queensland"
 		default:
-			return "Error"
+			 "Error"
 		}
 	}
 }
@@ -58,8 +58,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
         locationManager.delegate = self
-
-		start()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -75,6 +73,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 				self?.locationInfo.state = state
 				self?.locationInfo.country = country
 				self?.locationInfo.locationFound = true
+
             } else {
 				self?.locationInfo.locationFound = false
             }
@@ -111,9 +110,8 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	// MARK: Start
 
-	private func start() {
-
-		switch CLLocationManager.authorizationStatus() {
+	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+		switch manager.authorizationStatus {
 		case .notDetermined:
 			locationManager.requestWhenInUseAuthorization()
 			locationManager.startUpdatingLocation()

@@ -28,18 +28,21 @@ enum ViewDisplayed: Int {
 	}
 }
 
+@MainActor
 protocol MonthSelectedDelegate: AnyObject {
 	func updateMonth(to month: Month?)
 }
 
-final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+@MainActor
+final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
 	private let navigationController: UINavigationController
 	private var modalNavigationController: UINavigationController?
 
-	var parentCoordinator: AppCoordinator?
-	var cloudKitDataService: CloudKitDataService?
+	var parentCoordinator: AppCoordinatorOld?
+	var cloudKitDataServiceOld: CloudKitDataServiceOld?
 
+	@MainActor
 	weak var monthSelectedDelegate: MonthSelectedDelegate?
 
 	private var mainViewController: MainViewController?
@@ -50,11 +53,11 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	private var currentSeason: Season { monthAndSeason.1 }
 
 	init(navigationController: UINavigationController,
-		 cloudKitDataService: CloudKitDataService,
+		 cloudKitDataService: CloudKitDataServiceOld,
 		 dataFetched: [ProduceModel]?,
 		 location: StateLocation) {
 		self.navigationController = navigationController
-		self.cloudKitDataService = cloudKitDataService
+		self.cloudKitDataServiceOld = cloudKitDataService
 		self.dataFetched = dataFetched
 		self.determinedLocation = location
 	}
@@ -123,7 +126,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		}
 	}
 
-	func updateDataModelsAndDatabase(for id: Int, liked: Bool, from view: ViewDisplayed) {
+	@MainActor func updateDataModelsAndDatabase(for id: Int, liked: Bool, from view: ViewDisplayed) {
 
 		if view == .seasons {
 			mainViewController?.viewModel?.likeToggle(id: id, liked: liked)
@@ -178,7 +181,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	private func addLikedProduceToCloudKitDatabase(id: Int) {
-		cloudKitDataService?.saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitError>) in
+		cloudKitDataServiceOld?.saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitError>) in
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "added like record in CloudKit - id: \(id)")
@@ -191,7 +194,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	private func removeLikedProduceToCloudKitDatabase(id: Int) {
-		cloudKitDataService?.deleteRecordsInPrivateDatabase(id: id) { (result: Result<Bool, CloudKitError>) in
+		cloudKitDataServiceOld?.deleteRecordsInPrivateDatabase(id: id) { (result: Result<Bool, CloudKitError>) in
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "removed like record in CloudKit - id: \(id)")

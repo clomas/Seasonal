@@ -6,8 +6,9 @@
 //  Copyright © 2023 Clint Thomas. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
+@MainActor
 enum GlobalSettings {
 	// Storing location (Australian State) into User Defaults
 	@UserDefault("state", defaultValue: Location(state: "")) static var location: Location
@@ -20,4 +21,8 @@ struct Location: Codable {
 
 struct App: Codable {
 	let launchedBefore: Bool
+}
+
+struct Colour {
+	static let welcomeBackground = Color("welcomeBackground")
 }

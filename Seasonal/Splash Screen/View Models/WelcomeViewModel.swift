@@ -14,11 +14,11 @@ final class WelcomeViewModel {
 
 	weak var coordinator: InitialViewCoordinator?
 
-	func dismissWasTapped() {
+	@MainActor func dismissWasTapped() {
 		coordinator?.readyToDismiss()
 	}
 
-	func userChoseLocation(state: StateLocation) {
+	@MainActor func userChoseLocation(state: StateLocation) {
 		coordinator?.userChoseLocation(state: state)
 	}
 }

@@ -76,6 +76,9 @@ extension MonthPickerViewController: UICollectionViewDelegate, UICollectionViewD
 			coordinator?.monthPickerFinished(display: month)
 		}
 
+		let gen = UIImpactFeedbackGenerator(style: .heavy)
+		gen.impactOccurred()
+
 		dismiss(animated: true, completion: nil)
 	}
 

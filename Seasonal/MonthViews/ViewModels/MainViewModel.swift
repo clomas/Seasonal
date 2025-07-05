@@ -80,7 +80,7 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		}
 	}
 
-	func menuBarWasTapped(at index: Int) {
+	@MainActor func menuBarWasTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
 			ViewDisplayed.ProduceCategory.vegetables.rawValue,
@@ -177,6 +177,8 @@ extension MainViewModel {
 			break
 		}
 	}
+
+// next I should get rid of whitespace of search strings
 
 	// Filter by search fields and produce categories selected
 	private func filterMonthsProduce() {

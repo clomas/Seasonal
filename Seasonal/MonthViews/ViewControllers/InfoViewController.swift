@@ -24,7 +24,7 @@ class InfoViewController: UIViewController {
 		setUpNavigationController()
 
 		// If a location was detected, replace "Australia" with the state
-		if viewModel?.location != .noState, let usersStateInAustralia: String = viewModel?.location.fullName() {
+		if viewModel?.location != .noState, let usersStateInAustralia: String = viewModel?.location.fullName {
 			infoTextBlock.text = Constants.infoPageSpiel.replacingOccurrences(of: Constants.straya, with: "\(usersStateInAustralia)")
 
 		// else display "Australia" in default spiel
@@ -83,7 +83,7 @@ class InfoViewController: UIViewController {
     }
 }
 
-extension InfoViewController: MFMailComposeViewControllerDelegate {
+extension InfoViewController: @MainActor MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		if let mailError: Error = error {
 			presentAlert(title: "Unable to compose mail",

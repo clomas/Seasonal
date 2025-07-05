@@ -81,7 +81,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 	/// reference for favourites array manipulation
 	/// produceDataService.updateLike(id: id, liked: liked)
 	/// update viewModel array
-	func likeToggle(id: Int, liked: Bool) {
+	@MainActor func likeToggle(id: Int, liked: Bool) {
 		var updateLikeTo: Bool = liked
 
 		if liked == false {
@@ -106,11 +106,11 @@ final class SeasonsViewModel: MenuBarDelegate {
 		coordinator?.updateDataModelsAndDatabase(for: id, liked: liked, from: .seasons)
 	}
 
-	func backButtonWasTapped() {
+	@MainActor func backButtonWasTapped() {
 		coordinator?.seasonsBackButtonTapped()
 	}
 
-	func infoButtonWasTapped() {
+	@MainActor func infoButtonWasTapped() {
 		coordinator?.presentInfoViewController()
 	}
 }

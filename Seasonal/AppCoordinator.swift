@@ -2,26 +2,36 @@
 //  AppCoordinator.swift
 //  Seasonal
 //
-//  Created by Clint Thomas on 16/2/21.
-//  Copyright © 2021 Clint Thomas. All rights reserved.
+//  Created by Clint Thomas on 30/6/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import Foundation
 import UIKit
 import Network
+import SwiftUI
 
-protocol Coordinator: AnyObject {
-	func start()
+enum AppLaunchMode {
+	static var useSwiftUI: Bool {
+		if #available(iOS 26, *) {
+			true
+		} else {
+			false
+		}
+	}
 }
 
-protocol InitialCoordinatorDelegate: AnyObject {
-	func dataIsReady()
-	func networkFailed()
-	func locationNotFound()
+enum AppCoordinatorState {
+	case dataIsReady
+	case networkFailed
+	case locationNotFound
+	case initial
 }
 
-final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
+@MainActor
+final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, NetworkObserverDelegate {
 
-	let cloudKitDataService: CloudKitDataService = CloudKitDataService()
+	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
 
 	private let window: UIWindow
 	private let navigationController: UINavigationController = UINavigationController()
@@ -36,52 +46,60 @@ final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
 
 	lazy private var locationManager: LocationManager? = { LocationManager() }()
 
-	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
+	@Published var state: AppCoordinatorState = .initial
 
 	init(window: UIWindow) {
 		self.window = window
 
-		#if DEBUG
+#if DEBUG
 		if CommandLine.arguments.contains("enable-testing") {
-			// if testing UI disable animations.
+				// if testing UI disable animations.
 			UIView.setAnimationsEnabled(false)
 		}
-		#endif
+#endif
 	}
 
 	func start() {
-		loadInitialViewCoordinator()
+		if AppLaunchMode.useSwiftUI {
+				// SwiftUI root
+			let swiftUIView = RootView()
+			window.rootViewController = UIHostingController(rootView: swiftUIView.environmentObject(self))
+		} else {
+				// UIKit root
+			let legacyRootVC = navigationController
+			window.rootViewController = UINavigationController(rootViewController: legacyRootVC)
+		}
+
 		networkService = NetworkService(delegate: self)
 
-		window.rootViewController = navigationController
 		window.makeKeyAndVisible()
 	}
 
-	// Called from location manager
-	// also called from updateChosenLocation
-	// fetch data when conditions are right
+		// Called from location manager
+		// also called from updateChosenLocation
+		// fetch data when conditions are right
 	func locationReady(location: StateLocation) {
 
-		// If not determined, wait until it is
+			// If not determined, wait until it is
 		if locationManager?.authStatus != .notDetermined {
 			currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
 
-			// If not found && nothing is stored
+				// If not found && nothing is stored
 			if location == .noState && currentLocation == .noState {
 					// choose your own location
-				initialCoordinatorDelegate?.locationNotFound()
+				state = .locationNotFound
 
-			// If location is found - go on and get that data
+					// If location is found - go on and get that data
 			} else if location != .noState {
 				currentLocation = location
 				GlobalSettings.location = Location(state: location.rawValue)
 				getDataFromCloudKit(for: currentLocation)
 
-			// If location services is denied and nothing stored - prompt user for state
+					// If location services is denied and nothing stored - prompt user for state
 			} else if locationManager?.authStatus == .denied && currentLocation == .noState {
-				initialCoordinatorDelegate?.locationNotFound()
+				state = .locationNotFound
 
-			// If current location is stored - proceed
+					// If current location is stored - proceed
 			} else if currentLocation != .noState {
 				getDataFromCloudKit(for: currentLocation)
 			}
@@ -89,24 +107,26 @@ final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
 	}
 
 	func loadMainViewCoordinator() {
-		let mainViewCoordinator: MainViewCoordinator = MainViewCoordinator(navigationController: navigationController,
-																		   cloudKitDataService: cloudKitDataService,
-																		   dataFetched: produceData,
-																		   location: currentLocation
-		)
-		childCoordinators.append(mainViewCoordinator)
-		mainViewCoordinator.parentCoordinator = self
-		mainViewCoordinator.start()
+//		let mainViewCoordinator: MainViewCoordinator = MainViewCoordinator(
+//			navigationController: navigationController,
+//			cloudKitDataService: cloudKitDataService,
+//			dataFetched: produceData,
+//			location: currentLocation
+//		)
+//		childCoordinators.append(mainViewCoordinator)
+//		mainViewCoordinator.parentCoordinator = self
+//		mainViewCoordinator.start()
 	}
 
 	func internetStatusDidChange(status: NWPath.Status) {
 
 		switch status {
 		case .satisfied:
-			instantiateLocationManager()
-			networkService?.stop()
+			locationManager = LocationManager()
+			locationManager?.locationDelegate = self
+			Task { await networkService?.stop() }
 		default:
-			initialCoordinatorDelegate?.networkFailed()
+			state = .networkFailed
 		}
 	}
 
@@ -120,16 +140,16 @@ final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
 
 	private func getDataFromCloudKit(for location: StateLocation) {
 		getData(for: location, dataFetched: { [weak self] (produce: [ProduceModel]) in
-		    self?.produceData = produce
+			self?.produceData = produce
 
 			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
-				self?.initialCoordinatorDelegate?.dataIsReady()
+				self?.state = .dataIsReady
 			})
 		})
 	}
 
-	// Bubbled up from viewController
-	// let the user chose a location once then store it
+		// Bubbled up from viewController
+		// let the user chose a location once then store it
 	func updateChosenLocationUserDefaults(to location: StateLocation) {
 
 		if GlobalSettings.location.state == "" {
@@ -144,22 +164,8 @@ final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
 			do {
 				dataFetched(try data.get())
 			} catch {
-				self?.initialCoordinatorDelegate?.networkFailed()
+				self?.state = .networkFailed
 			}
 		})
-	}
-
-	private func loadInitialViewCoordinator() {
-		let initialViewCoordinator: InitialViewCoordinator = InitialViewCoordinator(navigationController: navigationController,
-																					firstRun: isFirstRun
-		)
-		childCoordinators.append(initialViewCoordinator)
-		initialViewCoordinator.parentCoordinator = self
-		initialViewCoordinator.start()
-	}
-
-	private func instantiateLocationManager() {
-		locationManager = LocationManager()
-		locationManager?.locationDelegate = self
 	}
 }

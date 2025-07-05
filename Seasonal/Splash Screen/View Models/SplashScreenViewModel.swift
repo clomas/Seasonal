@@ -12,7 +12,7 @@ final class SplashScreenViewModel {
 
 	weak var coordinator: InitialViewCoordinator?
 
-	func userChoseLocation(state: StateLocation) {
+	@MainActor func userChoseLocation(state: StateLocation) {
 		coordinator?.userChoseLocation(state: state)
 	}
 }

@@ -29,7 +29,7 @@
 		275EBD3C25F769D500F6D3F4 /* MenuBarCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275EBD3B25F769D500F6D3F4 /* MenuBarCollectionView.swift */; };
 		2765920D223D2B1C00A2C9C8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2765920C223D2B1C00A2C9C8 /* CloudKit.framework */; };
 		276DDC4F237671AC00929E77 /* LocalDataHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276DDC4E237671AC00929E77 /* LocalDataHandler.swift */; };
-		276F35D924D695CC00D223A0 /* CloudKitDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276F35D824D695CC00D223A0 /* CloudKitDataService.swift */; };
+		276F35D924D695CC00D223A0 /* CloudKitDataServiceOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 276F35D824D695CC00D223A0 /* CloudKitDataServiceOld.swift */; };
 		277A682E2638F8EA00E4389A /* InfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A682D2638F8EA00E4389A /* InfoViewModel.swift */; };
 		277A6830263A3B5700E4389A /* Extension-String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A682F263A3B5700E4389A /* Extension-String.swift */; };
 		277A6832263A3BDE00E4389A /* Extension-UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277A6831263A3BDE00E4389A /* Extension-UIColor.swift */; };
@@ -61,7 +61,12 @@
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
 		27EFF3D2215A5C1700CFB31D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */; };
-		27FCA53425DB6C3C00AD2020 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA53325DB6C3C00AD2020 /* AppCoordinator.swift */; };
+		27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */; };
+		27FB2EBC2E12C38700CA6DCE /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */; };
+		27FB2EBE2E13E19600CA6DCE /* CloudKitDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */; };
+		27FB2EC02E167B5B00CA6DCE /* InitialScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EBF2E167B5500CA6DCE /* InitialScreen.swift */; };
+		27FB2EC22E167C1800CA6DCE /* RootScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EC12E167C1500CA6DCE /* RootScreen.swift */; };
+		27FCA53425DB6C3C00AD2020 /* AppCoordinatorOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA53325DB6C3C00AD2020 /* AppCoordinatorOld.swift */; };
 		27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA53925DB781400AD2020 /* SceneDelegate.swift */; };
 		27FCA53C25DB913D00AD2020 /* InitialViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA53B25DB913D00AD2020 /* InitialViewCoordinator.swift */; };
 		27FCA53E25DB937600AD2020 /* SplashScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FCA53D25DB937600AD2020 /* SplashScreenViewModel.swift */; };
@@ -136,7 +141,7 @@
 		2765920B223D2AE900A2C9C8 /* Seasonal.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Seasonal.entitlements; sourceTree = "<group>"; };
 		2765920C223D2B1C00A2C9C8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		276DDC4E237671AC00929E77 /* LocalDataHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataHandler.swift; sourceTree = "<group>"; };
-		276F35D824D695CC00D223A0 /* CloudKitDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitDataService.swift; sourceTree = "<group>"; };
+		276F35D824D695CC00D223A0 /* CloudKitDataServiceOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitDataServiceOld.swift; sourceTree = "<group>"; };
 		277A682D2638F8EA00E4389A /* InfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewModel.swift; sourceTree = "<group>"; };
 		277A682F263A3B5700E4389A /* Extension-String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-String.swift"; sourceTree = "<group>"; };
 		277A6831263A3BDE00E4389A /* Extension-UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIColor.swift"; sourceTree = "<group>"; };
@@ -174,7 +179,12 @@
 		27EFF3D1215A5C1700CFB31D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27EFF3D3215A5C1700CFB31D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27F4218E22328FA40009922C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		27FCA53325DB6C3C00AD2020 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabScreen.swift; sourceTree = "<group>"; };
+		27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitDataService.swift; sourceTree = "<group>"; };
+		27FB2EBF2E167B5500CA6DCE /* InitialScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialScreen.swift; sourceTree = "<group>"; };
+		27FB2EC12E167C1500CA6DCE /* RootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScreen.swift; sourceTree = "<group>"; };
+		27FCA53325DB6C3C00AD2020 /* AppCoordinatorOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinatorOld.swift; sourceTree = "<group>"; };
 		27FCA53925DB781400AD2020 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		27FCA53B25DB913D00AD2020 /* InitialViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewCoordinator.swift; sourceTree = "<group>"; };
 		27FCA53D25DB937600AD2020 /* SplashScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewModel.swift; sourceTree = "<group>"; };
@@ -222,7 +232,8 @@
 		2718E2CE225F808700B802F9 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				276F35D824D695CC00D223A0 /* CloudKitDataService.swift */,
+				27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */,
+				276F35D824D695CC00D223A0 /* CloudKitDataServiceOld.swift */,
 				27E698E725EE5DCC004B45E9 /* ProduceDataSevice.swift */,
 				276DDC4E237671AC00929E77 /* LocalDataHandler.swift */,
 				27157E6D254FE02D0001CD4D /* LikedProduce.swift */,
@@ -267,15 +278,15 @@
 			path = Coordinators;
 			sourceTree = "<group>";
 		};
-		272D84DA266B72B4002CEE1A /* Month Views */ = {
+		272D84DA266B72B4002CEE1A /* MonthViews */ = {
 			isa = PBXGroup;
 			children = (
 				272D84DB266B72C9002CEE1A /* Coordinators */,
-				272D84DC266B72D0002CEE1A /* View Models */,
-				272D84DD266B72D9002CEE1A /* Views */,
+				272D84DC266B72D0002CEE1A /* ViewModels */,
+				272D84DD266B72D9002CEE1A /* ViewControllers */,
 				272D84E7266B7909002CEE1A /* Extensions */,
 			);
-			path = "Month Views";
+			path = MonthViews;
 			sourceTree = "<group>";
 		};
 		272D84DB266B72C9002CEE1A /* Coordinators */ = {
@@ -286,17 +297,17 @@
 			path = Coordinators;
 			sourceTree = "<group>";
 		};
-		272D84DC266B72D0002CEE1A /* View Models */ = {
+		272D84DC266B72D0002CEE1A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				27E137AC25E51D65003A0BFC /* MainViewModel.swift */,
 				275EBD3725F7679A00F6D3F4 /* MenuBarViewModel.swift */,
 				277A682D2638F8EA00E4389A /* InfoViewModel.swift */,
 			);
-			path = "View Models";
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		272D84DD266B72D9002CEE1A /* Views */ = {
+		272D84DD266B72D9002CEE1A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				27892C2425E7132B00ADD81F /* MainViewController.swift */,
@@ -304,7 +315,7 @@
 				27ECB41522EF19090097A8D4 /* InfoViewController.swift */,
 				272D84DE266B72E6002CEE1A /* Child Views */,
 			);
-			path = Views;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		272D84DE266B72E6002CEE1A /* Child Views */ = {
@@ -333,8 +344,8 @@
 		272D84E1266B7385002CEE1A /* Seasons View */ = {
 			isa = PBXGroup;
 			children = (
-				272D84E4266B7854002CEE1A /* View Models */,
-				272D84E3266B7848002CEE1A /* Views */,
+				272D84E4266B7854002CEE1A /* ViewModels */,
+				272D84E3266B7848002CEE1A /* ViewControllers */,
 				272D84E2266B7843002CEE1A /* Extensions */,
 			);
 			path = "Seasons View";
@@ -348,21 +359,21 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		272D84E3266B7848002CEE1A /* Views */ = {
+		272D84E3266B7848002CEE1A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				275E88D521C113CC0015968C /* SeasonsTableViewCell.swift */,
 				2749C9FB26304CA5009E19A5 /* SeasonsViewController.swift */,
 			);
-			path = Views;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
-		272D84E4266B7854002CEE1A /* View Models */ = {
+		272D84E4266B7854002CEE1A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				27E137AA25E51CB6003A0BFC /* SeasonsViewModel.swift */,
 			);
-			path = "View Models";
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		272D84E6266B78EA002CEE1A /* Utilities */ = {
@@ -478,16 +489,21 @@
 		27EFF3C6215A5C1500CFB31D /* Seasonal */ = {
 			isa = PBXGroup;
 			children = (
-				27FCA53325DB6C3C00AD2020 /* AppCoordinator.swift */,
+				27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */,
+				27FCA53925DB781400AD2020 /* SceneDelegate.swift */,
+				27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */,
+				27FB2EC12E167C1500CA6DCE /* RootScreen.swift */,
+				27FB2EBF2E167B5500CA6DCE /* InitialScreen.swift */,
+				27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */,
+				27FCA53325DB6C3C00AD2020 /* AppCoordinatorOld.swift */,
 				272D84D6266B7202002CEE1A /* Splash Screen */,
-				272D84DA266B72B4002CEE1A /* Month Views */,
+				272D84DA266B72B4002CEE1A /* MonthViews */,
 				272D84E1266B7385002CEE1A /* Seasons View */,
 				272D84DF266B7355002CEE1A /* Models */,
 				27157E7925529FA60001CD4D /* Networking */,
 				2718E2CE225F808700B802F9 /* Data */,
 				278611BB25687F8900E8021B /* Utilities */,
 				2794134C238F4047003D16E2 /* Videos */,
-				27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */,
 				27EFF3CB215A5C1500CFB31D /* Main.storyboard */,
 				27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */,
 				27F4218E22328FA40009922C /* Assets.xcassets */,
@@ -495,7 +511,6 @@
 				27EFF3D3215A5C1700CFB31D /* Info.plist */,
 				2706C40E2374C685006CB989 /* Seasonal.xcdatamodeld */,
 				2765920B223D2AE900A2C9C8 /* Seasonal.entitlements */,
-				27FCA53925DB781400AD2020 /* SceneDelegate.swift */,
 				2746838726665B98000C5456 /* .swiftlint.yml */,
 			);
 			path = Seasonal;
@@ -568,7 +583,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2600;
 				ORGANIZATIONNAME = "Clint Thomas";
 				TargetAttributes = {
 					27468370265D182B000C5456 = {
@@ -667,7 +682,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Adds support for Apple Silicon brew directory\nexport PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint; then\n    swiftlint autocorrect && swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Adds support for Apple Silicon brew directory\n#export PATH=\"$PATH:/opt/homebrew/bin\"\n\n#if which swiftlint; then\n#\tswiftlint\n#else\n#  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -699,9 +714,11 @@
 				27E137AB25E51CB6003A0BFC /* SeasonsViewModel.swift in Sources */,
 				277A6832263A3BDE00E4389A /* Extension-UIColor.swift in Sources */,
 				27E1379E25E219DC003A0BFC /* MainViewCoordinator.swift in Sources */,
-				276F35D924D695CC00D223A0 /* CloudKitDataService.swift in Sources */,
+				27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */,
+				276F35D924D695CC00D223A0 /* CloudKitDataServiceOld.swift in Sources */,
 				2706C4102374C685006CB989 /* Seasonal.xcdatamodeld in Sources */,
 				277A682E2638F8EA00E4389A /* InfoViewModel.swift in Sources */,
+				27FB2EBE2E13E19600CA6DCE /* CloudKitDataService.swift in Sources */,
 				277A6838263A9F8900E4389A /* Extension-Season.swift in Sources */,
 				277A6830263A3B5700E4389A /* Extension-String.swift in Sources */,
 				27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */,
@@ -713,12 +730,14 @@
 				27FCA53C25DB913D00AD2020 /* InitialViewCoordinator.swift in Sources */,
 				27FCA54425DB992300AD2020 /* NetworkService.swift in Sources */,
 				277A683A263A9FE100E4389A /* Extension-ViewDisplayed.swift in Sources */,
+				27FB2EC02E167B5B00CA6DCE /* InitialScreen.swift in Sources */,
 				27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */,
 				27FCA54825DBA27E00AD2020 /* Extension-UIViewController.swift in Sources */,
 				27993B11224A2A9500438A6B /* MonthTableCollectionViewCell.swift in Sources */,
 				27A3835F21DF6EE200BB62C1 /* ProduceMonthInfoViewCell.swift in Sources */,
 				2794E28F29FE0AC6007E9D22 /* InitialViewDelegate.swift in Sources */,
 				275EBD3825F7679A00F6D3F4 /* MenuBarViewModel.swift in Sources */,
+				27FB2EC22E167C1800CA6DCE /* RootScreen.swift in Sources */,
 				2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */,
 				277A6836263A9F1700E4389A /* Extension-Month.swift in Sources */,
 				27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */,
@@ -730,13 +749,14 @@
 				27FCA53E25DB937600AD2020 /* SplashScreenViewModel.swift in Sources */,
 				2749C9FC26304CA5009E19A5 /* SeasonsViewController.swift in Sources */,
 				27AE9A1629D907DC00C98823 /* Extension-UIEdgeInsets.swift in Sources */,
-				27FCA53425DB6C3C00AD2020 /* AppCoordinator.swift in Sources */,
+				27FCA53425DB6C3C00AD2020 /* AppCoordinatorOld.swift in Sources */,
 				274D476025FA08E900B60BD3 /* MenuBarCellModel.swift in Sources */,
 				27E137AD25E51D66003A0BFC /* MainViewModel.swift in Sources */,
 				2749C9FA26304B58009E19A5 /* MenuBarModel.swift in Sources */,
 				27E6E69122D1A3790018DCF2 /* SplashScreenViewController.swift in Sources */,
 				275E88D621C113CC0015968C /* SeasonsTableViewCell.swift in Sources */,
 				2746838026634029000C5456 /* Extension-UserDefaults.swift in Sources */,
+				27FB2EBC2E12C38700CA6DCE /* AppCoordinator.swift in Sources */,
 				27AE9A1E29E2518300C98823 /* Month.swift in Sources */,
 				278951F429FD39FD00C47B18 /* GlobalSettings.swift in Sources */,
 				2746837E265D2A39000C5456 /* Wrapper-UserDefaults.swift in Sources */,
@@ -784,7 +804,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				INFOPLIST_FILE = SeasonalUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -804,7 +823,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				INFOPLIST_FILE = SeasonalUITests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -825,7 +843,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				INFOPLIST_FILE = SeasonalTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -846,7 +863,6 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				INFOPLIST_FILE = SeasonalTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -898,8 +914,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -914,11 +932,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -960,8 +979,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = L8GPFYU7M7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -970,10 +991,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -983,17 +1005,15 @@
 		27EFF3D7215A5C1700CFB31D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
+				CURRENT_PROJECT_VERSION = 22;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1002,7 +1022,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = clomas.Seasonal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1010,17 +1030,15 @@
 		27EFF3D8215A5C1700CFB31D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 21;
-				DEVELOPMENT_TEAM = L8GPFYU7M7;
+				CURRENT_PROJECT_VERSION = 22;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1029,7 +1047,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = clomas.Seasonal;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

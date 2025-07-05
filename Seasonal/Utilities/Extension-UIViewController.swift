@@ -47,7 +47,7 @@ extension UIViewController {
 		presentAlert(title: "Undetermined Location",
 					 message: "Choose your location",
 					 alertStyle: .actionSheet,
-					 actionTitles: Constants.allLocationsForAlert,
+					 actionTitles: Constants.allLocations,
 					 actionStyles: [.default, .default, .default, .default, .default, .default, .default],
 
 					 actions: [ { _ in

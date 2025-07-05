@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	var window: UIWindow?
+	var appCoordinatorOld: AppCoordinatorOld?
 	var appCoordinator: AppCoordinator?
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -21,7 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let window: UIWindow = UIWindow(windowScene: scene)
 		self.window = window
 
-		appCoordinator = AppCoordinator(window: window)
-		appCoordinator?.start()
+		if AppLaunchMode.useSwiftUI {
+			appCoordinator = AppCoordinator(window: window)
+			appCoordinator?.start()
+		} else {
+			appCoordinatorOld = AppCoordinatorOld(window: window)
+			appCoordinatorOld?.start()
+		}
 	}
 }

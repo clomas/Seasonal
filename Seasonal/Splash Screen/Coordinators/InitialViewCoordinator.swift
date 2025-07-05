@@ -9,11 +9,12 @@
 import UIKit
 import Network
 
-final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
+@MainActor
+final class InitialViewCoordinator: Coordinator, @preconcurrency InitialCoordinatorDelegate {
 
 	private let navigationController: UINavigationController
 
-	var parentCoordinator: AppCoordinator?
+	var parentCoordinator: AppCoordinatorOld?
 
 	private(set) var childCoordinators: [Coordinator] = [] // No Children at this stage
 
@@ -71,7 +72,7 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 		})
 	}
 
-	func readyToDismiss() {
+	@MainActor func readyToDismiss() {
 		if navigationController.viewControllers.first is SplashScreenViewController {
 			navigationController.viewControllers.removeFirst()
 			parentCoordinator?.childDidFinish(self)
@@ -83,7 +84,7 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 		}
 	}
 
-	func userChoseLocation(state: StateLocation) {
+	@MainActor func userChoseLocation(state: StateLocation) {
 		parentCoordinator?.updateChosenLocationUserDefaults(to: state)
 	}
 }

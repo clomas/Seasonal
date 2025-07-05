@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 
+@MainActor
 class MenuBarCollectionView: UICollectionView {
 
 	var viewModel: MenuBarViewModel?
@@ -16,7 +17,9 @@ class MenuBarCollectionView: UICollectionView {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 
-		setupView()
+		Task { @MainActor in
+			setupView()
+		}
 	}
 
 	private func setupView() {

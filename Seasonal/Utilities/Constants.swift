@@ -84,13 +84,13 @@ struct Constants {
 
 	static let apple: String = "apple"
 
-	static let allLocationsForAlert: [String] = [
-		StateLocation.westernAustralia.fullName().capitalized,
-		StateLocation.southAustralia.fullName().capitalized,
-		StateLocation.northernTerritory.fullName().capitalized,
-		StateLocation.queensland.fullName().capitalized,
-		StateLocation.newSouthWales.fullName().capitalized,
-		StateLocation.victoria.fullName().capitalized,
-		StateLocation.tasmania.fullName().capitalized
+	static let allLocations: [String] = [
+		StateLocation.westernAustralia.fullName.capitalized,
+		StateLocation.southAustralia.fullName.capitalized,
+		StateLocation.northernTerritory.fullName.capitalized,
+		StateLocation.queensland.fullName.capitalized,
+		StateLocation.newSouthWales.fullName.capitalized,
+		StateLocation.victoria.fullName.capitalized,
+		StateLocation.tasmania.fullName.capitalized
 	]
 }

@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol LikeButtonDelegate: AnyObject {
 	func likeButtonWasTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed)
 }

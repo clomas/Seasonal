@@ -10,7 +10,7 @@ import Foundation
 
 extension UserDefaults {
 
-	static func isFirstLaunch() -> Bool {
+	@MainActor static func isFirstLaunch() -> Bool {
 		let isFirstLaunch: Bool = !GlobalSettings.hasBeenLaunchedBeforeFlag.launchedBefore
 
 		if isFirstLaunch {

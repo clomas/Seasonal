@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol InitialViewDelegate: AnyObject {
 	func networkFailed()
 	func locationNotFound()

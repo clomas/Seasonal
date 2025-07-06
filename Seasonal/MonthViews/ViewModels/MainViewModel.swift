@@ -15,9 +15,9 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	private let produceDataService: ProduceDataService
 
 	var category: ViewDisplayed.ProduceCategory
-	var monthToDisplay: Month
-	var thisMonthForProduceCell: Month // For displaying the circle in cell of current month.
-	var previousMonth: Month // Keep track of - for animation
+	var monthToDisplay: MonthOld
+	var thisMonthForProduceCell: MonthOld // For displaying the circle in cell of current month.
+	var previousMonth: MonthOld // Keep track of - for animation
 
 	var viewDisplayed: ViewDisplayed
 
@@ -37,9 +37,9 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 	init(monthsProduce: [[Produce]]?,
 		 favouritesProduce: [Produce]?,
 		 viewDisplayed: ViewDisplayed,
-		 monthToDisplay: Month,
-		 previousMonth: Month,
-		 thisMonthForProduceCell: Month,
+		 monthToDisplay: MonthOld,
+		 previousMonth: MonthOld,
+		 thisMonthForProduceCell: MonthOld,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
 		 dataService: ProduceDataService = ProduceDataService()
@@ -114,8 +114,8 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 
 	/// Update Month after another ViewController was displayed.
 	/// - Parameter month: month can be nil - if it is no need to update.
-	func updateMonth(to month: Month?) {
-		if let month: Month = month {
+	func updateMonth(to month: MonthOld?) {
+		if let month: MonthOld = month {
 			monthToDisplay = month
 			viewDisplayed = .months
 		}

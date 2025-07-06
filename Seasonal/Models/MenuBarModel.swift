@@ -33,7 +33,7 @@ struct MenuBarModel {
 		case herbs
 		case cancel
 
-		func imageName(currentMonth: Month) -> String {
+		func imageName(currentMonth: MonthOld) -> String {
 			switch self {
 			case .favourites: return "\(Constants.favourites).png"
 			case .calendar: return "\(Constants.months).png"

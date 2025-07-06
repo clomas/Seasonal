@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Network
 import SwiftUI
+import CoreLocation
 
 @MainActor
 protocol Coordinator: AnyObject {
@@ -22,7 +23,7 @@ protocol InitialCoordinatorDelegate: AnyObject {
 }
 
 @MainActor
-final class AppCoordinatorOld: @preconcurrency LocationDelegate, NetworkObserverDelegate {
+final class AppCoordinatorOld: @MainActor LocationDelegateOld, NetworkObserverDelegate {
 
 	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
 
@@ -37,7 +38,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegate, NetworkObserver
 		UserDefaults.isFirstLaunch()
 	}
 
-	lazy private var locationManager: LocationManager? = { LocationManager() }()
+	lazy private var locationManager: LocationManagerOld? = { LocationManagerOld() }()
 
 	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
 
@@ -61,6 +62,17 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegate, NetworkObserver
 		networkService = NetworkService(delegate: self)
 
 		window.makeKeyAndVisible()
+	}
+
+	func internetStatusDidChange(status: NWPath.Status) {
+
+		switch status {
+		case .satisfied:
+			instantiateLocationManager()
+			Task { await networkService?.stop() }
+		default:
+			initialCoordinatorDelegate?.networkFailed()
+		}
 	}
 
 	// Called from location manager
@@ -104,17 +116,6 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegate, NetworkObserver
 		childCoordinators.append(mainViewCoordinator)
 		mainViewCoordinator.parentCoordinator = self
 		mainViewCoordinator.start()
-	}
-
-	func internetStatusDidChange(status: NWPath.Status) {
-
-		switch status {
-		case .satisfied:
-			instantiateLocationManager()
-			Task { await networkService?.stop() }
-		default:
-			initialCoordinatorDelegate?.networkFailed()
-		}
 	}
 
 	func childDidFinish(_ childCoordinator: Coordinator) {
@@ -167,7 +168,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegate, NetworkObserver
 	}
 
 	private func instantiateLocationManager() {
-		locationManager = LocationManager()
+		locationManager = LocationManagerOld()
 		locationManager?.locationDelegate = self
 	}
 }

@@ -19,31 +19,9 @@ protocol CKDatabaseProtocol {
 	func save(_ record: CKRecord, completionHandler: @escaping (CKRecord?, Error?) -> Void)
 }
 
-enum CloudKitError: Error {
-    case databaseError
-	case invalidID
-	case likesError
-}
-
 class CloudKitDataServiceOld {
 	private let container: CKContainer = CKContainer.default()
     var currentLocation: StateLocation = .noState
-
-	private func iCloudUserIDAsync(completion: @escaping (Result<CKRecord.ID?, CloudKitError>) -> Void) {
-        container.fetchUserRecordID { recordID, error in
-            if error != nil {
-				#if DEBUG
-                print(error!.localizedDescription)
-				#endif
-				completion(.failure(.invalidID))
-            } else {
-				#if DEBUG
-                print("fetched ID \(String(describing: recordID?.recordName))")
-				#endif
-				completion(.success(recordID))
-            }
-        }
-    }
 
     // MARK: CloudKit Database
 
@@ -96,7 +74,7 @@ class CloudKitDataServiceOld {
 			var imageName: String = Constants.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
             let description: String = ""
-			var months: [Month] = [Month]()
+			var months: [MonthOld] = [MonthOld]()
 			var seasons: [Season] = [Season]()
 			var liked: Bool = false
 
@@ -228,8 +206,8 @@ extension String {
     }
 
 	// Parse Months
-    func createMonthArray() -> [Month] {
-		var months: [Month] = [Month]()
+    func createMonthArray() -> [MonthOld] {
+		var months: [MonthOld] = [MonthOld]()
 		var searchStartIndex: String.Index = self.startIndex
 
         while searchStartIndex < self.endIndex,
@@ -239,7 +217,7 @@ extension String {
 			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
 			// add 1 here for infiniteCollectionView offset
-			if let month: Month = Month(rawValue: index + 1) {
+			if let month: MonthOld = MonthOld(rawValue: index + 1) {
 				months.append(month)
 			}
             searchStartIndex = range.upperBound

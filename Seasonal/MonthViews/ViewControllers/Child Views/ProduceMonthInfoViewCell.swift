@@ -22,12 +22,12 @@ class ProduceMonthInfoViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
 
 	var viewDisplayed: ViewDisplayed?
-	var currentMonth: Month?
+	var currentMonth: MonthOld?
     var id: Int?
 
     @IBOutlet var monthImages: [UIImageView] = []
 
-	func updateViews(produce: Produce, monthNow: Month, in view: ViewDisplayed) {
+	func updateViews(produce: Produce, monthNow: MonthOld, in view: ViewDisplayed) {
 		guard let image = UIImage(named: produce.imageName) else { return }
 
 		id = produce.id
@@ -56,11 +56,11 @@ class ProduceMonthInfoViewCell: UITableViewCell {
 
         for uiView in monthImages {
             if monthIndex == currentMonth?.rawValue {
-                guard let image = UIImage(named: Month.asArray[monthIndex].imageName) else { return }
+                guard let image = UIImage(named: MonthOld.asArray[monthIndex].imageName) else { return }
                 uiView.image = image
             }
 
-            if produce.months.contains(Month.asArray[monthIndex]) {
+            if produce.months.contains(MonthOld.asArray[monthIndex]) {
                 uiView.tintColor = UIColor.MonthIcon.inSeasonTint
 
             } else {

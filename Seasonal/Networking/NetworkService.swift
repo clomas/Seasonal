@@ -33,18 +33,17 @@ actor NetworkService {
 		monitor.cancel()
 	}
 
-	private func startMonitoring() async {
+	func retry() async {
+		monitor.cancel()
+		await startMonitoring()
+	}
+
+	func startMonitoring() async {
 		monitor.pathUpdateHandler = { [weak self] path in
-			Task {
-				await self?.internetStatusDidChange(status: path.status)
+			Task { @MainActor in
+				await self?.delegate?.internetStatusDidChange(status: path.status)
 			}
 		}
 		monitor.start(queue: DispatchQueue.global(qos: .background))
-	}
-
-	private func internetStatusDidChange(status: NWPath.Status) {
-		Task { @MainActor in
-			await self.delegate?.internetStatusDidChange(status: status)
-		}
 	}
 }

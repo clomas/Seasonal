@@ -19,13 +19,13 @@ final class MenuBarViewModel {
 	var menuBarCells: [MenuBarCellModel] = []
 
 	private var selectedMonthView: MenuBarModel.Months?
-	private var selectedMonth: Month?
+	private var selectedMonth: MonthOld?
 	private var selectedSeasonView: MenuBarModel.Seasons?
 
 	@MainActor
 	weak var delegate: MenuBarDelegate?
 
-	init(month: Month, viewDisplayed: MenuBarModel.Months) {
+	init(month: MonthOld, viewDisplayed: MenuBarModel.Months) {
 		self.selectedMonth = month
 		self.selectedMonthView = viewDisplayed
 		self.selectedSeasonView = nil

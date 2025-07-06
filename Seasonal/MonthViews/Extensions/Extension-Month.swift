@@ -8,17 +8,17 @@
 
 import Foundation
 
-extension Month {
+extension MonthOld {
 
-	static var asArray: [Month] { return self.allCases }
+	static var asArray: [MonthOld] { return self.allCases }
 
 	var monthNameString: String {
 
 		switch self {
 		case .januaryOverflow:
-			return String(describing: Month.january)
+			return String(describing: MonthOld.january)
 		case .decemberOverflow:
-			return String(describing: Month.december)
+			return String(describing: MonthOld.december)
 		default:
 			return String(describing: self)
 		}

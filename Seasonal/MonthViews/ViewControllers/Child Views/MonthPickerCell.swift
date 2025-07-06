@@ -23,7 +23,7 @@ class MonthPickerCell: UICollectionViewCell {
         }
     }
 
-    func updateViews(month: Month) {
+    func updateViews(month: MonthOld) {
 
 		if let label: UILabel = monthLabel {
 			addConstraint(NSLayoutConstraint(item: label, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0))

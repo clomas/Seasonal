@@ -8,28 +8,29 @@
 
 import Foundation
 import CoreLocation
+import MapKit
 
 enum StateLocation: String, CaseIterable {
 
     case noState = "aus"
-    case westernAustralia = "wa"
-    case southAustralia = "sa"
-    case northernTerritory = "nt"
-    case newSouthWales = "nsw"
-    case victoria = "vic"
-    case tasmania = "tas"
+	case act
+	case newSouthWales = "nsw"
+	case northernTerritory = "nt"
 	case queensland = "qld"
-    case act
+	case southAustralia = "sa"
+	case tasmania = "tas"
+	case victoria = "vic"
+	case westernAustralia = "wa"
 
 	var fullName: String {
 		switch self {
-		case .westernAustralia:  "Western Australia"
-		case .southAustralia:  "South Australia"
-		case .northernTerritory:  "Northern Territory"
 		case .newSouthWales:  "New South Wales"
-		case .victoria:  "Victoria"
-		case .tasmania:  "Tasmania"
+		case .northernTerritory:  "Northern Territory"
 		case .queensland:  "Queensland"
+		case .southAustralia:  "South Australia"
+		case .tasmania:  "Tasmania"
+		case .victoria:  "Victoria"
+		case .westernAustralia:  "Western Australia"
 		default:
 			 "Error"
 		}
@@ -37,19 +38,19 @@ enum StateLocation: String, CaseIterable {
 }
 
 protocol LocationDelegate: AnyObject {
-    func locationReady(location: StateLocation)
+    func locationReady(location: CLLocation?)
 }
 
 class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	private let locationManager: CLLocationManager
-	private let locationInfo: LocationInformation = LocationInformation()
 
 	var authStatus: CLAuthorizationStatus?
 
 	weak var locationDelegate: LocationDelegate?
 
-    override init() {
+	init(delegate: LocationDelegate) {
+		locationDelegate = delegate
         locationManager = CLLocationManager()
 		super.init()
 
@@ -60,25 +61,13 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.delegate = self
     }
 
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let mostRecentLocation = locations.last else {
             return
         }
-        // now fill address as well for complete information through lat long ..
-		let geoCoder: CLGeocoder = CLGeocoder()
-		geoCoder.reverseGeocodeLocation(mostRecentLocation) { [weak self] (placeMarks: [CLPlacemark]?, _)  in
-            guard let placeMarks = placeMarks, let placeMark = placeMarks.first else { return }
 
-			if let state: String = placeMark.administrativeArea, let country: String = placeMark.country {
-				self?.locationInfo.state = state
-				self?.locationInfo.country = country
-				self?.locationInfo.locationFound = true
-
-            } else {
-				self?.locationInfo.locationFound = false
-            }
-			self?.parseLocation()
-        }
+		locationDelegate?.locationReady(location: mostRecentLocation)
+		locationManager.stopUpdatingLocation()
     }
 
     // MARK: Location Updated
@@ -100,8 +89,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     // MARK: Failure
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		locationManager.stopUpdatingLocation()
-		locationDelegate?.locationReady(location: .noState)
+		stop()
 
 		#if DEBUG
 		print("Location not found \(error) - Use generalized Australian data")
@@ -126,52 +114,6 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 
 	private func stop() {
 		locationManager.stopUpdatingLocation()
-		locationDelegate?.locationReady(location: .noState)
+		locationDelegate?.locationReady(location: nil)
 	}
-
-	// MARK: States in Aus
-
-	private func parseLocation() {
-		var stateFound: StateLocation = .noState
-
-		if let state: String = locationInfo.state?.lowercased() {
-
-			if state == StateLocation.act.rawValue {
-				stateFound = StateLocation.newSouthWales
-			} else if state == "ca" {
-				stateFound = StateLocation.noState
-			} else {
-				if locationInfo.country != Constants.straya {
-					if let state: StateLocation = StateLocation(rawValue: StateLocation.noState.rawValue) {
-						stateFound = state
-						#if DEBUG
-						print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
-						#endif
-					}
-				} else if state != "" {
-					if let locationInit: StateLocation = StateLocation(rawValue: state) {
-						stateFound = locationInit
-					}
-				}
-			}
-			#if DEBUG
-				print("location found - \(locationInfo.state ?? StateLocation.noState.rawValue)")
-			#endif
-		}
-		locationManager.stopUpdatingLocation()
-		locationDelegate?.locationReady(location: stateFound)
-	}
-}
-
-class LocationInformation {
-
-    var state: String?
-    var country: String?
-    var locationFound: Bool?
-
-	init(state: String? = "", country: String? = Constants.straya, locationFound: Bool? = false) {
-        self.state = state
-        self.country = country
-        self.locationFound = locationFound
-    }
 }

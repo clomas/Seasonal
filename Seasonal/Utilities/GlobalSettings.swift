@@ -25,4 +25,5 @@ struct App: Codable {
 
 struct Colour {
 	static let welcomeBackground = Color("welcomeBackground")
+	static let inSeason = Color("inSeason")
 }

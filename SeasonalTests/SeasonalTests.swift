@@ -103,7 +103,7 @@ class SeasonalTests: XCTestCase {
 			var imageName = Constants.apple
 			var category = ViewDisplayed.ProduceCategory.fruit
 			let description = ""
-			var months = [Month]()
+			var months = [MonthOld]()
 			var seasons = [Season]()
 			var liked = false
 

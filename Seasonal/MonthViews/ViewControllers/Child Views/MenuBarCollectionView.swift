@@ -57,7 +57,7 @@ class MenuBarCollectionView: UICollectionView {
 
 	// MARK: Scrolling Month Animation
 
-	func monthIconCarouselAnimation(from previousMonth: Month, to monthToScrollTo: Month) {
+	func monthIconCarouselAnimation(from previousMonth: MonthOld, to monthToScrollTo: MonthOld) {
 		let indexPath: IndexPath = IndexPath(item: 2, section: 0)
 
 		if let cell: MenuBarCollectionViewCell = cellForItem(at: indexPath) as? MenuBarCollectionViewCell {
@@ -68,11 +68,11 @@ class MenuBarCollectionView: UICollectionView {
 			// jump icon back to the opposite side before sliding back into the cell.
 			var jumpTo: CGFloat = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 
-			if previousMonth == Month.december && monthToScrollTo == Month.january {
+			if previousMonth == MonthOld.december && monthToScrollTo == MonthOld.january {
 				jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 				slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
 
-			} else if previousMonth == Month.january && monthToScrollTo == Month.december {
+			} else if previousMonth == MonthOld.january && monthToScrollTo == MonthOld.december {
 				slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
 				jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
 
@@ -113,7 +113,7 @@ class MenuBarCollectionView: UICollectionView {
 		}
 	}
 
-	func updateMenuBarFromNavigation(viewDisplayed: ViewDisplayed?, month: Month) {
+	func updateMenuBarFromNavigation(viewDisplayed: ViewDisplayed?, month: MonthOld) {
 		toggleSelectedCells(viewDisplayed: viewDisplayed)
 		updateMonthIconImage(to: month)
 	}
@@ -137,12 +137,12 @@ class MenuBarCollectionView: UICollectionView {
 
 	// After selecting a month from the MonthPickerViewController, this will update the icon
 	// to the current month
-	private func updateMonthIconImage(to month: Month) {
+	private func updateMonthIconImage(to month: MonthOld) {
 		viewModel?.menuBarCells[IndexPath(viewDisplayed: .months).item].imageName = month.calendarImageName
 		reloadData()
 	}
 
-	private func findNextMonthImage(month: Month) -> UIImage {
+	private func findNextMonthImage(month: MonthOld) -> UIImage {
 		if let monthImage: UIImage = UIImage(named: month.calendarImageName) {
 			return monthImage.withRenderingMode(.alwaysTemplate)
 		}

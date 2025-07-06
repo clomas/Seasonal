@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import Network
 import SwiftUI
+import CoreLocation
 
 enum AppLaunchMode {
 	static var useSwiftUI: Bool {
@@ -37,14 +38,15 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 	private let navigationController: UINavigationController = UINavigationController()
 
 	private(set) var childCoordinators: [Coordinator] = []
-	private var networkService: NetworkService?
+
 	private var currentLocation: StateLocation = .noState
 	private var produceData: [ProduceModel]?
 	private var isFirstRun: Bool {
 		UserDefaults.isFirstLaunch()
 	}
 
-	lazy private var locationManager: LocationManager? = { LocationManager() }()
+	private var networkService: NetworkService?
+	private var locationManager: LocationManager?
 
 	@Published var state: AppCoordinatorState = .initial
 
@@ -75,24 +77,40 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 		window.makeKeyAndVisible()
 	}
 
-		// Called from location manager
-		// also called from updateChosenLocation
-		// fetch data when conditions are right
-	func locationReady(location: StateLocation) {
+	func tryDetectLocationAgain() {
+		Task {
+			await networkService?.retry()
+		}
+	}
 
-			// If not determined, wait until it is
+	// Called from location manager
+	// also called from updateChosenLocation
+	// fetch data when conditions are right
+	func locationReady(location: CLLocation?) {
+		var stateLocation: StateLocation = .noState
+
+		if #available(iOS 26.0, *) {
+			Task {
+				stateLocation = await LocationInformationManager().parseLocation(location)
+			}
+		} else {
+				// TODO:
+
+		}
+
+		// If not determined, wait until it is
 		if locationManager?.authStatus != .notDetermined {
 			currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
 
 				// If not found && nothing is stored
-			if location == .noState && currentLocation == .noState {
-					// choose your own location
+			if stateLocation == .noState && currentLocation == .noState {
+				// choose your own location
 				state = .locationNotFound
 
 					// If location is found - go on and get that data
-			} else if location != .noState {
-				currentLocation = location
-				GlobalSettings.location = Location(state: location.rawValue)
+			} else if stateLocation != .noState {
+				currentLocation = stateLocation
+				GlobalSettings.location = Location(state: stateLocation.rawValue)
 				getDataFromCloudKit(for: currentLocation)
 
 					// If location services is denied and nothing stored - prompt user for state
@@ -106,24 +124,21 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 		}
 	}
 
-	func loadMainViewCoordinator() {
-//		let mainViewCoordinator: MainViewCoordinator = MainViewCoordinator(
-//			navigationController: navigationController,
-//			cloudKitDataService: cloudKitDataService,
-//			dataFetched: produceData,
-//			location: currentLocation
-//		)
-//		childCoordinators.append(mainViewCoordinator)
-//		mainViewCoordinator.parentCoordinator = self
-//		mainViewCoordinator.start()
+	// Let the user chose a location once then store it
+	func updateChosenLocationUserDefaults(to location: StateLocation) {
+
+		if GlobalSettings.location.state == "" {
+			GlobalSettings.location = Location(state: location.rawValue)
+		}
+		currentLocation = location
+		getDataFromCloudKit(for: location)
 	}
 
 	func internetStatusDidChange(status: NWPath.Status) {
 
 		switch status {
 		case .satisfied:
-			locationManager = LocationManager()
-			locationManager?.locationDelegate = self
+			locationManager = LocationManager(delegate: self)
 			Task { await networkService?.stop() }
 		default:
 			state = .networkFailed
@@ -146,17 +161,6 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 				self?.state = .dataIsReady
 			})
 		})
-	}
-
-		// Bubbled up from viewController
-		// let the user chose a location once then store it
-	func updateChosenLocationUserDefaults(to location: StateLocation) {
-
-		if GlobalSettings.location.state == "" {
-			GlobalSettings.location = Location(state: location.rawValue)
-		}
-		currentLocation = location
-		getDataFromCloudKit(for: location)
 	}
 
 	private func getData(for location: StateLocation, dataFetched: @escaping ([ProduceModel]) -> Void) {

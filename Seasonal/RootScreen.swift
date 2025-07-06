@@ -18,7 +18,10 @@ struct RootView: View {
 				MainTabScreen()
 				
 			default:
-				InitialScreen()
+				if #available(iOS 26.0, *) {
+					InitialScreen()
+						.glassEffect()
+				} 
 			}
 		}
 		.animation(.easeInOut, value: coordinator.state == .dataIsReady)

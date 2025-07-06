@@ -27,7 +27,7 @@ struct Produce {
 	var category: ViewDisplayed.ProduceCategory? {
 		produce.category
 	}
-	var months: [Month] {
+	var months: [MonthOld] {
 		produce.months
 	}
 	var seasons: [Season] {
@@ -48,7 +48,7 @@ struct ProduceModel {
     let category: ViewDisplayed.ProduceCategory
     let imageName: String
     let description: String // Not implemented yet
-    let months: [Month]
+    let months: [MonthOld]
     let seasons: [Season]
     var liked: Bool
 }

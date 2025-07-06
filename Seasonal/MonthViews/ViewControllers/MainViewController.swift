@@ -198,7 +198,7 @@ extension MainViewController: UICollectionViewDataSource {
 			// for my implementation of the infinite collectionView I need to change the subview cell tag
 			// based on the indexPath
 			cell.tag = indexPath.item
-			viewModel?.monthToDisplay = Month(rawValue: cell.tag) ?? .december
+			viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
 			return cell
@@ -249,17 +249,17 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		}
 		// this is the page currently displayed
 		// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
-		if var updatedMonth: Month = Month.init(rawValue: pageInt) {
+		if var updatedMonth: MonthOld = MonthOld.init(rawValue: pageInt) {
 			viewModel?.monthToDisplay = updatedMonth
 
 			// update menubar before calling method for animation of month icon
 			if viewModel?.previousMonth != updatedMonth {
 
-				if updatedMonth == Month.januaryOverflow {
-					updatedMonth = Month.january
+				if updatedMonth == MonthOld.januaryOverflow {
+					updatedMonth = MonthOld.january
 
-				} else if updatedMonth ==  Month.decemberOverflow {
-					updatedMonth = Month.december
+				} else if updatedMonth ==  MonthOld.decemberOverflow {
+					updatedMonth = MonthOld.december
 				}
 				menuBar.monthIconCarouselAnimation(from: viewModel?.previousMonth ?? .december, to: updatedMonth)
 				viewModel?.previousMonth = updatedMonth

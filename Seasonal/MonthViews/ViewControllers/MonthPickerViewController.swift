@@ -52,13 +52,13 @@ extension MonthPickerViewController: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 		// Less 2 given overflow Months
-		return (Month.allCases.count - 2)
+		return (MonthOld.allCases.count - 2)
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell: MonthPickerCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.SelectMonthCell, for: indexPath) as? MonthPickerCell {
 			// Plus 1 given overflow Months
-			cell.updateViews(month: Month.asArray[(indexPath.row + 1)])
+			cell.updateViews(month: MonthOld.asArray[(indexPath.row + 1)])
 			return cell
 		} else {
 			return MonthPickerCell()
@@ -72,7 +72,7 @@ extension MonthPickerViewController: UICollectionViewDelegate, UICollectionViewD
 
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		// Plus 1 given overflow Months
-		if let month: Month = Month(rawValue: (indexPath.row + 1)) {
+		if let month: MonthOld = MonthOld(rawValue: (indexPath.row + 1)) {
 			coordinator?.monthPickerFinished(display: month)
 		}
 

@@ -99,49 +99,219 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "B904975C-AAD4-4B2C-860B-6DC4C6E34071"
+            uuid = "0D85B222-A114-468A-AF56-A83BB33163FE"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Networking/LocationService.swift"
+            filePath = "Seasonal/InitialScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "117"
-            endingLineNumber = "117"
-            landmarkName = "locationManagerDidChangeAuthorization(_:)"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "0D85B222-A114-468A-AF56-A83BB33163FE - 7b726292741d7581"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(Swift.Optional&lt;SwiftUI.AnyView&gt;, SwiftUI.ForEach&lt;Swift.Array&lt;Seasonal.StateLocation&gt;, Seasonal.StateLocation, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt;, SwiftUI.Spacer)&gt; in Seasonal.InitialScreen.body.getter : some"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/InitialScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35">
+               </Location>
+               <Location
+                  uuid = "0D85B222-A114-468A-AF56-A83BB33163FE - fd9426cdbc72b9ab"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #2 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, Seasonal.GlassButton)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(Swift.Optional&lt;SwiftUI.AnyView&gt;, SwiftUI.ForEach&lt;Swift.Array&lt;Seasonal.StateLocation&gt;, Seasonal.StateLocation, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt;, SwiftUI.Spacer)&gt; in Seasonal.InitialScreen.body.getter : some"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/InitialScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "35"
+                  endingLineNumber = "35">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "61D0EF98-85DD-491D-9502-95EB0ACF67BA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/InitialScreen.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "44"
+            endingLineNumber = "44"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "61D0EF98-85DD-491D-9502-95EB0ACF67BA - 7b726292741d74fe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(Swift.Optional&lt;SwiftUI.AnyView&gt;, SwiftUI.ForEach&lt;Swift.Array&lt;Seasonal.StateLocation&gt;, Seasonal.StateLocation, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt;, SwiftUI.Spacer)&gt; in Seasonal.InitialScreen.body.getter : some"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/InitialScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
+               </Location>
+               <Location
+                  uuid = "61D0EF98-85DD-491D-9502-95EB0ACF67BA - 3fabcc853d8d6a81"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #3 () -&gt; SwiftUI.TupleView&lt;(Swift.Optional&lt;SwiftUI.AnyView&gt;, SwiftUI.ForEach&lt;Swift.Array&lt;Seasonal.StateLocation&gt;, Seasonal.StateLocation, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0)&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI._ConditionalContent&lt;SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.VStack&lt;SwiftUI.TupleView&lt;(Swift.Optional&lt;SwiftUI.AnyView&gt;, SwiftUI.ForEach&lt;Swift.Array&lt;Seasonal.StateLocation&gt;, Seasonal.StateLocation, Swift.Optional&lt;&lt;&lt;opaque return type of SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0&gt;&gt;, &lt;&lt;opaque return type of SwiftUI.View.padding(CoreGraphics.CGFloat) -&gt; some&gt;&gt;.0)&gt;&gt;&gt;, SwiftUI._ConditionalContent&lt;&lt;&lt;opaque return type of SwiftUI.View.transition(SwiftUI.AnyTransition) -&gt; some&gt;&gt;.0, SwiftUI.EmptyView&gt;&gt;, SwiftUI.Spacer)&gt; in Seasonal.InitialScreen.body.getter : some"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/InitialScreen.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "44"
+                  endingLineNumber = "44">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B6DDD30B-0E67-4AAD-A886-A42C20A9385E"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/AppCoordinator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
+            landmarkName = "internetStatusDidChange(status:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F365E615-12CE-4C3A-B52E-5ADFE05AA702"
+            uuid = "704EE5F1-9174-4348-AD1C-093FBFB27391"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Networking/LocationService.swift"
+            filePath = "Seasonal/AppCoordinator.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "locationManagerDidChangeAuthorization(_:)"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
+            landmarkName = "getData(for:dataFetched:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "72513F78-0FEC-45BA-AD06-5EBD9A84B52D"
+            uuid = "527DE0A7-9851-431D-BEAB-961772A34158"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Networking/LocationService.swift"
+            filePath = "Seasonal/Utilities/LocationInformationManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
-            landmarkName = "locationManagerDidChangeAuthorization(_:)"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "parseLocation(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "470863DF-36B3-4F58-8504-4BEBA83ED148"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/Utilities/LocationInformationManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "parseLocationForDelegate(state:country:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4B109E26-4053-414C-A699-BF94B8924C1E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/AppCoordinator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "103"
+            endingLineNumber = "103"
+            landmarkName = "locationReady(location:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D465DD75-934C-4223-A1A8-BCED941A34C7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/AppCoordinator.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
+            landmarkName = "getDataFromCloudKit(for:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D465DD75-934C-4223-A1A8-BCED941A34C7 - 970488a0b696ee63"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Array&lt;Seasonal.ProduceModel&gt;) -&gt; () in Seasonal.AppCoordinator.getDataFromCloudKit(for: Seasonal.StateLocation) -&gt; ()"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/AppCoordinator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160">
+               </Location>
+               <Location
+                  uuid = "D465DD75-934C-4223-A1A8-BCED941A34C7 - d3225f4ad9d13411"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 @Swift.MainActor @Sendable () -&gt; () in closure #1 (Swift.Array&lt;Seasonal.ProduceModel&gt;) -&gt; () in Seasonal.AppCoordinator.getDataFromCloudKit(for: Seasonal.StateLocation) -&gt; ()"
+                  moduleName = "Seasonal.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/AppCoordinator.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

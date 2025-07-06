@@ -30,7 +30,7 @@ enum ViewDisplayed: Int {
 
 @MainActor
 protocol MonthSelectedDelegate: AnyObject {
-	func updateMonth(to month: Month?)
+	func updateMonth(to month: MonthOld?)
 }
 
 @MainActor
@@ -48,8 +48,8 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 	private var mainViewController: MainViewController?
 	private var dataFetched: [ProduceModel]?
 	private var determinedLocation: StateLocation
-	private var monthAndSeason: (Month, Season) = DateHandler().findMonthAndSeason()
-	private var currentMonth: Month { monthAndSeason.0 }
+	private var monthAndSeason: (MonthOld, Season) = DateHandler().findMonthAndSeasonOld()
+	private var currentMonth: MonthOld { monthAndSeason.0 }
 	private var currentSeason: Season { monthAndSeason.1 }
 
 	init(navigationController: UINavigationController,
@@ -66,7 +66,7 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 		navigationController.delegate = self
 		mainViewController = .instantiate()
 
-		let monthNow: Month = currentMonth
+		let monthNow: MonthOld = currentMonth
 		let mainViewModel: MainViewModel = MainViewModel(monthsProduce: dataFetched?.sortIntoMonths(),
 														 favouritesProduce: dataFetched?.sortIntoFavourites(),
 														 viewDisplayed: .months,
@@ -109,7 +109,7 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 		}
 	}
 
-	func monthPickerFinished(display month: Month?) {
+	func monthPickerFinished(display month: MonthOld?) {
 		monthSelectedDelegate?.updateMonth(to: month ?? nil)
 	}
 

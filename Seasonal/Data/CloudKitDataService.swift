@@ -8,25 +8,46 @@
 
 import Foundation
 import CloudKit
-import Combine
 
-@MainActor
-final class CloudKitDataService: ObservableObject {
-	@Published var items: [CKRecord] = []
-	@Published var isLoading = false
-	@Published var errorMessage: String?
+enum CloudKitError: Error {
+	case databaseError
+	case invalidID
+	case likesError
+	case noToken
+}
 
-	private let container: CKContainer
-	private let database: CKDatabase
+actor CloudKitDataService: ObservableObject {
 
-	init(container: CKContainer = .default()) {
-		self.container = container
-		self.database = container.privateCloudDatabase
+	enum DatabaseType {
+		case `private`
+		case `public`
 	}
 
-	func fetchItems(recordType: String) async {
+//	@Published var items: [CKRecord] = []
+//	@Published var isLoading = false
+
+	private let container: CKContainer = .default()
+	private var database: CKDatabase {
+		databaseType == .private
+			? container.privateCloudDatabase
+			: container.publicCloudDatabase
+	}
+
+	private var databaseType: DatabaseType = .public
+	private var hasUbiquityIdentityToken: Bool {
+		FileManager.default.ubiquityIdentityToken != nil
+	}
+
+	func setDatabase(type: DatabaseType) {
+		databaseType = type
+	}
+
+	func fetchItems(recordType: String, queryKey: String) async -> [CKRecord] {
+		guard hasUbiquityIdentityToken else { return [] }
+
 		let predicate = NSPredicate(value: true)
 		let query = CKQuery(recordType: recordType, predicate: predicate)
+		query.sortDescriptors = [NSSortDescriptor(key: queryKey, ascending: true)]
 
 		do {
 			let (matchResults, _) = try await database.records(matching: query)
@@ -37,43 +58,31 @@ final class CloudKitDataService: ObservableObject {
 				case .failure: return nil
 				}
 			}
-
-			await MainActor.run {
-				self.items = records
-			}
+			return records
 
 		} catch {
-			await MainActor.run {
-				self.errorMessage = error.localizedDescription
-			}
+			return []
 		}
 	}
 
-	func saveItem(_ record: CKRecord, completion: ((Result<CKRecord, Error>) -> Void)? = nil) {
-		database.save(record) { [weak self] savedRecord, error in
-			DispatchQueue.main.async {
-				if let error = error {
-					self?.errorMessage = error.localizedDescription
-					completion?(.failure(error))
-				} else if let saved = savedRecord {
-					self?.items.append(saved)
-					completion?(.success(saved))
-				}
-			}
+	func saveItem(_ record: CKRecord) async -> Result<CKRecord, Error> {
+		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
+		do {
+			let record = try await database.save(record)
+			return .success(record)
+		} catch {
+			return .failure(CloudKitError.likesError)
 		}
 	}
 
-	func deleteItem(_ record: CKRecord) {
-		database.delete(withRecordID: record.recordID) { [weak self] recordID, error in
-			DispatchQueue.main.async {
-				guard let self = self else { return }
+	func deleteItem(_ record: CKRecord) async -> Result<CKRecord.ID, Error> {
+		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
 
-				if let error = error {
-					self.errorMessage = error.localizedDescription
-				} else if let id = recordID {
-					self.items.removeAll { $0.recordID == id }
-				}
-			}
+		do {
+			let recordID = try await database.deleteRecord(withID: record.recordID)
+			return .success(recordID)
+		} catch {
+			return .failure(CloudKitError.likesError)
 		}
 	}
 }

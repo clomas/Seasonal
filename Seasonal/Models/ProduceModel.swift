@@ -8,13 +8,14 @@
 
 import Foundation
 
-struct Produce {
+struct Produce: Identifiable {
 
 	var produce: ProduceModel
 
-	init(produce: ProduceModel) {
-		self.produce = produce
-	}
+//	init(produce: ProduceModel) {
+//		self.produce = produce
+//	}
+
 	var id: Int {
 		produce.id
 	}
@@ -42,7 +43,7 @@ struct Produce {
 	}
 }
 
-struct ProduceModel {
+struct ProduceModel: Identifiable {
     let id: Int
     let name: String
     let category: ViewDisplayed.ProduceCategory

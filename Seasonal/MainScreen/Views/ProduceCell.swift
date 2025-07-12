@@ -12,40 +12,41 @@ struct ProduceCell: View {
 
 	private let dateHandler: DateHandler = DateHandler()
 
-	let produce: Produce = .init(produce: .init(id: 1, name: "apple", category: .fruit, imageName: "apple", description: "", months: [], seasons: [], liked: true))
+	var produce: ProduceModel = .init(id: 1, name: "Apples Apples Apples Apples Apples", category: .fruit, imageName: "Apples", description: "", months: [], seasons: [], liked: false)
 
-    var body: some View {
-		HStack {
-			Image(systemName: produce.imageName)
-
-			VStack(alignment: .leading) {
-				Text("Apples")
-				HStack {
-					ForEach(Month.allCases, id: \.self) { month in
-						ZStack {
-							if month == dateHandler.findMonthAndSeason().month {
-								Circle()
-									.fill(Colour.inSeason)
-									.frame(width: 30, height: 30)
-
-								Text(month.firstLetter)
-									.foregroundStyle(.white)
-									.padding(4)
+	var body: some View {
+		GeometryReader { geometry in
+			if #available(iOS 26.0, *) {
+				VStack(spacing: 0) {
+					HStack {
+						Image(produce.imageName)
+						Spacer()
+						Button(action: {
+								//							produce.liked = !produce.liked
+						}) {
+							if produce.liked {
+								GradientHeartView()
 							} else {
-								Text(month.firstLetter)
-									.padding(4)
+								EmptyHeartView()
 							}
 						}
+						.padding(.trailing, 10)
 					}
+					.overlay(
+						Text("Apples")
+							.font(.headline)
+							.frame(width: geometry.size.width)
+							.multilineTextAlignment(.center)
+					)
+					MonthsInSeasonCapsuleView()
 				}
-			}
-			Button() {
-
+				.listRowSeparator(.hidden)
+//				.frame(height: 60)
 			}
 		}
-    }
+	}
 }
 
 #Preview {
-    ProduceCell()
+	ProduceCell()
 }

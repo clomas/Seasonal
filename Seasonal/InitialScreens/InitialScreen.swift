@@ -75,9 +75,10 @@ struct InitialScreen: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color(.welcomeBackground))
-		.animation(.easeInOut(duration: 1.2), value: coordinator.state)
+		.animation(.easeInOut(duration: Constants.animationDuration), value: coordinator.state)
 	}
 }
+
 struct GlassButton: View {
 
 	let label: String
@@ -140,11 +141,3 @@ extension AnyTransition {
 		InitialScreen()
 	}
 }
-
-#if DEBUG
-//extension AppCoordinator {
-//	static func preview() -> AppCoordinator {
-//		AppCoordinator(window: UIWindow())
-//	}
-//}
-#endif

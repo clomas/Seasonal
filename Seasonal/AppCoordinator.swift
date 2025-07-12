@@ -37,18 +37,18 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 	private let window: UIWindow
 	private let navigationController: UINavigationController = UINavigationController()
 
+	@Published var state: AppCoordinatorState = .initial
+	@Published var produceData: [ProduceModel]?
+
 	private(set) var childCoordinators: [Coordinator] = []
 
 	private var currentLocation: StateLocation = .noState
-	private var produceData: [ProduceModel]?
 	private var isFirstRun: Bool {
 		UserDefaults.isFirstLaunch()
 	}
 
 	private var networkService: NetworkService?
 	private var locationManager: LocationManager?
-
-	@Published var state: AppCoordinatorState = .initial
 
 	init(window: UIWindow) {
 		self.window = window

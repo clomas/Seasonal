@@ -93,4 +93,6 @@ struct Constants {
 		StateLocation.victoria.fullName.capitalized,
 		StateLocation.tasmania.fullName.capitalized
 	]
+
+	static let animationDuration: TimeInterval = 1.2
 }

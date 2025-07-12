@@ -9,12 +9,34 @@
 import SwiftUI
 
 struct MainTabScreen: View {
+
+	enum ProduceFilter {
+		case all
+		case liked
+		case season(Season) // or month(Int)
+	}
+
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@State private var selectedTab = 0
 	@State private var showErrorSheet = false
 
 	@State private var showAlert: Bool = false
+
+	@State private var selectedFilter: ProduceFilter = .all
+
+	var filteredProduce: [ProduceModel] {
+		guard let produce = appCoordinator.produceData else { return [] }
+
+		return switch selectedFilter {
+		case .all:
+			produce
+		case .liked:
+			produce.filter { $0.liked }
+		case .season(let season):
+			produce.filter { $0.seasons.contains(season) }
+		}
+	}
 
 	var alertStrings: (title: String, message: String) {
 		switch appCoordinator.state {
@@ -28,27 +50,26 @@ struct MainTabScreen: View {
 	}
 
 	var body: some View {
-//		switch appCoordinator.state {
-//		case .dataIsReady:
-//			ZStack {}
-//		case .networkFailed:
-//			ZStack {}
-//		case .locationNotFound:
-//			ZStack {}
-//		case .initial:
-//			ZStack {}
-//		}
 		ZStack {
 			TabView(selection: $selectedTab) {
-				ForEach(0..<3) { index in
-					Text("Tab \(index + 1)")
-						.tabItem {
-							Label("Tab \(index + 1)", systemImage: "square")
+				ForEach(0..<3, id: \.self) { index in
+						// Use a ZStack to avoid vertical compression
+					ZStack {
+						Color(.systemBackground) // fix background glitches
+
+						List(appCoordinator.produceData ?? [], id: \.id) { item in
+							ProduceCell(produce: item)
+//								.frame(height: .infinity)
 						}
-						.tag(index)
+						.listStyle(.plain)
+					}
+					.edgesIgnoringSafeArea(.bottom)
+					.tabItem {
+						Label("Tab \(index + 1)", systemImage: "square")
+					}
+					.tag(index)
 				}
 			}
-			.padding(.trailing, 80)
 
 			// Floating Search Button
 			VStack {
@@ -81,7 +102,6 @@ struct MainTabScreen: View {
 		.sheet(isPresented: $showErrorSheet) {
 			SearchView()
 		}
-
 	}
 }
 
@@ -98,5 +118,44 @@ struct SearchView: View {
 }
 
 #Preview {
+	lazy var coord: AppCoordinator = {
+		let coord = AppCoordinator(window: UIWindow())
+		coord.state = .locationNotFound
+		coord.produceData = [
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+		]
+		return coord
+	}()
+
 	MainTabScreen()
+		.environmentObject(coord)
 }

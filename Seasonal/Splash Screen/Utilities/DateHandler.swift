@@ -10,6 +10,10 @@ import Foundation
 
 struct DateHandler {
 
+	var currentMonth: Month {
+		findMonthAndSeason().month
+	}
+
 	func findMonthAndSeasonOld() -> (month: MonthOld, season: Season) {
 		// find the current month and store the index
 		let currentPageDate: [String] = Calendar.current.shortStandaloneMonthSymbols
@@ -68,9 +72,6 @@ struct DateHandler {
 
 		case .september, .october, .november:
 			return (month, .spring)
-
-		default:
-			return (Month.december, .summer)
 		}
 	}
 }

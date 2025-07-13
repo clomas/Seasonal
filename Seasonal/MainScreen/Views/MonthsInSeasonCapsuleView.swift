@@ -72,12 +72,12 @@ struct MonthRangeOverlay: View {
 				.overlay(
 					Capsule()
 						.stroke(Colour.inSeason.opacity(0.5), lineWidth: 1)
-						.glassEffect(.regular)
+//						.glassEffect(.regular)
 				)
 
 				.frame(width: overlayWidth - offset, height: 30)
 				.offset(x: xOffset)
-				.shadow(radius: 2)
+//				.shadow(radius: 20)
 
 		} else {
 			return Capsule()
@@ -88,7 +88,7 @@ struct MonthRangeOverlay: View {
 				)
 				.frame(width: overlayWidth - 4, height: 30)
 				.offset(x: xOffset)
-				.shadow(radius: 2)
+//				.shadow(radius: 20)
 		}
 	}
 }

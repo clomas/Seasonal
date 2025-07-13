@@ -9,44 +9,53 @@
 import SwiftUI
 
 struct ProduceCell: View {
-
-	private let dateHandler: DateHandler = DateHandler()
-
-	var produce: ProduceModel = .init(id: 1, name: "Apples Apples Apples Apples Apples", category: .fruit, imageName: "Apples", description: "", months: [], seasons: [], liked: false)
+	var produce: ProduceModel
 
 	var body: some View {
-		GeometryReader { geometry in
-			if #available(iOS 26.0, *) {
-				VStack(spacing: 0) {
+		ZStack {
+			Color(.systemBackground)
+			VStack(spacing: 12) {
+					// Row with image, centered title, heart
+				ZStack {
+						// Title centered across full width
+					Text(produce.name)
+						.font(.headline)
+						.multilineTextAlignment(.center)
+						.frame(maxWidth: .infinity)
+
+						// Row content: image and heart aligned
 					HStack {
 						Image(produce.imageName)
+							.resizable()
+							.scaledToFit()
+							.frame(width: 60, height: 60)
+							.padding(.leading, 4)
+
 						Spacer()
-						Button(action: {
-								//							produce.liked = !produce.liked
-						}) {
-							if produce.liked {
-								GradientHeartView()
-							} else {
-								EmptyHeartView()
-							}
+
+						Button(action: {}) {
+							if produce.liked { GradientHeartView() } else { EmptyHeartView() }
 						}
-						.padding(.trailing, 10)
+						.padding(.trailing, 16)
 					}
-					.overlay(
-						Text("Apples")
-							.font(.headline)
-							.frame(width: geometry.size.width)
-							.multilineTextAlignment(.center)
-					)
-					MonthsInSeasonCapsuleView()
 				}
-				.listRowSeparator(.hidden)
-//				.frame(height: 60)
+				MonthsInSeasonCapsuleView()
 			}
+//			.frame(minHeight: 5)
+//			.padding(.vertical, 8)
+			.background(Color(.systemBackground))
 		}
 	}
 }
-
 #Preview {
-	ProduceCell()
+	ProduceCell(produce: .init(
+		id: 1,
+		name: "Bananas",
+		category: .fruit,
+		imageName: "Bananas", // make sure this image exists!
+		description: "",
+		months: [.august],
+		seasons: [.spring],
+		liked: true
+	))
 }

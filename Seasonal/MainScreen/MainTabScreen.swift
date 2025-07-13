@@ -19,7 +19,7 @@ struct MainTabScreen: View {
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@State private var selectedTab = 0
-	@State private var showErrorSheet = false
+	@State private var isSearching = false
 
 	@State private var showAlert: Bool = false
 
@@ -59,10 +59,15 @@ struct MainTabScreen: View {
 
 						List(appCoordinator.produceData ?? [], id: \.id) { item in
 							ProduceCell(produce: item)
-//								.frame(height: .infinity)
+//								.listRowSeparator(.hidden)
+//								.listRowBackground(Color(.systemBackground))
+//							Text("Something really long long long long lon")
+								.listRowSeparator(.visible)
 						}
 						.listStyle(.plain)
+						.listRowInsets(.bottomPadding)
 					}
+//
 					.edgesIgnoringSafeArea(.bottom)
 					.tabItem {
 						Label("Tab \(index + 1)", systemImage: "square")
@@ -70,36 +75,16 @@ struct MainTabScreen: View {
 					.tag(index)
 				}
 			}
+//			.padding(.trailing, 85)
+			.padding(.bottom, isSearching ? 100 : 0)
 
-			// Floating Search Button
-			VStack {
-				Spacer()
-				HStack {
-					Spacer()
-
-					Button(action: {
-//						showSearch.toggle()
-						UIImpactFeedbackGenerator(style: .light).impactOccurred()
-					}) {
-						Image(systemName: "magnifyingglass")
-							.font(.system(size: 22, weight: .medium))
-							.foregroundStyle(.primary)
-							.padding(20)
-							.background(.ultraThinMaterial, in: Circle())
-							.shadow(radius: 4)
-					}
-					.padding(.bottom, 20)
-					.padding(.trailing, 24)
-					.accessibilityLabel("Search")
-				}
-			}
-			.ignoresSafeArea(edges: .bottom)
+			FloatingSearchButton(isSearching: $isSearching)
 		}
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
-		.sheet(isPresented: $showErrorSheet) {
+		.sheet(isPresented: $isSearching) {
 			SearchView()
 		}
 	}
@@ -122,6 +107,36 @@ struct SearchView: View {
 		let coord = AppCoordinator(window: UIWindow())
 		coord.state = .locationNotFound
 		coord.produceData = [
+			ProduceModel(
+				id: 0,
+				name: "Apples",
+				category: .fruit,
+				imageName: "Apples",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 1,
+				name: "Bananas",
+				category: .fruit,
+				imageName: "Bananas",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, .june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
 			ProduceModel(
 				id: 0,
 				name: "Apple",

@@ -15,6 +15,7 @@ struct EmptyHeartView: View {
 			.aspectRatio(contentMode: .fit)
 			.frame(width: 40, height: 60)
 			.foregroundColor(.black)
+			
 			//			.foregroundStyle(
 			//				LinearGradient(
 			//					colors: [Color.black, Color.red],

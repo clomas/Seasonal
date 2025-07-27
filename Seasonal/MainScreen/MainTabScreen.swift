@@ -1,14 +1,33 @@
-//
-//  MainTabScreen.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 30/6/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+struct ProduceList: View {
+	let produce: [ProduceModel]
+
+	var body: some View {
+		ZStack {
+			Color(.systemBackground)
+			List(produce, id: \.id) { item in
+				ProduceCell(produce: item)
+					.listRowSeparator(.visible)
+			}
+			.listStyle(.plain)
+			.listRowInsets(.bottomPadding)
+		}
+	}
+}
+	//
+	//  MainTabScreen.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 30/6/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import SwiftUI
 
 struct MainTabScreen: View {
+
+	enum Tabs: String, CaseIterable {
+		case favourites, months, seasons, categories, search
+	}
 
 	enum ProduceFilter {
 		case all
@@ -18,77 +37,103 @@ struct MainTabScreen: View {
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	@State private var selectedTab = 0
+	@State private var selectedTab: Tabs = .favourites // TODO: store previous?
+	// TODO: This is unfortunate an int is stored?
+	@State private var category: ViewDisplayed.ProduceCategory = .all
 	@State private var isSearching = false
-
+	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
 
-	@State private var selectedFilter: ProduceFilter = .all
-
 	var filteredProduce: [ProduceModel] {
-		guard let produce = appCoordinator.produceData else { return [] }
+		guard let produce: [ProduceModel] = appCoordinator.produceData else { return [] }
 
-		return switch selectedFilter {
-		case .all:
-			produce
-		case .liked:
+		return switch selectedTab {
+		case .categories:
+			produce.filter { $0.category == category }
+		case .favourites:
 			produce.filter { $0.liked }
-		case .season(let season):
-			produce.filter { $0.seasons.contains(season) }
-		}
-	}
-
-	var alertStrings: (title: String, message: String) {
-		switch appCoordinator.state {
-		case .networkFailed:
-			(title: "Network Error", message: "Unable to connect to the internet")
-		case .locationNotFound:
-			(title: "Undetermined Location", message: "Choose your location")
-		default:
-			(title: "Sorry", message: "Something went wrong")
+		case .months:
+			produce.filter {
+				$0.months.contains(MonthOld(rawValue: Calendar.current.component(.month, from: Date())) ?? .december)
+			}
+				//		case .all:
+				//			produce
+				//		case .liked:
+				//			produce.filter { $0.liked }
+				//		case .season(let season):
+				//			produce.filter { $0.seasons.contains(season) }
+		case .seasons:
+			produce.filter { $0.seasons.contains(.autumn) }
+		case .search:
+			produce.filter { searchString.contains($0.name) }
 		}
 	}
 
 	var body: some View {
 		ZStack {
-			TabView(selection: $selectedTab) {
-				ForEach(0..<3, id: \.self) { index in
-						// Use a ZStack to avoid vertical compression
-					ZStack {
-						Color(.systemBackground) // fix background glitches
+			if #available(iOS 18.0, *) {
+				TabView(selection: $selectedTab) {
+					Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites) {
+						ProduceList(produce: filteredProduce)
+					}
+					Tab("Months", systemImage: "calendar", value: MainTabScreen.Tabs.months) {
+						ProduceList(produce: filteredProduce)
+					}
+					Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons) {
+						ProduceList(produce: filteredProduce)
+					}
+					Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites) {
+						ZStack {
+							Color(.systemBackground)
 
-						List(appCoordinator.produceData ?? [], id: \.id) { item in
-							ProduceCell(produce: item)
-//								.listRowSeparator(.hidden)
-//								.listRowBackground(Color(.systemBackground))
-//							Text("Something really long long long long lon")
-								.listRowSeparator(.visible)
+							List(appCoordinator.produceData ?? [], id: \.id) { item in
+								ProduceCell(produce: item)
+									.listRowSeparator(.visible)
+							}
+							.listStyle(.plain)
+							.listRowInsets(.bottomPadding)
+								//						.padding(.leading, 100)
 						}
-						.listStyle(.plain)
-						.listRowInsets(.bottomPadding)
+						.edgesIgnoringSafeArea(.bottom)
 					}
-//
-					.edgesIgnoringSafeArea(.bottom)
-					.tabItem {
-						Label("Tab \(index + 1)", systemImage: "square")
+					Tab(value: .search, role: .search) {
+						NavigationStack {
+//							ProduceList(appCoordinator: _appCoordinator)
+//								.searchable(text: $searchString)
+						}
 					}
-					.tag(index)
 				}
+				// TODO: different colour here.
+				.tint(Colour.inSeason)
+			} else {
+					// TODO: ? Fallback on earlier versions
 			}
-//			.padding(.trailing, 85)
-			.padding(.bottom, isSearching ? 100 : 0)
-
+				// TODO: Whats going on here?
 			FloatingSearchButton(isSearching: $isSearching)
 		}
+
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
-		.sheet(isPresented: $isSearching) {
-			SearchView()
-		}
 	}
 }
+
+//struct ProduceList: View {
+//
+//	@EnvironmentObject var appCoordinator: AppCoordinator
+//
+//	var body: some View {
+//			//		ZStack {
+//			//			Color(.systemBackground)
+//		List(appCoordinator.produceData ?? [], id: \.id) { item in
+//			ProduceCell(produce: item)
+//				.listRowSeparator(.visible)
+//		}
+//		.listStyle(.plain)
+//		.listRowInsets(.bottomPadding)
+//	}
+//}
 
 struct SearchView: View {
 	var body: some View {
@@ -113,7 +158,7 @@ struct SearchView: View {
 				category: .fruit,
 				imageName: "Apples",
 				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
+				months: [.june, .september],
 				seasons: [.autumn, .spring],
 				liked: true
 			),

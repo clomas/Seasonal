@@ -8,10 +8,9 @@
 
 import Foundation
 
-@MainActor
-class ProduceDataService {
+struct ProduceDataService {
 
-	let cloudkitService = CloudKitDataService()
+	let cloudKitService = CloudKitDataService()
 
 	func updateLike(id: Int, liked: Bool) {
 		// Update in local database

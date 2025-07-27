@@ -15,21 +15,16 @@ struct ProduceCell: View {
 		ZStack {
 			Color(.systemBackground)
 			VStack(spacing: 12) {
-					// Row with image, centered title, heart
 				ZStack {
-						// Title centered across full width
 					Text(produce.name)
 						.font(.headline)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
-
-						// Row content: image and heart aligned
 					HStack {
 						Image(produce.imageName)
 							.resizable()
 							.scaledToFit()
 							.frame(width: 60, height: 60)
-							.padding(.leading, 4)
 
 						Spacer()
 
@@ -41,8 +36,6 @@ struct ProduceCell: View {
 				}
 				MonthsInSeasonCapsuleView()
 			}
-//			.frame(minHeight: 5)
-//			.padding(.vertical, 8)
 			.background(Color(.systemBackground))
 		}
 	}

@@ -9,12 +9,23 @@
 import SwiftUI
 
 struct InitialScreen: View {
-	@EnvironmentObject var coordinator: AppCoordinator
+	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@State private var selectedTab = 0
 	@State private var showErrorSheet = false
 
 	@State private var showAlert: Bool = false
+
+	private var alertStrings: (title: String, message: String) {
+		switch appCoordinator.state {
+		case .networkFailed:
+			(title: "Network Error", message: "Unable to connect to the internet")
+		case .locationNotFound:
+			(title: "Undetermined Location", message: "Choose your location")
+		default:
+			(title: "Sorry", message: "Something went wrong")
+		}
+	}
 
 	var body: some View {
 		VStack {
@@ -30,7 +41,7 @@ struct InitialScreen: View {
 			.frame(width: 150, height: 150)
 			.padding()
 
-			switch coordinator.state {
+			switch appCoordinator.state {
 			case .networkFailed:
 				VStack {
 					Text("Unable to connect to the internet")
@@ -52,7 +63,7 @@ struct InitialScreen: View {
 					ForEach(StateLocation.allCases, id: \.self) { state in
 						if state.fullName != StateLocation.noState.fullName {
 							GlassButton(label: state.fullName.capitalized) {
-								coordinator.updateChosenLocationUserDefaults(to:  state)
+								appCoordinator.updateChosenLocationUserDefaults(to:  state)
 							}
 							.padding(.horizontal, 20)
 							.padding(.vertical, 8)
@@ -75,7 +86,7 @@ struct InitialScreen: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color(.welcomeBackground))
-		.animation(.easeInOut(duration: Constants.animationDuration), value: coordinator.state)
+		.animation(.easeInOut(duration: Constants.animationDuration), value: appCoordinator.state)
 	}
 }
 

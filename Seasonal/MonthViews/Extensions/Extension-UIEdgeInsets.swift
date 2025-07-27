@@ -15,5 +15,5 @@ extension UIEdgeInsets {
 }
 
 extension EdgeInsets {
-	static let bottomPadding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 50, trailing: 0)
+	static let bottomPadding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 150, trailing: 0)
 }

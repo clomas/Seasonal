@@ -23,9 +23,6 @@ actor CloudKitDataService: ObservableObject {
 		case `public`
 	}
 
-//	@Published var items: [CKRecord] = []
-//	@Published var isLoading = false
-
 	private let container: CKContainer = .default()
 	private var database: CKDatabase {
 		databaseType == .private

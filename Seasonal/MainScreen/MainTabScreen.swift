@@ -1,18 +1,3 @@
-struct ProduceList: View {
-	let produce: [ProduceModel]
-
-	var body: some View {
-		ZStack {
-			Color(.systemBackground)
-			List(produce, id: \.id) { item in
-				ProduceCell(produce: item)
-					.listRowSeparator(.visible)
-			}
-			.listStyle(.plain)
-			.listRowInsets(.bottomPadding)
-		}
-	}
-}
 	//
 	//  MainTabScreen.swift
 	//  Seasonal
@@ -25,20 +10,43 @@ import SwiftUI
 
 struct MainTabScreen: View {
 
-	enum Tabs: String, CaseIterable {
-		case favourites, months, seasons, categories, search
-	}
+	enum Tabs: Hashable {
+		case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
+		case months(Month, category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
+		case seasons(Season, category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
+		case categories(ViewDisplayed.ProduceCategory)
+		case search(String = "")
 
-	enum ProduceFilter {
-		case all
-		case liked
-		case season(Season) // or month(Int)
+		var title: String {
+			switch self {
+			case .favourites:
+				return "Favourites"
+			case .months(let month, _, _):
+				return month.name
+			case .seasons(let season, _, _):
+				return season.name
+			case .categories(let category):
+				return categoryTitle(category)
+			case .search:
+				return "Search"
+			}
+		}
+
+		private func categoryTitle(_ category: ViewDisplayed.ProduceCategory) -> String {
+			switch category {
+			case .all: return "All"
+			case .fruit: return "Fruit"
+			case .vegetables: return "Vegetables"
+			case .herbs: return "Herbs"
+			case .cancelled: return "Cancelled"
+			}
+		}
 	}
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	@State private var selectedTab: Tabs = .favourites // TODO: store previous?
-	// TODO: This is unfortunate an int is stored?
+	@State private var selectedTab: Tabs = .favourites() // TODO: store previous?
+		// TODO: This is unfortunate an int is stored?
 	@State private var category: ViewDisplayed.ProduceCategory = .all
 	@State private var isSearching = false
 	@State private var searchString: String = ""
@@ -66,6 +74,9 @@ struct MainTabScreen: View {
 			produce.filter { $0.seasons.contains(.autumn) }
 		case .search:
 			produce.filter { searchString.contains($0.name) }
+		appCoordinator.produceData?.filtered(by: selectedTab, produce: appCoordinator.produceData ?? []) ?? []
+	}
+
 		}
 	}
 

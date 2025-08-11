@@ -46,4 +46,20 @@ enum Month: Int, CaseIterable {
 	var firstLetter: String {
 		"\(self)".first?.uppercased() ?? ""
 	}
+
+	var name: String {
+		String(describing: self).capitalized
+	}
+
+	func next() -> Month {
+		let all = Self.allCases
+		guard let index = all.firstIndex(of: self) else { return self }
+		return all[(index + 1) % all.count]
+	}
+
+	func previous() -> Month {
+		let all = Self.allCases
+		guard let index = all.firstIndex(of: self) else { return self }
+		return all[(index - 1 + all.count) % all.count]
+	}
 }

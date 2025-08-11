@@ -60,12 +60,12 @@ class ProduceMonthInfoViewCell: UITableViewCell {
                 uiView.image = image
             }
 
-            if produce.months.contains(MonthOld.asArray[monthIndex]) {
-                uiView.tintColor = UIColor.MonthIcon.inSeasonTint
-
-            } else {
-                uiView.tintColor = UIColor.MonthIcon.nonSeasonTint
-            }
+//            if produce.months.contains(Month.asArray[monthIndex]) {
+//                uiView.tintColor = UIColor.MonthIcon.inSeasonTint
+//
+//            } else {
+//                uiView.tintColor = UIColor.MonthIcon.nonSeasonTint
+//            }
             monthIndex += 1
         }
     }

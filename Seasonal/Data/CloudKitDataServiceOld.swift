@@ -74,7 +74,7 @@ class CloudKitDataServiceOld {
 			var imageName: String = Constants.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
             let description: String = ""
-			var months: [MonthOld] = [MonthOld]()
+			var months: [Month] = [Month]()
 			var seasons: [Season] = [Season]()
 			var liked: Bool = false
 
@@ -206,8 +206,8 @@ extension String {
     }
 
 	// Parse Months
-    func createMonthArray() -> [MonthOld] {
-		var months: [MonthOld] = [MonthOld]()
+    func createMonthArray() -> [Month] {
+		var months: [Month] = [Month]()
 		var searchStartIndex: String.Index = self.startIndex
 
         while searchStartIndex < self.endIndex,
@@ -217,7 +217,7 @@ extension String {
 			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
 			// add 1 here for infiniteCollectionView offset
-			if let month: MonthOld = MonthOld(rawValue: index + 1) {
+			if let month: Month = Month(rawValue: index + 1) {
 				months.append(month)
 			}
             searchStartIndex = range.upperBound

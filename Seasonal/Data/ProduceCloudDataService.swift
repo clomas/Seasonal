@@ -92,7 +92,7 @@ actor ProduceCloudDataService {
 			var imageName: String = Constants.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
 			let description: String = ""
-			var months: [MonthOld] = [MonthOld]()
+			var months: [Month] = [Month]()
 			var seasons: [Season] = [Season]()
 			var liked: Bool = false
 

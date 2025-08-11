@@ -12,10 +12,6 @@ struct Produce: Identifiable {
 
 	var produce: ProduceModel
 
-//	init(produce: ProduceModel) {
-//		self.produce = produce
-//	}
-
 	var id: Int {
 		produce.id
 	}
@@ -28,7 +24,7 @@ struct Produce: Identifiable {
 	var category: ViewDisplayed.ProduceCategory? {
 		produce.category
 	}
-	var months: [MonthOld] {
+	var months: [Month] {
 		produce.months
 	}
 	var seasons: [Season] {
@@ -49,7 +45,7 @@ struct ProduceModel: Identifiable {
     let category: ViewDisplayed.ProduceCategory
     let imageName: String
     let description: String // Not implemented yet
-    let months: [MonthOld]
+    let months: [Month]
     let seasons: [Season]
     var liked: Bool
 }
@@ -57,5 +53,33 @@ struct ProduceModel: Identifiable {
 extension ProduceModel {
 	var produceId: Int {
 		return id
+	}
+}
+
+extension Array where Element == ProduceModel {
+
+	func filtered(by selectedTab: MainTabScreen.Tabs, produce: [ProduceModel]) -> [ProduceModel] {
+		switch selectedTab {
+		case .favourites(let category, let search):
+			return produce
+				.filter { $0.liked && (category == .all || $0.category == category) }
+				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+
+		case .months(let month, let category, let search):
+			return produce
+				.filter { $0.months.contains(month) && (category == .all || $0.category == category) }
+				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+
+		case .seasons(let season, let category, let search):
+			return produce
+				.filter { $0.seasons.contains(season) && (category == .all || $0.category == category) }
+				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+
+		case .categories(let category):
+			return produce.filter { category == .all || $0.category == category }
+
+		case .search(let term):
+			return produce.filter { $0.name.localizedCaseInsensitiveContains(term) }
+		}
 	}
 }

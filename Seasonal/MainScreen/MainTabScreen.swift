@@ -45,106 +45,88 @@ struct MainTabScreen: View {
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	@State private var selectedTab: Tabs = .favourites() // TODO: store previous?
+	@State private var selectedTab: Tabs {
+		didSet {
+			print(selectedTab)
+		}
+	}// TODO: store previous?
 		// TODO: This is unfortunate an int is stored?
 	@State private var category: ViewDisplayed.ProduceCategory = .all
 	@State private var isSearching = false
 	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
 
-	var filteredProduce: [ProduceModel] {
-		guard let produce: [ProduceModel] = appCoordinator.produceData else { return [] }
-
-		return switch selectedTab {
-		case .categories:
-			produce.filter { $0.category == category }
-		case .favourites:
-			produce.filter { $0.liked }
-		case .months:
-			produce.filter {
-				$0.months.contains(MonthOld(rawValue: Calendar.current.component(.month, from: Date())) ?? .december)
-			}
-				//		case .all:
-				//			produce
-				//		case .liked:
-				//			produce.filter { $0.liked }
-				//		case .season(let season):
-				//			produce.filter { $0.seasons.contains(season) }
-		case .seasons:
-			produce.filter { $0.seasons.contains(.autumn) }
-		case .search:
-			produce.filter { searchString.contains($0.name) }
-		appCoordinator.produceData?.filtered(by: selectedTab, produce: appCoordinator.produceData ?? []) ?? []
+	private var produce: [ProduceModel] {
+		appCoordinator.produceData ?? []
 	}
 
+	var favourites: some View {
+		NavigationStack {
+			ProduceList(produce: produce)
+				.navigationTitle("Favourites")
 		}
+		.tabItem {
+			Label("Favourites", systemImage: "heart")
+		}
+		.tag(MainTabScreen.Tabs.favourites())
 	}
 
 	var body: some View {
 		ZStack {
-			if #available(iOS 18.0, *) {
-				TabView(selection: $selectedTab) {
-					Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites) {
-						ProduceList(produce: filteredProduce)
-					}
-					Tab("Months", systemImage: "calendar", value: MainTabScreen.Tabs.months) {
-						ProduceList(produce: filteredProduce)
-					}
-					Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons) {
-						ProduceList(produce: filteredProduce)
-					}
-					Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites) {
-						ZStack {
-							Color(.systemBackground)
 
-							List(appCoordinator.produceData ?? [], id: \.id) { item in
-								ProduceCell(produce: item)
-									.listRowSeparator(.visible)
-							}
-							.listStyle(.plain)
-							.listRowInsets(.bottomPadding)
-								//						.padding(.leading, 100)
-						}
-						.edgesIgnoringSafeArea(.bottom)
-					}
-					Tab(value: .search, role: .search) {
-						NavigationStack {
-//							ProduceList(appCoordinator: _appCoordinator)
-//								.searchable(text: $searchString)
-						}
+			TabView(selection: $selectedTab) {
+				Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites()) {
+					ProduceList(produce: produce)
+				}
+				Tab("Months", systemImage: "calendar", value: selectedTab) {
+					NavigationStack {
+						MonthsTabView(
+							produce: produce,
+							selectedTab: $selectedTab
+						)
 					}
 				}
-				// TODO: different colour here.
-				.tint(Colour.inSeason)
-			} else {
-					// TODO: ? Fallback on earlier versions
+				Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons(.autumn)) {
+					ProduceList(produce: produce)
+				}
+				Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites()) {
+					ZStack {
+						Color(.systemBackground)
+
+						List(appCoordinator.produceData ?? [], id: \.id) { item in
+							ProduceCell(produce: item)
+								.listRowSeparator(.visible)
+						}
+						.listStyle(.plain)
+						.listRowInsets(.bottomPadding)
+							//						.padding(.leading, 100)
+					}
+					.edgesIgnoringSafeArea(.bottom)
+				}
+				Tab(value: .search(), role: .search) {
+					NavigationStack {
+							//							ProduceList(appCoordinator: _appCoordinator)
+							//								.searchable(text: $searchString)
+					}
+				}
 			}
+				// TODO: different colour here.
+			.tint(Colour.inSeason)
 				// TODO: Whats going on here?
 			FloatingSearchButton(isSearching: $isSearching)
 		}
-
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
 	}
-}
 
-//struct ProduceList: View {
-//
-//	@EnvironmentObject var appCoordinator: AppCoordinator
-//
-//	var body: some View {
-//			//		ZStack {
-//			//			Color(.systemBackground)
-//		List(appCoordinator.produceData ?? [], id: \.id) { item in
-//			ProduceCell(produce: item)
-//				.listRowSeparator(.visible)
-//		}
-//		.listStyle(.plain)
-//		.listRowInsets(.bottomPadding)
-//	}
-//}
+	init() {
+		selectedTab = .favourites(category: .all)
+			//		UITabBar.appearance().backgroundColor = UIColor(Color.gray)
+		UITabBar.appearance().unselectedItemTintColor = .darkGray
+	}
+}
 
 struct SearchView: View {
 	var body: some View {

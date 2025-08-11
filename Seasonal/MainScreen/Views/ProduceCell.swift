@@ -1,10 +1,10 @@
-//
-//  ProduceCell.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 6/7/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+	//
+	//  ProduceCell.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 6/7/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import SwiftUI
 
@@ -14,7 +14,7 @@ struct ProduceCell: View {
 	var body: some View {
 		ZStack {
 			Color(.systemBackground)
-			VStack(spacing: 12) {
+			VStack(spacing: 6) {
 				ZStack {
 					Text(produce.name)
 						.font(.headline)
@@ -28,15 +28,19 @@ struct ProduceCell: View {
 
 						Spacer()
 
-						Button(action: {}) {
+						Button(action: {
+//							produce.liked = !produce.liked
+						}) {
 							if produce.liked { GradientHeartView() } else { EmptyHeartView() }
 						}
+						.animation(.bouncy, value: produce.liked)
 						.padding(.trailing, 16)
 					}
 				}
 				MonthsInSeasonCapsuleView()
 			}
-			.background(Color(.systemBackground))
+			.padding(.bottom, 4)
+			.background(Colour.background)
 		}
 	}
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct EmptyHeartView: View {
 	var body: some View {
-		Image(systemName: "heart")
+		Image.heart
 			.resizable()
 			.aspectRatio(contentMode: .fit)
 			.frame(width: 40, height: 60)

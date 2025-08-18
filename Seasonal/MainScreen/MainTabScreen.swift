@@ -10,39 +10,6 @@ import SwiftUI
 
 struct MainTabScreen: View {
 
-	enum Tabs: Hashable {
-		case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String)
-		case months(Month, category: ViewDisplayed.ProduceCategory = .all, search: String)
-		case seasons(Season, category: ViewDisplayed.ProduceCategory = .all, search: String)
-			//		case categories(ViewDisplayed.ProduceCategory)
-			//		case search(String = "")
-
-		var title: String {
-			switch self {
-			case .favourites:
-				"Favourites"
-			case .months(let month, _, _):
-				month.name
-			case .seasons(let season, _, _):
-				season.name
-					//			case .categories(let category):
-					//				return categoryTitle(category)
-					//			case .search:
-					//				return "Search"
-			}
-		}
-
-		private func categoryTitle(_ category: ViewDisplayed.ProduceCategory) -> String {
-			switch category {
-			case .all: "All"
-			case .fruit: "Fruit"
-			case .vegetables: "Vegetables"
-			case .herbs: "Herbs"
-			case .cancelled: "Cancelled"
-			}
-		}
-	}
-
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 		// selectedTab is now a computed binding to appCoordinator.viewContext
@@ -64,26 +31,26 @@ struct MainTabScreen: View {
 		.tabItem {
 			Label("Favourites", systemImage: "heart")
 		}
-		.tag(MainTabScreen.Tabs.favourites(category: .all, search: ""))
+		.tag(Tabs.favourites(category: .all, search: ""))
 	}
 
 	var body: some View {
 		ZStack {
 			TabView(selection: selectedTab) {
-				Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites(category: .all, search: "")) {
+				Tab("Favourites", systemImage: "heart", value: Tabs.favourites(category: .all, search: "")) {
 					ProduceList(produce: produce)
 				}
-				Tab("Months", systemImage: "calendar", value: selectedTab.wrappedValue) {
+				Tab("Months", systemImage: "calendar", value: Tabs.months(.thisMonth, category: .all, search: "")) {
 					NavigationStack {
 						MonthsTabView(produce: produce, selectedTab: $appCoordinator.viewContext)
 					}
 					.toolbarBackground(.visible, for: .navigationBar)
 					.toolbarBackground(Color.clear, for: .navigationBar)
 				}
-				Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons(.autumn, search: "")) {
+				Tab("Seasons", systemImage: "cloud.sun", value: Tabs.seasons(.autumn, search: "")) {
 					ProduceList(produce: produce)
 				}
-				Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites(category: .all, search: "")) {
+				Tab("Categories", systemImage: "slider.horizontal.2.square", value: Tabs.favourites(category: .all, search: "")) {
 					ZStack {
 						Color(.systemBackground)
 
@@ -100,6 +67,17 @@ struct MainTabScreen: View {
 							//							ProduceList(appCoordinator: _appCoordinator)
 							//								.searchable(text: $searchString)
 					}
+				}
+			}
+			.onChange(of: selectedTab.wrappedValue) { _, newValue in
+				if case .months = newValue {
+
+					// TODO: Handling here
+//					if case let .months(currentMonth, currentCategory, search) = appCoordinator.viewContext {
+//							// Already on months, do nothing
+//					} else {
+//						appCoordinator.viewContext = .months(.thisMonth, category: .all, search: "")
+//					}
 				}
 			}
 				// TODO: different colour here.

@@ -6,8 +6,7 @@
 //  Copyright © 2019 Clint Thomas. All rights reserved.
 //
 
-// Change this shit to camelcase?
-import Foundation
+import SwiftUI
 
 struct Constants {
 
@@ -95,4 +94,12 @@ struct Constants {
 	]
 
 	static let animationDuration: TimeInterval = 1.2
+}
+
+extension Image {
+	static let arrowLeft: Image = .init("arrow.left")
+	static let arrowRight: Image = .init("arrow.right")
+	static let heart: Image = .init("heart")
+	static let heartFill: Image = .init("heart.fill")
+	static let magnifyingGlass: Image = .init("magnifyingglass")
 }

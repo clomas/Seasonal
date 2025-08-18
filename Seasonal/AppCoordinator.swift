@@ -39,7 +39,7 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	@Published var state: AppCoordinatorState = .initial
 	@Published var produceData: [ProduceModel]?
-	@Published var viewContext: MainTabScreen.Tabs
+	@Published var viewContext: Tabs
 
 	private(set) var childCoordinators: [Coordinator] = []
 

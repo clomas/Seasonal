@@ -11,7 +11,7 @@ import SwiftUI
 struct MonthsTabView: View {
 
 	let produce: [ProduceModel]
-	@Binding var selectedTab: MainTabScreen.Tabs
+	@Binding var selectedTab: Tabs
 
 	private let middleOffset = Month.allCases.count
 	@State private var scrollPosition: Int = Month.allCases.count
@@ -45,7 +45,7 @@ struct MonthsTabView: View {
 				.ignoresSafeArea(edges: .bottom)
 				.onChange(of: selectedTab) { _, newValue in
 					if case let .months(month, _, _) = newValue {
-						let newIndex = getMonthIndex(month) + middleOffset
+						let newIndex = month.index + middleOffset
 						withAnimation(.easeInOut(duration: 0.3)) {
 							scrollPosition = newIndex
 						}
@@ -72,7 +72,7 @@ struct MonthsTabView: View {
 	}
 
 	private func monthCell(for month: Month, index: Int) -> some View {
-		ProduceList(produce: produce(for: month))
+		ProduceList(produce: produce.filtered(by: $selectedTab.wrappedValue))
 			.containerRelativeFrame(.horizontal)
 			.id(index)
 			.padding(.top, -100)
@@ -89,18 +89,6 @@ struct MonthsTabView: View {
 		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
 			handleInfiniteScroll(position: newPosition)
 		}
-	}
-
-	private func produce(for month: Month) -> [ProduceModel] {
-		if case let .months(_, category, search) = selectedTab {
-			produce.filtered(by: .months(month, category: category, search: search), produce: produce)
-		} else {
-			[]
-		}
-	}
-
-	private func getMonthIndex(_ month: Month) -> Int {
-		Month.allCases.firstIndex(of: month) ?? 0
 	}
 
 	private func updateCurrentMonth(from scrollPosition: Int) {
@@ -130,7 +118,7 @@ struct MonthsTabView: View {
 			ForEach(Month.allCases, id: \.self) { month in
 				Button(month.name) {
 					selectedTab = .months(month, category: .all, search: "") // TODO: track category here and search
-					let newIndex = getMonthIndex(month) + middleOffset
+					let newIndex = month.index + middleOffset
 					withAnimation(.easeInOut(duration: 0.3)) {
 						scrollPosition = newIndex
 					}
@@ -273,7 +261,7 @@ struct MonthsTabView: View {
 	}()
 
 	NavigationStack {
-		MonthsTabView(produce: coord.produceData ?? [], selectedTab: .constant(MainTabScreen.Tabs.months(.august, category: .all, search: "")))
+		MonthsTabView(produce: coord.produceData ?? [], selectedTab: .constant(Tabs.months(.august, category: .all, search: "")))
 			.environmentObject(coord)
 	}
 }

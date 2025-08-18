@@ -82,36 +82,6 @@
             endingLineNumber = "149"
             landmarkName = "internetStatusDidChange(status:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "B6DDD30B-0E67-4AAD-A886-A42C20A9385E - 4883db8a907e71e3"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Seasonal.AppCoordinator.internetStatusDidChange(status: Network.NWPath.Status) -&gt; ()"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/AppCoordinator.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "144"
-                  endingLineNumber = "144">
-               </Location>
-               <Location
-                  uuid = "B6DDD30B-0E67-4AAD-A886-A42C20A9385E - 4883db8a907e710e"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Seasonal.AppCoordinator.internetStatusDidChange(status: Network.NWPath.Status) -&gt; ()"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/AppCoordinator.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "149"
-                  endingLineNumber = "149">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -165,95 +135,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8FEA751F-B1D1-4CDF-BC21-2B37B8792F7D"
+            uuid = "1589A119-D4C8-4DE7-8FF1-CFBBB86B2E96"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/MainScreen/TabViews/MonthsTabToolbar.swift"
+            filePath = "Seasonal/MonthViews/ViewControllers/MainViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "23"
-            endingLineNumber = "23"
-            landmarkName = "body"
-            landmarkType = "24">
+            startingLineNumber = "63"
+            endingLineNumber = "63"
+            landmarkName = "reloadAndScrollToSelectedViewIndex()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "9A1DB554-E71F-4077-A44C-EA2D86E7292C"
+            uuid = "98C75F45-C6A7-4C64-8FF0-DFCF67DB6E62"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/MainScreen/TabViews/MonthsTabToolbar.swift"
+            filePath = "Seasonal/MonthViews/ViewControllers/MainViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "21"
-            endingLineNumber = "21"
-            landmarkName = "body"
-            landmarkType = "24">
-            <Locations>
-               <Location
-                  uuid = "9A1DB554-E71F-4077-A44C-EA2D86E7292C - 6a88a66216611af6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 () -&gt; SwiftUI.Button&lt;SwiftUI.Image&gt; in Seasonal.MonthsTabToolbar.body.getter : some"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/MainScreen/TabViews/MonthsTabToolbar.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21">
-               </Location>
-               <Location
-                  uuid = "9A1DB554-E71F-4077-A44C-EA2D86E7292C - 6a88a66216611af6"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 () -&gt; SwiftUI.Button&lt;SwiftUI.Image&gt; in Seasonal.MonthsTabToolbar.body.getter : some"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/MainScreen/TabViews/MonthsTabToolbar.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "21"
-                  endingLineNumber = "21">
-               </Location>
-            </Locations>
+            startingLineNumber = "102"
+            endingLineNumber = "102"
+            landmarkName = "viewDidLayoutSubviews()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "37838003-E184-4D0F-AB0C-515EB2CDE6C1"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/MainScreen/MainTabScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "982B73CF-6477-493F-8E14-F814B5069165"
+            uuid = "51DD6586-7282-42FF-AA38-CC840C717809"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Seasonal/MainScreen/TabViews/MonthsTabView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "onAppear()"
-            landmarkType = "7">
+            startingLineNumber = "50"
+            endingLineNumber = "50"
+            landmarkName = "body"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

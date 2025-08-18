@@ -64,6 +64,10 @@ enum Month: Int, CaseIterable {
 		guard let index = all.firstIndex(of: self) else { return self }
 		return all[(index - 1 + all.count) % all.count]
 	}
+
+	var index: Int {
+		Month.allCases.firstIndex(of: self) ?? 0
+	}
 }
 
 extension Calendar {

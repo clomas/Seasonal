@@ -66,6 +66,7 @@
 		27E6E69122D1A3790018DCF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */; };
 		27E989AE2E518B94006C7739 /* MonthsTabToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989AD2E518B89006C7739 /* MonthsTabToolbar.swift */; };
 		27E989B12E519407006C7739 /* Extension-UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */; };
+		27E989B32E52E43B006C7739 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B22E52E431006C7739 /* Tabs.swift */; };
 		27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ECB41522EF19090097A8D4 /* InfoViewController.swift */; };
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
@@ -193,6 +194,7 @@
 		27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		27E989AD2E518B89006C7739 /* MonthsTabToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthsTabToolbar.swift; sourceTree = "<group>"; };
 		27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIWindow.swift"; sourceTree = "<group>"; };
+		27E989B22E52E431006C7739 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
 		27ECB41522EF19090097A8D4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		27EFF3C4215A5C1500CFB31D /* Seasonal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seasonal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -367,6 +369,7 @@
 		272D84DF266B7355002CEE1A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				27E989B22E52E431006C7739 /* Tabs.swift */,
 				278611B925687DF500E8021B /* ProduceModel.swift */,
 				2749C9F926304B58009E19A5 /* MenuBarModel.swift */,
 				274D475F25FA08E900B60BD3 /* MenuBarCellModel.swift */,
@@ -797,6 +800,7 @@
 				27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */,
 				275EBD3C25F769D500F6D3F4 /* MenuBarCollectionView.swift in Sources */,
 				27FCA54225DB952E00AD2020 /* WelcomeViewModel.swift in Sources */,
+				27E989B32E52E43B006C7739 /* Tabs.swift in Sources */,
 				272C7A232E23788C00661BAA /* FloatingSearchButton.swift in Sources */,
 				27216E1821E800100042B4F4 /* WelcomeViewController.swift in Sources */,
 				2718E2D5225F809200B802F9 /* Constants.swift in Sources */,

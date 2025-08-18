@@ -58,20 +58,20 @@ extension ProduceModel {
 
 extension Array where Element == ProduceModel {
 
-	func filtered(by selectedTab: MainTabScreen.Tabs, produce: [ProduceModel]) -> [ProduceModel] {
+	func filtered(by selectedTab: Tabs) -> [ProduceModel] {
 		switch selectedTab {
 		case .favourites(let category, let search):
-			return produce
+			self
 				.filter { $0.liked && (category == .all || $0.category == category) }
 				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
 		case .months(let month, let category, let search):
-			return produce
+			self
 				.filter { $0.months.contains(month) && (category == .all || $0.category == category) }
 				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
 		case .seasons(let season, let category, let search):
-			return produce
+			self
 				.filter { $0.seasons.contains(season) && (category == .all || $0.category == category) }
 				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 

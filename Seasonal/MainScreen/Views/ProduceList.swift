@@ -13,7 +13,7 @@ struct ProduceList: View {
 	
 	var body: some View {
 		ZStack {
-			Colour.background.ignoresSafeArea()
+			Colour.background.ignoresSafeArea() // TODO: Handle empty state
 			List(produce, id: \.id) { item in
 				ProduceCell(produce: item)
 					.listRowSeparator(.visible)

@@ -22,20 +22,12 @@ struct FloatingSearchButton: View {
 					isSearching.toggle()
 					UIImpactFeedbackGenerator(style: .light).impactOccurred()
 				}) {
-					if #available(iOS 26.0, *) {
-						Image(systemName: "magnifyingglass")
-							.font(.system(size: 22, weight: .medium))
-							.foregroundStyle(.primary)
-							.padding(16)
-							.background(.ultraThinMaterial, in: Circle())
-							.glassEffect(.regular)
-					} else {
-						Image(systemName: "magnifyingglass")
-							.font(.system(size: 22, weight: .medium))
-							.foregroundStyle(.primary)
-							.padding(16)
-							.background(.ultraThinMaterial, in: Circle())
-					}
+					Image.magnifyingGlass
+						.font(.system(size: 22, weight: .medium))
+						.foregroundStyle(.primary)
+						.padding(16)
+						.background(.ultraThinMaterial, in: Circle())
+						.glassEffect(.regular)
 				}
 				.foregroundStyle(.black)
 				.padding(.bottom, 24)

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct GradientHeartView: View {
 	var body: some View {
-		Image(systemName: "heart.fill")
+		Image.heartFill
 			.resizable()
 			.aspectRatio(contentMode: .fit)
 			.frame(width: 35, height: 40)

@@ -139,7 +139,7 @@ extension AnyTransition {
 
 #Preview {
 	lazy var coord: AppCoordinator = {
-		let coord = AppCoordinator(window: UIWindow())
+		let coord = AppCoordinator(window: .create())
 		coord.state = .locationNotFound
 		return coord
 	}()

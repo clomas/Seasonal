@@ -34,11 +34,12 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
 
-	private let window: UIWindow
+	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
 
 	@Published var state: AppCoordinatorState = .initial
 	@Published var produceData: [ProduceModel]?
+	@Published var viewContext: MainTabScreen.Tabs
 
 	private(set) var childCoordinators: [Coordinator] = []
 
@@ -50,31 +51,35 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 	private var networkService: NetworkService?
 	private var locationManager: LocationManager?
 
-	init(window: UIWindow) {
+	init(window: UIWindow?) {
 		self.window = window
+		// TODO: Usr default here
+		self.viewContext = .favourites(category: .all, search: "")
 
 #if DEBUG
 		if CommandLine.arguments.contains("enable-testing") {
-				// if testing UI disable animations.
+			// if testing UI disable animations.
 			UIView.setAnimationsEnabled(false)
 		}
 #endif
 	}
 
+	// MARK: App initialisation
+
 	func start() {
 		if AppLaunchMode.useSwiftUI {
 				// SwiftUI root
 			let swiftUIView = RootView()
-			window.rootViewController = UIHostingController(rootView: swiftUIView.environmentObject(self))
+			window?.rootViewController = UIHostingController(rootView: swiftUIView.environmentObject(self))
 		} else {
 				// UIKit root
 			let legacyRootVC = navigationController
-			window.rootViewController = UINavigationController(rootViewController: legacyRootVC)
+			window?.rootViewController = UINavigationController(rootViewController: legacyRootVC)
 		}
 
 		networkService = NetworkService(delegate: self)
 
-		window.makeKeyAndVisible()
+		window?.makeKeyAndVisible()
 	}
 
 	func tryDetectLocationAgain() {
@@ -155,10 +160,10 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	private func getDataFromCloudKit(for location: StateLocation) {
 		getData(for: location, dataFetched: { [weak self] (produce: [ProduceModel]) in
-			self?.produceData = produce
 
 			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
 				self?.state = .dataIsReady
+				self?.produceData = produce
 			})
 		})
 	}
@@ -171,5 +176,41 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 				self?.state = .networkFailed
 			}
 		})
+	}
+
+	// MARK: Context update
+
+	func updateSearch(_ search: String) {
+		switch viewContext {
+		case .months(let month, let category, _):
+			viewContext = .months(month, category: category, search: search)
+		case .seasons(let season, let category, _):
+			viewContext = .seasons(season, category: category, search: search)
+		case .favourites(let category, _):
+			viewContext = .favourites(category: category, search: search)
+		}
+	}
+
+	func updateCategory(_ category: ViewDisplayed.ProduceCategory) {
+		switch viewContext {
+		case .months(let month, _, let search):
+			viewContext = .months(month, category: category, search: search)
+		case .seasons(let season, _, let search):
+			viewContext = .seasons(season, category: category, search: search)
+		case .favourites(_, let search):
+			viewContext = .favourites(category: category, search: search)
+		}
+	}
+
+	func updateMonth(_ month: Month) {
+		if case let .months(_, category, search) = viewContext {
+			viewContext = .months(month, category: category, search: search)
+		}
+	}
+
+	func updateSeason(_ season: Season) {
+		if case let .seasons(_, category, search) = viewContext {
+			viewContext = .seasons(season, category: category, search: search)
+		}
 	}
 }

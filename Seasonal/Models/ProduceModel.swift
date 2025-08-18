@@ -63,23 +63,23 @@ extension Array where Element == ProduceModel {
 		case .favourites(let category, let search):
 			return produce
 				.filter { $0.liked && (category == .all || $0.category == category) }
-				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
 		case .months(let month, let category, let search):
 			return produce
 				.filter { $0.months.contains(month) && (category == .all || $0.category == category) }
-				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
 		case .seasons(let season, let category, let search):
 			return produce
 				.filter { $0.seasons.contains(season) && (category == .all || $0.category == category) }
-				.filter { search == nil || $0.name.localizedCaseInsensitiveContains(search!) }
+				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
-		case .categories(let category):
-			return produce.filter { category == .all || $0.category == category }
+//		case .categories(let category):
+//			return produce.filter { category == .all || $0.category == category }
 
-		case .search(let term):
-			return produce.filter { $0.name.localizedCaseInsensitiveContains(term) }
+//		case .search(let term):
+//			return produce.filter { $0.name.localizedCaseInsensitiveContains(term) }
 		}
 	}
 }

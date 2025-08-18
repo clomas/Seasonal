@@ -11,158 +11,117 @@ import SwiftUI
 struct MonthsTabView: View {
 
 	let produce: [ProduceModel]
-
-	private let category: ViewDisplayed.ProduceCategory = .all
-	private let middleOffset = Month.allCases.count
-
 	@Binding var selectedTab: MainTabScreen.Tabs
-	@State private var currentMonth: Month = .august // or from selectedTab
-	@State private var scrollTarget: Int = Month.allCases.count
 
+	private let middleOffset = Month.allCases.count
+	@State private var scrollPosition: Int = Month.allCases.count
+
+	// TODO:  Create 3 copies of months for infinite scrolling
 	private var infiniteMonths: [Month] {
 		Array(repeating: Month.allCases, count: 3).flatMap { $0 }
 	}
 
-	private func produce(for month: Month) -> [ProduceModel] {
-		produce.filtered(by: .months(month, category: category), produce: produce)
-	}
-
-	var body2: some View {
-		ScrollViewReader { proxy in
-			ScrollView(.horizontal, showsIndicators: false) {
+	private var monthsScrollView: some View {
+		GeometryReader { geo in
+			ScrollView(.horizontal) {
 				LazyHStack(spacing: 0) {
-					ForEach(infiniteMonths.indices, id: \.self) { index in
-						let month = infiniteMonths[index]
-						ProduceList(produce: produce(for: month))
-//							.frame(width: UIScreen.main.bounds.width)
-							.tag(index)
-							.navigationTitle(month.name)
+					ForEach(Array(infiniteMonths.enumerated()), id: \.offset) { index, month in
+						monthCell(for: month, index: index)
 					}
 				}
+				.scrollTargetLayout()
 			}
-			.content.offset(x: 0) // fixes bounce
-			.onAppear {
-				proxy.scrollTo(scrollTarget, anchor: .center)
-			}
-			.gesture(
-				DragGesture().onEnded { value in
-					let direction = value.translation.width < 0 ? 1 : -1
-					scrollTarget += direction
-					withAnimation {
-						proxy.scrollTo(scrollTarget, anchor: .center)
-					}
-					let realIndex = scrollTarget % Month.allCases.count
-					let newMonth = Month.allCases[realIndex]
-					currentMonth = newMonth
-					selectedTab = .months(newMonth, category: category)
-				}
-			)
-		}
-		.toolbar {
-			ToolbarItem(placement: .navigationBarLeading) {
-				Button {
-					scrollTarget += -1
-				} label: {
-					Image(systemName: "chevron.left")
-				}
-			}
-			ToolbarItemGroup(placement: .navigationBarTrailing) {
-				monthMenu()
-				Button {
-					scrollTarget += 1
-				} label: {
-					Image(systemName: "chevron.right")
-				}
-			}
+			.scrollTargetBehavior(.paging)
+			.scrollPosition(id: .init(
+				get: { scrollPosition },
+				set: { updateScrollPosition(to: $0) }
+			))
 		}
 	}
-
-	var body3: some View {
-		ZStack {
-			ForEach(Month.allCases, id: \.self) { month in
-				ProduceList(produce: produce(for: currentMonth))
-					.tag(currentMonth)
-					.navigationTitle(currentMonth.name)
-					.ignoresSafeArea(edges: .bottom) // allow scroll to extend
-			}
-		}
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.tabViewStyle(.page(indexDisplayMode: .never))
-		.animation(.easeInOut, value: currentMonth)
-		.onChange(of: currentMonth) { _, newMonth in
-			selectedTab = .months(newMonth, category: category)
-		}
-		.onAppear {
-			if case let .months(month, _, _) = selectedTab {
-				currentMonth = month
-			}
-		}
-		.toolbar {
-			ToolbarItem(placement: .navigationBarLeading) {
-				Button {
-					currentMonth = currentMonth.previous()
-				} label: {
-					Image(systemName: "arrow.left")
-				}
-			}
-			ToolbarItemGroup(placement: .navigationBarTrailing) {
-				monthMenu()
-				Button {
-					currentMonth = currentMonth.next()
-				} label: {
-					Image(systemName: "arrow.right")
-				}
-				.glassEffect(.regular)
-			}
-		}
-	}
-
-//	init(produce: [ProduceModel], selectedTab: MainTabScreen.Tabs) {
-//		self.produce = produce
-//		self.selectedTab = selectedTab
-//		UITabBar.appearance().backgroundColor = .clear
-////		UITabBar.appearance().unselectedItemTintColor = .darkGray
-//	}
 
 	var body: some View {
-		VStack {
-			TabView(selection: $currentMonth) {
-				ForEach(Month.allCases, id: \.self) { month in
-					ProduceList(produce: produce(for: month))
-						.tag(month)
-						.navigationTitle(month.name)
-						.frame(maxWidth: .infinity, maxHeight: .infinity)
+		NavigationView {
+			monthsScrollView
+				.ignoresSafeArea(edges: .bottom)
+				.onChange(of: selectedTab) { _, newValue in
+					if case let .months(month, _, _) = newValue {
+						let newIndex = getMonthIndex(month) + middleOffset
+						withAnimation(.easeInOut(duration: 0.3)) {
+							scrollPosition = newIndex
+						}
+					}
 				}
-			}
-			.tabViewStyle(.page(indexDisplayMode: .never))
-			.ignoresSafeArea(edges: .bottom)
-			.animation(.easeInOut, value: currentMonth)
-			.onChange(of: currentMonth) { _, newMonth in
-				selectedTab = .months(newMonth, category: category)
-			}
-			.onAppear {
-				if case let .months(month, _, _) = selectedTab {
-					currentMonth = month
+				.onAppear {
+					onAppear()
 				}
-			}
+				.toolbar {
+					MonthsTabToolbar(
+						scrollPosition: $scrollPosition,
+						middleOffset: middleOffset,
+						selectedTab: $selectedTab
+					)
+				}
+				.toolbarBackground(.visible, for: .navigationBar)
+				.toolbarBackground(Color.clear, for: .navigationBar)
 		}
-		.toolbar {
-			ToolbarItem(placement: .navigationBarLeading) {
-				Button {
-					currentMonth = currentMonth.previous()
-				} label: {
-					Image(systemName: "arrow.left")
-				}
-			}
-			ToolbarItemGroup(placement: .navigationBarTrailing) {
-				monthMenu()
-				Button {
-					currentMonth = currentMonth.next()
-				} label: {
-					Image(systemName: "arrow.right")
-				}
-				.glassEffect(.regular)
-			}
+	}
+
+	// TODO: extract this into a helper
+	private func onAppear() {
+		selectedTab = .months(Month.thisMonth, category: .all, search: "")
+	}
+
+	private func monthCell(for month: Month, index: Int) -> some View {
+		ProduceList(produce: produce(for: month))
+			.containerRelativeFrame(.horizontal)
+			.id(index)
+			.padding(.top, -100)
+	}
+
+	private func updateScrollPosition(to newPosition: Int?) {
+		guard let newPosition: Int else {
+			return
+		}
+		scrollPosition = newPosition
+		updateCurrentMonth(from: newPosition)
+
+		// Add a small delay to avoid conflicts with scroll repositioning
+		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+			handleInfiniteScroll(position: newPosition)
+		}
+	}
+
+	private func produce(for month: Month) -> [ProduceModel] {
+		if case let .months(_, category, search) = selectedTab {
+			produce.filtered(by: .months(month, category: category, search: search), produce: produce)
+		} else {
+			[]
+		}
+	}
+
+	private func getMonthIndex(_ month: Month) -> Int {
+		Month.allCases.firstIndex(of: month) ?? 0
+	}
+
+	private func updateCurrentMonth(from scrollPosition: Int) {
+		let monthIndex = scrollPosition % Month.allCases.count
+		let newMonth = Month.allCases[monthIndex]
+
+		if case let .months(_, currentCategory, search) = selectedTab {
+			selectedTab = .months(newMonth, category: currentCategory, search: search)
+		}
+	}
+
+	private func handleInfiniteScroll(position: Int) {
+		let totalMonths = Month.allCases.count
+
+		// If we're at the first set (positions 0-11), jump to middle set
+		if position < totalMonths {
+			scrollPosition = position + totalMonths
+		}
+		// If we're at the last set (positions 24-35), jump to middle set
+		else if position >= totalMonths * 2 {
+			scrollPosition = position - totalMonths
 		}
 	}
 
@@ -170,13 +129,151 @@ struct MonthsTabView: View {
 		Menu {
 			ForEach(Month.allCases, id: \.self) { month in
 				Button(month.name) {
-					currentMonth = month
-					selectedTab = .months(month, category: category)
+					selectedTab = .months(month, category: .all, search: "") // TODO: track category here and search
+					let newIndex = getMonthIndex(month) + middleOffset
+					withAnimation(.easeInOut(duration: 0.3)) {
+						scrollPosition = newIndex
+					}
 				}
 			}
 		} label: {
 			Label("Month", systemImage: "calendar")
 				.glassEffect(.regular)
 		}
+	}
+}
+
+#Preview {
+	lazy var coord: AppCoordinator = {
+		let coord = AppCoordinator(window: .create())
+		coord.state = .locationNotFound
+		coord.produceData = [
+		ProduceModel(
+		id: 0,
+		name: "Apples",
+		category: .fruit,
+		imageName: "Apples",
+		description: "",
+		months: [.march],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 1,
+		name: "Bananas",
+		category: .fruit,
+		imageName: "Bananas",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september, .february],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 2,
+		name: "Carrots",
+		category: .vegetables,
+		imageName: "Carrots",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 3,
+		name: "Broccoli",
+		category: .vegetables,
+		imageName: "Broccoli",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september, .may],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 4,
+		name: "Spinach",
+		category: .vegetables,
+		imageName: "Spinach",
+		description: "",
+		months: [.april, .august, .april, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 5,
+		name: "Tomatoes",
+		category: .vegetables,
+		imageName: "Tomatoes",
+		description: "",
+		months: [.april, .august, .december, .january, .september, .february],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 0,
+		name: "Apples",
+		category: .fruit,
+		imageName: "Apples",
+		description: "",
+		months: [.june, .september, .july, .april, .february, .may, .march],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 1,
+		name: "Bananas",
+		category: .fruit,
+		imageName: "Bananas",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september, .february],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 2,
+		name: "Carrots",
+		category: .vegetables,
+		imageName: "Carrots",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 3,
+		name: "Broccoli",
+		category: .vegetables,
+		imageName: "Broccoli",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september, .may],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 4,
+		name: "Spinach",
+		category: .vegetables,
+		imageName: "Spinach",
+		description: "",
+		months: [.april, .august, .april, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 5,
+		name: "Tomatoes",
+		category: .vegetables,
+		imageName: "Tomatoes",
+		description: "",
+		months: [.april, .august, .december, .january, .september, .february],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		]
+		return coord
+	}()
+
+	NavigationStack {
+		MonthsTabView(produce: coord.produceData ?? [], selectedTab: .constant(MainTabScreen.Tabs.months(.august, category: .all, search: "")))
+			.environmentObject(coord)
 	}
 }

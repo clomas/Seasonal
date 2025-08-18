@@ -23,8 +23,9 @@ struct ProduceList: View {
 				
 			}
 			.listStyle(.plain)
+			.listRowInsets(.top, -100)
 			.scrollContentBackground(.hidden)
-				//			.padding(.top, -8)
+			.scrollIndicators(.hidden)
 		}
 	}
 }

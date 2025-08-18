@@ -64,6 +64,8 @@
 		27E137AD25E51D66003A0BFC /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AC25E51D65003A0BFC /* MainViewModel.swift */; };
 		27E698E825EE5DCC004B45E9 /* ProduceDataSevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E698E725EE5DCC004B45E9 /* ProduceDataSevice.swift */; };
 		27E6E69122D1A3790018DCF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */; };
+		27E989AE2E518B94006C7739 /* MonthsTabToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989AD2E518B89006C7739 /* MonthsTabToolbar.swift */; };
+		27E989B12E519407006C7739 /* Extension-UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */; };
 		27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ECB41522EF19090097A8D4 /* InfoViewController.swift */; };
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
@@ -189,6 +191,8 @@
 		27E137AC25E51D65003A0BFC /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		27E698E725EE5DCC004B45E9 /* ProduceDataSevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceDataSevice.swift; sourceTree = "<group>"; };
 		27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
+		27E989AD2E518B89006C7739 /* MonthsTabToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthsTabToolbar.swift; sourceTree = "<group>"; };
+		27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIWindow.swift"; sourceTree = "<group>"; };
 		27ECB41522EF19090097A8D4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		27EFF3C4215A5C1500CFB31D /* Seasonal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seasonal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -265,6 +269,7 @@
 		2723154F2E3F5779006474A2 /* TabViews */ = {
 			isa = PBXGroup;
 			children = (
+				27E989AD2E518B89006C7739 /* MonthsTabToolbar.swift */,
 				272315502E3F5785006474A2 /* MonthsTabView.swift */,
 			);
 			path = TabViews;
@@ -445,6 +450,7 @@
 		278611BB25687F8900E8021B /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */,
 				27FB2EC92E1A199200CA6DCE /* LocationManagerOld.swift */,
 				2718E2CF225F809100B802F9 /* Constants.swift */,
 				277A682F263A3B5700E4389A /* Extension-String.swift */,
@@ -772,6 +778,7 @@
 			files = (
 				278611BA25687DF500E8021B /* ProduceModel.swift in Sources */,
 				277A6834263A3C2600E4389A /* Extension-UIButton.swift in Sources */,
+				27E989AE2E518B94006C7739 /* MonthsTabToolbar.swift in Sources */,
 				2794F0822E1A735A00BFFB12 /* ProduceCell.swift in Sources */,
 				272C7A1F2E220E2100661BAA /* MonthsInSeasonCapsuleView.swift in Sources */,
 				27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */,
@@ -818,6 +825,7 @@
 				27892C2525E7132B00ADD81F /* MainViewController.swift in Sources */,
 				27FCA53E25DB937600AD2020 /* SplashScreenViewModel.swift in Sources */,
 				2749C9FC26304CA5009E19A5 /* SeasonsViewController.swift in Sources */,
+				27E989B12E519407006C7739 /* Extension-UIWindow.swift in Sources */,
 				27AE9A1629D907DC00C98823 /* Extension-UIEdgeInsets.swift in Sources */,
 				27FCA53425DB6C3C00AD2020 /* AppCoordinatorOld.swift in Sources */,
 				274D476025FA08E900B60BD3 /* MenuBarCellModel.swift in Sources */,

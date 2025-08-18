@@ -51,6 +51,8 @@ enum Month: Int, CaseIterable {
 		String(describing: self).capitalized
 	}
 
+	static let thisMonth: Month = Month(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
+
 	func next() -> Month {
 		let all = Self.allCases
 		guard let index = all.firstIndex(of: self) else { return self }
@@ -61,5 +63,12 @@ enum Month: Int, CaseIterable {
 		let all = Self.allCases
 		guard let index = all.firstIndex(of: self) else { return self }
 		return all[(index - 1 + all.count) % all.count]
+	}
+}
+
+extension Calendar {
+
+	func isDateInThisMonth(_ date: Date) -> Bool {
+		isDate(date, equalTo: Date(), toGranularity: .month)
 	}
 }

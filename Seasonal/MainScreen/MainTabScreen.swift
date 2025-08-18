@@ -11,46 +11,42 @@ import SwiftUI
 struct MainTabScreen: View {
 
 	enum Tabs: Hashable {
-		case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
-		case months(Month, category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
-		case seasons(Season, category: ViewDisplayed.ProduceCategory = .all, search: String? = nil)
-		case categories(ViewDisplayed.ProduceCategory)
-		case search(String = "")
+		case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String)
+		case months(Month, category: ViewDisplayed.ProduceCategory = .all, search: String)
+		case seasons(Season, category: ViewDisplayed.ProduceCategory = .all, search: String)
+			//		case categories(ViewDisplayed.ProduceCategory)
+			//		case search(String = "")
 
 		var title: String {
 			switch self {
 			case .favourites:
-				return "Favourites"
+				"Favourites"
 			case .months(let month, _, _):
-				return month.name
+				month.name
 			case .seasons(let season, _, _):
-				return season.name
-			case .categories(let category):
-				return categoryTitle(category)
-			case .search:
-				return "Search"
+				season.name
+					//			case .categories(let category):
+					//				return categoryTitle(category)
+					//			case .search:
+					//				return "Search"
 			}
 		}
 
 		private func categoryTitle(_ category: ViewDisplayed.ProduceCategory) -> String {
 			switch category {
-			case .all: return "All"
-			case .fruit: return "Fruit"
-			case .vegetables: return "Vegetables"
-			case .herbs: return "Herbs"
-			case .cancelled: return "Cancelled"
+			case .all: "All"
+			case .fruit: "Fruit"
+			case .vegetables: "Vegetables"
+			case .herbs: "Herbs"
+			case .cancelled: "Cancelled"
 			}
 		}
 	}
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	@State private var selectedTab: Tabs {
-		didSet {
-			print(selectedTab)
-		}
-	}// TODO: store previous?
-		// TODO: This is unfortunate an int is stored?
+		// selectedTab is now a computed binding to appCoordinator.viewContext
+	private var selectedTab: Binding<Tabs> { $appCoordinator.viewContext }
 	@State private var category: ViewDisplayed.ProduceCategory = .all
 	@State private var isSearching = false
 	@State private var searchString: String = ""
@@ -68,28 +64,26 @@ struct MainTabScreen: View {
 		.tabItem {
 			Label("Favourites", systemImage: "heart")
 		}
-		.tag(MainTabScreen.Tabs.favourites())
+		.tag(MainTabScreen.Tabs.favourites(category: .all, search: ""))
 	}
 
 	var body: some View {
 		ZStack {
-
-			TabView(selection: $selectedTab) {
-				Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites()) {
+			TabView(selection: selectedTab) {
+				Tab("Favourites", systemImage: "heart", value: MainTabScreen.Tabs.favourites(category: .all, search: "")) {
 					ProduceList(produce: produce)
 				}
-				Tab("Months", systemImage: "calendar", value: selectedTab) {
+				Tab("Months", systemImage: "calendar", value: selectedTab.wrappedValue) {
 					NavigationStack {
-						MonthsTabView(
-							produce: produce,
-							selectedTab: $selectedTab
-						)
+						MonthsTabView(produce: produce, selectedTab: $appCoordinator.viewContext)
 					}
+					.toolbarBackground(.visible, for: .navigationBar)
+					.toolbarBackground(Color.clear, for: .navigationBar)
 				}
-				Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons(.autumn)) {
+				Tab("Seasons", systemImage: "cloud.sun", value: MainTabScreen.Tabs.seasons(.autumn, search: "")) {
 					ProduceList(produce: produce)
 				}
-				Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites()) {
+				Tab("Categories", systemImage: "slider.horizontal.2.square", value: MainTabScreen.Tabs.favourites(category: .all, search: "")) {
 					ZStack {
 						Color(.systemBackground)
 
@@ -99,11 +93,9 @@ struct MainTabScreen: View {
 						}
 						.listStyle(.plain)
 						.listRowInsets(.bottomPadding)
-							//						.padding(.leading, 100)
 					}
-					.edgesIgnoringSafeArea(.bottom)
 				}
-				Tab(value: .search(), role: .search) {
+				Tab(value: selectedTab.wrappedValue, role: .search) {
 					NavigationStack {
 							//							ProduceList(appCoordinator: _appCoordinator)
 							//								.searchable(text: $searchString)
@@ -115,6 +107,7 @@ struct MainTabScreen: View {
 				// TODO: Whats going on here?
 			FloatingSearchButton(isSearching: $isSearching)
 		}
+
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
 			Button("OK", role: .cancel) { }
@@ -122,9 +115,9 @@ struct MainTabScreen: View {
 	}
 
 	init() {
-		selectedTab = .favourites(category: .all)
+		// TODO: This? nah
 			//		UITabBar.appearance().backgroundColor = UIColor(Color.gray)
-		UITabBar.appearance().unselectedItemTintColor = .darkGray
+//		UITabBar.appearance().unselectedItemTintColor = .darkGray
 	}
 }
 
@@ -142,7 +135,7 @@ struct SearchView: View {
 
 #Preview {
 	lazy var coord: AppCoordinator = {
-		let coord = AppCoordinator(window: UIWindow())
+		let coord = AppCoordinator(window: .create())
 		coord.state = .locationNotFound
 		coord.produceData = [
 			ProduceModel(

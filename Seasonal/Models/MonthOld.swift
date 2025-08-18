@@ -30,7 +30,7 @@ enum MonthOld: Int, CaseIterable {
 }
 
 enum Month: Int, PeriodType {
-	case january
+	case january = 1
 	case february
 	case march
 	case april

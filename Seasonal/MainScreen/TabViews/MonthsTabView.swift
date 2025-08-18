@@ -14,7 +14,7 @@ struct MonthsTabView: View {
 	@State var selectedCategory: ViewDisplayed.ProduceCategory = .all
 	@State var searchQuery: String = ""
 
-	@State private var scrollPosition: Int = Month.allCases.count
+	@State private var scrollPosition: Int = 0
 
 	let produce: [ProduceModel]
 
@@ -47,15 +47,19 @@ struct MonthsTabView: View {
 			monthsScrollView
 				.ignoresSafeArea(edges: .bottom)
 				.onAppear {
-					selectedMonth = Month.thisMonth
+					selectedMonth = .thisMonth
+					// Set scroll position to match the selected month
+					scrollPosition = selectedMonth.index + middleOffset
 				}
 				.onChange(of: selectedMonth) { _, updatedMonth in
 						//					setHorizontalScrollPosition(for: updatedMonth)
 				}
 				.toolbar {
-					InfiniteTabToolbar<Month>(selectedItem: $selectedMonth) { direction in
-						navigateToAdjacentMonth(direction)
-					}
+					InfiniteTabToolbar<Month>(
+						selectedItem: $selectedMonth,
+						scrollPosition: $scrollPosition,
+						middleOffset: middleOffset
+					)
 				}
 				.toolbarBackground(.visible, for: .navigationBar)
 				.toolbarBackground(Color.clear, for: .navigationBar)
@@ -68,19 +72,6 @@ struct MonthsTabView: View {
 			.id(index)
 			.padding(.top, -100)
 	}
-	@State private var isNavigatingProgrammatically = false
-
-	private func navigateToAdjacentMonth(_ direction: InfiniteTabToolbar<Month>.NavigationDirection) {
-		let newPosition = switch direction {
-		case .next: scrollPosition + 1
-		case .previous: scrollPosition - 1
-		}
-
-		isNavigatingProgrammatically = true
-		withAnimation(.easeInOut(duration: 0.5)) {
-			scrollPosition = newPosition
-		}
-	}
 
 	private func updateScrollPosition(to newPosition: Int?) {
 		guard let newPosition: Int else {
@@ -88,34 +79,11 @@ struct MonthsTabView: View {
 		}
 		scrollPosition = newPosition
 		updateCurrentMonth(from: newPosition)
-
-			// Only handle infinite scroll reset for user-initiated scrolling
-		if !isNavigatingProgrammatically {
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-				handleInfiniteScroll(position: newPosition)
-			}
-		} else {
-			isNavigatingProgrammatically = false
-		}
 	}
 
 	private func updateCurrentMonth(from scrollPosition: Int) {
 		let monthIndex = scrollPosition % Month.allCases.count
 		selectedMonth = Month.allCases[monthIndex]
-	}
-
-	private func handleInfiniteScroll(position: Int) {
-		let totalMonths = Month.allCases.count
-
-		if position < totalMonths {
-			withAnimation(nil) {
-				scrollPosition = position + totalMonths
-			}
-		} else if position >= totalMonths * 2 {
-			withAnimation(nil) {
-				scrollPosition = position - totalMonths
-			}
-		}
 	}
 
 	private func monthMenu() -> some View {

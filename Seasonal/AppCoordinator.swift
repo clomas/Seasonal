@@ -39,7 +39,6 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	@Published var state: AppCoordinatorState = .initial
 	@Published var produceData: [ProduceModel]?
-	@Published var viewContext: Tabs
 
 	private(set) var childCoordinators: [Coordinator] = []
 
@@ -53,8 +52,6 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	init(window: UIWindow?) {
 		self.window = window
-		// TODO: Usr default here
-		self.viewContext = .favourites(category: .all, search: "")
 
 #if DEBUG
 		if CommandLine.arguments.contains("enable-testing") {
@@ -180,37 +177,37 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 	// MARK: Context update
 
-	func updateSearch(_ search: String) {
-		switch viewContext {
-		case .months(let month, let category, _):
-			viewContext = .months(month, category: category, search: search)
-		case .seasons(let season, let category, _):
-			viewContext = .seasons(season, category: category, search: search)
-		case .favourites(let category, _):
-			viewContext = .favourites(category: category, search: search)
-		}
-	}
-
-	func updateCategory(_ category: ViewDisplayed.ProduceCategory) {
-		switch viewContext {
-		case .months(let month, _, let search):
-			viewContext = .months(month, category: category, search: search)
-		case .seasons(let season, _, let search):
-			viewContext = .seasons(season, category: category, search: search)
-		case .favourites(_, let search):
-			viewContext = .favourites(category: category, search: search)
-		}
-	}
-
-	func updateMonth(_ month: Month) {
-		if case let .months(_, category, search) = viewContext {
-			viewContext = .months(month, category: category, search: search)
-		}
-	}
-
-	func updateSeason(_ season: Season) {
-		if case let .seasons(_, category, search) = viewContext {
-			viewContext = .seasons(season, category: category, search: search)
-		}
-	}
+//	func updateSearch(_ search: String) {
+//		switch viewContext {
+//		case .months(let month, let category, _):
+//			viewContext = .months(month, category: category, search: search)
+//		case .seasons(let season, let category, _):
+//			viewContext = .seasons(season, category: category, search: search)
+//		case .favourites(let category, _):
+//			viewContext = .favourites(category: category, search: search)
+//		}
+//	}
+//
+//	func updateCategory(_ category: ViewDisplayed.ProduceCategory) {
+//		switch viewContext {
+//		case .months(let month, _, let search):
+//			viewContext = .months(month, category: category, search: search)
+//		case .seasons(let season, _, let search):
+//			viewContext = .seasons(season, category: category, search: search)
+//		case .favourites(_, let search):
+//			viewContext = .favourites(category: category, search: search)
+//		}
+//	}
+//
+//	func updateMonth(_ month: Month) {
+//		if case let .months(_, category, search) = viewContext {
+//			viewContext = .months(month, category: category, search: search)
+//		}
+//	}
+//
+//	func updateSeason(_ season: Season) {
+//		if case let .seasons(_, category, search) = viewContext {
+//			viewContext = .seasons(season, category: category, search: search)
+//		}
+//	}
 }

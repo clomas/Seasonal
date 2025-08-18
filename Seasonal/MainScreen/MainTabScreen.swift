@@ -10,10 +10,17 @@ import SwiftUI
 
 struct MainTabScreen: View {
 
+	enum MainTabScreenTab: Hashable {
+		case favourites
+		case months
+		case seasons
+		case categories
+		case search
+	}
+
+	@State private var selectedTab: MainTabScreenTab = .favourites
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-		// selectedTab is now a computed binding to appCoordinator.viewContext
-	private var selectedTab: Binding<Tabs> { $appCoordinator.viewContext }
 	@State private var category: ViewDisplayed.ProduceCategory = .all
 	@State private var isSearching = false
 	@State private var searchString: String = ""
@@ -36,21 +43,24 @@ struct MainTabScreen: View {
 
 	var body: some View {
 		ZStack {
-			TabView(selection: selectedTab) {
-				Tab("Favourites", systemImage: "heart", value: Tabs.favourites(category: .all, search: "")) {
+			TabView(selection: $selectedTab) {
+				Tab("Favourites", systemImage: "heart", value: .favourites) {
 					ProduceList(produce: produce)
 				}
-				Tab("Months", systemImage: "calendar", value: Tabs.months(.thisMonth, category: .all, search: "")) {
+				Tab("Months", systemImage: "calendar", value: .months) {
 					NavigationStack {
-						MonthsTabView(produce: produce, selectedTab: $appCoordinator.viewContext)
+						MonthsTabView(
+							selectedMonth: Month.thisMonth,
+							produce: produce
+						)
 					}
 					.toolbarBackground(.visible, for: .navigationBar)
 					.toolbarBackground(Color.clear, for: .navigationBar)
 				}
-				Tab("Seasons", systemImage: "cloud.sun", value: Tabs.seasons(.autumn, search: "")) {
+				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {
 					ProduceList(produce: produce)
 				}
-				Tab("Categories", systemImage: "slider.horizontal.2.square", value: Tabs.favourites(category: .all, search: "")) {
+				Tab("Categories", systemImage: "slider.horizontal.2.square", value: .categories) {
 					ZStack {
 						Color(.systemBackground)
 
@@ -62,14 +72,14 @@ struct MainTabScreen: View {
 						.listRowInsets(.bottomPadding)
 					}
 				}
-				Tab(value: selectedTab.wrappedValue, role: .search) {
+				Tab(value: .search, role: .search) {
 					NavigationStack {
 							//							ProduceList(appCoordinator: _appCoordinator)
 							//								.searchable(text: $searchString)
 					}
 				}
 			}
-			.onChange(of: selectedTab.wrappedValue) { _, newValue in
+			.onChange(of: $selectedTab.wrappedValue) { _, newValue in
 				if case .months = newValue {
 
 					// TODO: Handling here

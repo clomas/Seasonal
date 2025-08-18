@@ -10,15 +10,25 @@ import SwiftUI
 
 struct MonthsTabView: View {
 
-	let produce: [ProduceModel]
-	@Binding var selectedTab: Tabs
+	@State var selectedMonth: Month
+	@State var selectedCategory: ViewDisplayed.ProduceCategory = .all
+	@State var searchQuery: String = ""
 
-	private let middleOffset = Month.allCases.count
 	@State private var scrollPosition: Int = Month.allCases.count
 
+	let produce: [ProduceModel]
+
+	private let middleOffset = Month.allCases.count
+
 	// TODO:  Create 3 copies of months for infinite scrolling
+//	private var infiniteMonths: [Month] {
+//		Array(repeating: Month.allCases, count: 3).flatMap { $0 }
+//	}
 	private var infiniteMonths: [Month] {
-		Array(repeating: Month.allCases, count: 3).flatMap { $0 }
+		let months = Month.allCases
+		guard let lastMonth: Month = months.last else { return [] }
+
+		return [lastMonth] + months + months + [lastMonth]
 	}
 
 	private var monthsScrollView: some View {
@@ -43,22 +53,16 @@ struct MonthsTabView: View {
 		NavigationView {
 			monthsScrollView
 				.ignoresSafeArea(edges: .bottom)
-				.onChange(of: selectedTab) { _, newValue in
-					if case let .months(month, _, _) = newValue {
-						let newIndex = month.index + middleOffset
-						withAnimation(.easeInOut(duration: 0.3)) {
-							scrollPosition = newIndex
-						}
-					}
+				.onChange(of: selectedMonth) { _, updatedMonth in
+					setHorizontalScrollPosition(for: updatedMonth)
 				}
 				.onAppear {
-					onAppear()
+					selectedMonth = Month.thisMonth
 				}
 				.toolbar {
 					MonthsTabToolbar(
 						scrollPosition: $scrollPosition,
-						middleOffset: middleOffset,
-						selectedTab: $selectedTab
+						selectedMonth: $selectedMonth
 					)
 				}
 				.toolbarBackground(.visible, for: .navigationBar)
@@ -66,13 +70,8 @@ struct MonthsTabView: View {
 		}
 	}
 
-	// TODO: extract this into a helper
-	private func onAppear() {
-		selectedTab = .months(Month.thisMonth, category: .all, search: "")
-	}
-
 	private func monthCell(for month: Month, index: Int) -> some View {
-		ProduceList(produce: produce.filtered(by: $selectedTab.wrappedValue))
+		ProduceList(produce: produce.filtered(by: .months(month, category: selectedCategory, search: searchQuery)))
 			.containerRelativeFrame(.horizontal)
 			.id(index)
 			.padding(.top, -100)
@@ -93,11 +92,7 @@ struct MonthsTabView: View {
 
 	private func updateCurrentMonth(from scrollPosition: Int) {
 		let monthIndex = scrollPosition % Month.allCases.count
-		let newMonth = Month.allCases[monthIndex]
-
-		if case let .months(_, currentCategory, search) = selectedTab {
-			selectedTab = .months(newMonth, category: currentCategory, search: search)
-		}
+		selectedMonth = Month.allCases[monthIndex]
 	}
 
 	private func handleInfiniteScroll(position: Int) {
@@ -117,16 +112,19 @@ struct MonthsTabView: View {
 		Menu {
 			ForEach(Month.allCases, id: \.self) { month in
 				Button(month.name) {
-					selectedTab = .months(month, category: .all, search: "") // TODO: track category here and search
-					let newIndex = month.index + middleOffset
-					withAnimation(.easeInOut(duration: 0.3)) {
-						scrollPosition = newIndex
-					}
+					selectedMonth = month
+					// TODO: This should trigger scroll possie
 				}
 			}
 		} label: {
 			Label("Month", systemImage: "calendar")
 				.glassEffect(.regular)
+		}
+	}
+
+	private func setHorizontalScrollPosition(for updatedMonth: Month) {
+		withAnimation(.easeInOut(duration: 0.3)) {
+			scrollPosition = updatedMonth.index + middleOffset
 		}
 	}
 }
@@ -261,7 +259,7 @@ struct MonthsTabView: View {
 	}()
 
 	NavigationStack {
-		MonthsTabView(produce: coord.produceData ?? [], selectedTab: .constant(Tabs.months(.august, category: .all, search: "")))
+		MonthsTabView(selectedMonth: .april, produce: coord.produceData ?? [])
 			.environmentObject(coord)
 	}
 }

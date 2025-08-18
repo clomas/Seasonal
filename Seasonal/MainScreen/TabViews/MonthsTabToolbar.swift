@@ -11,22 +11,21 @@ import SwiftUI
 struct MonthsTabToolbar: ToolbarContent {
 
 	@Binding var scrollPosition: Int
-
-	let middleOffset: Int
-	let selectedTab: Binding<Tabs>
+	@Binding var selectedMonth: Month
 
 	var body: some ToolbarContent {
 		// <-
 		ToolbarItem(placement: .navigationBarLeading) {
 			Button {
-				selectedTab.wrappedValue = selectedTab.wrappedValue.updatingMonth(selectedTab.wrappedValue.currentSelectedMonth.previous())
+				selectedMonth = selectedMonth.previous()
 			} label: {
 				Image.arrowLeft
 			}
+			.buttonStyle(.plain)
 		}
 		// Month name
 		ToolbarItem(placement: .topBarLeading) {
-			Text(selectedTab.wrappedValue.title)
+			Text(selectedMonth.name)
 				.font(.title)
 				.fixedSize()
 		}
@@ -38,7 +37,7 @@ struct MonthsTabToolbar: ToolbarContent {
 			Menu {
 				ForEach(Month.allCases, id: \.self) { month in
 					Button(month.name) {
-						selectedTab.wrappedValue = selectedTab.wrappedValue.updatingMonth(month)
+						selectedMonth = month
 					}
 				}
 			} label: {
@@ -47,7 +46,7 @@ struct MonthsTabToolbar: ToolbarContent {
 			}
 			// ->
 			Button{
-				selectedTab.wrappedValue = selectedTab.wrappedValue.updatingMonth(selectedTab.wrappedValue.currentSelectedMonth.next())
+				selectedMonth = selectedMonth.next()
 			} label: {
 				Image.arrowRight
 			}

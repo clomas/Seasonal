@@ -97,9 +97,9 @@ struct Constants {
 }
 
 extension Image {
-	static let arrowLeft: Image = .init("arrow.left")
-	static let arrowRight: Image = .init("arrow.right")
-	static let heart: Image = .init("heart")
-	static let heartFill: Image = .init("heart.fill")
-	static let magnifyingGlass: Image = .init("magnifyingglass")
+	static let arrowLeft: Image = .init(systemName: "arrow.left")
+	static let arrowRight: Image = .init(systemName: "arrow.right")
+	static let heart: Image = .init(systemName: "heart")
+	static let heartFill: Image = .init(systemName: "heart.fill")
+	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
 }

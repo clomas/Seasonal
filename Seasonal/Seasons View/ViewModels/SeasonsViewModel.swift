@@ -6,26 +6,6 @@
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
 
-import Foundation
-
-enum Season: Int, CaseIterable {
-	    case summer = 0
-	    case autumn = 1
-	    case winter = 2
-	    case spring = 3
-	    case cancelled = 4
-
-	var name: String {
-		switch self {
-		case .summer: return "summer"
-		case .autumn: return "autumn"
-		case .winter: return "winter"
-		case .spring: return "spring"
-		case .cancelled: return "cancelled"
-		}
-	}
-}
-
 final class SeasonsViewModel: MenuBarDelegate {
 
 	private let produceDataService: ProduceDataService

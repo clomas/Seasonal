@@ -16,7 +16,7 @@ struct ProduceList: View {
 			Colour.background.ignoresSafeArea() // TODO: Handle empty state
 			List(produce, id: \.id) { item in
 				ProduceCell(produce: item)
-					.listRowSeparator(.visible)
+					.listRowSeparator(.hidden)
 					.listRowInsets(.topListRowInset)
 					.listRowBackground(Color.clear)
 				

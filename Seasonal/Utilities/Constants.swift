@@ -99,6 +99,8 @@ struct Constants {
 extension Image {
 	static let arrowLeft: Image = .init(systemName: "arrow.left")
 	static let arrowRight: Image = .init(systemName: "arrow.right")
+	static let calendar: Image = .init(systemName: "calendar")
+	static let cloudSun: Image = .init(systemName: "cloud.sun")
 	static let heart: Image = .init(systemName: "heart")
 	static let heartFill: Image = .init(systemName: "heart.fill")
 	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")

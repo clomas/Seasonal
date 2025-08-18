@@ -20,15 +20,8 @@ struct MonthsTabView: View {
 
 	private let middleOffset = Month.allCases.count
 
-	// TODO:  Create 3 copies of months for infinite scrolling
-//	private var infiniteMonths: [Month] {
-//		Array(repeating: Month.allCases, count: 3).flatMap { $0 }
-//	}
 	private var infiniteMonths: [Month] {
-		let months = Month.allCases
-		guard let lastMonth: Month = months.last else { return [] }
-
-		return [lastMonth] + months + months + [lastMonth]
+		Array(repeating: Month.allCases, count: 3).flatMap { $0 }
 	}
 
 	private var monthsScrollView: some View {
@@ -53,17 +46,16 @@ struct MonthsTabView: View {
 		NavigationView {
 			monthsScrollView
 				.ignoresSafeArea(edges: .bottom)
-				.onChange(of: selectedMonth) { _, updatedMonth in
-					setHorizontalScrollPosition(for: updatedMonth)
-				}
 				.onAppear {
 					selectedMonth = Month.thisMonth
 				}
+				.onChange(of: selectedMonth) { _, updatedMonth in
+						//					setHorizontalScrollPosition(for: updatedMonth)
+				}
 				.toolbar {
-					MonthsTabToolbar(
-						scrollPosition: $scrollPosition,
-						selectedMonth: $selectedMonth
-					)
+					InfiniteTabToolbar<Month>(selectedItem: $selectedMonth) { direction in
+						navigateToAdjacentMonth(direction)
+					}
 				}
 				.toolbarBackground(.visible, for: .navigationBar)
 				.toolbarBackground(Color.clear, for: .navigationBar)
@@ -76,6 +68,19 @@ struct MonthsTabView: View {
 			.id(index)
 			.padding(.top, -100)
 	}
+	@State private var isNavigatingProgrammatically = false
+
+	private func navigateToAdjacentMonth(_ direction: InfiniteTabToolbar<Month>.NavigationDirection) {
+		let newPosition = switch direction {
+		case .next: scrollPosition + 1
+		case .previous: scrollPosition - 1
+		}
+
+		isNavigatingProgrammatically = true
+		withAnimation(.easeInOut(duration: 0.5)) {
+			scrollPosition = newPosition
+		}
+	}
 
 	private func updateScrollPosition(to newPosition: Int?) {
 		guard let newPosition: Int else {
@@ -84,9 +89,13 @@ struct MonthsTabView: View {
 		scrollPosition = newPosition
 		updateCurrentMonth(from: newPosition)
 
-		// Add a small delay to avoid conflicts with scroll repositioning
-		DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-			handleInfiniteScroll(position: newPosition)
+			// Only handle infinite scroll reset for user-initiated scrolling
+		if !isNavigatingProgrammatically {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+				handleInfiniteScroll(position: newPosition)
+			}
+		} else {
+			isNavigatingProgrammatically = false
 		}
 	}
 
@@ -98,13 +107,14 @@ struct MonthsTabView: View {
 	private func handleInfiniteScroll(position: Int) {
 		let totalMonths = Month.allCases.count
 
-		// If we're at the first set (positions 0-11), jump to middle set
 		if position < totalMonths {
-			scrollPosition = position + totalMonths
-		}
-		// If we're at the last set (positions 24-35), jump to middle set
-		else if position >= totalMonths * 2 {
-			scrollPosition = position - totalMonths
+			withAnimation(nil) {
+				scrollPosition = position + totalMonths
+			}
+		} else if position >= totalMonths * 2 {
+			withAnimation(nil) {
+				scrollPosition = position - totalMonths
+			}
 		}
 	}
 
@@ -113,7 +123,7 @@ struct MonthsTabView: View {
 			ForEach(Month.allCases, id: \.self) { month in
 				Button(month.name) {
 					selectedMonth = month
-					// TODO: This should trigger scroll possie
+						// Remove the TODO - the onChange will handle the scroll position
 				}
 			}
 		} label: {
@@ -123,7 +133,7 @@ struct MonthsTabView: View {
 	}
 
 	private func setHorizontalScrollPosition(for updatedMonth: Month) {
-		withAnimation(.easeInOut(duration: 0.3)) {
+		withAnimation(.easeInOut(duration: 0.5)) {
 			scrollPosition = updatedMonth.index + middleOffset
 		}
 	}

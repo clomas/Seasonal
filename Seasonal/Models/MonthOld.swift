@@ -1,12 +1,12 @@
-//
-//  Month.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 9/4/2023.
-//  Copyright © 2023 Clint Thomas. All rights reserved.
-//
+	//
+	//  Month.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 9/4/2023.
+	//  Copyright © 2023 Clint Thomas. All rights reserved.
+	//
 
-import Foundation
+import SwiftUI
 
 enum MonthOld: Int, CaseIterable {
 	case decemberOverflow
@@ -29,7 +29,7 @@ enum MonthOld: Int, CaseIterable {
 	}
 }
 
-enum Month: Int, CaseIterable {
+enum Month: Int, PeriodType {
 	case january
 	case february
 	case march
@@ -43,30 +43,14 @@ enum Month: Int, CaseIterable {
 	case november
 	case december
 
+	static let thisMonth: Month = Month(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
+	
+	var image: Image {
+		.calendar
+	}
+
 	var firstLetter: String {
 		"\(self)".first?.uppercased() ?? ""
-	}
-
-	var name: String {
-		String(describing: self).capitalized
-	}
-
-	static let thisMonth: Month = Month(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
-
-	func next() -> Month {
-		let all = Self.allCases
-		guard let index = all.firstIndex(of: self) else { return self }
-		return all[(index + 1) % all.count]
-	}
-
-	func previous() -> Month {
-		let all = Self.allCases
-		guard let index = all.firstIndex(of: self) else { return self }
-		return all[(index - 1 + all.count) % all.count]
-	}
-
-	var index: Int {
-		Month.allCases.firstIndex(of: self) ?? 0
 	}
 }
 

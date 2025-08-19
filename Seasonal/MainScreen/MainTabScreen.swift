@@ -1,10 +1,10 @@
-	//
-	//  MainTabScreen.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 30/6/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  MainTabScreen.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 30/6/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 
@@ -29,91 +29,114 @@ struct MainTabScreen: View {
 				""
 			}
 		}
-
-		var lowercaseTitle: String {
-			title.lowercased()
-		}
 	}
 
-	@State private var selectedTab: MainTabScreenTab = .favourites
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	@State private var category: ViewDisplayed.ProduceCategory = .all
-	@State private var isSearching = false
+	@State private var selectedTab: MainTabScreenTab = .favourites
+	@State private var previousTab: MainTabScreenTab = .favourites
+	@State private var selectedCategory: ProduceCategory = .all
+
 	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
+	@State private var showCategoryMenu = false
+	@State private var isSearching = false
 
 	private var produce: [ProduceModel] {
 		appCoordinator.produceData ?? []
 	}
 
+	var tab: some View {
+		switch previousTab {
+		case .favourites:
+			// TODO: period here aint right
+			AnyView(ProduceList(produce: produce, period: Months.april, selectedTab: selectedTab))
+		case .months:
+			AnyView(createNavigationStackForPeriodView(
+				PeriodTabView<Months>(
+					produce: produce,
+					selectedPeriod: Months.currentPeriod
+				)
+			))
+		case .seasons:
+			AnyView(createNavigationStackForPeriodView(
+				PeriodTabView<Seasons>(
+					produce: produce,
+					selectedPeriod: Seasons.currentPeriod
+				)
+			))
+		case .categories:
+			AnyView(EmptyView())
+		case .search:
+			AnyView(EmptyView())
+		}
+	}
+
 	var body: some View {
 		ZStack {
 			TabView(selection: $selectedTab) {
-				Tab("Favourites", systemImage: "heart", value: .favourites) {
-					ProduceList(produce: produce, period: Months.april, selectedTab: selectedTab)
-				}
-				Tab("Months", systemImage: "calendar", value: .months) {
-					createNavigationStackForPeriodView(for:
-						PeriodTabView<Months>(
-							produce: produce,
-							selectedPeriod: Months.currentPeriod
-						)
-					)
-				}
-				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {
-					createNavigationStackForPeriodView(for:
-						PeriodTabView<Seasons>(
-							produce: produce,
-							selectedPeriod: Seasons.currentPeriod
-						)
-					)
-				}
-				Tab("Categories", systemImage: "slider.horizontal.2.square", value: .categories) {
-//					ZStack {
-//						Color(.systemBackground)
+				Tab("Favourites", systemImage: "heart", value: .favourites) { tab }
+				Tab("Months", systemImage: "calendar", value: .months) { tab }
+				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {	tab }
+				Tab("Categories", systemImage: .settings, value: .categories) {
+					tab
+						.onAppear {
+							showCategoryMenu = true
+						}
+						.popover(
+							isPresented: $showCategoryMenu,
+							attachmentAnchor: .point(.bottom), // Point to bottom of screen area
+							arrowEdge: .none
+						) {
+							categoriesPopOver()
+						}
+//					ProduceList(produce: produce, period: Months.april, selectedTab: selectedTab)
+//						.onAppear {
+//							// Show the popover immediately
+//							showCategoryMenu = true
 //
-//						List(appCoordinator.produceData ?? [], id: \.id) { item in
-//							ProduceCell(produce: item)
-//								.listRowSeparator(.visible)
+//							// Switch back to previous tab after a small delay
+////							DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+////								selectedTab = previousTab
+////							}
 //						}
-//						.listStyle(.plain)
-//						.listRowInsets(.bottomPadding)
-//					}
-//					Menu {
-//						ForEach(Array(Period.allCases), id: \.self) { period in
-//							Button("\(period.name)") {
-//								selectedPeriod = period
-//							}
-//						}
-//					} label: {
-//						Label(selectedPeriod.name, systemImage: .calendarImage)
-//							.glassEffect(.regular)
-//					}
+
 				}
+
 				Tab(value: .search, role: .search) {
 					NavigationStack {
-							//							ProduceList(appCoordinator: _appCoordinator)
-							//								.searchable(text: $searchString)
+//							ProduceList(appCoordinator: _appCoordinator)
+//								.searchable(text: $searchString)
 					}
-				}
-			}
-			.onChange(of: $selectedTab.wrappedValue) { _, newValue in
-				if case .months = newValue {
-
-					// TODO: Handling here
-//					if case let .months(currentMonth, currentCategory, search) = appCoordinator.viewContext {
-//							// Already on months, do nothing
-//					} else {
-//						appCoordinator.viewContext = .months(.thisMonth, category: .all, search: "")
-//					}
 				}
 			}
 				// TODO: different colour here.
 			.tint(Colour.inSeason)
 				// TODO: Whats going on here?
-			FloatingSearchButton(isSearching: $isSearching)
+//			FloatingSearchButton(isSearching: $isSearching)
+
+//			Button(action: { showCategoryMenu = true }) {
+//				Image(systemName: .settings)
+//			}
+//			.hidden()
 		}
+		.onChange(of: selectedTab) { _, newTab in
+			if newTab != .categories && !showCategoryMenu {
+//				previousTab = newTab
+//				showCategoryMenu = false // Close popover if switching away
+			}
+		}
+//				ForEach(ProduceCategory.allCases, id: \.self) { category in
+//					Button(action: {
+//						selectedCategory = category
+//						showCategoryMenu = false
+//							// Ensure we switch back to the previous tab
+//						selectedTab = previousTab
+//					}) {
+//						Label(category.title, systemImage: category.image)
+//							.padding()
+//					}
+//				}
 
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
@@ -121,7 +144,23 @@ struct MainTabScreen: View {
 		}
 	}
 
-	private func createNavigationStackForPeriodView(for view: some View) -> some View {
+	private func categoriesPopOver() -> some View {
+		ForEach(ProduceCategory.allCases, id: \.self) { category in
+			Button(action: {
+				selectedCategory = category
+				showCategoryMenu = false
+					// Ensure we switch back to the previous tab
+				selectedTab = previousTab
+			}) {
+				Label(category.title, systemImage: category.image)
+					.padding()
+					.tint(category == selectedCategory ? Colour.inSeason : .black)
+			}
+		}
+		.presentationCompactAdaptation(.popover)
+	}
+
+	private func createNavigationStackForPeriodView(_ view: some View) -> some View {
 		NavigationStack { view }
 			.toolbarBackground(.visible, for: .navigationBar)
 			.toolbarBackground(Color.clear, for: .navigationBar)
@@ -145,66 +184,66 @@ struct SearchView: View {
 		let coord = AppCoordinator(window: .create())
 		coord.state = .locationNotFound
 		coord.produceData = [
-			ProduceModel(
-				id: 0,
-				name: "Apples",
-				category: .fruit,
-				imageName: "Apples",
-				description: "",
-				months: [.june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 1,
-				name: "Bananas",
-				category: .fruit,
-				imageName: "Bananas",
-				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, .june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
+		ProduceModel(
+		id: 0,
+		name: "Apples",
+		category: .fruit,
+		imageName: "Apples",
+		description: "",
+		months: [.june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 1,
+		name: "Bananas",
+		category: .fruit,
+		imageName: "Bananas",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 0,
+		name: "Apple",
+		category: .fruit,
+		imageName: "apple",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 0,
+		name: "Apple",
+		category: .fruit,
+		imageName: "apple",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 0,
+		name: "Apple",
+		category: .fruit,
+		imageName: "apple",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
+		ProduceModel(
+		id: 0,
+		name: "Apple",
+		category: .fruit,
+		imageName: "apple",
+		description: "",
+		months: [.april, .august, .december, .january, .june, .september],
+		seasons: [.autumn, .spring],
+		liked: true
+		),
 		]
 		return coord
 	}()

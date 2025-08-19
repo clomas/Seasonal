@@ -69,7 +69,8 @@ struct PeriodTabView<Period: PeriodType>: View {
 		)
 		.containerRelativeFrame(.horizontal)
 		.id(index)
-		.padding(.top, -100)
+//		.padding(.top, -100)
+		// TODO: CHECK
 	}
 
 	private func periodMenu() -> some View {
@@ -94,7 +95,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 	}
 
 	private func updateCurrentPeriod(from scrollPosition: Int) {
-		let periodIndex = scrollPosition % Period.allCases.count
+		let periodIndex: Int = scrollPosition % Period.allCases.count
 		selectedPeriod = Array(Period.allCases)[periodIndex]
 	}
 

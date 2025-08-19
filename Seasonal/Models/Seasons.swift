@@ -19,6 +19,6 @@ enum Seasons: Int, PeriodType {
 	static let currentPeriod: Seasons = .autumn
 
 	var image: Image {
-		.cloudSun
+		.seasons
 	}
 }

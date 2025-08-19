@@ -69,7 +69,7 @@
 		27E989B12E519407006C7739 /* Extension-UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */; };
 		27E989B32E52E43B006C7739 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B22E52E431006C7739 /* Tabs.swift */; };
 		27E989B52E530336006C7739 /* PeriodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B42E530333006C7739 /* PeriodType.swift */; };
-		27E989B72E530760006C7739 /* SeasonsOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B62E53075D006C7739 /* SeasonsOld.swift */; };
+		27E989B72E530760006C7739 /* Seasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B62E53075D006C7739 /* Seasons.swift */; };
 		27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ECB41522EF19090097A8D4 /* InfoViewController.swift */; };
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
@@ -200,7 +200,7 @@
 		27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIWindow.swift"; sourceTree = "<group>"; };
 		27E989B22E52E431006C7739 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
 		27E989B42E530333006C7739 /* PeriodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodType.swift; sourceTree = "<group>"; };
-		27E989B62E53075D006C7739 /* SeasonsOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsOld.swift; sourceTree = "<group>"; };
+		27E989B62E53075D006C7739 /* Seasons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seasons.swift; sourceTree = "<group>"; };
 		27ECB41522EF19090097A8D4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		27EFF3C4215A5C1500CFB31D /* Seasonal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Seasonal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -376,7 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				2790D8452E54144500119F87 /* ProduceCategory.swift */,
-				27E989B62E53075D006C7739 /* SeasonsOld.swift */,
+				27E989B62E53075D006C7739 /* Seasons.swift */,
 				27E989B22E52E431006C7739 /* Tabs.swift */,
 				278611B925687DF500E8021B /* ProduceModel.swift */,
 				2749C9F926304B58009E19A5 /* MenuBarModel.swift */,
@@ -850,7 +850,7 @@
 				275E88D621C113CC0015968C /* SeasonsTableViewCell.swift in Sources */,
 				2746838026634029000C5456 /* Extension-UserDefaults.swift in Sources */,
 				27FB2EBC2E12C38700CA6DCE /* AppCoordinator.swift in Sources */,
-				27E989B72E530760006C7739 /* SeasonsOld.swift in Sources */,
+				27E989B72E530760006C7739 /* Seasons.swift in Sources */,
 				27AE9A1E29E2518300C98823 /* MonthOld.swift in Sources */,
 				278951F429FD39FD00C47B18 /* GlobalSettings.swift in Sources */,
 				27FB2EC82E1A166400CA6DCE /* ProduceCloudDataService.swift in Sources */,

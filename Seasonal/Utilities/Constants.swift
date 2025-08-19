@@ -100,16 +100,30 @@ extension Image {
 	static let arrowLeft: Image = .init(systemName: "arrow.left")
 	static let arrowRight: Image = .init(systemName: "arrow.right")
 	static let calendar: Image = .init(systemName: "calendar")
-	static let cloudSun: Image = .init(systemName: "cloud.sun")
+	static let seasons: Image = .init(systemName: .seasons)
 	static let heart: Image = .init(systemName: "heart")
 	static let heartFill: Image = .init(systemName: "heart.fill")
 	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
+	static let settings: Image = .init("slider.vertical.3")
 }
+
+// MARK: Image strings
 
 extension String {
 	static let calendarImage: String = "calendar"
+	static let fruit: String = "apple.logo"
+	static let herbs: String = "leaf.fill"
+	static let settings: String = "slider.vertical.3"
+	static let vegetables: String = "carrot.fill"
+	static let seasons: String = "cloud.sun.fill"
 }
+
+// MARK: Time intervals
 
 extension TimeInterval {
 	static let lazyHStackScrollDuration: TimeInterval = 0.5
+}
+
+extension CGFloat {
+	static let largePadding: CGFloat = 200
 }

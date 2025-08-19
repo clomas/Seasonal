@@ -16,8 +16,7 @@ struct FloatingSearchButton: View {
 		VStack {
 			Spacer()
 			HStack {
-				Spacer()
-
+//				Spacer()
 				Button(action: {
 					isSearching.toggle()
 					UIImpactFeedbackGenerator(style: .light).impactOccurred()

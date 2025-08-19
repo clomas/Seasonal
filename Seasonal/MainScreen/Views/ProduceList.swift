@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct ProduceList: View {
-	private let bottomPadding: CGFloat = 200
-
 	let produce: [ProduceModel]
 	let period: any PeriodType
 	// TODO: Delete this
@@ -22,7 +20,7 @@ struct ProduceList: View {
 
 			if produce.isEmpty {
 				emptyProduceListView
-					.padding(.bottom, bottomPadding)
+					.padding(.bottom, .largePadding)
 			} else {
 				List(produce, id: \.id) { item in
 					ProduceCell(produce: item)
@@ -35,7 +33,7 @@ struct ProduceList: View {
 				.scrollContentBackground(.hidden)
 				.scrollIndicators(.hidden)
 				.safeAreaInset(edge: .bottom) {
-					Color.clear.frame(height: bottomPadding)
+					Color.clear.frame(height: .largePadding)
 				}
 			}
 		}
@@ -43,7 +41,7 @@ struct ProduceList: View {
 
 	private var emptyProduceListView: some View {
 		VStack(spacing: 6) {
-			Image(systemName: "slider.vertical.3")
+			Image.settings
 				.resizable()
 				.frame(width: 50, height: 50)
 				.padding(20)

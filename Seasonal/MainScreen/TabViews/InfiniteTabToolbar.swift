@@ -27,7 +27,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 	}
 
 	var body: some ToolbarContent {
-			// <-
+		// <-
 		ToolbarItem(placement: .navigationBarLeading) {
 			Button {
 				navigateToAdjacent(.previous)
@@ -38,7 +38,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.foregroundColor(.primary)
 		}
 
-			// Month name
+		// Month name
 		ToolbarItem(placement: .topBarLeading) {
 			Text(selectedItem.name)
 				.font(.title)
@@ -46,9 +46,9 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 		}
 		.sharedBackgroundVisibility(.hidden)
 
-			// (🗓️ ->)
+		// (🗓️ ->)
 		ToolbarItemGroup(placement: .navigationBarTrailing) {
-				// 🗓️ picker
+			// 🗓️ picker
 			Menu {
 				ForEach(Period.allCases, id: \.self) { item in
 					Button(item.name) {
@@ -61,7 +61,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.buttonStyle(.plain)
 			.foregroundColor(.primary)
 
-				// ->
+			// ->
 			Button {
 				navigateToAdjacent(.next)
 			} label: {
@@ -71,8 +71,6 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.foregroundColor(.primary)
 		}
 	}
-
-		// MARK: - Private Methods
 
 	private func navigateToAdjacent(_ direction: NavigationDirection) {
 		let newPosition = switch direction {

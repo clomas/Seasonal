@@ -16,6 +16,23 @@ struct MainTabScreen: View {
 		case seasons
 		case categories
 		case search
+
+		var title: String {
+			switch self {
+			case .favourites:
+				"Favourites"
+			case .months:
+				"Months"
+			case .seasons:
+				"Seasons"
+			default: // TODO: handle other cases?
+				""
+			}
+		}
+
+		var lowercaseTitle: String {
+			title.lowercased()
+		}
 	}
 
 	@State private var selectedTab: MainTabScreenTab = .favourites
@@ -32,7 +49,7 @@ struct MainTabScreen: View {
 
 	var favourites: some View {
 		NavigationStack {
-			ProduceList(produce: produce)
+			ProduceList(produce: produce, selectedTab: selectedTab)
 				.navigationTitle("Favourites")
 		}
 		.tabItem {
@@ -45,7 +62,7 @@ struct MainTabScreen: View {
 		ZStack {
 			TabView(selection: $selectedTab) {
 				Tab("Favourites", systemImage: "heart", value: .favourites) {
-					ProduceList(produce: produce)
+					ProduceList(produce: produce, selectedTab: selectedTab)
 				}
 				Tab("Months", systemImage: "calendar", value: .months) {
 					NavigationStack {
@@ -58,7 +75,7 @@ struct MainTabScreen: View {
 					.toolbarBackground(Color.clear, for: .navigationBar)
 				}
 				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {
-					ProduceList(produce: produce)
+					ProduceList(produce: produce, selectedTab: selectedTab)
 				}
 				Tab("Categories", systemImage: "slider.horizontal.2.square", value: .categories) {
 					ZStack {

@@ -40,6 +40,7 @@ struct ProduceCell: View {
 				MonthsInSeasonCapsuleView()
 			}
 			.padding(.bottom, 4)
+			.padding(.leading, 4)
 			.background(Colour.background)
 		}
 	}

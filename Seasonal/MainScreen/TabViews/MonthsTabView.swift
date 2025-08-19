@@ -61,16 +61,18 @@ struct MonthsTabView: View {
 						middleOffset: middleOffset
 					)
 				}
-				.toolbarBackground(.visible, for: .navigationBar)
-				.toolbarBackground(Color.clear, for: .navigationBar)
+				.toolbarBackground(.hidden, for: .navigationBar)
 		}
 	}
 
 	private func monthCell(for month: Month, index: Int) -> some View {
-		ProduceList(produce: produce.filtered(by: .months(month, category: selectedCategory, search: searchQuery)))
-			.containerRelativeFrame(.horizontal)
-			.id(index)
-			.padding(.top, -100)
+		ProduceList(
+			produce: produce.filtered(by: .months(month, category: selectedCategory, search: searchQuery)),
+			selectedTab: .months
+		)
+		.containerRelativeFrame(.horizontal)
+		.id(index)
+		.padding(.top, -100)
 	}
 
 	private func updateScrollPosition(to newPosition: Int?) {

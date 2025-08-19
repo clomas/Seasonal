@@ -9,23 +9,43 @@
 import SwiftUI
 
 struct ProduceList: View {
+	private let bottomPadding: CGFloat = 200
+
 	let produce: [ProduceModel]
-	
+	let selectedTab: MainTabScreen.MainTabScreenTab
+
 	var body: some View {
 		ZStack {
-			Colour.background.ignoresSafeArea() // TODO: Handle empty state
-			List(produce, id: \.id) { item in
-				ProduceCell(produce: item)
-					.listRowSeparator(.hidden)
-					.listRowInsets(.topListRowInset)
-					.listRowBackground(Color.clear)
-				
-				
+			Colour.background.ignoresSafeArea()
+
+			if produce.isEmpty {
+				emptyProduceListView
+					.padding(.bottom, bottomPadding)
+			} else {
+				List(produce, id: \.id) { item in
+					ProduceCell(produce: item)
+						.listRowSeparator(.hidden)
+						.listRowInsets(.topListRowInset)
+						.listRowBackground(Color.clear)
+
+				}
+				.listStyle(.plain)
+				.scrollContentBackground(.hidden)
+				.scrollIndicators(.hidden)
+				.safeAreaInset(edge: .bottom) {
+					Color.clear.frame(height: bottomPadding)
+				}
 			}
-			.listStyle(.plain)
-			.listRowInsets(.top, -100)
-			.scrollContentBackground(.hidden)
-			.scrollIndicators(.hidden)
+		}
+	}
+
+	private var emptyProduceListView: some View {
+		VStack(spacing: 6) {
+			Image(systemName: "slider.vertical.3")
+				.resizable()
+				.frame(width: 50, height: 50)
+				.padding(20)
+			Text("Nothing to see ere, try another \(selectedTab.lowercaseTitle)") // TODO: Test this out
 		}
 	}
 }

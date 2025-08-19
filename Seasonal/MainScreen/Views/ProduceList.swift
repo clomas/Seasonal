@@ -12,7 +12,7 @@ struct ProduceList: View {
 	let produce: [ProduceModel]
 	let period: any PeriodType
 	// TODO: Delete this
-	let selectedTab: MainTabScreen.MainTabScreenTab
+	let selectedTab: MainTabScreen.Tabs
 
 	var body: some View {
 		ZStack {

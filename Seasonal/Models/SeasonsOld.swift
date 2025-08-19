@@ -18,16 +18,6 @@ enum Seasons: Int, PeriodType {
 
 	static let currentPeriod: Seasons = .autumn
 
-	var name: String {
-		switch self {
-		case .summer: return "summer"
-		case .autumn: return "autumn"
-		case .winter: return "winter"
-		case .spring: return "spring"
-		case .cancelled: return "cancelled"
-		}
-	}
-
 	var image: Image {
 		.cloudSun
 	}

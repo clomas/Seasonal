@@ -10,15 +10,15 @@ import SwiftUI
 
 struct PeriodTabView<Period: PeriodType>: View {
 
+	let produce: [ProduceModel]
+
+	private let middleOffset = Period.allCases.count
+
 	@State var selectedPeriod: Period
 	@State var selectedCategory: ViewDisplayed.ProduceCategory = .all
 	@State var searchQuery: String = ""
 
 	@State private var scrollPosition: Int = 0
-
-	let produce: [ProduceModel]
-
-	private let middleOffset = Period.allCases.count
 
 	private var infinitePeriods: [Period] {
 		Array(repeating: Period.allCases, count: 3).flatMap { $0 }
@@ -235,7 +235,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 	}()
 
 	NavigationStack {
-		PeriodTabView<Months>(selectedPeriod: .april, produce: coord.produceData ?? [])
+		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedPeriod: .april)
 			.environmentObject(coord)
 	}
 }

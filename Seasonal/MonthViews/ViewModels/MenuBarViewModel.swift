@@ -34,7 +34,7 @@ final class MenuBarViewModel {
 		setupSelectedCell(selectedMenuBarIndex: selectedMonthView?.rawValue)
 	}
 
-	init(season: Seasons) {
+	init(season: SeasonsOld) {
 		self.selectedSeasonView = MenuBarModel.Seasons(rawValue: season.rawValue)
 		self.selectedMonthView = nil
 
@@ -113,7 +113,7 @@ extension MenuBarViewModel {
 		for index in 0...8 {
 			var selectedCell: Bool = false
 
-			if index < Seasons.allCases.count {
+			if index < SeasonsOld.allCases.count {
 				if let season: MenuBarModel.Seasons = selectedSeasonView, index == season.rawValue {
 					selectedCell = true
 				}

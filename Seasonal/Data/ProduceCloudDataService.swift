@@ -93,7 +93,7 @@ actor ProduceCloudDataService {
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
 			let description: String = ""
 			var months: [Months] = [Months]()
-			var seasons: [Seasons] = [Seasons]()
+			var seasons: [SeasonsOld] = [SeasonsOld]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,

@@ -14,7 +14,7 @@ struct DateHandler {
 		findMonthAndSeason().month
 	}
 
-	func findMonthAndSeasonOld() -> (month: MonthOld, season: Seasons) {
+	func findMonthAndSeasonOld() -> (month: MonthOld, season: SeasonsOld) {
 		// find the current month and store the index
 		let currentPageDate: [String] = Calendar.current.shortStandaloneMonthSymbols
 		let dateFormatter: DateFormatter = DateFormatter()
@@ -46,7 +46,7 @@ struct DateHandler {
 		}
 	}
 
-	func findMonthAndSeason() -> (month: Months, season: Seasons) {
+	func findMonthAndSeason() -> (month: Months, season: SeasonsOld) {
 		// find the current month and store the index
 		let currentPageDate: [String] = Calendar.current.shortStandaloneMonthSymbols
 		let dateFormatter: DateFormatter = DateFormatter()

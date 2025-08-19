@@ -56,16 +56,16 @@ struct MainTabScreen: View {
 				Tab("Months", systemImage: "calendar", value: .months) {
 					createNavigationStackForPeriodView(for:
 						PeriodTabView<Months>(
-							selectedPeriod: Months.currentPeriod,
-							produce: produce
+							produce: produce,
+							selectedPeriod: Months.currentPeriod
 						)
 					)
 				}
 				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {
 					createNavigationStackForPeriodView(for:
 						PeriodTabView<Seasons>(
-							selectedPeriod: Seasons.currentPeriod,
-							produce: produce
+							produce: produce,
+							selectedPeriod: Seasons.currentPeriod
 						)
 					)
 				}

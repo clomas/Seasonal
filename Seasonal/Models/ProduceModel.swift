@@ -27,7 +27,7 @@ struct Produce: Identifiable {
 	var months: [Months] {
 		produce.months
 	}
-	var seasons: [Seasons] {
+	var seasons: [SeasonsOld] {
 		produce.seasons
 	}
 	var liked: Bool {
@@ -46,7 +46,7 @@ struct ProduceModel: Identifiable {
     let imageName: String
     let description: String // Not implemented yet
     let months: [Months]
-    let seasons: [Seasons]
+    let seasons: [SeasonsOld]
     var liked: Bool
 }
 

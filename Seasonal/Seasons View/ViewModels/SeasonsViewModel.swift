@@ -6,14 +6,33 @@
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
 
+enum SeasonsOld: Int, CaseIterable {
+
+	case summer = 0
+	case autumn = 1
+	case winter = 2
+	case spring = 3
+	case cancelled = 4
+
+	var name: String {
+		switch self {
+		case .summer: return "summer"
+		case .autumn: return "autumn"
+		case .winter: return "winter"
+		case .spring: return "spring"
+		case .cancelled: return "cancelled"
+		}
+	}
+}
+
 final class SeasonsViewModel: MenuBarDelegate {
 
 	private let produceDataService: ProduceDataService
 
 	weak var coordinator: MainViewCoordinator?
 
-	var produceData: [Seasons: [Produce]]
-	var season: Seasons
+	var produceData: [SeasonsOld: [Produce]]
+	var season: SeasonsOld
 	var category: ViewDisplayed.ProduceCategory
 
 	var seasonProduceToDisplay: [Produce]? {
@@ -26,8 +45,8 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	var reloadTableView: Closure = {}
 
-	init(produceData: [Seasons: [Produce]],
-		 season: Seasons,
+	init(produceData: [SeasonsOld: [Produce]],
+		 season: SeasonsOld,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
 		 dataService: ProduceDataService = ProduceDataService()) {
@@ -50,12 +69,12 @@ final class SeasonsViewModel: MenuBarDelegate {
 		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
 
 			category = .cancelled
-		case Seasons.summer.rawValue,
-			 Seasons.autumn.rawValue,
-			 Seasons.winter.rawValue,
-			 Seasons.spring.rawValue:
+		case SeasonsOld.summer.rawValue,
+			 SeasonsOld.autumn.rawValue,
+			 SeasonsOld.winter.rawValue,
+			 SeasonsOld.spring.rawValue:
 
-			season = Seasons(rawValue: index) ?? .summer
+			season = SeasonsOld(rawValue: index) ?? .summer
 		default:
 			return
 		}
@@ -85,7 +104,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 		// TODO: Do I need code 😬to update in cloudkit from users? because I don't think I'm recording in cloudkit
 
 		for seasonProduce in produceData {
-			let season: Seasons = seasonProduce.key
+			let season: SeasonsOld = seasonProduce.key
 
 			if let index: Array<ProduceModel>.Index = produceData[season]?.firstIndex(where: { $0.id == id}) {
 				produceData[season]?[index].liked = updateLikeTo
@@ -110,10 +129,10 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 extension Array where Element == ProduceModel {
 
-	func sortIntoSeasons() -> [Seasons: [Produce]] {
-		var seasonsArray: [Seasons: [Produce]] = [Seasons: [Produce]]()
+	func sortIntoSeasons() -> [SeasonsOld: [Produce]] {
+		var seasonsArray: [SeasonsOld: [Produce]] = [SeasonsOld: [Produce]]()
 
-		Seasons.asArray.forEach { (season: Seasons) in
+		SeasonsOld.asArray.forEach { (season: SeasonsOld) in
 			var seasonsProduce: [Produce] = [Produce]()
 
 			if season != .cancelled {

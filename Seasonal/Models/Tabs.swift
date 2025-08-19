@@ -11,7 +11,7 @@ import Foundation
 enum Tabs: Hashable {
 	case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String)
 	case months(Months, category: ViewDisplayed.ProduceCategory = .all, search: String)
-	case seasons(Seasons, category: ViewDisplayed.ProduceCategory = .all, search: String)
+	case seasons(SeasonsOld, category: ViewDisplayed.ProduceCategory = .all, search: String)
 
 	var title: String {
 		switch self {

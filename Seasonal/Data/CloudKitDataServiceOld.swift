@@ -75,7 +75,7 @@ class CloudKitDataServiceOld {
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
             let description: String = ""
 			var months: [Months] = [Months]()
-			var seasons: [Seasons] = [Seasons]()
+			var seasons: [SeasonsOld] = [SeasonsOld]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
@@ -187,19 +187,19 @@ class CloudKitDataServiceOld {
 extension String {
 
     // Parse Seasons
-    func createSeasonArray() -> [Seasons] {
-		var seasons: [Seasons] = [Seasons]()
+    func createSeasonArray() -> [SeasonsOld] {
+		var seasons: [SeasonsOld] = [SeasonsOld]()
 
-        if self.contains(Seasons.summer.shortName) {
+        if self.contains(SeasonsOld.summer.shortName) {
             seasons.append(.summer)
         }
-        if self.contains(Seasons.autumn.shortName) {
+        if self.contains(SeasonsOld.autumn.shortName) {
             seasons.append(.autumn)
         }
-        if self.contains(Seasons.winter.shortName) {
+        if self.contains(SeasonsOld.winter.shortName) {
             seasons.append(.winter)
         }
-        if self.contains(Seasons.spring.shortName) {
+        if self.contains(SeasonsOld.spring.shortName) {
             seasons.append(.spring)
         }
         return seasons

@@ -47,47 +47,49 @@ struct MainTabScreen: View {
 		appCoordinator.produceData ?? []
 	}
 
-	var favourites: some View {
-		NavigationStack {
-			ProduceList(produce: produce, selectedTab: selectedTab)
-				.navigationTitle("Favourites")
-		}
-		.tabItem {
-			Label("Favourites", systemImage: "heart")
-		}
-		.tag(Tabs.favourites(category: .all, search: ""))
-	}
-
 	var body: some View {
 		ZStack {
 			TabView(selection: $selectedTab) {
 				Tab("Favourites", systemImage: "heart", value: .favourites) {
-					ProduceList(produce: produce, selectedTab: selectedTab)
+					ProduceList(produce: produce, period: Months.april, selectedTab: selectedTab)
 				}
 				Tab("Months", systemImage: "calendar", value: .months) {
-					NavigationStack {
-						MonthsTabView(
-							selectedMonth: Month.thisMonth,
+					createNavigationStackForPeriodView(for:
+						PeriodTabView<Months>(
+							selectedPeriod: Months.currentPeriod,
 							produce: produce
 						)
-					}
-					.toolbarBackground(.visible, for: .navigationBar)
-					.toolbarBackground(Color.clear, for: .navigationBar)
+					)
 				}
 				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {
-					ProduceList(produce: produce, selectedTab: selectedTab)
+					createNavigationStackForPeriodView(for:
+						PeriodTabView<Seasons>(
+							selectedPeriod: Seasons.currentPeriod,
+							produce: produce
+						)
+					)
 				}
 				Tab("Categories", systemImage: "slider.horizontal.2.square", value: .categories) {
-					ZStack {
-						Color(.systemBackground)
-
-						List(appCoordinator.produceData ?? [], id: \.id) { item in
-							ProduceCell(produce: item)
-								.listRowSeparator(.visible)
-						}
-						.listStyle(.plain)
-						.listRowInsets(.bottomPadding)
-					}
+//					ZStack {
+//						Color(.systemBackground)
+//
+//						List(appCoordinator.produceData ?? [], id: \.id) { item in
+//							ProduceCell(produce: item)
+//								.listRowSeparator(.visible)
+//						}
+//						.listStyle(.plain)
+//						.listRowInsets(.bottomPadding)
+//					}
+//					Menu {
+//						ForEach(Array(Period.allCases), id: \.self) { period in
+//							Button("\(period.name)") {
+//								selectedPeriod = period
+//							}
+//						}
+//					} label: {
+//						Label(selectedPeriod.name, systemImage: .calendarImage)
+//							.glassEffect(.regular)
+//					}
 				}
 				Tab(value: .search, role: .search) {
 					NavigationStack {
@@ -119,10 +121,10 @@ struct MainTabScreen: View {
 		}
 	}
 
-	init() {
-		// TODO: This? nah
-			//		UITabBar.appearance().backgroundColor = UIColor(Color.gray)
-//		UITabBar.appearance().unselectedItemTintColor = .darkGray
+	private func createNavigationStackForPeriodView(for view: some View) -> some View {
+		NavigationStack { view }
+			.toolbarBackground(.visible, for: .navigationBar)
+			.toolbarBackground(Color.clear, for: .navigationBar)
 	}
 }
 

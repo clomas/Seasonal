@@ -24,10 +24,10 @@ struct Produce: Identifiable {
 	var category: ViewDisplayed.ProduceCategory? {
 		produce.category
 	}
-	var months: [Month] {
+	var months: [Months] {
 		produce.months
 	}
-	var seasons: [Season] {
+	var seasons: [Seasons] {
 		produce.seasons
 	}
 	var liked: Bool {
@@ -45,8 +45,8 @@ struct ProduceModel: Identifiable {
     let category: ViewDisplayed.ProduceCategory
     let imageName: String
     let description: String // Not implemented yet
-    let months: [Month]
-    let seasons: [Season]
+    let months: [Months]
+    let seasons: [Seasons]
     var liked: Bool
 }
 
@@ -57,6 +57,17 @@ extension ProduceModel {
 }
 
 extension Array where Element == ProduceModel {
+
+	/// Filters produce by period, category, and search. Works for any PeriodType.
+	func filtered<Period: PeriodType>(
+		by period: Period,
+		category: ViewDisplayed.ProduceCategory,
+		search: String
+	) -> [ProduceModel] {
+		self
+			.filter { period.allCases.contains(period) && (category == .all || $0.category == category) }
+			.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
+	}
 
 	func filtered(by selectedTab: Tabs) -> [ProduceModel] {
 		switch selectedTab {

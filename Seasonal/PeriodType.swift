@@ -9,7 +9,12 @@
 import SwiftUI
 
 protocol PeriodType: CaseIterable, Equatable, Hashable where AllCases: RandomAccessCollection {
+
+	static var currentPeriod: Self { get }
+	static var allCases: [Self] { get }
+
 	var name: String { get }
+	var nameLowercased: String { get }
 	var index: Int { get }
 	var image: Image { get }
 }
@@ -20,7 +25,15 @@ extension PeriodType {
 		String(describing: self).capitalized
 	}
 
+	var nameLowercased: String {
+		String(describing: self)
+	}
+
 	var index: Int {
-		Array(Self.allCases).firstIndex(of: self) ?? 0
+		allCases.firstIndex(of: self) ?? 0
+	}
+
+	var allCases: [Self] {
+		Array(Self.allCases)
 	}
 }

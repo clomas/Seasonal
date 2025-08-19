@@ -105,3 +105,11 @@ extension Image {
 	static let heartFill: Image = .init(systemName: "heart.fill")
 	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
 }
+
+extension String {
+	static let calendarImage: String = "calendar"
+}
+
+extension TimeInterval {
+	static let lazyHStackScrollDuration: TimeInterval = 0.5
+}

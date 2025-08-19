@@ -12,8 +12,8 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	weak var coordinator: MainViewCoordinator?
 
-	var produceData: [Season: [Produce]]
-	var season: Season
+	var produceData: [Seasons: [Produce]]
+	var season: Seasons
 	var category: ViewDisplayed.ProduceCategory
 
 	var seasonProduceToDisplay: [Produce]? {
@@ -26,8 +26,8 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	var reloadTableView: Closure = {}
 
-	init(produceData: [Season: [Produce]],
-		 season: Season,
+	init(produceData: [Seasons: [Produce]],
+		 season: Seasons,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
 		 dataService: ProduceDataService = ProduceDataService()) {
@@ -50,12 +50,12 @@ final class SeasonsViewModel: MenuBarDelegate {
 		case ViewDisplayed.ProduceCategory.cancelled.rawValue:
 
 			category = .cancelled
-		case Season.summer.rawValue,
-			 Season.autumn.rawValue,
-			 Season.winter.rawValue,
-			 Season.spring.rawValue:
+		case Seasons.summer.rawValue,
+			 Seasons.autumn.rawValue,
+			 Seasons.winter.rawValue,
+			 Seasons.spring.rawValue:
 
-			season = Season(rawValue: index) ?? .summer
+			season = Seasons(rawValue: index) ?? .summer
 		default:
 			return
 		}
@@ -85,7 +85,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 		// TODO: Do I need code 😬to update in cloudkit from users? because I don't think I'm recording in cloudkit
 
 		for seasonProduce in produceData {
-			let season: Season = seasonProduce.key
+			let season: Seasons = seasonProduce.key
 
 			if let index: Array<ProduceModel>.Index = produceData[season]?.firstIndex(where: { $0.id == id}) {
 				produceData[season]?[index].liked = updateLikeTo
@@ -110,10 +110,10 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 extension Array where Element == ProduceModel {
 
-	func sortIntoSeasons() -> [Season: [Produce]] {
-		var seasonsArray: [Season: [Produce]] = [Season: [Produce]]()
+	func sortIntoSeasons() -> [Seasons: [Produce]] {
+		var seasonsArray: [Seasons: [Produce]] = [Seasons: [Produce]]()
 
-		Season.asArray.forEach { (season: Season) in
+		Seasons.asArray.forEach { (season: Seasons) in
 			var seasonsProduce: [Produce] = [Produce]()
 
 			if season != .cancelled {

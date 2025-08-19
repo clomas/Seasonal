@@ -37,7 +37,7 @@ class SeasonalTests: XCTestCase {
 	var likedArray: [Int] = [4, 3, 30, 91, 2]
 
 	var testMonthData = [[ProduceModel]]()
-	var testSeasonData = [Season: [ProduceModel]]()
+	var testSeasonData = [Seasons: [ProduceModel]]()
 
 	struct DummyPublicCKRecords {
 		let id: Int?
@@ -104,7 +104,7 @@ class SeasonalTests: XCTestCase {
 			var category = ViewDisplayed.ProduceCategory.fruit
 			let description = ""
 			var months = [MonthOld]()
-			var seasons = [Season]()
+			var seasons = [Seasons]()
 			var liked = false
 
 			if let recordID = record.id,

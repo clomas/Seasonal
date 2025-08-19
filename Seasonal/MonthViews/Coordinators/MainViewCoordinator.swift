@@ -48,9 +48,9 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 	private var mainViewController: MainViewController?
 	private var dataFetched: [ProduceModel]?
 	private var determinedLocation: StateLocation
-	private var monthAndSeason: (MonthOld, Season) = DateHandler().findMonthAndSeasonOld()
+	private var monthAndSeason: (MonthOld, Seasons) = DateHandler().findMonthAndSeasonOld()
 	private var currentMonth: MonthOld { monthAndSeason.0 }
-	private var currentSeason: Season { monthAndSeason.1 }
+	private var currentSeason: Seasons { monthAndSeason.1 }
 
 	init(navigationController: UINavigationController,
 		 cloudKitDataService: CloudKitDataServiceOld,

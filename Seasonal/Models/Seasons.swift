@@ -1,5 +1,5 @@
 //
-//  Season.swift
+//  Seasons.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 18/8/2025.
@@ -8,13 +8,15 @@
 
 import SwiftUI
 
-enum Season: Int, PeriodType {
+enum Seasons: Int, PeriodType {
 
 	case summer = 0
 	case autumn = 1
 	case winter = 2
 	case spring = 3
 	case cancelled = 4
+
+	static let currentPeriod: Seasons = .autumn
 
 	var name: String {
 		switch self {

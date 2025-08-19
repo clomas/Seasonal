@@ -10,11 +10,11 @@ import Foundation
 
 struct DateHandler {
 
-	var currentMonth: Month {
+	var currentMonth: Months {
 		findMonthAndSeason().month
 	}
 
-	func findMonthAndSeasonOld() -> (month: MonthOld, season: Season) {
+	func findMonthAndSeasonOld() -> (month: MonthOld, season: Seasons) {
 		// find the current month and store the index
 		let currentPageDate: [String] = Calendar.current.shortStandaloneMonthSymbols
 		let dateFormatter: DateFormatter = DateFormatter()
@@ -46,7 +46,7 @@ struct DateHandler {
 		}
 	}
 
-	func findMonthAndSeason() -> (month: Month, season: Season) {
+	func findMonthAndSeason() -> (month: Months, season: Seasons) {
 		// find the current month and store the index
 		let currentPageDate: [String] = Calendar.current.shortStandaloneMonthSymbols
 		let dateFormatter: DateFormatter = DateFormatter()
@@ -58,7 +58,7 @@ struct DateHandler {
 		let monthString: MonthOld = MonthOld.asArray[(currentPageDate.firstIndex(of: currentMonth) ?? 0) as Int]
 
 		// Infinite CollectionView means the month in Month.asArray will be 1 less
-		let month: Month = Month(rawValue: (monthString.rawValue + 1)) ?? .december
+		let month: Months = Months(rawValue: (monthString.rawValue + 1)) ?? .december
 
 		switch month {
 		case .december, .january, .february:

@@ -10,10 +10,8 @@ import Foundation
 
 enum Tabs: Hashable {
 	case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String)
-	case months(Month, category: ViewDisplayed.ProduceCategory = .all, search: String)
-	case seasons(Season, category: ViewDisplayed.ProduceCategory = .all, search: String)
-		//		case categories(ViewDisplayed.ProduceCategory)
-		//		case search(String = "")
+	case months(Months, category: ViewDisplayed.ProduceCategory = .all, search: String)
+	case seasons(Seasons, category: ViewDisplayed.ProduceCategory = .all, search: String)
 
 	var title: String {
 		switch self {
@@ -23,21 +21,17 @@ enum Tabs: Hashable {
 			month.name
 		case .seasons(let season, _, _):
 			season.name
-				//			case .categories(let category):
-				//				return categoryTitle(category)
-				//			case .search:
-				//				return "Search"
 		}
 	}
 
-	var currentSelectedMonth: Month {
+	var currentSelectedMonth: Months {
 		if case let .months(month, _, _) = self {
 			return month
 		}
-		return .thisMonth // fallback for non-months cases
+		return .currentPeriod
 	}
 
-	func updatingMonth(_ newMonth: Month) -> Tabs {
+	func updatingMonth(_ newMonth: Months) -> Tabs {
 		switch self {
 		case .months(_, let category, let search):
 			.months(newMonth, category: category, search: search)

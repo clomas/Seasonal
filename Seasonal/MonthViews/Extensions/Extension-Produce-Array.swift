@@ -27,7 +27,7 @@ extension Array where Element == ProduceModel {
 
 			self.forEach({ (item: ProduceModel) in
 
-				if let month: Month = Month(rawValue: (monthIndex	+ 1)) {
+				if let month: Months = Months(rawValue: (monthIndex	+ 1)) {
 					if item.months.contains(month) {
 						monthArray.append(Produce(produce: item))
 					}

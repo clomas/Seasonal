@@ -61,10 +61,10 @@ struct MenuBarModel {
 
 		func imageName() -> String {
 			switch self {
-			case .summer: return "\(Season.summer).png"
-			case .autumn: return "\(Season.autumn).png"
-			case .winter: return "\(Season.winter).png"
-			case .spring: return "\(Season.spring).png"
+			case .summer: return "\(Seasons.summer).png"
+			case .autumn: return "\(Seasons.autumn).png"
+			case .winter: return "\(Seasons.winter).png"
+			case .spring: return "\(Seasons.spring).png"
 			case .all: return "\(Constants.categories).png"
 			case .fruit: return "\(Constants.fruit).png"
 			case .vegetables: return "\(Constants.vegetables).png"

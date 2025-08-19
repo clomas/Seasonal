@@ -74,8 +74,8 @@ class CloudKitDataServiceOld {
 			var imageName: String = Constants.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
             let description: String = ""
-			var months: [Month] = [Month]()
-			var seasons: [Season] = [Season]()
+			var months: [Months] = [Months]()
+			var seasons: [Seasons] = [Seasons]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
@@ -187,27 +187,27 @@ class CloudKitDataServiceOld {
 extension String {
 
     // Parse Seasons
-    func createSeasonArray() -> [Season] {
-		var seasons: [Season] = [Season]()
+    func createSeasonArray() -> [Seasons] {
+		var seasons: [Seasons] = [Seasons]()
 
-        if self.contains(Season.summer.shortName) {
+        if self.contains(Seasons.summer.shortName) {
             seasons.append(.summer)
         }
-        if self.contains(Season.autumn.shortName) {
+        if self.contains(Seasons.autumn.shortName) {
             seasons.append(.autumn)
         }
-        if self.contains(Season.winter.shortName) {
+        if self.contains(Seasons.winter.shortName) {
             seasons.append(.winter)
         }
-        if self.contains(Season.spring.shortName) {
+        if self.contains(Seasons.spring.shortName) {
             seasons.append(.spring)
         }
         return seasons
     }
 
 	// Parse Months
-    func createMonthArray() -> [Month] {
-		var months: [Month] = [Month]()
+    func createMonthArray() -> [Months] {
+		var months: [Months] = [Months]()
 		var searchStartIndex: String.Index = self.startIndex
 
         while searchStartIndex < self.endIndex,
@@ -217,7 +217,7 @@ extension String {
 			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
 			// add 1 here for infiniteCollectionView offset
-			if let month: Month = Month(rawValue: index + 1) {
+			if let month: Months = Months(rawValue: index + 1) {
 				months.append(month)
 			}
             searchStartIndex = range.upperBound

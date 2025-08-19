@@ -10,8 +10,8 @@ import SwiftUI
 
 struct MonthsInSeasonCapsuleView: View {
 
-	let from: Month = .january
-	let to: Month = .september
+	let from: Months = .january
+	let to: Months = .september
 
 	var body: some View {
 		GeometryReader { geometry in
@@ -23,7 +23,7 @@ struct MonthsInSeasonCapsuleView: View {
 
 					// Month circles
 				HStack(spacing: 0) {
-					ForEach(Month.allCases, id: \.self) { month in
+					ForEach(Months.allCases, id: \.self) { month in
 						ZStack {
 							if DateHandler().findMonthAndSeason().month == month {
 								ZStack {
@@ -49,8 +49,8 @@ struct MonthsInSeasonCapsuleView: View {
 }
 
 struct MonthRangeOverlay: View {
-	let from: Month
-	let to: Month
+	let from: Months
+	let to: Months
 	let totalWidth: CGFloat
 
 	private var offset: CGFloat {

@@ -12,6 +12,8 @@ struct ProduceList: View {
 	private let bottomPadding: CGFloat = 200
 
 	let produce: [ProduceModel]
+	let period: any PeriodType
+	// TODO: Delete this
 	let selectedTab: MainTabScreen.MainTabScreenTab
 
 	var body: some View {
@@ -45,7 +47,7 @@ struct ProduceList: View {
 				.resizable()
 				.frame(width: 50, height: 50)
 				.padding(20)
-			Text("Nothing to see ere, try another \(selectedTab.lowercaseTitle)") // TODO: Test this out
+			Text("Nothing to see ere, try another \(period.nameLowercased)") // TODO: Test this out
 		}
 	}
 }

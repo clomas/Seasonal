@@ -1,5 +1,5 @@
 	//
-	//  Month.swift
+	//  Months.swift
 	//  Seasonal
 	//
 	//  Created by Clint Thomas on 9/4/2023.
@@ -29,7 +29,7 @@ enum MonthOld: Int, CaseIterable {
 	}
 }
 
-enum Month: Int, PeriodType {
+enum Months: Int, PeriodType {
 	case january = 1
 	case february
 	case march
@@ -43,8 +43,8 @@ enum Month: Int, PeriodType {
 	case november
 	case december
 
-	static let thisMonth: Month = Month(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
-	
+	static let currentPeriod: Months = Months(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
+
 	var image: Image {
 		.calendar
 	}

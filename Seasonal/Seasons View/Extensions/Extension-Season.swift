@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension Season {
+extension Seasons {
 
 	var asString: String {
 		switch self {
@@ -29,5 +29,5 @@ extension Season {
 		}
 	}
 
-	static var asArray: [Season] {return self.allCases}
+	static var asArray: [Seasons] {return self.allCases}
 }

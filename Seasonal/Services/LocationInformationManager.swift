@@ -9,19 +9,16 @@
 import Foundation
 import MapKit
 
+@available(iOS 26.0, *)
 class LocationInformationManager {
 
 	func parseLocation(_ location: CLLocation?) async -> StateLocation {
 		guard let location else { return .noState }
 
-		if #available(iOS 26.0, *) {
-			let request = MKReverseGeocodingRequest(location: location)
-			let placemark: MKPlacemark? = try? await request?.mapItems.first?.placemark
+		let request = MKReverseGeocodingRequest(location: location)
+		let placemark: MKPlacemark? = try? await request?.mapItems.first?.placemark
 
-			return parseLocationForDelegate(state: placemark?.administrativeArea, country: placemark?.country)
-		} else {
-			return .noState
-		}
+		return parseLocationForDelegate(state: placemark?.administrativeArea, country: placemark?.country)
 	}
 
 	// MARK: States in Aus

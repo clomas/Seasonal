@@ -8,56 +8,6 @@
 
 import Foundation
 
-struct Produce: Identifiable {
-
-	var produce: ProduceModel
-
-	var id: Int {
-		produce.id
-	}
-	var name: String {
-		produce.name
-	}
-	var imageName: String {
-		produce.imageName
-	}
-	var description: String {
-		produce.description
-	}
-	var liked: Bool {
-		get {
-			return produce.liked
-		} set(liked) {
-			produce.liked = liked
-		}
-	}
-
-	// Commented out redundant properties now provided by protocol conformance
-	var produceName: String {
-		produce.name
-	}
-	var category: ViewDisplayed.ProduceCategory? {
-		produce.category.toOld
-	}
-	var months: [MonthOld] {
-		produce.months.toOld
-	}
-	var seasons: [SeasonsOld] {
-		produce.seasons.toOld
-	}
-}
-
-struct ProduceModel: Identifiable {
-    let id: Int
-    let name: String
-    let category: ProduceCategory
-    let imageName: String
-    let description: String // Not implemented yet
-    let months: [Months]
-    let seasons: [Seasons]
-    var liked: Bool
-}
-
 struct ProduceModelOld: Identifiable {
     let id: Int
     let name: String
@@ -99,28 +49,28 @@ extension Array where Element == ProduceModel {
 			.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 	}
 
-	func filtered(by selectedTab: Tabs) -> [ProduceModel] {
-		switch selectedTab {
-		case .favourites(let category, let search):
-			self
-				.filter { $0.liked && (category == .all || $0.category == category) }
-				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
-
-		case .months(let month, let category, let search):
-			self
-				.filter { $0.months.contains(month) && (category == .all || $0.category == category) }
-				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
-
-		case .seasons(let season, let category, let search):
-			self
-				.filter { $0.seasons.contains(season) && (category == .all || $0.category == category) }
-				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
+//	func filtered(by selectedTab: Tabs) -> [ProduceModel] {
+//		switch selectedTab {
+//		case .favourites(let category, let search):
+//			self
+//				.filter { $0.liked && (category == .all || $0.category == category) }
+//				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
+//
+//		case .months(let month, let category, let search):
+//			self
+//				.filter { $0.months.contains(month) && (category == .all || $0.category == category) }
+//				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
+//
+//		case .seasons(let season, let category, let search):
+//			self
+//				.filter { $0.seasons.contains(season) && (category == .all || $0.category == category) }
+//				.filter { search.isEmpty || $0.name.localizedCaseInsensitiveContains(search) }
 
 //		case .categories(let category):
 //			return produce.filter { category == .all || $0.category == category }
 
 //		case .search(let term):
 //			return produce.filter { $0.name.localizedCaseInsensitiveContains(term) }
-		}
-	}
+//		}
+//	}
 }

@@ -7,235 +7,161 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "3B4A7A3F-E555-463D-B314-7916AA151F92"
+            uuid = "F155FEEC-D98E-48D0-A331-E6E568DBE66F"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Month Views/View Models/MainViewModel.swift"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewModels/MenuBarViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "215"
-            endingLineNumber = "215"
-            landmarkName = "filterFavouritesProduce()"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "setupSeasonsViewMenuBar()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2D46851A-C61D-4664-8F18-2AB0AA81C88E"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/Month Views/View Models/MainViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
-            landmarkName = "filterFavouritesProduce()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "0D85B222-A114-468A-AF56-A83BB33163FE"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/InitialScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "35"
-            endingLineNumber = "35"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "61D0EF98-85DD-491D-9502-95EB0ACF67BA"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/InitialScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "44"
-            endingLineNumber = "44"
-            landmarkName = "body"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "470863DF-36B3-4F58-8504-4BEBA83ED148"
+            uuid = "FB78AEB7-A329-44E4-A2F3-B8669A621A70"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Utilities/LocationInformationManager.swift"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewControllers/Child Views/MenuBarCollectionView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "52"
-            endingLineNumber = "52"
-            landmarkName = "parseLocationForDelegate(state:country:)"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
+            landmarkName = "toggleSelectedCells(viewDisplayed:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D7AEA361-6BD1-4F5C-8DA6-D45F294469AE"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/MainScreen/TabViews/MonthsTabScreen.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "unknown"
-            landmarkType = "0">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "1589A119-D4C8-4DE7-8FF1-CFBBB86B2E96"
+            uuid = "22C6F29B-D5A7-4259-9087-58D5D73467F4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/MonthViews/ViewControllers/MainViewController.swift"
+            filePath = "Seasonal/Services/ProduceCloudDataService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "reloadAndScrollToSelectedViewIndex()"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "compareCoreDataToCloudKitData(locallyStoredData:produceArray:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "98C75F45-C6A7-4C64-8FF0-DFCF67DB6E62"
+            uuid = "12018884-F954-4EA2-8D02-9CD964481796"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/MonthViews/ViewControllers/MainViewController.swift"
+            filePath = "Seasonal/Services/ProduceCloudDataService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "viewDidLayoutSubviews()"
+            startingLineNumber = "170"
+            endingLineNumber = "170"
+            landmarkName = "compareCoreDataToCloudKitData(locallyStoredData:produceArray:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "35521E8F-B275-4E7B-AF62-CD6E1BD73A32"
+            uuid = "B873C7FA-BC34-46AD-9030-210093CD93E2"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Seasonal/Data/CloudKitDataService.swift"
+            filePath = "Seasonal/Services/ProduceCloudDataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "174"
+            endingLineNumber = "174"
+            landmarkName = "compareCoreDataToCloudKitData(locallyStoredData:produceArray:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7776149D-E398-402D-963C-239FBC5103CA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/Services/ProduceCloudDataService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "173"
+            endingLineNumber = "173"
+            landmarkName = "compareCoreDataToCloudKitData(locallyStoredData:produceArray:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DF03F8EB-AE34-4065-853B-5B71425E2B40"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/&lt; iOS 26/Data/CloudKitDataServiceOld.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "129"
+            endingLineNumber = "129"
+            landmarkName = "compareCoreDataToCloudKitData(locallyStoredData:produceArray:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7410E722-D30F-459D-B9CC-F4D5AA287F75"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewControllers/InfoViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "presentCopyEmailToClipboardAlert()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "726DD29F-0FFF-4348-AC20-DAB820413CCB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewControllers/InfoViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "46"
+            endingLineNumber = "46"
+            landmarkName = "emailButtonWasTapped(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7E07BAF4-8370-4EC4-B335-26390DA62F52"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewControllers/InfoViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
             endingLineNumber = "50"
-            landmarkName = "fetchItems(recordType:queryKey:)"
+            landmarkName = "emailButtonWasTapped(_:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "35521E8F-B275-4E7B-AF62-CD6E1BD73A32 - 90dea1b5008ee766"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for Seasonal.CloudKitDataService.fetchItems(recordType: Swift.String, queryKey: Swift.String) async -&gt; Swift.Array&lt;__C.CKRecord&gt;"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/Data/CloudKitDataService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50">
-               </Location>
-               <Location
-                  uuid = "35521E8F-B275-4E7B-AF62-CD6E1BD73A32 - b45a04041734b444"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (__C.CKRecordID, Swift.Result&lt;__C.CKRecord, Swift.Error&gt;) -&gt; Swift.Optional&lt;__C.CKRecord&gt; in Seasonal.CloudKitDataService.fetchItems(recordType: Swift.String, queryKey: Swift.String) async -&gt; Swift.Array&lt;__C.CKRecord&gt;"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/Data/CloudKitDataService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "50"
-                  endingLineNumber = "50">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "732BD56D-A468-4B3D-B442-6BF56E26F0CF"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/Data/CloudKitDataService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "fetchItems(recordType:queryKey:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "732BD56D-A468-4B3D-B442-6BF56E26F0CF - ef39600c041c6282"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for Seasonal.CloudKitDataService.fetchItems(recordType: Swift.String, queryKey: Swift.String) async -&gt; Swift.Array&lt;__C.CKRecord&gt;"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/Data/CloudKitDataService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "48"
-                  endingLineNumber = "48">
-               </Location>
-               <Location
-                  uuid = "732BD56D-A468-4B3D-B442-6BF56E26F0CF - 1bb4e4a8058a56c7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(2) await resume partial function for Seasonal.CloudKitDataService.fetchItems(recordType: Swift.String, queryKey: Swift.String) async -&gt; Swift.Array&lt;__C.CKRecord&gt;"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/Data/CloudKitDataService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "48"
-                  endingLineNumber = "48">
-               </Location>
-               <Location
-                  uuid = "732BD56D-A468-4B3D-B442-6BF56E26F0CF - ea420e828137a4d7"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for Seasonal.CloudKitDataService.fetchItems(recordType: Swift.String, queryKey: Swift.String) async -&gt; Swift.Array&lt;__C.CKRecord&gt;"
-                  moduleName = "Seasonal.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/clintthomas/Apps/xcode/work_in_progress/Seasonal/Seasonal/Data/CloudKitDataService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "48"
-                  endingLineNumber = "48">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

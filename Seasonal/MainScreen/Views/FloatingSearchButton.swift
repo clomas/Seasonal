@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 26.0, *)
 struct FloatingSearchButton: View {
 
 	@Binding var isSearching: Bool
@@ -16,7 +17,6 @@ struct FloatingSearchButton: View {
 		VStack {
 			Spacer()
 			HStack {
-//				Spacer()
 				Button(action: {
 					isSearching.toggle()
 					UIImpactFeedbackGenerator(style: .light).impactOccurred()

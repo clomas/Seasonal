@@ -143,7 +143,8 @@ class CloudKitDataServiceOld {
 	}
 
     // MARK: Save
-
+	
+	@discardableResult
 	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
 
         if FileManager.default.ubiquityIdentityToken != nil {
@@ -161,6 +162,7 @@ class CloudKitDataServiceOld {
         }
     }
 
+	@discardableResult
 	func deleteRecordsInPrivateDatabase(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
 
 		if FileManager.default.ubiquityIdentityToken != nil {

@@ -71,10 +71,7 @@ final class MenuBarViewModel {
 		}
 
 		toggleSelectedCells(indexSelected: indexToSelect)
-
-//		Task { @MainActor in
-			delegate?.menuBarWasTapped(at: index)
-//		}
+		delegate?.menuBarWasTapped(at: index)
 	}
 
 	private func toggleSelectedCells(indexSelected: Int) {

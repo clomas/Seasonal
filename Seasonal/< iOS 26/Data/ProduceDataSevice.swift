@@ -10,11 +10,18 @@ import Foundation
 
 struct ProduceDataService {
 
-	let cloudKitService = CloudKitDataService()
+	let cloudKitService = CloudKitDataServiceOld()
 
 	func updateLike(id: Int, liked: Bool) {
-		// Update in local database
+
 		let likedProduce: LikedProduce = LikedProduce(id: id)
-		liked ? likedProduce.saveItem() : likedProduce.deleteItem()
+
+		if liked {
+			likedProduce.saveItem()
+			cloudKitService.saveLikeToPrivateDatabaseInCloudKit(id: id, result: { _ in })
+		} else {
+			likedProduce.deleteItem()
+			cloudKitService.deleteRecordsInPrivateDatabase(id: id, result: { _ in })
+		}
 	}
 }

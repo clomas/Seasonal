@@ -32,7 +32,7 @@ protocol MonthSelectedDelegate: AnyObject {
 	func updateMonth(to month: MonthOld?)
 }
 
-final class MainViewCoordinator: NSObject, @preconcurrency Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
 	private let navigationController: UINavigationController
 	private var modalNavigationController: UINavigationController?
@@ -124,8 +124,8 @@ final class MainViewCoordinator: NSObject, @preconcurrency Coordinator, UINaviga
 		}
 	}
 
-	@MainActor func updateDataModelsAndDatabase(for id: Int, liked: Bool, from view: ViewDisplayed) {
-
+	@MainActor
+	func updateDataModelsAndDatabase(for id: Int, liked: Bool, from view: ViewDisplayed) {
 		if view == .seasons {
 			mainViewController?.viewModel?.likeToggle(id: id, liked: liked)
 		} else {

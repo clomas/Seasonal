@@ -8,6 +8,12 @@
 
 import SwiftUI
 
+// TODO: List
+// Info screen
+// Search screen
+// CloudKit work (old and new)
+// 
+
 @available(iOS 26, *)
 struct RootView: View {
 	@EnvironmentObject var coordinator: AppCoordinator

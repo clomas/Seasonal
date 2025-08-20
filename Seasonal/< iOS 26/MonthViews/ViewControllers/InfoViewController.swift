@@ -42,7 +42,7 @@ class InfoViewController: UIViewController {
     @IBAction func emailButtonWasTapped(_ sender: Any) {
 		// Else no mail client set up, copy email address to clipboard?
         guard MFMailComposeViewController.canSendMail() else {
-
+			presentCopyEmailToClipboardAlert()
             return
         }
 
@@ -68,8 +68,8 @@ class InfoViewController: UIViewController {
 
 	// Copy my email address to the clipboard (if no email client)
     private func presentCopyEmailToClipboardAlert() {
-		presentAlert(title: "Unable to find mail app",
-					 message: "Copy 'clint.thomas@me.com' to clipboard?",
+		presentAlert(title: "Unable to launch mail app",
+					 message: "Copy email address: 'clint.thomas@me.com' to clipboard?",
 					 alertStyle: .alert,
 					 actionTitles: ["Yes", "Nope"],
 					 actionStyles: [.default, .cancel],

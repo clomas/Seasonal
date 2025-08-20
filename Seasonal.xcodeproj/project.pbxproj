@@ -67,13 +67,15 @@
 		27E6E69122D1A3790018DCF2 /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */; };
 		27E989AE2E518B94006C7739 /* InfiniteTabToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989AD2E518B89006C7739 /* InfiniteTabToolbar.swift */; };
 		27E989B12E519407006C7739 /* Extension-UIWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */; };
-		27E989B32E52E43B006C7739 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B22E52E431006C7739 /* Tabs.swift */; };
+		27E989B32E52E43B006C7739 /* Tabs-DELETE?.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B22E52E431006C7739 /* Tabs-DELETE?.swift */; };
 		27E989B52E530336006C7739 /* PeriodType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B42E530333006C7739 /* PeriodType.swift */; };
 		27E989B72E530760006C7739 /* Seasons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E989B62E53075D006C7739 /* Seasons.swift */; };
 		27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27ECB41522EF19090097A8D4 /* InfoViewController.swift */; };
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
 		27EFF3D2215A5C1700CFB31D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */; };
+		27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED32E558133000E4A75 /* ProduceOld.swift */; };
+		27FACED62E55828A000E4A75 /* Produce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED52E558286000E4A75 /* Produce.swift */; };
 		27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */; };
 		27FB2EBC2E12C38700CA6DCE /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */; };
 		27FB2EBE2E13E19600CA6DCE /* CloudKitDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */; };
@@ -198,7 +200,7 @@
 		27E6E69022D1A3790018DCF2 /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		27E989AD2E518B89006C7739 /* InfiniteTabToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfiniteTabToolbar.swift; sourceTree = "<group>"; };
 		27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Extension-UIWindow.swift"; sourceTree = "<group>"; };
-		27E989B22E52E431006C7739 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
+		27E989B22E52E431006C7739 /* Tabs-DELETE?.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Tabs-DELETE?.swift"; sourceTree = "<group>"; };
 		27E989B42E530333006C7739 /* PeriodType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodType.swift; sourceTree = "<group>"; };
 		27E989B62E53075D006C7739 /* Seasons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Seasons.swift; sourceTree = "<group>"; };
 		27ECB41522EF19090097A8D4 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
@@ -208,6 +210,8 @@
 		27EFF3D1215A5C1700CFB31D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27EFF3D3215A5C1700CFB31D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27F4218E22328FA40009922C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27FACED32E558133000E4A75 /* ProduceOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceOld.swift; sourceTree = "<group>"; };
+		27FACED52E558286000E4A75 /* Produce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Produce.swift; sourceTree = "<group>"; };
 		27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabScreen.swift; sourceTree = "<group>"; };
 		27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitDataService.swift; sourceTree = "<group>"; };
@@ -252,24 +256,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		27157E7925529FA60001CD4D /* Networking */ = {
+		27157E7925529FA60001CD4D /* Services */ = {
 			isa = PBXGroup;
 			children = (
 				27FCA54325DB992300AD2020 /* NetworkService.swift */,
 				2715421622F9957900375D64 /* LocationService.swift */,
+				27FB2EC52E18F4C400CA6DCE /* LocationInformationManager.swift */,
+				27FB2EC72E1A166200CA6DCE /* ProduceCloudDataService.swift */,
+				27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */,
+				276DDC4E237671AC00929E77 /* LocalDataHandler.swift */,
+				27157E6D254FE02D0001CD4D /* LikedProduce.swift */,
 			);
-			path = Networking;
+			path = Services;
 			sourceTree = "<group>";
 		};
 		2718E2CE225F808700B802F9 /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				27FB2EC72E1A166200CA6DCE /* ProduceCloudDataService.swift */,
-				27FB2EBD2E13E18A00CA6DCE /* CloudKitDataService.swift */,
 				276F35D824D695CC00D223A0 /* CloudKitDataServiceOld.swift */,
 				27E698E725EE5DCC004B45E9 /* ProduceDataSevice.swift */,
-				276DDC4E237671AC00929E77 /* LocalDataHandler.swift */,
-				27157E6D254FE02D0001CD4D /* LikedProduce.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -375,13 +380,10 @@
 		272D84DF266B7355002CEE1A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				2790D8452E54144500119F87 /* ProduceCategory.swift */,
 				27E989B62E53075D006C7739 /* Seasons.swift */,
-				27E989B22E52E431006C7739 /* Tabs.swift */,
+				27E989B22E52E431006C7739 /* Tabs-DELETE?.swift */,
 				278611B925687DF500E8021B /* ProduceModel.swift */,
-				2749C9F926304B58009E19A5 /* MenuBarModel.swift */,
-				274D475F25FA08E900B60BD3 /* MenuBarCellModel.swift */,
-				27AE9A1D29E2518300C98823 /* MonthOld.swift */,
+				27FACED52E558286000E4A75 /* Produce.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -461,16 +463,12 @@
 		278611BB25687F8900E8021B /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */,
 				27FB2EC92E1A199200CA6DCE /* LocationManagerOld.swift */,
-				2718E2CF225F809100B802F9 /* Constants.swift */,
 				277A682F263A3B5700E4389A /* Extension-String.swift */,
 				277A6833263A3C2600E4389A /* Extension-UIButton.swift */,
 				277A6831263A3BDE00E4389A /* Extension-UIColor.swift */,
 				27FCA54725DBA27E00AD2020 /* Extension-UIViewController.swift */,
 				277A6839263A9FE100E4389A /* Extension-ViewDisplayed.swift */,
-				278951F329FD39FD00C47B18 /* GlobalSettings.swift */,
-				27FB2EC52E18F4C400CA6DCE /* LocationInformationManager.swift */,
 				277B37AF2A109F6D00DF2F38 /* UserDefaults */,
 			);
 			path = Utilities;
@@ -568,22 +566,17 @@
 		27EFF3C6215A5C1500CFB31D /* Seasonal */ = {
 			isa = PBXGroup;
 			children = (
-				27E989B42E530333006C7739 /* PeriodType.swift */,
-				27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */,
-				27FB2EC12E167C1500CA6DCE /* RootScreen.swift */,
-				2794F07C2E1A72EF00BFFB12 /* InitialScreens */,
-				2794F07B2E1A72D100BFFB12 /* MainScreen */,
 				27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */,
 				27FCA53925DB781400AD2020 /* SceneDelegate.swift */,
-				27FCA53325DB6C3C00AD2020 /* AppCoordinatorOld.swift */,
-				272D84D6266B7202002CEE1A /* Splash Screen */,
-				272D84DA266B72B4002CEE1A /* MonthViews */,
-				272D84E1266B7385002CEE1A /* Seasons View */,
+				27FB2EBB2E12C38300CA6DCE /* AppCoordinator.swift */,
+				27FB2EC12E167C1500CA6DCE /* RootScreen.swift */,
+				27FACED82E55832C000E4A75 /* Globals */,
+				2794F07C2E1A72EF00BFFB12 /* InitialScreens */,
+				27FACED72E5582E2000E4A75 /* Extensions */,
+				2794F07B2E1A72D100BFFB12 /* MainScreen */,
 				272D84DF266B7355002CEE1A /* Models */,
-				27157E7925529FA60001CD4D /* Networking */,
-				2718E2CE225F808700B802F9 /* Data */,
-				278611BB25687F8900E8021B /* Utilities */,
-				2794134C238F4047003D16E2 /* Videos */,
+				27157E7925529FA60001CD4D /* Services */,
+				27FACED12E5580B5000E4A75 /* < iOS 26 */,
 				27EFF3CB215A5C1500CFB31D /* Main.storyboard */,
 				27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */,
 				27F4218E22328FA40009922C /* Assets.xcassets */,
@@ -594,6 +587,51 @@
 				2746838726665B98000C5456 /* .swiftlint.yml */,
 			);
 			path = Seasonal;
+			sourceTree = "<group>";
+		};
+		27FACED12E5580B5000E4A75 /* < iOS 26 */ = {
+			isa = PBXGroup;
+			children = (
+				27FCA53325DB6C3C00AD2020 /* AppCoordinatorOld.swift */,
+				2718E2CE225F808700B802F9 /* Data */,
+				27FACED22E558100000E4A75 /* Models */,
+				272D84DA266B72B4002CEE1A /* MonthViews */,
+				272D84E1266B7385002CEE1A /* Seasons View */,
+				272D84D6266B7202002CEE1A /* Splash Screen */,
+				278611BB25687F8900E8021B /* Utilities */,
+				2794134C238F4047003D16E2 /* Videos */,
+			);
+			path = "< iOS 26";
+			sourceTree = "<group>";
+		};
+		27FACED22E558100000E4A75 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				27FACED32E558133000E4A75 /* ProduceOld.swift */,
+				2749C9F926304B58009E19A5 /* MenuBarModel.swift */,
+				274D475F25FA08E900B60BD3 /* MenuBarCellModel.swift */,
+				27AE9A1D29E2518300C98823 /* MonthOld.swift */,
+				2790D8452E54144500119F87 /* ProduceCategory.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		27FACED72E5582E2000E4A75 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				27E989B02E5193FE006C7739 /* Extension-UIWindow.swift */,
+				27E989B42E530333006C7739 /* PeriodType.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		27FACED82E55832C000E4A75 /* Globals */ = {
+			isa = PBXGroup;
+			children = (
+				278951F329FD39FD00C47B18 /* GlobalSettings.swift */,
+				2718E2CF225F809100B802F9 /* Constants.swift */,
+			);
+			path = Globals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -790,6 +828,7 @@
 			files = (
 				278611BA25687DF500E8021B /* ProduceModel.swift in Sources */,
 				277A6834263A3C2600E4389A /* Extension-UIButton.swift in Sources */,
+				27FACED62E55828A000E4A75 /* Produce.swift in Sources */,
 				27E989AE2E518B94006C7739 /* InfiniteTabToolbar.swift in Sources */,
 				2794F0822E1A735A00BFFB12 /* ProduceCell.swift in Sources */,
 				272C7A1F2E220E2100661BAA /* MonthsInSeasonCapsuleView.swift in Sources */,
@@ -809,7 +848,7 @@
 				27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */,
 				275EBD3C25F769D500F6D3F4 /* MenuBarCollectionView.swift in Sources */,
 				27FCA54225DB952E00AD2020 /* WelcomeViewModel.swift in Sources */,
-				27E989B32E52E43B006C7739 /* Tabs.swift in Sources */,
+				27E989B32E52E43B006C7739 /* Tabs-DELETE?.swift in Sources */,
 				272C7A232E23788C00661BAA /* FloatingSearchButton.swift in Sources */,
 				27216E1821E800100042B4F4 /* WelcomeViewController.swift in Sources */,
 				27E989B52E530336006C7739 /* PeriodType.swift in Sources */,
@@ -829,6 +868,7 @@
 				27FB2EC22E167C1800CA6DCE /* RootScreen.swift in Sources */,
 				2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */,
 				2790D8462E54144A00119F87 /* ProduceCategory.swift in Sources */,
+				27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */,
 				277A6836263A9F1700E4389A /* Extension-Month.swift in Sources */,
 				27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */,
 				276DDC4F237671AC00929E77 /* LocalDataHandler.swift in Sources */,

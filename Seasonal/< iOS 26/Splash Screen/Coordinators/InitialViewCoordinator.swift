@@ -9,7 +9,7 @@
 import UIKit
 import Network
 
-@preconcurrency
+@MainActor
 final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 
 	private let navigationController: UINavigationController
@@ -88,3 +88,4 @@ final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 		parentCoordinator?.updateChosenLocationUserDefaults(to: state)
 	}
 }
+

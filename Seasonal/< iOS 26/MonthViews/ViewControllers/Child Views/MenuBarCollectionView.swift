@@ -1,10 +1,10 @@
-//
-//  MenuBar.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 6/2/19.
-//  Copyright © 2019 Clint Thomas. All rights reserved.
-//
+	//
+	//  MenuBar.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 6/2/19.
+	//  Copyright © 2019 Clint Thomas. All rights reserved.
+	//
 
 import UIKit
 import Foundation
@@ -16,10 +16,7 @@ class MenuBarCollectionView: UICollectionView {
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
-
-		Task { @MainActor in
-			setupView()
-		}
+		Task { @MainActor in self.setupView() }
 	}
 
 	private func setupView() {
@@ -38,12 +35,12 @@ class MenuBarCollectionView: UICollectionView {
 		dataSource = self
 	}
 
-	// Menu Bar Actions
+		// Menu Bar Actions
 
-	/// If menuBar is tapped at index 4, we need to animate the cells across to
-	/// present the
-	/// - Parameters:
-	///   - index: index that was tapped
+		/// If menuBar is tapped at index 4, we need to animate the cells across to
+		/// present the
+		/// - Parameters:
+		///   - index: index that was tapped
 	func beginMenuBarAnimation(for index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.all.rawValue:
@@ -55,52 +52,52 @@ class MenuBarCollectionView: UICollectionView {
 		}
 	}
 
-	// MARK: Scrolling Month Animation
+		// MARK: Scrolling MonthOld Animation
 
-	func monthIconCarouselAnimation(from previousMonth: MonthOld, to monthToScrollTo: MonthOld) {
+	func monthIconCarouselAnimation(from previousMonthOld: MonthOld, to monthToScrollTo: MonthOld) {
 		let indexPath: IndexPath = IndexPath(item: 2, section: 0)
 
 		if let cell: MenuBarCollectionViewCell = cellForItem(at: indexPath) as? MenuBarCollectionViewCell {
 
 			let originX: CGFloat = frame.origin.x
-			// slide coordinates for moving icon
+				// slide coordinates for moving icon
 			var slideTo: CGFloat = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-			// jump icon back to the opposite side before sliding back into the cell.
+				// jump icon back to the opposite side before sliding back into the cell.
 			var jumpTo: CGFloat = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 
-			if previousMonth == MonthOld.december && monthToScrollTo == MonthOld.january {
+			if previousMonthOld == MonthOld.december && monthToScrollTo == MonthOld.january {
 				jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 				slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
 
-			} else if previousMonth == MonthOld.january && monthToScrollTo == MonthOld.december {
+			} else if previousMonthOld == MonthOld.january && monthToScrollTo == MonthOld.december {
 				slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
 				jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
 
-			// if page slideTo left
-			} else if previousMonth.rawValue > monthToScrollTo.rawValue {
+					// if page slideTo left
+			} else if previousMonthOld.rawValue > monthToScrollTo.rawValue {
 				slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
 				jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
 
-			// else page slideTo right
-			} else if previousMonth.rawValue < monthToScrollTo.rawValue {
+					// else page slideTo right
+			} else if previousMonthOld.rawValue < monthToScrollTo.rawValue {
 				slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
 				jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
 			}
 
-			// slide icon
+				// slide icon
 			UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
 				cell.imageView.frame = CGRect(x: slideTo, y: cell.imageView.frame.origin.y, width: cell.imageView.frame.width, height: cell.imageView.frame.height)
 
 			}, completion: { [weak self] _ in
-				// jump across
+					// jump across
 				cell.imageView.frame = CGRect(x: jumpTo,
 											  y: cell.imageView.frame.origin.y,
 											  width: cell.imageView.frame.width,
 											  height: cell.imageView.frame.height
 				)
-				cell.imageView.image = self?.findNextMonthImage(month: monthToScrollTo)
+				cell.imageView.image = self?.findNextMonthOldImage(month: monthToScrollTo)
 
-				// slide in
+					// slide in
 				UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
 					cell.imageView.frame = CGRect(x: originX + 15,
 												  y: cell.imageView.frame.origin.y,
@@ -115,7 +112,7 @@ class MenuBarCollectionView: UICollectionView {
 
 	func updateMenuBarFromNavigation(viewDisplayed: ViewDisplayed?, month: MonthOld) {
 		toggleSelectedCells(viewDisplayed: viewDisplayed)
-		updateMonthIconImage(to: month)
+		updateMonthOldIconImage(to: month)
 	}
 
 	func toggleSelectedCells(viewDisplayed: ViewDisplayed?) {
@@ -125,7 +122,10 @@ class MenuBarCollectionView: UICollectionView {
 			for index in 0..<menuBarCellCount {
 
 				if selectedIndexPath.item == index {
-					selectItem(at: selectedIndexPath, animated: false, scrollPosition: .top)
+
+					DispatchQueue.main.async { [weak self] in
+						self?.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .top)
+					}
 					collectionView(self, didSelectItemAt: selectedIndexPath)
 
 				} else {
@@ -137,12 +137,12 @@ class MenuBarCollectionView: UICollectionView {
 
 	// After selecting a month from the MonthPickerViewController, this will update the icon
 	// to the current month
-	private func updateMonthIconImage(to month: MonthOld) {
+	private func updateMonthOldIconImage(to month: MonthOld) {
 		viewModel?.menuBarCells[IndexPath(viewDisplayed: .months).item].imageName = month.calendarImageName
 		reloadData()
 	}
 
-	private func findNextMonthImage(month: MonthOld) -> UIImage {
+	private func findNextMonthOldImage(month: MonthOld) -> UIImage {
 		if let monthImage: UIImage = UIImage(named: month.calendarImageName) {
 			return monthImage.withRenderingMode(.alwaysTemplate)
 		}
@@ -167,16 +167,16 @@ extension MenuBarCollectionView: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		layoutIfNeeded()
 
-		// swiftlint:disable line_length
+			// swiftlint:disable line_length
 		if let cell: MenuBarCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MenuBarCell, for: indexPath) as? MenuBarCollectionViewCell {
 
 			cell.updateViews(viewModel: viewModel?.menuBarCells[indexPath.item])
 
-			#if DEBUG
+#if DEBUG
 			if CommandLine.arguments.contains("enable-testing"), indexPath == [0, 8] {
 				cell.accessibilityIdentifier = "cancelCell"
 			}
-			#endif
+#endif
 			return cell
 		}
 
@@ -201,3 +201,4 @@ extension MenuBarCollectionView: UICollectionViewDelegateFlowLayout {
 		reloadData()
 	}
 }
+

@@ -11,10 +11,12 @@ import Network
 import SwiftUI
 import CoreLocation
 
+@MainActor
 protocol Coordinator: AnyObject {
 	func start()
 }
 
+@MainActor
 protocol InitialCoordinatorDelegate: AnyObject {
 	func dataIsReady()
 	func networkFailed()
@@ -52,13 +54,10 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 	}
 
 	func start() {
-		// UIKit root
-		let legacyRootVC = navigationController
-		window?.rootViewController = UINavigationController(rootViewController: legacyRootVC)
-
 		loadInitialViewCoordinator()
 		networkService = NetworkService(delegate: self)
 
+		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()
 	}
 

@@ -10,7 +10,7 @@ import Foundation
 
 typealias Closure = () -> Void
 
-final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
+final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegate {
 
 	private let produceDataService: ProduceDataService
 
@@ -80,7 +80,8 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		}
 	}
 
-	@MainActor func menuBarWasTapped(at index: Int) {
+	@MainActor
+	func menuBarWasTapped(at index: Int) {
 		switch index {
 		case ViewDisplayed.ProduceCategory.fruit.rawValue,
 			ViewDisplayed.ProduceCategory.vegetables.rawValue,
@@ -143,9 +144,9 @@ final class MainViewModel: MenuBarDelegate, MonthSelectedDelegate {
 		}
 
 		updateFavouritesArray(produce: produceToToggle, liked: updateLikeTo)
-			// Update in CloudKit and on disk
+		// Update in CloudKit and on disk
 		produceDataService.updateLike(id: id, liked: updateLikeTo)
-			// Update data model for syncing between views
+		// Update data model for syncing between views
 		coordinator?.updateDataModelsAndDatabase(for: id, liked: updateLikeTo, from: .months)
 	}
 

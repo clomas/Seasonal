@@ -28,13 +28,11 @@ enum ViewDisplayed: Int {
 	}
 }
 
-@MainActor
 protocol MonthSelectedDelegate: AnyObject {
 	func updateMonth(to month: MonthOld?)
 }
 
-@MainActor
-final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+final class MainViewCoordinator: NSObject, @preconcurrency Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
 
 	private let navigationController: UINavigationController
 	private var modalNavigationController: UINavigationController?

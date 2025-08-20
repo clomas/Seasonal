@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 26, *)
 struct RootView: View {
 	@EnvironmentObject var coordinator: AppCoordinator
 

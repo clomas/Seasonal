@@ -83,7 +83,7 @@ class InfoViewController: UIViewController {
     }
 }
 
-extension InfoViewController: @MainActor MFMailComposeViewControllerDelegate {
+extension InfoViewController: @preconcurrency MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
 		if let mailError: Error = error {
 			presentAlert(title: "Unable to compose mail",

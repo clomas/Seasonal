@@ -11,7 +11,6 @@ import Network
 import SwiftUI
 import CoreLocation
 
-@MainActor
 protocol Coordinator: AnyObject {
 	func start()
 }
@@ -22,12 +21,11 @@ protocol InitialCoordinatorDelegate: AnyObject {
 	func locationNotFound()
 }
 
-@MainActor
-final class AppCoordinatorOld: @MainActor LocationDelegateOld, NetworkObserverDelegate {
+final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObserverDelegate, @preconcurrency AppCoordinatorVersionProtocol {
 
 	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
 
-	private let window: UIWindow
+	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
 
 	private(set) var childCoordinators: [Coordinator] = []
@@ -42,7 +40,7 @@ final class AppCoordinatorOld: @MainActor LocationDelegateOld, NetworkObserverDe
 
 	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
 
-	init(window: UIWindow) {
+	init(window: UIWindow?) {
 		self.window = window
 
 		#if DEBUG
@@ -56,12 +54,12 @@ final class AppCoordinatorOld: @MainActor LocationDelegateOld, NetworkObserverDe
 	func start() {
 		// UIKit root
 		let legacyRootVC = navigationController
-		window.rootViewController = UINavigationController(rootViewController: legacyRootVC)
+		window?.rootViewController = UINavigationController(rootViewController: legacyRootVC)
 
 		loadInitialViewCoordinator()
 		networkService = NetworkService(delegate: self)
 
-		window.makeKeyAndVisible()
+		window?.makeKeyAndVisible()
 	}
 
 	func internetStatusDidChange(status: NWPath.Status) {

@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 26, *)
 struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 
 	private enum NavigationDirection {
@@ -38,13 +39,13 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.foregroundColor(.primary)
 		}
 
-		// Month name
-		ToolbarItem(placement: .topBarLeading) {
-			Text(selectedItem.name)
-				.font(.title)
-				.fixedSize()
-		}
-		.sharedBackgroundVisibility(.hidden)
+        // Month name
+        ToolbarItem(placement: .topBarLeading) {
+            Text(selectedItem.name)
+                .font(.title)
+                .fixedSize()
+        }
+        .sharedBackgroundVisibility(.hidden)
 
 		// (🗓️ ->)
 		ToolbarItemGroup(placement: .navigationBarTrailing) {

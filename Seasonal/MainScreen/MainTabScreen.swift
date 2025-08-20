@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 26, *)
 struct MainTabScreen: View {
 
 	enum Tabs: Hashable {
@@ -161,6 +162,7 @@ struct SearchView: View {
 	}
 }
 
+@available(iOS 26, *)
 #Preview {
 	lazy var coord: AppCoordinator = {
 		let coord = AppCoordinator(window: .create())

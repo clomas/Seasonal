@@ -21,7 +21,7 @@ enum AppLaunchMode {
 		}
 	}
 }
-
+@available(iOS 26, *)
 enum AppCoordinatorState {
 	case dataIsReady
 	case networkFailed
@@ -29,8 +29,14 @@ enum AppCoordinatorState {
 	case initial
 }
 
+protocol AppCoordinatorVersionProtocol {
+    init(window: UIWindow?)
+    func start()
+}
+
+@available(iOS 26, *)
 @MainActor
-final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, NetworkObserverDelegate {
+final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, NetworkObserverDelegate, @preconcurrency AppCoordinatorVersionProtocol {
 
 	var produceCloudDataService: ProduceCloudDataService?
 

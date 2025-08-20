@@ -12,8 +12,8 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 	var window: UIWindow?
-	var appCoordinatorOld: AppCoordinatorOld?
-	var appCoordinator: AppCoordinator?
+
+    var appCoordinatorVersionProtocol: AppCoordinatorVersionProtocol?
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let scene = (scene as? UIWindowScene) else { return }
@@ -21,12 +21,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let window: UIWindow = UIWindow(windowScene: scene)
 		self.window = window
 
-		if AppLaunchMode.useSwiftUI {
-			appCoordinator = AppCoordinator(window: window)
-			appCoordinator?.start()
+        if AppLaunchMode.useSwiftUI, #available(iOS 26, *) {
+            appCoordinatorVersionProtocol = AppCoordinator(window: window)
+            appCoordinatorVersionProtocol?.start()
 		} else {
-			appCoordinatorOld = AppCoordinatorOld(window: window)
-			appCoordinatorOld?.start()
+            appCoordinatorVersionProtocol = AppCoordinatorOld(window: window)
+            appCoordinatorVersionProtocol?.start()
 		}
 	}
 }

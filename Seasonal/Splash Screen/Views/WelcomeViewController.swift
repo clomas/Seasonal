@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 
+@preconcurrency
 class WelcomeViewController: UIViewController, InitialViewDelegate {
 
 	var viewModel: WelcomeViewModel?

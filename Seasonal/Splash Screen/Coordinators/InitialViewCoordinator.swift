@@ -9,8 +9,8 @@
 import UIKit
 import Network
 
-@MainActor
-final class InitialViewCoordinator: Coordinator, @preconcurrency InitialCoordinatorDelegate {
+@preconcurrency
+final class InitialViewCoordinator: Coordinator, InitialCoordinatorDelegate {
 
 	private let navigationController: UINavigationController
 
@@ -42,7 +42,7 @@ final class InitialViewCoordinator: Coordinator, @preconcurrency InitialCoordina
 		self.firstRun = firstRun
 	}
 
-	func start() {
+    func start() {
 		if let initialViewController: UIViewController = firstRun == true ? welcomeViewController : splashScreenViewController {
 			navigationController.setViewControllers([initialViewController], animated: false)
 		}

@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@available(iOS 26, *)
 struct InitialScreen: View {
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
@@ -31,12 +32,11 @@ struct InitialScreen: View {
 		VStack {
 			ZStack {
 //				GlassIconBackground()
-				if #available(iOS 26.0, *) {
-					Image("Logo")
-						.resizable()
-						.glassEffect()
+                Image("Logo")
+                    .resizable()
+                    .glassEffect(.regular)
 //						.opacity(8)
-				}
+				
 			}
 			.frame(width: 150, height: 150)
 			.padding()
@@ -53,12 +53,10 @@ struct InitialScreen: View {
 				.transition(.fallFromTop)
 			case .locationNotFound:
 				VStack {
-					if #available(iOS 26.0, *) {
-						Text("Choose your location")
-							.font(.title3)
-							.glassEffect()
-							.padding(.bottom)
-					}
+                    Text("Choose your location")
+                        .font(.title3)
+                        .glassEffect(.regular)
+                        .padding(.bottom)
 
 					ForEach(StateLocation.allCases, id: \.self) { state in
 						if state.fullName != StateLocation.noState.fullName {
@@ -137,6 +135,7 @@ extension AnyTransition {
 	}
 }
 
+@available(iOS 26, *)
 #Preview {
 	lazy var coord: AppCoordinator = {
 		let coord = AppCoordinator(window: .create())
@@ -147,8 +146,5 @@ extension AnyTransition {
 	if #available(iOS 26.0, *) {
 		InitialScreen()
 			.environmentObject(coord)
-//			.glassEffect(.regular.tint(.orange).interactive())
-	} else {
-		InitialScreen()
 	}
 }

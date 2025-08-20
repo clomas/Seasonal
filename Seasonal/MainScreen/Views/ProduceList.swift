@@ -8,11 +8,11 @@
 
 import SwiftUI
 
+@available(iOS 26, *)
 struct ProduceList: View {
 	let produce: [ProduceModel]
 	let period: any PeriodType
-	// TODO: Delete this
-//	let selectedTab: MainTabScreen.Tabs
+	let parentTab: MainTabScreen.Tabs
 
 	var body: some View {
 		ZStack {
@@ -45,7 +45,7 @@ struct ProduceList: View {
 				.resizable()
 				.frame(width: 50, height: 50)
 				.padding(20)
-			Text("Nothing to see ere, try another \(period.nameLowercased)") // TODO: Test this out
+			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: period.nameLowercased))
 		}
 	}
 }

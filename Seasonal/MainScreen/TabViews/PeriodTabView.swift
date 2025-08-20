@@ -12,6 +12,7 @@ import SwiftUI
 struct PeriodTabView<Period: PeriodType>: View {
 
 	let produce: [ProduceModel]
+	let selectedTab: MainTabScreen.Tabs
 
 	private let middleOffset = Period.allCases.count
 
@@ -65,7 +66,8 @@ struct PeriodTabView<Period: PeriodType>: View {
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
 			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
-			period: period
+			period: period,
+			parentTab: selectedTab
 		)
 		.containerRelativeFrame(.horizontal)
 		.id(index)
@@ -81,7 +83,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 			}
 		} label: {
 			Label(selectedPeriod.name, systemImage: .calendarImage)
-//				.glassEffect(.regular)
+				.glassEffect(.regular)
 		}
 	}
 
@@ -237,7 +239,7 @@ struct PeriodTabView<Period: PeriodType>: View {
     
 
 	NavigationStack {
-		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedCategory: .constant(.all), selectedPeriod: .april)
+		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
 			.environmentObject(coord)
 	}
 }

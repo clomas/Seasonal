@@ -99,9 +99,6 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 		// Update in CloudKit and on disk
 		produceDataService.updateLike(id: id, liked: liked)
-//		CloudKitDataService.saveItem(toCloudKit: .produce)
-
-		// TODO: Do I need code 😬to update in cloudkit from users? because I don't think I'm recording in cloudkit
 
 		for seasonProduce in produceData {
 			let season: SeasonsOld = seasonProduce.key

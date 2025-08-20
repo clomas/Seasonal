@@ -15,6 +15,7 @@ enum GlobalSettings {
 	@UserDefault("hasBeenLaunchedBeforeFlag", defaultValue: App(launchedBefore: false)) static var hasBeenLaunchedBeforeFlag: App
 }
 
+@MainActor
 struct Location: Codable {
 	let state: String
 }

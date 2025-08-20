@@ -9,14 +9,25 @@
 import SwiftUI
 
 enum Seasons: Int, PeriodType {
-
 	case summer = 0
-	case autumn = 1
-	case winter = 2
-	case spring = 3
-	case cancelled = 4
+	case autumn
+	case winter
+	case spring
 
-	static let currentPeriod: Seasons = .autumn
+	static var currentPeriod: Seasons {
+		switch Calendar.current.component(.month, from: Date()) {
+		case 12, 1, 2:
+			return .summer
+		case 3, 4, 5:
+			return .autumn
+		case 6, 7, 8:
+			return .winter
+		case 9, 10, 11:
+			return .spring
+		default:
+			return .summer
+		}
+	}
 
 	var image: Image {
 		.seasons
@@ -29,7 +40,6 @@ enum Seasons: Int, PeriodType {
 		case .autumn: return "aut"
 		case .winter: return "win"
 		case .spring: return "spr"
-		case .cancelled: return "can"
 		}
 	}
 }

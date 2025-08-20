@@ -6,7 +6,7 @@
 	//  Copyright © 2023 Clint Thomas. All rights reserved.
 	//
 
-import SwiftUI
+import Foundation
 
 enum MonthOld: Int, CaseIterable {
 	case decemberOverflow
@@ -23,31 +23,6 @@ enum MonthOld: Int, CaseIterable {
 	case november
 	case december
 	case januaryOverflow
-
-	var firstLetter: String {
-		"\(self)".first?.uppercased() ?? ""
-	}
-}
-
-enum Months: Int, PeriodType {
-	case january = 1
-	case february
-	case march
-	case april
-	case may
-	case june
-	case july
-	case august
-	case september
-	case october
-	case november
-	case december
-
-	static let currentPeriod: Months = Months(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
-
-	var image: Image {
-		.calendar
-	}
 
 	var firstLetter: String {
 		"\(self)".first?.uppercased() ?? ""

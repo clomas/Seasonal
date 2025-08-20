@@ -8,6 +8,7 @@
 
 import CloudKit
 
+@available(iOS 26, *)
 actor ProduceCloudDataService {
 
 	private let cloudKitDataService: CloudKitDataService = CloudKitDataService()
@@ -21,18 +22,42 @@ actor ProduceCloudDataService {
 
 	func getData(for locationFound: StateLocation) async -> [ProduceModel] {
 		var model: [ProduceModel] = []
+		var publicRecords: [CKRecord] = []
+		var privateRecords: [CKRecord] = []
 
-		await cloudKitDataService.setDatabase(type: .public)
-		let publicRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+		do {
+			try await withThrowingTaskGroup(of: (CloudKitDataService.DatabaseType, [CKRecord]).self) { [weak self] group in
+				guard let self: ProduceCloudDataService else { return }
 
-		await cloudKitDataService.setDatabase(type: .private)
-		let privateRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
-		model = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
-		return model
+				group.addTask {
+					await self.cloudKitDataService.setDatabase(type: .public)
+					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+					return (.public, records)
+				}
+				group.addTask {
+					await self.cloudKitDataService.setDatabase(type: .private)
+					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+					return (.private, records)
+				}
+				for try await (type, records) in group {
+					switch type {
+					case .public:
+						publicRecords = records
+					case .private:
+						privateRecords = records
+					}
+				}
+			}
+			model = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
+			return model
+		} catch {
+			return []
+		}
 	}
 
 	// MARK: Save
 
+	@discardableResult
 	func saveLikeToPrivateDatabaseInCloudKit(id: Int) -> Bool {
 		var success: Bool = false
 
@@ -53,6 +78,7 @@ actor ProduceCloudDataService {
 
 	// MARK: Delete
 
+	@discardableResult
 	func deleteRecordsInPrivateDatabase(id: Int) -> Bool {
 		var success: Bool = false
 
@@ -201,3 +227,4 @@ extension String {
 	}
 
 }
+

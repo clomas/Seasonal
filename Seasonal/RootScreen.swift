@@ -12,7 +12,9 @@ import SwiftUI
 // Info screen
 // Search screen
 // CloudKit work (old and new)
-// 
+// Wire up like button
+// Work on like button appearance
+// The months capsule needs work
 
 @available(iOS 26, *)
 struct RootView: View {

@@ -30,6 +30,14 @@ struct MainTabScreen: View {
 				""
 			}
 		}
+
+		var emptyProduceListViewMessage: String? {
+			return if case .favourites = self {
+				"Like some produce to see it in here."
+			} else {
+				nil
+			}
+		}
 	}
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
@@ -87,8 +95,7 @@ struct MainTabScreen: View {
 					}
 				Tab(value: .search, role: .search) {
 					NavigationStack {
-							//							ProduceList(appCoordinator: _appCoordinator)
-							//								.searchable(text: $searchString)
+						
 					}
 				}
 			}
@@ -117,12 +124,13 @@ struct MainTabScreen: View {
 	private func tabView(for tab: MainTabScreen.Tabs, produce: [ProduceModel]) -> AnyView {
 		switch tab {
 		case .favourites:
-			AnyView(ProduceList(produce: produce, period: Months.april))
+			AnyView(ProduceList(produce: produce, period: Months.april, parentTab: tab))
 		case .months:
 			AnyView(
 				NavigationStack {
 					PeriodTabView<Months>(
 						produce: produce,
+						selectedTab: tab,
 						selectedCategory: $selectedCategory,
 						selectedPeriod: Months.currentPeriod
 					)
@@ -135,6 +143,7 @@ struct MainTabScreen: View {
 				NavigationStack {
 					PeriodTabView<Seasons>(
 						produce: produce,
+						selectedTab: tab,
 						selectedCategory: $selectedCategory,
 						selectedPeriod: Seasons.currentPeriod
 					)

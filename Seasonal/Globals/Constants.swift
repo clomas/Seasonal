@@ -116,6 +116,10 @@ extension String {
 	static let settings: String = "slider.vertical.3"
 	static let vegetables: String = "carrot.fill"
 	static let seasons: String = "cloud.sun.fill"
+
+	static func nothingToSeeHereMessage(tryAnother: String) -> String {
+		"Nothing to see ere, try another \(tryAnother)."
+	}
 }
 
 // MARK: Time intervals

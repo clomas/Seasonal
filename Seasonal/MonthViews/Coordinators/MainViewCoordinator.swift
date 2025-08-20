@@ -189,7 +189,6 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 				print(result)
 			}
 			#endif
-			// TODO: Handle error here
 		}
 	}
 
@@ -202,7 +201,6 @@ final class MainViewCoordinator: NSObject, @MainActor Coordinator, UINavigationC
 				print(result)
 			}
 			#endif
-			// TODO: Handle error here
 		}
 	}
 

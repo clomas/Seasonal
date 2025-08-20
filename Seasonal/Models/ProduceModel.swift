@@ -15,20 +15,14 @@ struct Produce: Identifiable {
 	var id: Int {
 		produce.id
 	}
-	var produceName: String {
+	var name: String {
 		produce.name
 	}
 	var imageName: String {
 		produce.imageName
 	}
-	var category: ViewDisplayed.ProduceCategory? {
-		produce.category
-	}
-	var months: [Months] {
-		produce.months
-	}
-	var seasons: [SeasonsOld] {
-		produce.seasons
+	var description: String {
+		produce.description
 	}
 	var liked: Bool {
 		get {
@@ -37,17 +31,53 @@ struct Produce: Identifiable {
 			produce.liked = liked
 		}
 	}
+
+	// Commented out redundant properties now provided by protocol conformance
+	var produceName: String {
+		produce.name
+	}
+	var category: ViewDisplayed.ProduceCategory? {
+		produce.category.toOld
+	}
+	var months: [MonthOld] {
+		produce.months.toOld
+	}
+	var seasons: [SeasonsOld] {
+		produce.seasons.toOld
+	}
 }
 
 struct ProduceModel: Identifiable {
     let id: Int
     let name: String
-    let category: ViewDisplayed.ProduceCategory
+    let category: ProduceCategory
     let imageName: String
     let description: String // Not implemented yet
     let months: [Months]
+    let seasons: [Seasons]
+    var liked: Bool
+}
+
+struct ProduceModelOld: Identifiable {
+    let id: Int
+    let name: String
+	let category: ViewDisplayed.ProduceCategory
+    let imageName: String
+    let description: String // Not implemented yet
+    let months: [MonthOld]
     let seasons: [SeasonsOld]
     var liked: Bool
+
+	// ProduceCloudRepresentable conformance
+	var cloudCategory: Int {
+		category.rawValue
+	}
+	var cloudMonths: [Int] {
+		months.map { $0.rawValue }
+	}
+	var cloudSeasons: [Int] {
+		seasons.map { $0.rawValue }
+	}
 }
 
 extension ProduceModel {
@@ -61,7 +91,7 @@ extension Array where Element == ProduceModel {
 	/// Filters produce by period, category, and search. Works for any PeriodType.
 	func filtered<Period: PeriodType>(
 		by period: Period,
-		category: ViewDisplayed.ProduceCategory,
+		category: ProduceCategory,
 		search: String
 	) -> [ProduceModel] {
 		self

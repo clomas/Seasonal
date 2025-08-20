@@ -25,7 +25,7 @@ struct MainTabScreen: View {
 				"Months"
 			case .seasons:
 				"Seasons"
-			default: // TODO: handle other cases?
+			default: // TODO: handle other cases
 				""
 			}
 		}
@@ -48,6 +48,10 @@ struct MainTabScreen: View {
 		appCoordinator.produceData ?? []
 	}
 
+	private var tab: some View {
+		tabView(for: selectedTab == .categories ? previousTab : selectedTab, produce: produce)
+	}
+
 	private var categoriesPopOverView: some View {
 		ForEach(ProduceCategory.allCases, id: \.self) { category in
 			Button(action: {
@@ -68,10 +72,6 @@ struct MainTabScreen: View {
 			selectedTab = originalTabBeforeCategories
 			showCategoryMenu = false
 		}
-	}
-
-	var tab: some View {
-		MainTabScreenViewFactory.view(for: selectedTab == .categories ? previousTab : selectedTab, produce: produce)
 	}
 
 	var body: some View {
@@ -112,39 +112,38 @@ struct MainTabScreen: View {
 			.toolbarBackground(.visible, for: .navigationBar)
 			.toolbarBackground(Color.clear, for: .navigationBar)
 	}
-}
 
-struct MainTabScreenViewFactory {
-	@MainActor
-	static func view(for tab: MainTabScreen.Tabs, produce: [ProduceModel]) -> AnyView {
+	private func tabView(for tab: MainTabScreen.Tabs, produce: [ProduceModel]) -> AnyView {
 		switch tab {
-			case .favourites:
-			AnyView(ProduceList(produce: produce, period: Months.april, selectedTab: tab))
-			case .months:
+		case .favourites:
+			AnyView(ProduceList(produce: produce, period: Months.april))
+		case .months:
 			AnyView(
-			NavigationStack {
-				PeriodTabView<Months>(
-				produce: produce,
-				selectedPeriod: Months.currentPeriod
-				)
-			}
-			.toolbarBackground(.visible, for: .navigationBar)
-			.toolbarBackground(Color.clear, for: .navigationBar)
+				NavigationStack {
+					PeriodTabView<Months>(
+						produce: produce,
+						selectedCategory: $selectedCategory,
+						selectedPeriod: Months.currentPeriod
+					)
+				}
+				.toolbarBackground(.visible, for: .navigationBar)
+				.toolbarBackground(Color.clear, for: .navigationBar)
 			)
-			case .seasons:
+		case .seasons:
 			AnyView(
-			NavigationStack {
-				PeriodTabView<Seasons>(
-				produce: produce,
-				selectedPeriod: Seasons.currentPeriod
-				)
-			}
-			.toolbarBackground(.visible, for: .navigationBar)
-			.toolbarBackground(Color.clear, for: .navigationBar)
+				NavigationStack {
+					PeriodTabView<Seasons>(
+						produce: produce,
+						selectedCategory: $selectedCategory,
+						selectedPeriod: Seasons.currentPeriod
+					)
+				}
+				.toolbarBackground(.visible, for: .navigationBar)
+				.toolbarBackground(Color.clear, for: .navigationBar)
 			)
-			case .categories:
+		case .categories:
 			AnyView(EmptyView())
-			case .search:
+		case .search:
 			AnyView(EmptyView())
 		}
 	}
@@ -167,66 +166,66 @@ struct SearchView: View {
 		let coord = AppCoordinator(window: .create())
 		coord.state = .locationNotFound
 		coord.produceData = [
-		ProduceModel(
-		id: 0,
-		name: "Apples",
-		category: .fruit,
-		imageName: "Apples",
-		description: "",
-		months: [.june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
-		ProduceModel(
-		id: 1,
-		name: "Bananas",
-		category: .fruit,
-		imageName: "Bananas",
-		description: "",
-		months: [.april, .august, .december, .january, . june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
-		ProduceModel(
-		id: 0,
-		name: "Apple",
-		category: .fruit,
-		imageName: "apple",
-		description: "",
-		months: [.april, .august, .december, .january, . june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
-		ProduceModel(
-		id: 0,
-		name: "Apple",
-		category: .fruit,
-		imageName: "apple",
-		description: "",
-		months: [.april, .august, .december, .january, . june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
-		ProduceModel(
-		id: 0,
-		name: "Apple",
-		category: .fruit,
-		imageName: "apple",
-		description: "",
-		months: [.april, .august, .december, .january, . june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
-		ProduceModel(
-		id: 0,
-		name: "Apple",
-		category: .fruit,
-		imageName: "apple",
-		description: "",
-		months: [.april, .august, .december, .january, . june, .september],
-		seasons: [.autumn, .spring],
-		liked: true
-		),
+			ProduceModel(
+				id: 0,
+				name: "Apples",
+				category: .fruit,
+				imageName: "Apples",
+				description: "",
+				months: [.june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 1,
+				name: "Bananas",
+				category: .fruit,
+				imageName: "Bananas",
+				description: "",
+				months: [.april, .august, .december, .january, . june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, . june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, . june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, . june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
+			ProduceModel(
+				id: 0,
+				name: "Apple",
+				category: .fruit,
+				imageName: "apple",
+				description: "",
+				months: [.april, .august, .december, .january, . june, .september],
+				seasons: [.autumn, .spring],
+				liked: true
+			),
 		]
 		return coord
 	}()
@@ -234,3 +233,4 @@ struct SearchView: View {
 	MainTabScreen()
 		.environmentObject(coord)
 }
+

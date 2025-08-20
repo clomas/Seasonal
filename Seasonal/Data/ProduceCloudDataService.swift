@@ -17,24 +17,21 @@ actor ProduceCloudDataService {
 		self.location = location
 	}
 
-		// MARK: CloudKit Database
+	// MARK: CloudKit Database
 
-	func getData(for locationFound: StateLocation) -> [ProduceModel] {
+	func getData(for locationFound: StateLocation) async -> [ProduceModel] {
 		var model: [ProduceModel] = []
 
-		Task {
-			await cloudKitDataService.setDatabase(type: .public)
-			let publicRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+		await cloudKitDataService.setDatabase(type: .public)
+		let publicRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
 
-			await cloudKitDataService.setDatabase(type: .private)
-			let privateRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
-				//
-			model = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
-		}
+		await cloudKitDataService.setDatabase(type: .private)
+		let privateRecords = await cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+		model = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
 		return model
 	}
 
-		// MARK: Save
+	// MARK: Save
 
 	func saveLikeToPrivateDatabaseInCloudKit(id: Int) -> Bool {
 		var success: Bool = false
@@ -54,7 +51,7 @@ actor ProduceCloudDataService {
 		return success
 	}
 
-		// MARK: Delete
+	// MARK: Delete
 
 	func deleteRecordsInPrivateDatabase(id: Int) -> Bool {
 		var success: Bool = false
@@ -80,7 +77,7 @@ actor ProduceCloudDataService {
 		)
 	}
 
-		// MARK: Sort Data
+	// MARK: Sort Data
 
 	private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [ProduceModel] {
 		var produceArray: [ProduceModel] = [ProduceModel]()
@@ -90,10 +87,10 @@ actor ProduceCloudDataService {
 			var id: Int = 0
 			var name: String = Constants.apple
 			var imageName: String = Constants.apple
-			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
+			var category: ProduceCategory = ProduceCategory.fruit
 			let description: String = ""
 			var months: [Months] = [Months]()
-			var seasons: [SeasonsOld] = [SeasonsOld]()
+			var seasons: [Seasons] = [Seasons]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
@@ -104,13 +101,28 @@ actor ProduceCloudDataService {
 				id = recordID
 				name = nameRecord
 				imageName = nameRecord
-				category = ViewDisplayed.ProduceCategory.asArray.filter { $0.asString == categoryRecord }[0]
+				category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
 				months = monthsRecord.createMonthArray()
 				seasons = seasonsRecord.createSeasonArray()
 			}
 
+			/*
 			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
 				liked = Bool(truncating: id as NSNumber)
+			}
+			*/
+			if let recordIdValue = record.object(forKey: Constants.id) {
+				let recordIdInt: Int?
+				if let intValue = recordIdValue as? Int {
+					recordIdInt = intValue
+				} else if let stringValue = recordIdValue as? String, let intValue = Int(stringValue) {
+					recordIdInt = intValue
+				} else {
+					recordIdInt = nil
+				}
+				if let recordIdInt, likedArray.contains(recordIdInt) {
+					liked = true
+				}
 			}
 
 			let produce: ProduceModel = ProduceModel(id: id,
@@ -132,15 +144,14 @@ actor ProduceCloudDataService {
 		return produceArray
 	}
 
-		// Update cloudKit with local data if there is a disparity
-		// local data should always be accurate
+	// Update cloudKit with local data if there is a disparity
+	// local data should always be accurate
 	private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [ProduceModel]) {
 		let likedArray: [ProduceModel] = produceArray.filter { $0.liked == true}
 
 		for prod in produceArray where prod.liked {
 #if DEBUG
-				// TODO: probably don't need this here
-			print("Liked produce:", prod.id, prod.liked)
+			print("Liked produce in CloudKit:", prod.id, prod.liked)
 #endif
 		}
 		Task {
@@ -158,10 +169,35 @@ actor ProduceCloudDataService {
 			if result == true {
 				print(result, "Found disparity - added like record in CloudKit - id: \(localLike.id)")
 			} else {
-					// TODO: Handle error here
+
 				print(result)
 			}
 #endif
 		}
 	}
+}
+
+// On creating the database I made some questionable decisions, I could have maybe handled it better.
+// string matching is required to convert database data to useable app data.
+extension String {
+
+	// Parse Seasons
+	func createSeasonArray() -> [Seasons] {
+		var seasons: [Seasons] = [Seasons]()
+
+		if self.contains(Seasons.summer.shortName) {
+			seasons.append(.summer)
+		}
+		if self.contains(Seasons.autumn.shortName) {
+			seasons.append(.autumn)
+		}
+		if self.contains(Seasons.winter.shortName) {
+			seasons.append(.winter)
+		}
+		if self.contains(Seasons.spring.shortName) {
+			seasons.append(.spring)
+		}
+		return seasons
+	}
+
 }

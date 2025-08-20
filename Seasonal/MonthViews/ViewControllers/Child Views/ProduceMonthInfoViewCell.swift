@@ -34,7 +34,7 @@ class ProduceMonthInfoViewCell: UITableViewCell {
 		currentMonth = monthNow
 		viewDisplayed = view
 
-        foodLabel.text = produce.produceName
+        foodLabel.text = produce.name
         foodImage.image = image
 
         backgroundColor = UIColor.TableViewCell.tint
@@ -85,3 +85,4 @@ class ProduceMonthInfoViewCell: UITableViewCell {
 		likeButton.isSelected.toggle()
     }
 }
+

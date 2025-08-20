@@ -21,4 +21,15 @@ enum Seasons: Int, PeriodType {
 	var image: Image {
 		.seasons
 	}
+
+	// TODO: Can I decode this instead?
+	var shortName: String {
+		switch self {
+		case .summer: return "sum"
+		case .autumn: return "aut"
+		case .winter: return "win"
+		case .spring: return "spr"
+		case .cancelled: return "can"
+		}
+	}
 }

@@ -72,10 +72,10 @@ class CloudKitDataServiceOld {
 			var id: Int = 0
 			var name: String = Constants.apple
 			var imageName: String = Constants.apple
-			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
+			var category: ProduceCategory = ProduceCategory.fruit
             let description: String = ""
 			var months: [Months] = [Months]()
-			var seasons: [SeasonsOld] = [SeasonsOld]()
+			var seasons: [Seasons] = [Seasons]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
@@ -86,7 +86,7 @@ class CloudKitDataServiceOld {
 				id = recordID
                 name = nameRecord
                 imageName = nameRecord
-                category = ViewDisplayed.ProduceCategory.asArray.filter { $0.asString == categoryRecord }[0]
+				category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
                 months = monthsRecord.createMonthArray()
                 seasons = seasonsRecord.createSeasonArray()
             }
@@ -135,7 +135,6 @@ class CloudKitDataServiceOld {
 				if result == .success(true) {
 					print(result, "added like record in CloudKit - id: \(localLike.id)")
 				} else {
-					// TODO: Handle error here
 					print(result)
 				}
 				#endif
@@ -178,50 +177,47 @@ class CloudKitDataServiceOld {
 			CKContainer.default().privateCloudDatabase.add(operation)
 		}
 	}
-
 }
-
-// On creating the database I made some questionable decisions, I could have maybe handled it better.
-// string matching is required to convert database data to useable app data.
-
+	// On creating the database I made some questionable decisions, I could have maybe handled it better.
+	// string matching is required to convert database data to useable app data.
 extension String {
 
-    // Parse Seasons
-    func createSeasonArray() -> [SeasonsOld] {
+		// Parse Seasons
+	func createSeasonArrayOld() -> [SeasonsOld] {
 		var seasons: [SeasonsOld] = [SeasonsOld]()
 
-        if self.contains(SeasonsOld.summer.shortName) {
-            seasons.append(.summer)
-        }
-        if self.contains(SeasonsOld.autumn.shortName) {
-            seasons.append(.autumn)
-        }
-        if self.contains(SeasonsOld.winter.shortName) {
-            seasons.append(.winter)
-        }
-        if self.contains(SeasonsOld.spring.shortName) {
-            seasons.append(.spring)
-        }
-        return seasons
-    }
+		if self.contains(SeasonsOld.summer.shortName) {
+			seasons.append(.summer)
+		}
+		if self.contains(SeasonsOld.autumn.shortName) {
+			seasons.append(.autumn)
+		}
+		if self.contains(SeasonsOld.winter.shortName) {
+			seasons.append(.winter)
+		}
+		if self.contains(SeasonsOld.spring.shortName) {
+			seasons.append(.spring)
+		}
+		return seasons
+	}
 
 	// Parse Months
-    func createMonthArray() -> [Months] {
+	func createMonthArray() -> [Months] {
 		var months: [Months] = [Months]()
 		var searchStartIndex: String.Index = self.startIndex
 
-        while searchStartIndex < self.endIndex,
-              // find 1 in month string which indicates the produce is in season
-              let range: Range<String.Index> = self.range(of: "1", range: searchStartIndex..<self.endIndex),
+		while searchStartIndex < self.endIndex,
+			  // find 1 in month string which indicates the produce is in season
+			  let range: Range<String.Index> = self.range(of: "1", range: searchStartIndex..<self.endIndex),
 			  !range.isEmpty {
 			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
-			// add 1 here for infiniteCollectionView offset
+				// add 1 here for infiniteCollectionView offset
 			if let month: Months = Months(rawValue: index + 1) {
 				months.append(month)
 			}
-            searchStartIndex = range.upperBound
-        }
-        return months
-    }
+			searchStartIndex = range.upperBound
+		}
+		return months
+	}
 }

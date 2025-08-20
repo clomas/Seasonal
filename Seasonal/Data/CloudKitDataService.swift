@@ -40,8 +40,6 @@ actor CloudKitDataService: ObservableObject {
 	}
 
 	func fetchItems(recordType: String, queryKey: String) async -> [CKRecord] {
-		guard hasUbiquityIdentityToken else { return [] }
-
 		let predicate = NSPredicate(value: true)
 		let query = CKQuery(recordType: recordType, predicate: predicate)
 		query.sortDescriptors = [NSSortDescriptor(key: queryKey, ascending: true)]

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum ProduceCategory: Int, CaseIterable {
+enum ProduceCategory: String, CaseIterable {
 
 	case fruit
 	case vegetables

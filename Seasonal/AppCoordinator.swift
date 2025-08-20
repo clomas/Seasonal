@@ -1,10 +1,10 @@
-//
-//  AppCoordinator.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 30/6/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+	//
+	//  AppCoordinator.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 30/6/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import Foundation
 import UIKit
@@ -32,7 +32,7 @@ enum AppCoordinatorState {
 @MainActor
 final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, NetworkObserverDelegate {
 
-	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
+	var produceCloudDataService: ProduceCloudDataService?
 
 	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
@@ -55,13 +55,13 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 
 #if DEBUG
 		if CommandLine.arguments.contains("enable-testing") {
-			// if testing UI disable animations.
+				// if testing UI disable animations.
 			UIView.setAnimationsEnabled(false)
 		}
 #endif
 	}
 
-	// MARK: App initialisation
+		// MARK: App initialisation
 
 	func start() {
 		if AppLaunchMode.useSwiftUI {
@@ -85,28 +85,23 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 		}
 	}
 
-	// Called from location manager
-	// also called from updateChosenLocation
-	// fetch data when conditions are right
+		// Called from location manager
+		// also called from updateChosenLocation
+		// fetch data when conditions are right
 	func locationReady(location: CLLocation?) {
 		var stateLocation: StateLocation = .noState
 
-		if #available(iOS 26.0, *) {
-			Task {
-				stateLocation = await LocationInformationManager().parseLocation(location)
-			}
-		} else {
-				// TODO:
-
+		Task {
+			stateLocation = await LocationInformationManager().parseLocation(location)
 		}
 
-		// If not determined, wait until it is
+			// If not determined, wait until it is
 		if locationManager?.authStatus != .notDetermined {
 			currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
 
 				// If not found && nothing is stored
 			if stateLocation == .noState && currentLocation == .noState {
-				// choose your own location
+					// choose your own location
 				state = .locationNotFound
 
 					// If location is found - go on and get that data
@@ -126,14 +121,14 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 		}
 	}
 
-	// Let the user chose a location once then store it
+		// Let the user chose a location once then store it
 	func updateChosenLocationUserDefaults(to location: StateLocation) {
 
 		if GlobalSettings.location.state == "" {
 			GlobalSettings.location = Location(state: location.rawValue)
 		}
 		currentLocation = location
-		getDataFromCloudKit(for: location)
+		getDataFromCloudKit(for: currentLocation)
 	}
 
 	func internetStatusDidChange(status: NWPath.Status) {
@@ -156,58 +151,10 @@ final class AppCoordinator: ObservableObject, @MainActor LocationDelegate, Netwo
 	}
 
 	private func getDataFromCloudKit(for location: StateLocation) {
-		getData(for: location, dataFetched: { [weak self] (produce: [ProduceModel]) in
-
-			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
-				self?.state = .dataIsReady
-				self?.produceData = produce
-			})
-		})
+		produceCloudDataService = ProduceCloudDataService(location: location)
+		Task {
+			produceData = await produceCloudDataService?.getData(for: location)
+			state = .dataIsReady
+		}
 	}
-
-	private func getData(for location: StateLocation, dataFetched: @escaping ([ProduceModel]) -> Void) {
-		cloudKitDataService.getData(for: location, dataFetched: { [weak self] data in
-			do {
-				dataFetched(try data.get())
-			} catch {
-				self?.state = .networkFailed
-			}
-		})
-	}
-
-	// MARK: Context update
-
-//	func updateSearch(_ search: String) {
-//		switch viewContext {
-//		case .months(let month, let category, _):
-//			viewContext = .months(month, category: category, search: search)
-//		case .seasons(let season, let category, _):
-//			viewContext = .seasons(season, category: category, search: search)
-//		case .favourites(let category, _):
-//			viewContext = .favourites(category: category, search: search)
-//		}
-//	}
-//
-//	func updateCategory(_ category: ViewDisplayed.ProduceCategory) {
-//		switch viewContext {
-//		case .months(let month, _, let search):
-//			viewContext = .months(month, category: category, search: search)
-//		case .seasons(let season, _, let search):
-//			viewContext = .seasons(season, category: category, search: search)
-//		case .favourites(_, let search):
-//			viewContext = .favourites(category: category, search: search)
-//		}
-//	}
-//
-//	func updateMonth(_ month: Month) {
-//		if case let .months(_, category, search) = viewContext {
-//			viewContext = .months(month, category: category, search: search)
-//		}
-//	}
-//
-//	func updateSeason(_ season: Season) {
-//		if case let .seasons(_, category, search) = viewContext {
-//			viewContext = .seasons(season, category: category, search: search)
-//		}
-//	}
 }

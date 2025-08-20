@@ -9,9 +9,9 @@
 import Foundation
 
 enum Tabs: Hashable {
-	case favourites(category: ViewDisplayed.ProduceCategory = .all, search: String)
-	case months(Months, category: ViewDisplayed.ProduceCategory = .all, search: String)
-	case seasons(SeasonsOld, category: ViewDisplayed.ProduceCategory = .all, search: String)
+	case favourites(category: ProduceCategory = .all, search: String)
+	case months(Months, category: ProduceCategory = .all, search: String)
+	case seasons(Seasons, category: ProduceCategory = .all, search: String)
 
 	var title: String {
 		switch self {
@@ -40,7 +40,7 @@ enum Tabs: Hashable {
 		}
 	}
 
-	func updatingCategory(_ newCategory: ViewDisplayed.ProduceCategory) -> Tabs {
+	func updatingCategory(_ newCategory: ProduceCategory) -> Tabs {
 		switch self {
 		case .months(let month, _, let search):
 			.months(month, category: newCategory, search: search)

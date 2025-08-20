@@ -117,7 +117,7 @@ class SeasonalTests: XCTestCase {
 				imageName = nameRecord
 				category = ViewDisplayed.ProduceCategory.asArray.filter {$0.asString == categoryRecord}[0]
 				months = monthsRecord.createMonthArray()
-				seasons = seasonsRecord.createSeasonArray()
+				seasons = seasonsRecord.createSeasonArrayOld()
 			}
 
 			if likedArray.contains(record.id) {

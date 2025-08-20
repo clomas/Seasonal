@@ -14,10 +14,10 @@ struct PeriodTabView<Period: PeriodType>: View {
 
 	private let middleOffset = Period.allCases.count
 
-	@State var selectedPeriod: Period
-	@State var selectedCategory: ViewDisplayed.ProduceCategory = .all
-	@State var searchQuery: String = ""
+	@Binding var selectedCategory: ProduceCategory
 
+	@State var selectedPeriod: Period
+	@State var searchQuery: String = ""
 	@State private var scrollPosition: Int = 0
 
 	private var infinitePeriods: [Period] {
@@ -63,14 +63,12 @@ struct PeriodTabView<Period: PeriodType>: View {
 
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
-			// TODO: category
-			produce: produce.filtered(by: period, category: .all, search: ""),
-			period: period, selectedTab: .months
+			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
+			period: period
 		)
 		.containerRelativeFrame(.horizontal)
 		.id(index)
-//		.padding(.top, -100)
-		// TODO: CHECK
+		.padding(.top, -100)
 	}
 
 	private func periodMenu() -> some View {
@@ -236,7 +234,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 	}()
 
 	NavigationStack {
-		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedPeriod: .april)
+		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedCategory: .constant(.all), selectedPeriod: .april)
 			.environmentObject(coord)
 	}
 }

@@ -136,11 +136,11 @@ extension Array where Element == ProduceModel {
 			var seasonsProduce: [Produce] = [Produce]()
 
 			if season != .cancelled {
-				forEach({ item in
-					if item.seasons.contains(season) {
+				forEach { item in
+					if item.seasons.toOld.contains(season) {
 						seasonsProduce.append(Produce(produce: item))
 					}
-				})
+				}
 				seasonsArray[season] = seasonsProduce
 			}
 		}
@@ -177,3 +177,4 @@ extension SeasonsViewModel {
 		}
 	}
 }
+

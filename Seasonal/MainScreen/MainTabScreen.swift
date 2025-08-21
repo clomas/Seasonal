@@ -136,9 +136,15 @@ struct MainTabScreen: View {
 		switch tab {
 		case .favourites:
 			return AnyView(
-				ProduceList(period: nil, parentTab: tab, produce: produce, onToggleLike: {
-					storeLikeInDatabase(for: $0)
-				})
+				ProduceList<NoPeriod>(
+					selectedPeriod: .none,
+					parentTab: selectedTab,
+					selectedCategory: $selectedCategory,
+					produce: produce, // TODO: pass liked in here
+					onToggleLike: {
+						storeLikeInDatabase(for: $0)
+					}
+				)
 			)
 		// Period - Months or Seasons
 		case .period(let type):
@@ -151,10 +157,10 @@ struct MainTabScreen: View {
 			}
 		case .search(let period):
 			if let months = period.cast(Months.self) {
-				return searchView(with: months)
+				return searchTabView(with: months)
 
 			} else if let seasons = period.cast(Seasons.self) {
-				return searchView(with: seasons)
+				return searchTabView(with: seasons)
 
 			}
 		default:
@@ -177,11 +183,11 @@ struct MainTabScreen: View {
 		)
 	}
 
-	private func searchView<P: PeriodType>(with period: P) -> AnyView {
+	private func searchTabView<P: PeriodType>(with period: P) -> AnyView {
 		AnyView(
-			SearchView(
+			SearchTabView(
 				produce: produce,
-				selectedTab: selectedTab,
+				selectedTab: previousTab,
 				selectedPeriod: period,
 				selectedCategory: $selectedCategory,
 				onToggleLike: { storeLikeInDatabase(for: $0) }

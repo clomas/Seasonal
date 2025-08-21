@@ -21,7 +21,6 @@ actor ProduceCloudDataService {
 	// MARK: CloudKit Database
 
 	func getData(for locationFound: StateLocation) async -> [Produce] {
-		var model: [Produce] = []
 		var publicRecords: [CKRecord] = []
 		var privateRecords: [CKRecord] = []
 
@@ -36,7 +35,7 @@ actor ProduceCloudDataService {
 				}
 				group.addTask {
 					await self.cloudKitDataService.setDatabase(type: .private)
-					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
+					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduceLikes, queryKey: Constants.id)
 					return (.private, records)
 				}
 				for try await (type, records) in group {
@@ -48,8 +47,7 @@ actor ProduceCloudDataService {
 					}
 				}
 			}
-			model = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
-			return model
+			return addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
 		} catch {
 			return []
 		}
@@ -132,20 +130,21 @@ actor ProduceCloudDataService {
 				seasons = seasonsRecord.createSeasonArray()
 			}
 
-			/*
-			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
-				liked = Bool(truncating: id as NSNumber)
-			}
-			*/
 			if let recordIdValue = record.object(forKey: Constants.id) {
+
 				let recordIdInt: Int?
+
 				if let intValue = recordIdValue as? Int {
 					recordIdInt = intValue
+
 				} else if let stringValue = recordIdValue as? String, let intValue = Int(stringValue) {
 					recordIdInt = intValue
+
 				} else {
 					recordIdInt = nil
+
 				}
+
 				if let recordIdInt, likedArray.contains(recordIdInt) {
 					liked = true
 				}

@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  CloudKitDataService.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 1/7/2025.
@@ -55,7 +55,8 @@ actor CloudKitDataService: ObservableObject {
 			}
 			return records
 
-		} catch {
+		} catch(let error) {
+			print(error.localizedDescription)
 			return []
 		}
 	}

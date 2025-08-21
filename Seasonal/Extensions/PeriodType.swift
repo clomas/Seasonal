@@ -8,6 +8,16 @@
 
 import SwiftUI
 
+enum NoPeriod: PeriodType {
+	case `none`
+
+	static let currentPeriod: NoPeriod = `none`
+
+	var image: Image {
+		Image(systemName: "")
+	}
+}
+
 protocol PeriodType: CaseIterable, Equatable, Hashable where AllCases: RandomAccessCollection {
 
 	static var currentPeriod: Self { get }

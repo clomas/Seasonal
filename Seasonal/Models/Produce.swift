@@ -23,7 +23,7 @@ extension Array where Element == Produce {
 	func filtered<Period: PeriodType>(
 		by period: Period,
 		category: ProduceCategory,
-		search: String
+		search: String // TODO: Nil this out?
 	) -> [Produce] {
 		self
 			.filter { period.allCases.contains(period) && (category == .all || $0.category == category) }

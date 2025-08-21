@@ -19,7 +19,6 @@ struct PeriodTabView<Period: PeriodType>: View {
 	@Binding var selectedCategory: ProduceCategory
 
 	@State var selectedPeriod: Period
-	@State var searchQuery: String = ""
 	@State private var scrollPosition: Int = 0
 
 	var onToggleLike: ToggleLikeCallback
@@ -63,12 +62,14 @@ struct PeriodTabView<Period: PeriodType>: View {
 				}
 				.toolbarBackground(.hidden, for: .navigationBar)
 		}
+		.toolbarBackground(.hidden, for: .navigationBar)
 	}
 
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
-			period: period,
+			selectedPeriod: period,
 			parentTab: selectedTab,
+			selectedCategory: $selectedCategory,
 			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
 			onToggleLike: onToggleLike
 		)

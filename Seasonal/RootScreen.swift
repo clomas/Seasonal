@@ -15,6 +15,7 @@ import SwiftUI
 // Wire up like button
 // Work on like button appearance
 // The months capsule needs work
+// Cache everything, it's never updated
 
 @available(iOS 26, *)
 struct RootView: View {
@@ -25,12 +26,10 @@ struct RootView: View {
 			switch coordinator.state {
 			case .dataIsReady:
 				MainTabScreen()
-				
 			default:
-				if #available(iOS 26.0, *) {
-					InitialScreen()
-						.glassEffect()
-				} 
+				InitialScreen()
+					.glassEffect()
+
 			}
 		}
 		.animation(.easeInOut, value: coordinator.state == .dataIsReady)

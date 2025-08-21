@@ -9,13 +9,23 @@
 import SwiftUI
 
 @available(iOS 26, *)
-struct ProduceList: View {
-	let period: (any PeriodType)?
+struct ProduceList<Period: PeriodType>: View {
+
+	let selectedPeriod: Period
 	let parentTab: MainTabScreen.Tabs
 
+	@Binding var selectedCategory: ProduceCategory
+
 	@State var produce: [Produce]
+	@State private var query: String = ""
+
+	@FocusState private var searchIsFocused: Bool
 
 	var onToggleLike: ToggleLikeCallback
+
+	private var filteredProduce: [Produce] {
+		produce.filtered(by: selectedPeriod, category: selectedCategory, search: query)
+	}
 
 	var body: some View {
 		ZStack {
@@ -31,6 +41,11 @@ struct ProduceList: View {
 						.listRowInsets(.topListRowInset)
 						.listRowBackground(Color.clear)
 
+				}
+				.searchable(text: $query, prompt: "Search produce")
+				.focused($searchIsFocused)
+				.onAppear {
+					searchIsFocused = true
 				}
 				.listStyle(.plain)
 				.scrollContentBackground(.hidden)
@@ -48,7 +63,7 @@ struct ProduceList: View {
 				.resizable()
 				.frame(width: 50, height: 50)
 				.padding(20)
-			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: period?.nameLowercased))
+			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: selectedPeriod.nameLowercased))
 		}
 	}
 }

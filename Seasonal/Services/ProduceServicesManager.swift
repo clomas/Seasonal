@@ -14,10 +14,10 @@ actor ProduceServicesManager {
 	static func getDataFromCloudKit(for location: StateLocation) async -> [Produce] {
 		let cloudKitService: ProduceCloudDataService = .init(location: location)
 
-		Task {
-			return await cloudKitService.getData(for: location)
+		let data = Task {
+			await cloudKitService.getData(for: location)
 		}
-		return []
+		return await data.value
 	}
 
 	static func updateLike(id: Int, liked: Bool) async {

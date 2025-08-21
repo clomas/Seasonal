@@ -137,8 +137,6 @@ extension AnyTransition {
 
 @available(iOS 26, *)
 #Preview {
-	if #available(iOS 26.0, *) {
-		InitialScreen()
-			.environmentObject(previewCoordinator)
-	}
+	InitialScreen()
+		.environmentObject(previewCoordinator)
 }

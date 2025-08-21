@@ -104,7 +104,7 @@ extension Image {
 	static let heart: Image = .init(systemName: "heart")
 	static let heartFill: Image = .init(systemName: "heart.fill")
 	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
-	static let settings: Image = .init("slider.vertical.3")
+	static let settings: Image = .init(systemName: "slider.vertical.3")
 }
 
 // MARK: Image strings

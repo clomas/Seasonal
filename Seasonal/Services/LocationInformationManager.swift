@@ -13,7 +13,9 @@ import MapKit
 class LocationInformationManager {
 
 	func parseLocation(_ location: CLLocation?) async -> StateLocation {
-		guard let location else { return .noState }
+		guard let location else {
+			return .noState
+		}
 
 		let request = MKReverseGeocodingRequest(location: location)
 		let placemark: MKPlacemark? = try? await request?.mapItems.first?.placemark

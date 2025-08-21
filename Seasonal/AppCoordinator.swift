@@ -89,38 +89,24 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 
-		// Called from location manager
-		// also called from updateChosenLocation
-		// fetch data when conditions are right
 	func locationReady(location: CLLocation?) {
-		var stateLocation: StateLocation = .noState
-
 		Task {
-			stateLocation = await LocationInformationManager().parseLocation(location)
-		}
+			let stateLocation = await LocationInformationManager().parseLocation(location)
 
-			// If not determined, wait until it is
-		if locationManager?.authStatus != .notDetermined {
-			currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
+			if locationManager?.authStatus != .notDetermined {
+				currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
 
-				// If not found && nothing is stored
-			if stateLocation == .noState && currentLocation == .noState {
-					// choose your own location
-				state = .locationNotFound
-
-					// If location is found - go on and get that data
-			} else if stateLocation != .noState {
-				currentLocation = stateLocation
-				GlobalSettings.location = Location(state: stateLocation.rawValue)
-				getDataFromCloudKit(for: currentLocation)
-
-					// If location services is denied and nothing stored - prompt user for state
-			} else if locationManager?.authStatus == .denied && currentLocation == .noState {
-				state = .locationNotFound
-
-					// If current location is stored - proceed
-			} else if currentLocation != .noState {
-				getDataFromCloudKit(for: currentLocation)
+				if stateLocation == .noState && currentLocation == .noState {
+					state = .locationNotFound
+				} else if stateLocation != .noState {
+					currentLocation = stateLocation
+					GlobalSettings.location = Location(state: stateLocation.rawValue)
+					getDataFromCloudKit(for: currentLocation)
+				} else if locationManager?.authStatus == .denied && currentLocation == .noState {
+					state = .locationNotFound
+				} else if currentLocation != .noState {
+					getDataFromCloudKit(for: currentLocation)
+				}
 			}
 		}
 	}
@@ -170,4 +156,3 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 }
-

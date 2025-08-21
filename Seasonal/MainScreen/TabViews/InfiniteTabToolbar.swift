@@ -35,11 +35,8 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			} label: {
 				Image.arrowLeft
 			}
-			.buttonStyle(.plain)
-			.foregroundColor(.primary)
+			.foregroundStyle(.black) // TODO: Update to my colours for dark mode
 		}
-		.sharedBackgroundVisibility(.hidden)
-
         // Month name
         ToolbarItem(placement: .topBarLeading) {
             Text(selectedItem.name)
@@ -60,8 +57,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			} label: {
 				selectedItem.image
 			}
-			.buttonStyle(.plain)
-			.foregroundColor(.primary)
+			.foregroundStyle(.black)
 
 			// ->
 			Button {
@@ -69,10 +65,8 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			} label: {
 				Image.arrowRight
 			}
-			.buttonStyle(.plain)
-			.foregroundColor(.primary)
+			.foregroundStyle(.black)
 		}
-		.sharedBackgroundVisibility(.hidden)
 	}
 
 	private func navigateToAdjacent(_ direction: NavigationDirection) {

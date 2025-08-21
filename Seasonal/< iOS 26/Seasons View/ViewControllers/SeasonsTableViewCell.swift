@@ -23,7 +23,7 @@ class SeasonsTableViewCell: UITableViewCell {
 
     var id: Int?
 
-    func updateViews(produce: Produce) {
+    func updateViews(produce: ProduceOld) {
 		guard let image = UIImage(named: produce.imageName) else { return }
 		backgroundColor = UIColor.TableViewCell.tint
 

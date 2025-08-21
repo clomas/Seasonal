@@ -44,7 +44,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 	private let navigationController: UINavigationController = UINavigationController()
 
 	@Published var state: AppCoordinatorState = .initial
-	@Published var produceData: [ProduceModel]?
+	@Published var produceData: [Produce]?
 
 	private(set) var childCoordinators: [Coordinator] = []
 

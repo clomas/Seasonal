@@ -33,7 +33,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 	private(set) var childCoordinators: [Coordinator] = []
 	private var networkService: NetworkService?
 	private var currentLocation: StateLocation = .noState
-	private var produceData: [ProduceModel]?
+	private var produceData: [Produce]?
 	private var isFirstRun: Bool {
 		UserDefaults.isFirstLaunch()
 	}
@@ -124,7 +124,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 	}
 
 	private func getDataFromCloudKit(for location: StateLocation) {
-		getData(for: location, dataFetched: { [weak self] (produce: [ProduceModel]) in
+		getData(for: location, dataFetched: { [weak self] (produce: [Produce]) in
 		    self?.produceData = produce
 
 			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
@@ -144,7 +144,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 		getDataFromCloudKit(for: location)
 	}
 
-	private func getData(for location: StateLocation, dataFetched: @escaping ([ProduceModel]) -> Void) {
+	private func getData(for location: StateLocation, dataFetched: @escaping ([Produce]) -> Void) {
 		cloudKitDataService.getData(for: location, dataFetched: { [weak self] data in
 			do {
 				dataFetched(try data.get())

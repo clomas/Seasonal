@@ -27,7 +27,7 @@ class ProduceMonthInfoViewCell: UITableViewCell {
 
     @IBOutlet var monthImages: [UIImageView] = []
 
-	func updateViews(produce: Produce, monthNow: MonthOld, in view: ViewDisplayed) {
+	func updateViews(produce: ProduceOld, monthNow: MonthOld, in view: ViewDisplayed) {
 		guard let image = UIImage(named: produce.imageName) else { return }
 
 		id = produce.id

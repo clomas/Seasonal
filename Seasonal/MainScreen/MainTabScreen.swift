@@ -13,17 +13,20 @@ struct MainTabScreen: View {
 
 	enum Tabs: Hashable {
 		case favourites
-		case months
-		case seasons
+		case period(AnyPeriod)
 		case categories
-		case search
+		case search(AnyPeriod)
 
 		var title: String {
 			switch self {
 			case .favourites:
 				"Favourites"
-			case .months:
-				"Months"
+			case .period(let period):
+				switch period {
+				case .months(let month):
+					"Month"
+				}
+//				"Months/"
 			case .seasons:
 				"Seasons"
 			default: // TODO: handle other cases
@@ -33,7 +36,7 @@ struct MainTabScreen: View {
 
 		var emptyProduceListViewMessage: String? {
 			return if case .favourites = self {
-				"Like some produce to see it in here."
+				"❤️ Favourite some produce to see it in here."
 			} else {
 				nil
 			}
@@ -42,6 +45,7 @@ struct MainTabScreen: View {
 
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
+	// TODO: track last tab in user d's
 	@State private var selectedTab: Tabs = .favourites
 	@State private var previousTab: Tabs = .favourites
 	@State private var originalTabBeforeCategories: Tabs = .favourites
@@ -53,7 +57,7 @@ struct MainTabScreen: View {
 	@State private var showAlert: Bool = false
 	@State private var isSearching = false
 
-	private var produce: [ProduceModel] {
+	private var produce: [Produce] {
 		appCoordinator.produceData ?? []
 	}
 
@@ -87,15 +91,15 @@ struct MainTabScreen: View {
 		ZStack {
 			TabView(selection: $selectedTab) {
 				Tab("Favourites", systemImage: "heart", value: .favourites) { tab }
-				Tab("Months", systemImage: "calendar", value: .months) { tab }
-				Tab("Seasons", systemImage: "cloud.sun", value: .seasons) {	tab }
+				Tab("Months", systemImage: "calendar", value: .period(AnyPeriod(Months.currentPeriod))) { tab }
+				Tab("Seasons", systemImage: "cloud.sun", value: .period(AnyPeriod(Seasons.currentPeriod))) { tab }
 				Tab("Categories", systemImage: .settings, value: .categories) { tab }
 					.popover(isPresented: $showCategoryMenu) {
 						categoriesPopOverView
 					}
-				Tab(value: .search, role: .search) {
+				Tab(value: .search(AnyPeriod(Months.)), role: .search) {
 					NavigationStack {
-						
+						tab
 					}
 				}
 			}
@@ -121,127 +125,52 @@ struct MainTabScreen: View {
 			.toolbarBackground(Color.clear, for: .navigationBar)
 	}
 
-	private func tabView(for tab: MainTabScreen.Tabs, produce: [ProduceModel]) -> AnyView {
+	private func tabView(for tab: MainTabScreen.Tabs, produce: [Produce]) -> AnyView {
 		switch tab {
 		case .favourites:
 			AnyView(ProduceList(produce: produce, period: Months.april, parentTab: tab))
-		case .months:
-			AnyView(
-				NavigationStack {
-					PeriodTabView<Months>(
-						produce: produce,
-						selectedTab: tab,
-						selectedCategory: $selectedCategory,
-						selectedPeriod: Months.currentPeriod
-					)
-				}
-				.toolbarBackground(.visible, for: .navigationBar)
-				.toolbarBackground(Color.clear, for: .navigationBar)
-			)
-		case .seasons:
-			AnyView(
-				NavigationStack {
-					PeriodTabView<Seasons>(
-						produce: produce,
-						selectedTab: tab,
-						selectedCategory: $selectedCategory,
-						selectedPeriod: Seasons.currentPeriod
-					)
-				}
-				.toolbarBackground(.visible, for: .navigationBar)
-				.toolbarBackground(Color.clear, for: .navigationBar)
-			)
+		case .period(let type):
+			if type.is(Months.self) {
+				AnyView(
+					NavigationStack {
+						PeriodTabView<Months>(
+							produce: produce,
+							selectedTab: tab,
+							selectedCategory: $selectedCategory,
+							selectedPeriod: Months.currentPeriod
+						)
+					}
+					.toolbarBackground(.visible, for: .navigationBar)
+					.toolbarBackground(Color.clear, for: .navigationBar)
+				)
+			} else if type.is(Seasons.self) {
+				AnyView(
+					NavigationStack {
+						PeriodTabView<Seasons>(
+							produce: produce,
+							selectedTab: tab,
+							selectedCategory: $selectedCategory,
+							selectedPeriod: Seasons.currentPeriod
+						)
+					}
+					.toolbarBackground(.visible, for: .navigationBar)
+					.toolbarBackground(Color.clear, for: .navigationBar)
+				)
+			} else {
+				AnyView(EmptyView())
+			}
 		case .categories:
 			AnyView(EmptyView())
 		case .search:
+			AnyView(SearchView(produce: produce, selectedTab: selectedTab, selectedPeriod: $selectedPeriod, selectedCategory: $selectedCategory))
+		default:
 			AnyView(EmptyView())
-		}
-	}
-}
-
-struct SearchView: View {
-	var body: some View {
-		NavigationView {
-			List {
-				Text("Recent searches")
-				Text("Trending items")
-			}
-			.navigationTitle("Search")
 		}
 	}
 }
 
 @available(iOS 26, *)
 #Preview {
-	lazy var coord: AppCoordinator = {
-		let coord = AppCoordinator(window: .create())
-		coord.state = .locationNotFound
-		coord.produceData = [
-			ProduceModel(
-				id: 0,
-				name: "Apples",
-				category: .fruit,
-				imageName: "Apples",
-				description: "",
-				months: [.june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 1,
-				name: "Bananas",
-				category: .fruit,
-				imageName: "Bananas",
-				description: "",
-				months: [.april, .august, .december, .january, . june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, . june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, . june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, . june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-			ProduceModel(
-				id: 0,
-				name: "Apple",
-				category: .fruit,
-				imageName: "apple",
-				description: "",
-				months: [.april, .august, .december, .january, . june, .september],
-				seasons: [.autumn, .spring],
-				liked: true
-			),
-		]
-		return coord
-	}()
-
 	MainTabScreen()
-		.environmentObject(coord)
+		.environmentObject(previewCoordinator)
 }
-

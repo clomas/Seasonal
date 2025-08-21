@@ -1,27 +1,28 @@
-	//
-	//  ProduceCell.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 6/7/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  ProduceCell.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 6/7/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 
 struct ProduceCell: View {
-	var produce: ProduceModel
+	var produce: Produce
+	var onToggleLike: (() -> Void)? = nil
 
 	var body: some View {
 		ZStack {
 			Color(.systemBackground)
 			VStack(spacing: 6) {
 				ZStack {
-					Text(produce.name)
+					Text(produce.name ?? "")
 						.font(.headline)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
 					HStack {
-						Image(produce.imageName)
+						Image(produce.imageName ?? "")
 							.resizable()
 							.scaledToFit()
 							.frame(width: 60, height: 60)
@@ -29,9 +30,10 @@ struct ProduceCell: View {
 						Spacer()
 
 						Button(action: {
-//							produce.liked = !produce.liked
+							produce.liked?.toggle()
+							self.onToggleLike?()
 						}) {
-							if produce.liked { GradientHeartView() } else { EmptyHeartView() }
+							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
 						}
 						.animation(.bouncy, value: produce.liked)
 						.padding(.trailing, 16)
@@ -50,10 +52,10 @@ struct ProduceCell: View {
 		id: 1,
 		name: "Bananas",
 		category: .fruit,
-		imageName: "Bananas", // make sure this image exists!
+		imageName: "Bananas",
 		description: "",
 		months: [.august],
 		seasons: [.spring],
 		liked: true
-	))
+	), onToggleLike: {})
 }

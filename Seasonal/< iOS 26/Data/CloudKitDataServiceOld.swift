@@ -25,7 +25,7 @@ class CloudKitDataServiceOld {
 
     // MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceModel], CloudKitError>) -> Void) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[Produce], CloudKitError>) -> Void) {
         currentLocation = locationFound
 		let predicate: NSPredicate = NSPredicate(value: true)
 		let publicQuery: CKQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
@@ -64,8 +64,8 @@ class CloudKitDataServiceOld {
 
     // MARK: Sort Data
 
-    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [ProduceModel] {
-		var produceArray: [ProduceModel] = [ProduceModel]()
+    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
+		var produceArray: [Produce] = [Produce]()
 		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
         for record in publicRecords {
@@ -95,7 +95,7 @@ class CloudKitDataServiceOld {
 				liked = Bool(truncating: id as NSNumber)
 			}
 
-			let produce: ProduceModel = ProduceModel(id: id,
+			let produce: Produce = Produce(id: id,
 								                     name: name,
 								                     category: category,
 								                     imageName: imageName,
@@ -116,8 +116,8 @@ class CloudKitDataServiceOld {
 
     // Update cloudKit with local data if there is a disparity
     // local data should always be accurate
-    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [ProduceModel]) {
-		let likedArray: [ProduceModel] = produceArray.filter { $0.liked == true}
+    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
+		let likedArray: [Produce] = produceArray.filter { $0.liked == true}
 
 		for prod in produceArray where prod.liked {
 			#if DEBUG
@@ -127,7 +127,7 @@ class CloudKitDataServiceOld {
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
 
-			if let index: Array<Produce>.Index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
+			if let index: Array<ProduceOld>.Index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
 				produceArray[index].liked = true
 			}
 			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { (result: Result<Bool, CloudKitError>) in

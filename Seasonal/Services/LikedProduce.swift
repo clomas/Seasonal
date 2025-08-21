@@ -1,5 +1,5 @@
 //
-//  LikedProduceModel.swift
+//  LikedProduce.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 2/11/20.

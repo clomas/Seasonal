@@ -103,14 +103,14 @@ extension MonthTableCollectionViewCell: UITableViewDataSource {
 
 			switch viewModel?.viewDisplayed {
 			case .favourites:
-				guard let produce: Produce = viewModel?.favouritesProduceToDisplay?[indexPath.row] else { return cell }
+				guard let produce: ProduceOld = viewModel?.favouritesProduceToDisplay?[indexPath.row] else { return cell }
 
 				cell.updateViews(produce: produce, monthNow: thisMonthForProduceCell, in: .favourites)
 				return cell
 
 			case .months:
 
-				guard let produce: Produce = viewModel?.allMonthsAndTheirProduceToDisplay?[tag][indexPath.row] else { return cell }
+				guard let produce: ProduceOld = viewModel?.allMonthsAndTheirProduceToDisplay?[tag][indexPath.row] else { return cell }
 
 				cell.updateViews(produce: produce, monthNow: thisMonthForProduceCell, in: .months)
 				return cell

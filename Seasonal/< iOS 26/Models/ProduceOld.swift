@@ -8,25 +8,25 @@
 
 import Foundation
 
-struct Produce: Identifiable {
+struct ProduceOld: Identifiable {
 
-	var produce: ProduceModel
+	var produce: Produce
 
 	var id: Int {
-		produce.id
+		produce.id ?? -1
 	}
 	var name: String {
-		produce.name
+		produce.name ?? ""
 	}
 	var imageName: String {
-		produce.imageName
+		produce.imageName ?? ""
 	}
 	var description: String {
-		produce.description
+		produce.description ?? ""
 	}
 	var liked: Bool {
 		get {
-			return produce.liked
+			return produce.liked == true
 		} set(liked) {
 			produce.liked = liked
 		}
@@ -34,15 +34,15 @@ struct Produce: Identifiable {
 
 		// Commented out redundant properties now provided by protocol conformance
 	var produceName: String {
-		produce.name
+		produce.name ?? ""
 	}
 	var category: ViewDisplayed.ProduceCategory? {
-		produce.category.toOld
+		produce.category?.toOld ?? .all
 	}
 	var months: [MonthOld] {
-		produce.months.toOld
+		produce.months?.toOld ?? []
 	}
 	var seasons: [SeasonsOld] {
-		produce.seasons.toOld
+		produce.seasons?.toOld ?? []
 	}
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct ProduceList: View {
-	let produce: [ProduceModel]
+	let produce: [Produce]
 	let period: any PeriodType
 	let parentTab: MainTabScreen.Tabs
 

@@ -31,11 +31,11 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	weak var coordinator: MainViewCoordinator?
 
-	var produceData: [SeasonsOld: [Produce]]
+	var produceData: [SeasonsOld: [ProduceOld]]
 	var season: SeasonsOld
 	var category: ViewDisplayed.ProduceCategory
 
-	var seasonProduceToDisplay: [Produce]? {
+	var seasonProduceToDisplay: [ProduceOld]? {
 		didSet {
 			numberOfRows = seasonProduceToDisplay?.count ?? 0
 		}
@@ -45,7 +45,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 	var reloadTableView: Closure = {}
 
-	init(produceData: [SeasonsOld: [Produce]],
+	init(produceData: [SeasonsOld: [ProduceOld]],
 		 season: SeasonsOld,
 		 category: ViewDisplayed.ProduceCategory,
 		 searchString: String,
@@ -103,7 +103,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 		for seasonProduce in produceData {
 			let season: SeasonsOld = seasonProduce.key
 
-			if let index: Array<ProduceModel>.Index = produceData[season]?.firstIndex(where: { $0.id == id}) {
+			if let index: Array<Produce>.Index = produceData[season]?.firstIndex(where: { $0.id == id}) {
 				produceData[season]?[index].liked = updateLikeTo
 				#if DEBUG
 				print(produceData[season]?[index].liked ?? "")
@@ -124,18 +124,18 @@ final class SeasonsViewModel: MenuBarDelegate {
 	}
 }
 
-extension Array where Element == ProduceModel {
+extension Array where Element == Produce {
 
-	func sortIntoSeasons() -> [SeasonsOld: [Produce]] {
-		var seasonsArray: [SeasonsOld: [Produce]] = [SeasonsOld: [Produce]]()
+	func sortIntoSeasons() -> [SeasonsOld: [ProduceOld]] {
+		var seasonsArray: [SeasonsOld: [ProduceOld]] = [SeasonsOld: [ProduceOld]]()
 
 		SeasonsOld.asArray.forEach { (season: SeasonsOld) in
-			var seasonsProduce: [Produce] = [Produce]()
+			var seasonsProduce: [ProduceOld] = [ProduceOld]()
 
 			if season != .cancelled {
 				forEach { item in
 					if item.seasons.toOld.contains(season) {
-						seasonsProduce.append(Produce(produce: item))
+						seasonsProduce.append(ProduceOld(produce: item))
 					}
 				}
 				seasonsArray[season] = seasonsProduce
@@ -148,7 +148,7 @@ extension Array where Element == ProduceModel {
 extension SeasonsViewModel {
 
 	func filterProduce(by searchTextFieldString: String?) {
-		guard let seasonData: [Produce] = produceData[season] else { return }
+		guard let seasonData: [ProduceOld] = produceData[season] else { return }
 		searchString = searchTextFieldString ?? ""
 
 		switch category {

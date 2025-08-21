@@ -44,7 +44,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	weak var monthSelectedDelegate: MonthSelectedDelegate?
 
 	private var mainViewController: MainViewController?
-	private var dataFetched: [ProduceModel]?
+	private var dataFetched: [Produce]?
 	private var determinedLocation: StateLocation
 	private var monthAndSeason: (MonthOld, SeasonsOld) = DateHandler().findMonthAndSeasonOld()
 	private var currentMonth: MonthOld { monthAndSeason.0 }
@@ -52,7 +52,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 	init(navigationController: UINavigationController,
 		 cloudKitDataService: CloudKitDataServiceOld,
-		 dataFetched: [ProduceModel]?,
+		 dataFetched: [Produce]?,
 		 location: StateLocation) {
 		self.navigationController = navigationController
 		self.cloudKitDataServiceOld = cloudKitDataService
@@ -130,7 +130,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 			mainViewController?.viewModel?.likeToggle(id: id, liked: liked)
 		} else {
 			// update the struct array that is passed to SeasonsView which is pushed and popped
-			if let index: Array<Produce>.Index = dataFetched?.firstIndex(where: { $0.id == id}) {
+			if let index: Array<ProduceOld>.Index = dataFetched?.firstIndex(where: { $0.id == id}) {
 				dataFetched?[index].liked = liked
 			}
 		}

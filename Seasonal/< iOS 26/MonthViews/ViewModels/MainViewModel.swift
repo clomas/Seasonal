@@ -21,8 +21,8 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 
 	var viewDisplayed: ViewDisplayed
 
-	var allMonthsAndTheirProduceToDisplay: [[Produce]]?
-	var favouritesProduceToDisplay: [Produce]?
+	var allMonthsAndTheirProduceToDisplay: [[ProduceOld]]?
+	var favouritesProduceToDisplay: [ProduceOld]?
 
 	var searchString: String
 
@@ -31,11 +31,11 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 
 	weak var coordinator: MainViewCoordinator?
 
-	private var allMonthsAndTheirProduce: [[Produce]]?
-	private var favouritesProduce: [Produce]?
+	private var allMonthsAndTheirProduce: [[ProduceOld]]?
+	private var favouritesProduce: [ProduceOld]?
 
-	init(monthsProduce: [[Produce]]?,
-		 favouritesProduce: [Produce]?,
+	init(monthsProduce: [[ProduceOld]]?,
+		 favouritesProduce: [ProduceOld]?,
 		 viewDisplayed: ViewDisplayed,
 		 monthToDisplay: MonthOld,
 		 previousMonth: MonthOld,
@@ -131,12 +131,12 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 
 	func likeToggle(id: Int, liked: Bool) {
 		let updateLikeTo: Bool = liked == false ? true : false
-		var produceToToggle: Produce?
+		var produceToToggle: ProduceOld?
 
-		if let produce: [[Produce]] = allMonthsAndTheirProduce {
+		if let produce: [[ProduceOld]] = allMonthsAndTheirProduce {
 			for (monthIndex, monthProduce) in produce.enumerated() {
 
-				if let likedProduceIndex: Array<Produce>.Index = monthProduce.firstIndex(where: { $0.id == id }) {
+				if let likedProduceIndex: Array<ProduceOld>.Index = monthProduce.firstIndex(where: { $0.id == id }) {
 					allMonthsAndTheirProduce?[monthIndex][likedProduceIndex].liked = updateLikeTo
 					produceToToggle = allMonthsAndTheirProduce?[monthIndex][likedProduceIndex]
 				}
@@ -150,9 +150,9 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 		coordinator?.updateDataModelsAndDatabase(for: id, liked: updateLikeTo, from: .months)
 	}
 
-	private func updateFavouritesArray(produce: Produce?, liked: Bool) {
+	private func updateFavouritesArray(produce: ProduceOld?, liked: Bool) {
 		if liked == true {
-			if let selectedProduce: Produce = produce {
+			if let selectedProduce: ProduceOld = produce {
 				favouritesProduce?.insert(selectedProduce, at: 0)
 				favouritesProduce = favouritesProduce?.sorted(by: { $0.produceName < $1.produceName })
 			}

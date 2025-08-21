@@ -137,14 +137,8 @@ extension AnyTransition {
 
 @available(iOS 26, *)
 #Preview {
-	lazy var coord: AppCoordinator = {
-		let coord = AppCoordinator(window: .create())
-		coord.state = .locationNotFound
-		return coord
-	}()
-
 	if #available(iOS 26.0, *) {
 		InitialScreen()
-			.environmentObject(coord)
+			.environmentObject(previewCoordinator)
 	}
 }

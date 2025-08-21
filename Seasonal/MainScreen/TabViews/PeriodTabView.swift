@@ -11,7 +11,7 @@ import SwiftUI
 @available(iOS 26, *)
 struct PeriodTabView<Period: PeriodType>: View {
 
-	let produce: [ProduceModel]
+	let produce: [Produce]
 	let selectedTab: MainTabScreen.Tabs
 
 	private let middleOffset = Period.allCases.count
@@ -74,19 +74,6 @@ struct PeriodTabView<Period: PeriodType>: View {
 		.padding(.top, -100)
 	}
 
-	private func periodMenu() -> some View {
-		Menu {
-			ForEach(Array(Period.allCases), id: \.self) { period in
-				Button("\(period.name)") {
-					selectedPeriod = period
-				}
-			}
-		} label: {
-			Label(selectedPeriod.name, systemImage: .calendarImage)
-				.glassEffect(.regular)
-		}
-	}
-
 	private func updateScrollPosition(to newPosition: Int?) {
 		guard let newPosition: Int else {
 			return
@@ -99,147 +86,12 @@ struct PeriodTabView<Period: PeriodType>: View {
 		let periodIndex: Int = scrollPosition % Period.allCases.count
 		selectedPeriod = Array(Period.allCases)[periodIndex]
 	}
-
-	private func setHorizontalScrollPosition(for updatedPeriod: Period) {
-		withAnimation(.easeInOut(duration: .lazyHStackScrollDuration)) {
-			updateScrollPosition(to: updatedPeriod.index + middleOffset)
-		}
-	}
 }
 
 @available(iOS 26, *)
 #Preview {
-    var coord: AppCoordinator = {
-        let coord = AppCoordinator(window: .create())
-        coord.state = .locationNotFound
-        coord.produceData = [
-            ProduceModel(
-                id: 0,
-                name: "Apples",
-                category: .fruit,
-                imageName: "Apples",
-                description: "",
-                months: [.march],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 1,
-                name: "Bananas",
-                category: .fruit,
-                imageName: "Bananas",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september, .february],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 2,
-                name: "Carrots",
-                category: .vegetables,
-                imageName: "Carrots",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 3,
-                name: "Broccoli",
-                category: .vegetables,
-                imageName: "Broccoli",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september, .may],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 4,
-                name: "Spinach",
-                category: .vegetables,
-                imageName: "Spinach",
-                description: "",
-                months: [.april, .august, .april, .january, .june, .september],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 5,
-                name: "Tomatoes",
-                category: .vegetables,
-                imageName: "Tomatoes",
-                description: "",
-                months: [.april, .august, .december, .january, .september, .february],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 0,
-                name: "Apples",
-                category: .fruit,
-                imageName: "Apples",
-                description: "",
-                months: [.june, .september, .july, .april, .february, .may, .march],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 1,
-                name: "Bananas",
-                category: .fruit,
-                imageName: "Bananas",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september, .february],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 2,
-                name: "Carrots",
-                category: .vegetables,
-                imageName: "Carrots",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 3,
-                name: "Broccoli",
-                category: .vegetables,
-                imageName: "Broccoli",
-                description: "",
-                months: [.april, .august, .december, .january, .june, .september, .may],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 4,
-                name: "Spinach",
-                category: .vegetables,
-                imageName: "Spinach",
-                description: "",
-                months: [.april, .august, .april, .january, .june, .september],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-            ProduceModel(
-                id: 5,
-                name: "Tomatoes",
-                category: .vegetables,
-                imageName: "Tomatoes",
-                description: "",
-                months: [.april, .august, .december, .january, .september, .february],
-                seasons: [.autumn, .spring],
-                liked: true
-            ),
-        ]
-        return coord
-    }()
-    
-
 	NavigationStack {
-		PeriodTabView<Months>(produce: coord.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
-			.environmentObject(coord)
+		PeriodTabView<Months>(produce: previewCoordinator.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
+			.environmentObject(previewCoordinator)
 	}
 }

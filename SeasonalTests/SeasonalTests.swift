@@ -33,11 +33,11 @@ class SeasonalTests: XCTestCase {
 //    }
 
 	var produceDataService = ProduceDataService()
-	var produce = [Produce]()
+	var produce = [ProduceOld]()
 	var likedArray: [Int] = [4, 3, 30, 91, 2]
 
-	var testMonthData = [[ProduceModel]]()
-	var testSeasonData = [SeasonsOld: [ProduceModel]]()
+	var testMonthData = [[Produce]]()
+	var testSeasonData = [SeasonsOld: [Produce]]()
 
 	struct DummyPublicCKRecords {
 		let id: Int?
@@ -92,8 +92,8 @@ class SeasonalTests: XCTestCase {
 		produce = addDataToArray(publicRecords: publicData, privateRecords: privateData)
 	}
 
-	private func addDataToArray(publicRecords: [DummyPublicCKRecords], privateRecords: [DummyPrivateCKRecords]) -> [Produce] {
-		var produceArray = [Produce]()
+	private func addDataToArray(publicRecords: [DummyPublicCKRecords], privateRecords: [DummyPrivateCKRecords]) -> [ProduceOld] {
+		var produceArray = [ProduceOld]()
 		let likedArray = privateRecords.map { $0.id }
 
 		for record in publicRecords {
@@ -123,7 +123,7 @@ class SeasonalTests: XCTestCase {
 			if likedArray.contains(record.id) {
 				liked = Bool(truncating: id as NSNumber)
 			}
-			let produce = Produce(id: id,
+			let produce = ProduceOld(id: id,
 								  name: name,
 								  category: category,
 								  imageName: imageName,
@@ -157,7 +157,7 @@ class SeasonalTests: XCTestCase {
 		mimicCloudKitData()
 		testMonthData = produce.sortIntoMonths()
 		let mainViewModel = MainViewModel(monthsProduce: testMonthData,
-										  favouritesProduce: [ProduceModel](),
+										  favouritesProduce: [Produce](),
 										  viewDisplayed: .months,
 										  monthToDisplay: .december,
 										  currentMonth: .december,

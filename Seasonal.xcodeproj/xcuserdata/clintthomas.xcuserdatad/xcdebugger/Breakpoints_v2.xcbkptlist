@@ -7,22 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "FB78AEB7-A329-44E4-A2F3-B8669A621A70"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewControllers/Child Views/MenuBarCollectionView.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "125"
-            endingLineNumber = "125"
-            landmarkName = "toggleSelectedCells(viewDisplayed:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "22C6F29B-D5A7-4259-9087-58D5D73467F4"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -145,6 +129,22 @@
             startingLineNumber = "50"
             endingLineNumber = "50"
             landmarkName = "emailButtonWasTapped(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9CA333ED-866B-468A-9218-7D8FF6594C74"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Seasonal/&lt; iOS 26/MonthViews/ViewModels/MenuBarViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
+            landmarkName = "menuBarWasTapped(at:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -38,8 +38,6 @@ protocol AppCoordinatorVersionProtocol {
 @MainActor
 final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, NetworkObserverDelegate, @preconcurrency AppCoordinatorVersionProtocol {
 
-	var produceCloudDataService: ProduceCloudDataService?
-
 	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
 
@@ -127,7 +125,13 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 
-		// Let the user chose a location once then store it
+	func updateLikedProduce(id: Int, liked: Bool) {
+		Task {
+			await ProduceServicesManager.updateLike(id: id, liked: liked)
+		}
+	}
+
+	// Let the user chose a location once then store it
 	func updateChosenLocationUserDefaults(to location: StateLocation) {
 
 		if GlobalSettings.location.state == "" {
@@ -157,10 +161,13 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 	}
 
 	private func getDataFromCloudKit(for location: StateLocation) {
-		produceCloudDataService = ProduceCloudDataService(location: location)
 		Task {
-			produceData = await produceCloudDataService?.getData(for: location)
-			state = .dataIsReady
+			let data = await ProduceServicesManager.getDataFromCloudKit(for: location)
+			await MainActor.run {
+				self.produceData = data
+				self.state = .dataIsReady
+			}
 		}
 	}
 }
+

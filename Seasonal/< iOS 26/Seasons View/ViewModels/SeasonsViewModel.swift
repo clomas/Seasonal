@@ -134,7 +134,7 @@ extension Array where Element == Produce {
 
 			if season != .cancelled {
 				forEach { item in
-					if item.seasons.toOld.contains(season) {
+					if item.seasons?.toOld.contains(season) == true {
 						seasonsProduce.append(ProduceOld(produce: item))
 					}
 				}

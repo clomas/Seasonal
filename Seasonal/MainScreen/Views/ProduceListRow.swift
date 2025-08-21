@@ -1,5 +1,5 @@
 //
-//  ProduceCell.swift
+//  ProduceListRow.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 6/7/2025.
@@ -8,9 +8,11 @@
 
 import SwiftUI
 
-struct ProduceCell: View {
-	var produce: Produce
-	var onToggleLike: (() -> Void)? = nil
+typealias ToggleLikeCallback = ((Produce) -> Void)?
+
+struct ProduceListRow: View {
+	@Binding var produce: Produce
+	var onToggleLike: ToggleLikeCallback
 
 	var body: some View {
 		ZStack {
@@ -31,7 +33,7 @@ struct ProduceCell: View {
 
 						Button(action: {
 							produce.liked?.toggle()
-							self.onToggleLike?()
+							onToggleLike?(produce)
 						}) {
 							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
 						}
@@ -48,7 +50,7 @@ struct ProduceCell: View {
 	}
 }
 #Preview {
-	ProduceCell(produce: .init(
+	ProduceListRow(produce: .constant(.init(
 		id: 1,
 		name: "Bananas",
 		category: .fruit,
@@ -57,5 +59,5 @@ struct ProduceCell: View {
 		months: [.august],
 		seasons: [.spring],
 		liked: true
-	), onToggleLike: {})
+	)), onToggleLike: { _ in })
 }

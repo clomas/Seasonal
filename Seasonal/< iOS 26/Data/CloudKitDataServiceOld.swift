@@ -119,10 +119,10 @@ class CloudKitDataServiceOld {
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
 		let likedArray: [Produce] = produceArray.filter { $0.liked == true}
 
-		for prod in produceArray where prod.liked {
-			#if DEBUG
+		for prod in produceArray where prod.liked == true {
+		#if DEBUG
 			print(prod.id, prod.liked)
-			#endif
+		#endif
 		}
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
@@ -131,13 +131,13 @@ class CloudKitDataServiceOld {
 				produceArray[index].liked = true
 			}
 			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { (result: Result<Bool, CloudKitError>) in
-				#if DEBUG
+			#if DEBUG
 				if result == .success(true) {
 					print(result, "added like record in CloudKit - id: \(localLike.id)")
 				} else {
 					print(result)
 				}
-				#endif
+			#endif
 			}
 		}
 	}

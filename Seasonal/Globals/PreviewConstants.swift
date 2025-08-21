@@ -6,7 +6,6 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-
 #if DEBUG
 
 @available(iOS 26, *)
@@ -139,26 +138,4 @@ let previewCoordinator: AppCoordinator = {
 	return coord
 }()
 
-extension Produce {
-	convenience init(
-		id: Int? = nil,
-		name: String? = nil,
-		category: ProduceCategory? = nil,
-		imageName: String? = nil,
-		description: String? = nil,
-		months: [Months]? = nil,
-		seasons: [Seasons]? = nil,
-		liked: Bool? = nil
-	) {
-		self.init()
-		self.id = id
-		self.name = name
-		self.category = category
-		self.imageName = imageName
-		self.description = description
-		self.months = months
-		self.seasons = seasons
-		self.liked = liked
-	}
-}
 #endif

@@ -52,7 +52,7 @@
 		27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27949E7C2625A5D5007F3930 /* MonthPickerViewController.swift */; };
 		27949E812625CB6B007F3930 /* MenuBarCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27949E802625CB6B007F3930 /* MenuBarCollectionViewCell.swift */; };
 		2794E28F29FE0AC6007E9D22 /* InitialViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2794E28E29FE0AC6007E9D22 /* InitialViewDelegate.swift */; };
-		2794F0822E1A735A00BFFB12 /* ProduceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2794F0812E1A735A00BFFB12 /* ProduceCell.swift */; };
+		2794F0822E1A735A00BFFB12 /* ProduceListRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2794F0812E1A735A00BFFB12 /* ProduceListRow.swift */; };
 		2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2795AA90222D0A0F009CE7D3 /* MonthPickerCell.swift */; };
 		27993B11224A2A9500438A6B /* MonthTableCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27993B10224A2A9500438A6B /* MonthTableCollectionViewCell.swift */; };
 		27A3835F21DF6EE200BB62C1 /* ProduceMonthInfoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A3835E21DF6EE200BB62C1 /* ProduceMonthInfoViewCell.swift */; };
@@ -62,6 +62,7 @@
 		27AE9A1E29E2518300C98823 /* MonthOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AE9A1D29E2518300C98823 /* MonthOld.swift */; };
 		27B4E45B22D99930003D51B8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B4E44D22D99930003D51B8 /* CoreLocation.framework */; };
 		27BF31CA2E56A4F2004795DB /* PreviewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF31C92E56A4ED004795DB /* PreviewConstants.swift */; };
+		27BF31CE2E56C12F004795DB /* TransparentBackgroundNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */; };
 		27E1379E25E219DC003A0BFC /* MainViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1379D25E219DC003A0BFC /* MainViewCoordinator.swift */; };
 		27E137AB25E51CB6003A0BFC /* SeasonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AA25E51CB6003A0BFC /* SeasonsViewModel.swift */; };
 		27E137AD25E51D66003A0BFC /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AC25E51D65003A0BFC /* MainViewModel.swift */; };
@@ -183,7 +184,7 @@
 		27949E7C2625A5D5007F3930 /* MonthPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthPickerViewController.swift; sourceTree = "<group>"; };
 		27949E802625CB6B007F3930 /* MenuBarCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarCollectionViewCell.swift; sourceTree = "<group>"; };
 		2794E28E29FE0AC6007E9D22 /* InitialViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialViewDelegate.swift; sourceTree = "<group>"; };
-		2794F0812E1A735A00BFFB12 /* ProduceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceCell.swift; sourceTree = "<group>"; };
+		2794F0812E1A735A00BFFB12 /* ProduceListRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceListRow.swift; sourceTree = "<group>"; };
 		2795AA90222D0A0F009CE7D3 /* MonthPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthPickerCell.swift; sourceTree = "<group>"; };
 		27993B10224A2A9500438A6B /* MonthTableCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthTableCollectionViewCell.swift; sourceTree = "<group>"; };
 		27A3835E21DF6EE200BB62C1 /* ProduceMonthInfoViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceMonthInfoViewCell.swift; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 		27AE9A1D29E2518300C98823 /* MonthOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthOld.swift; sourceTree = "<group>"; };
 		27B4E44D22D99930003D51B8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		27BF31C92E56A4ED004795DB /* PreviewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewConstants.swift; sourceTree = "<group>"; };
+		27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentBackgroundNavigationStack.swift; sourceTree = "<group>"; };
 		27E1379D25E219DC003A0BFC /* MainViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCoordinator.swift; sourceTree = "<group>"; };
 		27E137AA25E51CB6003A0BFC /* SeasonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewModel.swift; sourceTree = "<group>"; };
 		27E137AC25E51D65003A0BFC /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -506,12 +508,13 @@
 		2794F07D2E1A731B00BFFB12 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */,
 				27949C0F2E35EE9E00B56E3E /* ProduceList.swift */,
 				272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */,
 				272C7A222E23788800661BAA /* FloatingSearchButton.swift */,
 				272C7A182E220DAD00661BAA /* LikedHeartView.swift */,
 				272C7A1E2E220E0A00661BAA /* MonthsInSeasonCapsuleView.swift */,
-				2794F0812E1A735A00BFFB12 /* ProduceCell.swift */,
+				2794F0812E1A735A00BFFB12 /* ProduceListRow.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -832,7 +835,7 @@
 				277A6834263A3C2600E4389A /* Extension-UIButton.swift in Sources */,
 				27FACED62E55828A000E4A75 /* Produce.swift in Sources */,
 				27E989AE2E518B94006C7739 /* InfiniteTabToolbar.swift in Sources */,
-				2794F0822E1A735A00BFFB12 /* ProduceCell.swift in Sources */,
+				2794F0822E1A735A00BFFB12 /* ProduceListRow.swift in Sources */,
 				272C7A1F2E220E2100661BAA /* MonthsInSeasonCapsuleView.swift in Sources */,
 				27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */,
 				27E137AB25E51CB6003A0BFC /* SeasonsViewModel.swift in Sources */,
@@ -871,6 +874,7 @@
 				2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */,
 				2790D8462E54144A00119F87 /* ProduceCategory.swift in Sources */,
 				27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */,
+				27BF31CE2E56C12F004795DB /* TransparentBackgroundNavigationStack.swift in Sources */,
 				277A6836263A9F1700E4389A /* Extension-Month.swift in Sources */,
 				27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */,
 				276DDC4F237671AC00929E77 /* LocalDataHandler.swift in Sources */,

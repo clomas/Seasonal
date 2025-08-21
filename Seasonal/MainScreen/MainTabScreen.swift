@@ -13,7 +13,7 @@ struct MainTabScreen: View {
 
 	enum Tabs: Hashable {
 		case favourites
-		case period(AnyPeriod)
+		case period(AnyPeriod)   // now holds an actual period value
 		case categories
 		case search(AnyPeriod)
 
@@ -21,16 +21,12 @@ struct MainTabScreen: View {
 			switch self {
 			case .favourites:
 				"Favourites"
-			case .period(let period):
-				switch period {
-				case .months(let month):
-					"Month"
-				}
-//				"Months/"
-			case .seasons:
-				"Seasons"
-			default: // TODO: handle other cases
-				""
+			case .period(let p):
+				p.name
+			case .categories:
+				"Categories"
+			case .search:
+				"Search"
 			}
 		}
 
@@ -97,7 +93,7 @@ struct MainTabScreen: View {
 					.popover(isPresented: $showCategoryMenu) {
 						categoriesPopOverView
 					}
-				Tab(value: .search(AnyPeriod(Months.)), role: .search) {
+				Tab(value: .search(AnyPeriod(Months.currentPeriod)), role: .search) {
 					NavigationStack {
 						tab
 					}
@@ -106,9 +102,24 @@ struct MainTabScreen: View {
 			.tint(Colour.inSeason)
 		}
 		.onChange(of: selectedTab) { oldTab, newTab in
-			if newTab == .categories {
+			switch newTab {
+			case .categories:
 				showCategoryMenu.toggle()
-			} else {
+			case .search(let currentPeriod):
+				let periodToSearch: AnyPeriod = {
+					switch previousTab {
+					case .period(let period): return period
+					case .search(let period): return period
+					default: return currentPeriod
+					}
+				}()
+				if currentPeriod != periodToSearch {
+					selectedTab = .search(periodToSearch)
+					return
+				}
+				previousTab = newTab
+				showCategoryMenu = false
+			default:
 				previousTab = newTab
 				showCategoryMenu = false
 			}
@@ -119,58 +130,75 @@ struct MainTabScreen: View {
 		}
 	}
 
-	private func createNavigationStackForPeriodView(_ view: some View) -> some View {
-		NavigationStack { view }
-			.toolbarBackground(.visible, for: .navigationBar)
-			.toolbarBackground(Color.clear, for: .navigationBar)
-	}
+	// MARK: Main tab logic
 
 	private func tabView(for tab: MainTabScreen.Tabs, produce: [Produce]) -> AnyView {
 		switch tab {
 		case .favourites:
-			AnyView(ProduceList(produce: produce, period: Months.april, parentTab: tab))
+			return AnyView(
+				ProduceList(period: nil, parentTab: tab, produce: produce, onToggleLike: {
+					storeLikeInDatabase(for: $0)
+				})
+			)
+		// Period - Months or Seasons
 		case .period(let type):
 			if type.is(Months.self) {
-				AnyView(
-					NavigationStack {
-						PeriodTabView<Months>(
-							produce: produce,
-							selectedTab: tab,
-							selectedCategory: $selectedCategory,
-							selectedPeriod: Months.currentPeriod
-						)
-					}
-					.toolbarBackground(.visible, for: .navigationBar)
-					.toolbarBackground(Color.clear, for: .navigationBar)
-				)
+				return periodTabView(periodType: Months.self, period: Months.currentPeriod, tab: tab)
+
 			} else if type.is(Seasons.self) {
-				AnyView(
-					NavigationStack {
-						PeriodTabView<Seasons>(
-							produce: produce,
-							selectedTab: tab,
-							selectedCategory: $selectedCategory,
-							selectedPeriod: Seasons.currentPeriod
-						)
-					}
-					.toolbarBackground(.visible, for: .navigationBar)
-					.toolbarBackground(Color.clear, for: .navigationBar)
-				)
-			} else {
-				AnyView(EmptyView())
+				return periodTabView(periodType: Seasons.self, period: Seasons.currentPeriod, tab: tab)
+
 			}
-		case .categories:
-			AnyView(EmptyView())
-		case .search:
-			AnyView(SearchView(produce: produce, selectedTab: selectedTab, selectedPeriod: $selectedPeriod, selectedCategory: $selectedCategory))
+		case .search(let period):
+			if let months = period.cast(Months.self) {
+				return searchView(with: months)
+
+			} else if let seasons = period.cast(Seasons.self) {
+				return searchView(with: seasons)
+
+			}
 		default:
-			AnyView(EmptyView())
+			return AnyView(EmptyView())
 		}
+		return AnyView(EmptyView())
+	}
+
+	private func periodTabView<P: PeriodType>(periodType: P.Type, period: P, tab: MainTabScreen.Tabs) -> AnyView {
+		AnyView(
+			TransparentBackgroundNavigationStack {
+				PeriodTabView<P>(
+					produce: produce,
+					selectedTab: tab,
+					selectedCategory: $selectedCategory,
+					selectedPeriod: period,
+					onToggleLike: { storeLikeInDatabase(for: $0) }
+				)
+			}
+		)
+	}
+
+	private func searchView<P: PeriodType>(with period: P) -> AnyView {
+		AnyView(
+			SearchView(
+				produce: produce,
+				selectedTab: selectedTab,
+				selectedPeriod: period,
+				selectedCategory: $selectedCategory,
+				onToggleLike: { storeLikeInDatabase(for: $0) }
+			)
+		)
+	}
+
+	private func storeLikeInDatabase(for produce: Produce) {
+		guard let id = produce.id, let liked = produce.liked else {
+			return
+		}
+		appCoordinator.updateLikedProduce(id: id, liked: liked)
 	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	MainTabScreen()
-		.environmentObject(previewCoordinator)
+	.environmentObject(previewCoordinator)
 }

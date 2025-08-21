@@ -1,18 +1,21 @@
-	//
-	//  ProduceList.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 27/7/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  ProduceList.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 27/7/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 
 @available(iOS 26, *)
 struct ProduceList: View {
-	let produce: [Produce]
-	let period: any PeriodType
+	let period: (any PeriodType)?
 	let parentTab: MainTabScreen.Tabs
+
+	@State var produce: [Produce]
+
+	var onToggleLike: ToggleLikeCallback
 
 	var body: some View {
 		ZStack {
@@ -22,8 +25,8 @@ struct ProduceList: View {
 				emptyProduceListView
 					.padding(.bottom, .largePadding)
 			} else {
-				List(produce, id: \.id) { item in
-					ProduceCell(produce: item)
+				List($produce, id: \.id) { $item in
+					ProduceListRow(produce: $item, onToggleLike: onToggleLike)
 						.listRowSeparator(.hidden)
 						.listRowInsets(.topListRowInset)
 						.listRowBackground(Color.clear)
@@ -45,7 +48,7 @@ struct ProduceList: View {
 				.resizable()
 				.frame(width: 50, height: 50)
 				.padding(20)
-			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: period.nameLowercased))
+			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: period?.nameLowercased))
 		}
 	}
 }

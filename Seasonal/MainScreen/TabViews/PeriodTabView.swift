@@ -22,6 +22,8 @@ struct PeriodTabView<Period: PeriodType>: View {
 	@State var searchQuery: String = ""
 	@State private var scrollPosition: Int = 0
 
+	var onToggleLike: ToggleLikeCallback
+
 	private var infinitePeriods: [Period] {
 		Array(repeating: Period.allCases, count: 3).flatMap { $0 }
 	}
@@ -65,9 +67,10 @@ struct PeriodTabView<Period: PeriodType>: View {
 
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
-			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
 			period: period,
-			parentTab: selectedTab
+			parentTab: selectedTab,
+			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
+			onToggleLike: onToggleLike
 		)
 		.containerRelativeFrame(.horizontal)
 		.id(index)
@@ -91,7 +94,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 @available(iOS 26, *)
 #Preview {
 	NavigationStack {
-		PeriodTabView<Months>(produce: previewCoordinator.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
+		PeriodTabView<Months>(produce: previewCoordinator.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april, onToggleLike: { _ in })
 			.environmentObject(previewCoordinator)
 	}
 }

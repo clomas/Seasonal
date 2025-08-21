@@ -38,6 +38,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.buttonStyle(.plain)
 			.foregroundColor(.primary)
 		}
+		.sharedBackgroundVisibility(.hidden)
 
         // Month name
         ToolbarItem(placement: .topBarLeading) {
@@ -71,6 +72,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			.buttonStyle(.plain)
 			.foregroundColor(.primary)
 		}
+		.sharedBackgroundVisibility(.hidden)
 	}
 
 	private func navigateToAdjacent(_ direction: NavigationDirection) {

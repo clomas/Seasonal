@@ -38,12 +38,15 @@ extension PeriodType {
 	}
 }
 
-struct AnyPeriod: Hashable {
+struct AnyPeriod: Hashable, Equatable {
 	private let _equals: (AnyPeriod) -> Bool
 	private let _hash: (inout Hasher) -> Void
 	private let _name: () -> String
 	private let _image: () -> Image
 	private let _base: Any
+
+	var name: String { _name() }
+	var image: Image { _image() }
 
 	init<T: PeriodType>(_ base: T) {
 		_base = base
@@ -53,10 +56,13 @@ struct AnyPeriod: Hashable {
 		_image = { base.image }
 	}
 
-	func `is`<T: PeriodType>(_ type: T.Type) -> Bool {
-		_base is T
+	static func == (lhs: AnyPeriod, rhs: AnyPeriod) -> Bool {
+		lhs._equals(rhs)
 	}
 
-	var name: String { _name() }
-	var image: Image { _image() }
+	func `is`<T: PeriodType>(_ type: T.Type) -> Bool { _base is T }
+
+	func cast<T: PeriodType>(_ type: T.Type) -> T? { _base as? T }
+
+	func hash(into hasher: inout Hasher) { _hash(&hasher) }
 }

@@ -6,14 +6,14 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-class Produce: Identifiable {
-	var id: Int?
-	var name: String?
-	var category: ProduceCategory?
-	var imageName: String?
-	var description: String? // Not implemented yet
-	var months: [Months]?
-	var seasons: [Seasons]?
+struct Produce: Identifiable, Sendable {
+	let id: Int?
+	let name: String?
+	let category: ProduceCategory?
+	let imageName: String?
+	let description: String? // Not implemented yet
+	let months: [Months]?
+	let seasons: [Seasons]?
 	var liked: Bool?
 }
 
@@ -40,7 +40,7 @@ extension Array where Element == Produce {
 	}
 
 	func sortIntoMonths() -> [[ProduceOld]] {
-			// create array of 12 months
+		// create array of 12 months
 		var monthProduceArray: [[ProduceOld]] = .init(repeating: [], count: 12)
 
 		for monthIndex in 0...11 {

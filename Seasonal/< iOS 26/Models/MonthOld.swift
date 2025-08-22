@@ -1,11 +1,3 @@
-	//
-	//  Months.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 9/4/2023.
-	//  Copyright © 2023 Clint Thomas. All rights reserved.
-	//
-
 import Foundation
 
 enum MonthOld: Int, CaseIterable {
@@ -23,20 +15,20 @@ enum MonthOld: Int, CaseIterable {
 	case november
 	case december
 	case januaryOverflow
-
+	
 	var firstLetter: String {
 		"\(self)".first?.uppercased() ?? ""
 	}
 }
 
 extension Calendar {
-
+	
 	func isDateInThisMonth(_ date: Date) -> Bool {
 		isDate(date, equalTo: Date(), toGranularity: .month)
 	}
 }
 
-// MARK: - Category mapping
+	// MARK: - Category mapping
 extension ProduceCategory {
 	var toOld: ViewDisplayed.ProduceCategory {
 		switch self {

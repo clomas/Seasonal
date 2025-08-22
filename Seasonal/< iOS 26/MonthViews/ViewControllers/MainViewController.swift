@@ -16,6 +16,9 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	var viewModel: MainViewModel?
 	var searchController: UISearchController = UISearchController(searchResultsController: nil)
 
+	private var hasSetInitialScroll: Bool = false
+	private var shouldIgnoreNextScrollEnd: Bool = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
 		setUpView()
@@ -62,10 +65,27 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	private func reloadAndScrollToSelectedViewIndex() {
 		let indexToScrollTo: Int = viewModel?.viewDisplayed == .favourites ? 0 : viewModel?.monthToDisplay.rawValue ?? 0
 		infiniteMonthCollectionView.reloadData()
-		infiniteMonthCollectionView.scrollToItem(at: IndexPath(row: indexToScrollTo, section: 0),
-												 at: .centeredHorizontally,
-												 animated: false)
-		title = viewModel?.navigationBarTitleString
+		infiniteMonthCollectionView.layoutIfNeeded()
+
+		scrollToItemUpdateTitle(indexToScrollTo)
+
+		shouldIgnoreNextScrollEnd = true
+	}
+
+	private func scrollToItemUpdateTitle(_ indexToScrollTo: Int) {
+		if viewModel?.viewDisplayed == .favourites {
+			title = viewModel?.navigationBarTitleString
+			return
+		}
+
+		CATransaction.begin()
+		CATransaction.setCompletionBlock { [weak self] in
+			self?.setTitleFromScrollViewPaged(newTitle: self?.viewModel?.navigationBarTitleString)
+		}
+		infiniteMonthCollectionView.reloadData()
+		infiniteMonthCollectionView.layoutIfNeeded()
+		infiniteMonthCollectionView.scrollToItem(at: IndexPath(item: indexToScrollTo, section: 0), at: .centeredHorizontally, animated: false)
+		CATransaction.commit()
 	}
 
 	private func menuBarNeedsUpdate() {
@@ -93,13 +113,16 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
 
-	// Scroll to correct month before view is presented
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 
-		if viewModel?.allMonthsAndTheirProduceToDisplay?.isEmpty == false && viewModel?.viewDisplayed != .favourites {
-			let indexPath: IndexPath = IndexPath(item: (viewModel?.monthToDisplay.rawValue ?? 0), section: 0)
-			infiniteMonthCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
+		if !hasSetInitialScroll,
+		   viewModel?.allMonthsAndTheirProduceToDisplay?.isEmpty == false,
+		   viewModel?.viewDisplayed != .favourites {
+
+			scrollToItemUpdateTitle(viewModel?.monthToDisplay.rawValue ?? 0)
+			hasSetInitialScroll = true
+			shouldIgnoreNextScrollEnd = true   // 👈 Reset here too
 		}
 	}
 
@@ -194,13 +217,23 @@ extension MainViewController: UICollectionViewDataSource {
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
-														 for: indexPath) as? MonthTableCollectionViewCell {
+																					   for: indexPath) as? MonthTableCollectionViewCell {
 			// for my implementation of the infinite collectionView I need to change the subview cell tag
 			// based on the indexPath
-			cell.tag = indexPath.item
-			viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
+
+			if viewModel?.viewDisplayed == .favourites {
+				cell.tag = 0
+			} else {
+				cell.tag = indexPath.item
+				viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
+			}
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
+//
+//			if indexPath.item == viewModel?.monthToDisplay.rawValue ?? 0 && title != viewModel?.navigationBarTitleString {
+//				title = viewModel?.navigationBarTitleString
+//			}
+
 			return cell
 
 		} else {
@@ -236,8 +269,13 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 	// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		let pageFloat: CGFloat = (scrollView.contentOffset.x / scrollView.frame.size.width)
-		let pageInt: Int = Int(round(pageFloat))
+		let center = CGPoint(
+			x: scrollView.contentOffset.x + scrollView.bounds.width/2,
+			y: scrollView.bounds.height/2
+		)
+		guard let indexPath = infiniteMonthCollectionView.indexPathForItem(at: center) else { return }
+
+		let pageInt = indexPath.item
 
 		switch pageInt {
 		case 0:
@@ -247,6 +285,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		default:
 			break
 		}
+
 		// this is the page currently displayed
 		// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
 		if var updatedMonth: MonthOld = MonthOld.init(rawValue: pageInt) {

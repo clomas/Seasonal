@@ -17,12 +17,12 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 
 	private let allCases = Array(Period.allCases)
 
-	@Binding var selectedItem: Period
+	@Binding var selectedPeriod: Period
 	@Binding var scrollPosition: Int
 	private let middleOffset: Int
 
-	init(selectedItem: Binding<Period>, scrollPosition: Binding<Int>, middleOffset: Int) {
-		self._selectedItem = selectedItem
+	init(selectedPeriod: Binding<Period>, scrollPosition: Binding<Int>, middleOffset: Int) {
+		self._selectedPeriod = selectedPeriod
 		self._scrollPosition = scrollPosition
 		self.middleOffset = middleOffset
 	}
@@ -37,9 +37,9 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			}
 			.foregroundStyle(.black) // TODO: Update to my colours for dark mode
 		}
-        // Month name
+        // Title
         ToolbarItem(placement: .topBarLeading) {
-            Text(selectedItem.name)
+            Text(selectedPeriod.name)
                 .font(.title)
                 .fixedSize()
         }
@@ -49,13 +49,13 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 		ToolbarItemGroup(placement: .navigationBarTrailing) {
 			// 🗓️ picker
 			Menu {
-				ForEach(Period.allCases, id: \.self) { item in
-					Button(item.name) {
-						jumpToMonth(item)
+				ForEach(Period.allCases, id: \.self) { period in
+					Button(period.name) {
+						jumpToPeriod(period)
 					}
 				}
 			} label: {
-				selectedItem.image
+				selectedPeriod.image
 			}
 			.foregroundStyle(.black)
 
@@ -76,9 +76,9 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 		}
 
 			// Update selected item immediately for UI responsiveness
-		let monthIndex = newPosition % allCases.count
-		let adjustedIndex = monthIndex < 0 ? monthIndex + allCases.count : monthIndex
-		selectedItem = allCases[adjustedIndex]
+		let periodIndex = newPosition % allCases.count
+		let adjustedIndex = periodIndex < 0 ? periodIndex + allCases.count : periodIndex
+		selectedPeriod = allCases[adjustedIndex]
 
 			// Animate to new position
 		withAnimation(.easeInOut(duration: 0.5)) {
@@ -86,10 +86,10 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 		}
 	}
 
-	private func jumpToMonth(_ month: Period) {
-		selectedItem = month
+	private func jumpToPeriod(_ period: Period) {
+		selectedPeriod = period
 		withAnimation(.easeInOut(duration: 0.5)) {
-			scrollPosition = month.index + middleOffset
+			scrollPosition = period.index + middleOffset
 		}
 	}
 }

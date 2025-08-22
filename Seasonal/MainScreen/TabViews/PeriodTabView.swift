@@ -55,7 +55,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 				}
 				.toolbar {
 					InfiniteTabToolbar<Period>(
-						selectedItem: $selectedPeriod,
+						selectedPeriod: $selectedPeriod,
 						scrollPosition: $scrollPosition,
 						middleOffset: middleOffset
 					)
@@ -88,7 +88,9 @@ struct PeriodTabView<Period: PeriodType>: View {
 
 	private func updateCurrentPeriod(from scrollPosition: Int) {
 		let periodIndex: Int = scrollPosition % Period.allCases.count
+		print("before: \(selectedPeriod) index: \(periodIndex)")
 		selectedPeriod = Array(Period.allCases)[periodIndex]
+		print("after: \(selectedPeriod)")
 	}
 }
 

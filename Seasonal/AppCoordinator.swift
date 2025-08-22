@@ -27,6 +27,7 @@ enum AppCoordinatorState {
 	case networkFailed
 	case locationNotFound
 	case initial
+	case dataFailed
 }
 
 protocol AppCoordinatorVersionProtocol {
@@ -148,10 +149,19 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 
 	private func getDataFromCloudKit(for location: StateLocation) {
 		Task {
-			let data = await ProduceServicesManager.getDataFromCloudKit(for: location)
-			await MainActor.run {
-				self.produceData = data
-				self.state = .dataIsReady
+			do {
+				let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
+				switch result {
+				case .success(let data):
+					await MainActor.run {
+						self.produceData = data
+						self.state = .dataIsReady
+					}
+				case .failure(let failure):
+					state = .dataFailed
+				}
+			} catch {
+				state = .dataFailed
 			}
 		}
 	}

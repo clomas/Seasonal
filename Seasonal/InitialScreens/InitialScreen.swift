@@ -42,7 +42,7 @@ struct InitialScreen: View {
 			.padding()
 
 			switch appCoordinator.state {
-			case .networkFailed:
+			case .networkFailed, .dataFailed:
 				VStack {
 					Text("Unable to connect to the internet")
 						.padding(.all)

@@ -24,11 +24,6 @@ actor CloudKitDataService: ObservableObject {
 	}
 
 	private let container: CKContainer = .default()
-	private var database: CKDatabase {
-		databaseType == .private
-			? container.privateCloudDatabase
-			: container.publicCloudDatabase
-	}
 
 	private var databaseType: DatabaseType = .public
 	private var hasUbiquityIdentityToken: Bool {
@@ -39,33 +34,39 @@ actor CloudKitDataService: ObservableObject {
 		databaseType = type
 	}
 
-	func fetchItems(recordType: String, queryKey: String) async -> [CKRecord] {
+	/// Fetches all records for the given recordType and queryKey,
+	/// returning all results including both successes and failures.
+	func fetchItems(_ databaseType: DatabaseType, recordType: String, queryKey: String) async -> Result<[CKRecord], Error> {
+		let database = databaseType == .private ? container.privateCloudDatabase : container.publicCloudDatabase
+
 		let predicate = NSPredicate(value: true)
 		let query = CKQuery(recordType: recordType, predicate: predicate)
 		query.sortDescriptors = [NSSortDescriptor(key: queryKey, ascending: true)]
 
 		do {
 			let (matchResults, _) = try await database.records(matching: query)
+			var records: [CKRecord] = []
 
-			let records = matchResults.compactMap { (_, result) in
+			for (_, result) in matchResults {
 				switch result {
-				case .success(let record): return record
-				case .failure: return nil
+				case .success(let record):
+					records.append(record)
+				case .failure(let error):
+					return .failure(error) // stop at first failure
 				}
 			}
-			#if DEBUG
-			print("\(records.count) records in \(databaseType)")
-			#endif
-			return records
-
-		} catch(let error) {
-			print(error.localizedDescription)
-			return []
+			return .success(records)
+		} catch {
+			return .failure(error) // top-level error
 		}
 	}
 
 	func saveItem(_ record: CKRecord) async -> Result<CKRecord, Error> {
 		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
+		let database = databaseType == .private
+			? container.privateCloudDatabase
+			: container.publicCloudDatabase
+
 		do {
 			let record = try await database.save(record)
 			return .success(record)
@@ -76,6 +77,9 @@ actor CloudKitDataService: ObservableObject {
 
 	func deleteItem(_ record: CKRecord) async -> Result<CKRecord.ID, Error> {
 		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
+		let database = databaseType == .private
+			? container.privateCloudDatabase
+			: container.publicCloudDatabase
 
 		do {
 			let recordID = try await database.deleteRecord(withID: record.recordID)
@@ -85,3 +89,4 @@ actor CloudKitDataService: ObservableObject {
 		}
 	}
 }
+

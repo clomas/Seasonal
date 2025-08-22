@@ -20,37 +20,38 @@ actor ProduceCloudDataService {
 
 	// MARK: CloudKit Database
 
-	func getData(for locationFound: StateLocation) async -> [Produce] {
+	func getData(for locationFound: StateLocation) async -> Result<[Produce], Error> {
 		var publicRecords: [CKRecord] = []
 		var privateRecords: [CKRecord] = []
+		var fetchError: Error? = nil
 
-		do {
-			try await withThrowingTaskGroup(of: (CloudKitDataService.DatabaseType, [CKRecord]).self) { [weak self] group in
-				guard let self: ProduceCloudDataService else { return }
-
-				group.addTask {
-					await self.cloudKitDataService.setDatabase(type: .public)
-					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduce, queryKey: Constants.id)
-					return (.public, records)
-				}
-				group.addTask {
-					await self.cloudKitDataService.setDatabase(type: .private)
-					let records = await self.cloudKitDataService.fetchItems(recordType: Constants.australianProduceLikes, queryKey: Constants.id)
-					return (.private, records)
-				}
-				for try await (type, records) in group {
-					switch type {
-					case .public:
-						publicRecords = records
-					case .private:
-						privateRecords = records
-					}
+		await withTaskGroup(of: (CloudKitDataService.DatabaseType, Result<[CKRecord], Error>).self) { group in
+			group.addTask {
+				await self.cloudKitDataService.setDatabase(type: .public)
+				let recordsResult = await self.cloudKitDataService.fetchItems(.public, recordType: Constants.australianProduce, queryKey: Constants.id)
+				return (.public, recordsResult)
+			}
+			group.addTask {
+				await self.cloudKitDataService.setDatabase(type: .private)
+				let recordsResult = await self.cloudKitDataService.fetchItems(.private, recordType: Constants.australianProduceLikes, queryKey: Constants.id)
+				return (.private, recordsResult)
+			}
+			for await (type, result) in group {
+				switch (type, result) {
+				case (.public, .success(let records)):
+					publicRecords = records
+				case (.private, .success(let records)):
+					privateRecords = records
+				case (_, .failure(let error)):
+					fetchError = error
 				}
 			}
-			return addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
-		} catch {
-			return []
 		}
+		if let error = fetchError {
+			return .failure(error)
+		}
+		let produce = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
+		return .success(produce)
 	}
 
 	// MARK: Save

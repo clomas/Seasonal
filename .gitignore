@@ -1,6 +1,6 @@
 ### Xcode ###
 ## User settings
-xcuserdata/
+/Seasonal.xcodeproj/xcuserdata
 
 ### Xcode Patch ###
 *.xcodeproj/*

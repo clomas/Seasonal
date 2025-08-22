@@ -59,7 +59,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		guard let viewModel else { return }
 
 		menuBar.viewModel = .init(month: viewModel.monthToDisplay, viewDisplayed: .currentMonth)
-		menuBar.viewModel?.delegate = viewModel.self
+		menuBar.viewModel?.delegate = viewModel
 
 		menuBar.toggleSelectedCells(viewDisplayed: viewModel.viewDisplayed)
 		menuBar.accessibilityIdentifier = "menuBar"

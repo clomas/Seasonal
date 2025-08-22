@@ -81,7 +81,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
 	private func setupMenuBar() {
 		menuBar.viewModel = .init(season: viewModel?.season ?? .summer)
-		menuBar.viewModel?.delegate = viewModel.self
+		menuBar.viewModel?.delegate = viewModel
 	}
 
 	private func setUpSearchController() {

@@ -91,7 +91,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 			try AVAudioSession.sharedInstance().setActive(true)
         } catch {
 			#if DEBUG
-			print(error)
+			print("Video play error")
 			#endif
 			presentGenericAlert()
         }

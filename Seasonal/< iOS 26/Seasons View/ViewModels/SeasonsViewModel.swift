@@ -76,7 +76,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 
 			season = SeasonsOld(rawValue: index) ?? .summer
 		default:
-			return
+			category = .all
 		}
 
 		filterProduce(by: searchString)

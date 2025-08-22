@@ -183,8 +183,6 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "added like record in CloudKit - id: \(id)")
-			} else {
-				print(result)
 			}
 			#endif
 		}
@@ -195,9 +193,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "removed like record in CloudKit - id: \(id)")
-			} else {
-				print(result)
-			}
+			} 
 			#endif
 		}
 	}

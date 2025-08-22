@@ -1,6 +1,6 @@
 ### Xcode ###
 ## User settings
-/Seasonal.xcodeproj/xcuserdata
+*.xcuserdata/
 
 ### Xcode Patch ###
 *.xcodeproj/*
@@ -11,3 +11,4 @@
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+/Seasonal.xcodeproj/xcuserdata

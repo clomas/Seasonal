@@ -128,6 +128,8 @@ extension TimeInterval {
 	static let lazyHStackScrollDuration: TimeInterval = 0.5
 }
 
+// MARK: Space
+
 extension CGFloat {
 	static let largePadding: CGFloat = 200
 }

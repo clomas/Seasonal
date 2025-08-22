@@ -174,11 +174,6 @@ actor ProduceCloudDataService {
 	private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
 		let likedArray: [Produce] = produceArray.filter { $0.liked == true}
 
-		for prod in produceArray where prod.liked == true {
-#if DEBUG
-			print("Liked produce in CloudKit: \(String(describing: prod.id)), \(String(describing: prod.liked))")
-#endif
-		}
 		Task {
 			await cloudKitDataService.setDatabase(type: .private)
 		}

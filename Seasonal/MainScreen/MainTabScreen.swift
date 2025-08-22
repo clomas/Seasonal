@@ -13,9 +13,9 @@ struct MainTabScreen: View {
 
 	enum Tabs: Hashable {
 		case favourites
-		case period(AnyPeriod)   // now holds an actual period value
+		case period(AnyPeriod)
 		case categories
-		case search(AnyPeriod)
+		case search(AnyPeriod) // TODO: Make optional? to search faves?
 
 		var title: String {
 			switch self {
@@ -101,6 +101,9 @@ struct MainTabScreen: View {
 			}
 			.tint(Colour.inSeason)
 		}
+		// This onChange triggers when the selectedTab changes.
+		// It updates showCategoryMenu and previousTab accordingly.
+		// WARNING: It sets selectedTab inside the block, which may immediately re-trigger this onChange, potentially causing a feedback loop or excessive updates.
 		.onChange(of: selectedTab) { oldTab, newTab in
 			switch newTab {
 			case .categories:

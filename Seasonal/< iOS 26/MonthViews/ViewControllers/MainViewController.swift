@@ -29,10 +29,11 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		viewModel?.reloadTableView = { [weak self] in
 			self?.reloadAndScrollToSelectedViewIndex()
 		}
-			// Called from MonthPickerViewController to update -
-			// month icon,
-			// month in the table view
-			// navigation bar title
+
+		// Called from MonthPickerViewController to update -
+		// month icon,
+		// month in the table view
+		// navigation bar title
 		viewModel?.updateMenuBar = { [weak self] in
 			self?.menuBarNeedsUpdate()
 		}

@@ -53,6 +53,9 @@ actor CloudKitDataService: ObservableObject {
 				case .failure: return nil
 				}
 			}
+			#if DEBUG
+			print("\(records.count) records in \(databaseType)")
+			#endif
 			return records
 
 		} catch(let error) {

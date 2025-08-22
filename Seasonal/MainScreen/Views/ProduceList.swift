@@ -42,11 +42,13 @@ struct ProduceList<Period: PeriodType>: View {
 						.listRowBackground(Color.clear)
 
 				}
-				.searchable(text: $query, prompt: "Search produce")
-				.focused($searchIsFocused)
-				.onAppear {
-					searchIsFocused = true
-				}
+//				.searchable(text: $query, placement: .sidebar, prompt: "Search produce")
+//				.focused($searchIsFocused)
+//				.onAppear {
+//					if case .search = parentTab {
+//						searchIsFocused = true
+//					}
+//				}
 				.listStyle(.plain)
 				.scrollContentBackground(.hidden)
 				.scrollIndicators(.hidden)

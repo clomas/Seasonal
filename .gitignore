@@ -1,4 +1,13 @@
-/Seasonal.xcodeproj/xcuserdata
-.DS_Store
-/Seasonal.xcodeproj/project.xcworkspace/xcuserdata
-/Seasonal.xcodeproj/xcuserdata
+### Xcode ###
+## User settings
+xcuserdata/
+
+### Xcode Patch ###
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
+

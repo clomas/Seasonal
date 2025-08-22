@@ -1,10 +1,10 @@
-//
-//  MainViewController.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 25/2/21.
-//  Copyright © 2021 Clint Thomas. All rights reserved.
-//
+	//
+	//  MainViewController.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 25/2/21.
+	//  Copyright © 2021 Clint Thomas. All rights reserved.
+	//
 
 import UIKit
 
@@ -18,22 +18,25 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 
 	private var hasSetInitialScroll: Bool = false
 	private var shouldIgnoreNextScrollEnd: Bool = false
+	private var userIsDragging: Bool = false
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	private var lastUserScrolledMonth: MonthOld?
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		setUpView()
 
 		viewModel?.reloadTableView = { [weak self] in
 			self?.reloadAndScrollToSelectedViewIndex()
 		}
-		// Called from MonthPickerViewController to update -
-		// month icon,
-		// month in the table view
-		// navigation bar title
+			// Called from MonthPickerViewController to update -
+			// month icon,
+			// month in the table view
+			// navigation bar title
 		viewModel?.updateMenuBar = { [weak self] in
 			self?.menuBarNeedsUpdate()
 		}
-    }
+	}
 
 	override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
@@ -51,7 +54,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		title = viewModel?.navigationBarTitleString
 	}
 
-	// Init child viewModel & assign delegate between child and parent viewModel
+		// Init child viewModel & assign delegate between child and parent viewModel
 	private func setupMenuBar() {
 		guard let viewModel else { return }
 
@@ -63,11 +66,19 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	}
 
 	private func reloadAndScrollToSelectedViewIndex() {
-		let indexToScrollTo: Int = viewModel?.viewDisplayed == .favourites ? 0 : viewModel?.monthToDisplay.rawValue ?? 0
-		infiniteMonthCollectionView.reloadData()
-		infiniteMonthCollectionView.layoutIfNeeded()
-
-		scrollToItemUpdateTitle(indexToScrollTo)
+		if viewModel?.viewDisplayed == .favourites {
+			UIView.performWithoutAnimation {
+				infiniteMonthCollectionView.reloadData()
+				infiniteMonthCollectionView.layoutIfNeeded()
+				infiniteMonthCollectionView.setContentOffset(.zero, animated: false)
+			}
+			title = viewModel?.navigationBarTitleString
+		} else {
+			let indexToScrollTo: Int = viewModel?.monthToDisplay.rawValue ?? 0
+			infiniteMonthCollectionView.reloadData()
+			infiniteMonthCollectionView.layoutIfNeeded()
+			scrollToItemUpdateTitle(indexToScrollTo)
+		}
 
 		shouldIgnoreNextScrollEnd = true
 	}
@@ -75,6 +86,12 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	private func scrollToItemUpdateTitle(_ indexToScrollTo: Int) {
 		if viewModel?.viewDisplayed == .favourites {
 			title = viewModel?.navigationBarTitleString
+			return
+		}
+
+		if let current = indexOfCenteredItem(), current == indexToScrollTo {
+				// Already centered; just ensure the title is right
+			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)
 			return
 		}
 
@@ -126,23 +143,31 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		}
 	}
 
-	// MARK: Title
+	private func indexOfCenteredItem() -> Int? {
+		let center = CGPoint(
+			x: infiniteMonthCollectionView.contentOffset.x + infiniteMonthCollectionView.bounds.width/2,
+			y: infiniteMonthCollectionView.bounds.height/2
+		)
+		return infiniteMonthCollectionView.indexPathForItem(at: center)?.item
+	}
 
-	/// Scrollview Paging changes the title
-	/// - Parameter newTitle: newTitle is the month determined from the index of the main tableView
-	/// this only runs if the infiniteMonthCollectionView is visible, otherwise the heading is "Favourites"
+		// MARK: Title
+
+		/// Scrollview Paging changes the title
+		/// - Parameter newTitle: newTitle is the month determined from the index of the main tableView
+		/// this only runs if the infiniteMonthCollectionView is visible, otherwise the heading is "Favourites"
 	private func setTitleFromScrollViewPaged(newTitle: String?) {
 		if viewModel?.viewDisplayed == .months, let newTitle: String = newTitle, newTitle.isEmpty == false {
 
 			if (newTitle).isEmpty == false { // only proceed with a valid value for newTitle.
-				// CATransition code
+											 // CATransition code
 				let titleAnimation: CATransition = CATransition()
 				titleAnimation.duration = 0.5
 				titleAnimation.type = CATransitionType.fade
 				titleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-				// this is a detail view controller, so we must grab the reference
-				// to the parent view controller's navigation controller
-				// then cycle through until we find the title labels.
+					// this is a detail view controller, so we must grab the reference
+					// to the parent view controller's navigation controller
+					// then cycle through until we find the title labels.
 				if let subviews: [UIView] = navigationController?.navigationBar.subviews {
 					for navigationItem in subviews {
 						for itemSubView in navigationItem.subviews {
@@ -152,7 +177,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 						}
 					}
 				}
-				// finally set the title
+					// finally set the title
 				navigationItem.title = newTitle
 			}
 		}
@@ -162,7 +187,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		viewModel?.infoButtonTapped()
 	}
 
-	// MARK: Search controller setup
+		// MARK: Search controller setup
 
 	private func setupNavigationControllerView() {
 		navigationController?.navigationBar.isTranslucent = false
@@ -184,7 +209,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		searchController.searchBar.searchBarStyle = .minimal
 		searchController.searchBar.isTranslucent = false
 		searchController.searchResultsUpdater = self
-		// for cancel button
+			// for cancel button
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
 
@@ -218,22 +243,17 @@ extension MainViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
 																					   for: indexPath) as? MonthTableCollectionViewCell {
-			// for my implementation of the infinite collectionView I need to change the subview cell tag
-			// based on the indexPath
+				// for my implementation of the infinite collectionView I need to change the subview cell tag
+				// based on the indexPath
 
 			if viewModel?.viewDisplayed == .favourites {
 				cell.tag = 0
 			} else {
 				cell.tag = indexPath.item
-				viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
+					//				viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
 			}
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
-//
-//			if indexPath.item == viewModel?.monthToDisplay.rawValue ?? 0 && title != viewModel?.navigationBarTitleString {
-//				title = viewModel?.navigationBarTitleString
-//			}
-
 			return cell
 
 		} else {
@@ -266,9 +286,22 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		return .allZero
 	}
 
-	// MARK: ScrollView did end decelerating
+	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+		userIsDragging = true
+	}
+
+		// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+		if shouldIgnoreNextScrollEnd {
+			shouldIgnoreNextScrollEnd = false
+			userIsDragging = false
+			return
+		}
+		guard userIsDragging else { return }
+		defer { userIsDragging = false }
+		guard viewModel?.viewDisplayed == .months else { return }
+
 		let center = CGPoint(
 			x: scrollView.contentOffset.x + scrollView.bounds.width/2,
 			y: scrollView.bounds.height/2
@@ -286,25 +319,31 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 			break
 		}
 
-		// this is the page currently displayed
-		// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
-		if var updatedMonth: MonthOld = MonthOld.init(rawValue: pageInt) {
+			// this is the page currently displayed
+			// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
+		if var updatedMonth: MonthOld = MonthOld(rawValue: pageInt) {
+				// Map overflow indices to canonical months for comparison/animation
+			if updatedMonth == .januaryOverflow { updatedMonth = .january }
+			else if updatedMonth == .decemberOverflow { updatedMonth = .december }
+
+				// Only react if the user actually moved to a different logical month
+			guard updatedMonth != viewModel?.monthToDisplay else { return }
+			guard updatedMonth != lastUserScrolledMonth else { return }
+
+				// Update VM state based on the user scroll
 			viewModel?.monthToDisplay = updatedMonth
 
-			// update menubar before calling method for animation of month icon
-			if viewModel?.previousMonth != updatedMonth {
+				// Animate the month icon strictly on user scroll
+			menuBar.monthIconCarouselAnimation(
+				from: lastUserScrolledMonth ?? (viewModel?.previousMonth ?? .december),
+				to: updatedMonth
+			)
 
-				if updatedMonth == MonthOld.januaryOverflow {
-					updatedMonth = MonthOld.january
+				// Track last user-scrolled month separate from VM so external updates don't trigger animation
+			lastUserScrolledMonth = updatedMonth
+			viewModel?.previousMonth = updatedMonth
 
-				} else if updatedMonth ==  MonthOld.decemberOverflow {
-					updatedMonth = MonthOld.december
-				}
-				menuBar.monthIconCarouselAnimation(from: viewModel?.previousMonth ?? .december, to: updatedMonth)
-				viewModel?.previousMonth = updatedMonth
-			}
-
-			// override the title because it can be wrong if not scrolled properly
+				// Update the title for the newly visible month
 			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)
 		}
 	}

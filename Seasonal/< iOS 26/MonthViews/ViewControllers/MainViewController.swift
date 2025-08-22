@@ -79,8 +79,6 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 			infiniteMonthCollectionView.layoutIfNeeded()
 			scrollToItemUpdateTitle(indexToScrollTo)
 		}
-
-		shouldIgnoreNextScrollEnd = true
 	}
 
 	private func scrollToItemUpdateTitle(_ indexToScrollTo: Int) {
@@ -290,7 +288,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 		userIsDragging = true
 	}
 
-		// MARK: ScrollView did end decelerating
+	// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
 		if shouldIgnoreNextScrollEnd {

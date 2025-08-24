@@ -160,7 +160,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 	}
 
 	func updateLikedProduce(id: Int?, liked: Bool?) {
-		guard let id, let liked else {
+		guard let id, let liked, id > 0 else {
 			return
 		}
 		Task {

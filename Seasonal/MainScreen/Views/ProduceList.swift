@@ -44,7 +44,7 @@ struct ProduceList<Period: PeriodType>: View {
 						selectedPeriod: selectedPeriod,
 						produce: $item,
 						onToggleLike: { tappedProduce in
-							appCoordinator.updateLikedProduce(id: tappedProduce.id ?? 0, liked: tappedProduce.liked ?? false)
+							appCoordinator.updateLikedProduce(id: tappedProduce.id, liked: tappedProduce.liked)
 						}
 					)
 					.listRowSeparator(.hidden)

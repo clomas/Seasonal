@@ -18,8 +18,6 @@ struct SearchTabView<Period: PeriodType>: View {
 
 	@Binding var selectedCategory: ProduceCategory
 
-	var onToggleLike: ToggleLikeCallback
-
 	var body: some View {
 		NavigationStack {
 			if selectedTab == .favourites {
@@ -27,15 +25,13 @@ struct SearchTabView<Period: PeriodType>: View {
 					selectedPeriod: selectedPeriod,
 					parentTab: selectedTab,
 					selectedCategory: $selectedCategory,
-					produce: produce, onToggleLike: onToggleLike
+					produce: produce
 				)
 			} else {
 				PeriodTabView(
-					produce: produce,
 					selectedTab: selectedTab,
 					selectedCategory: $selectedCategory,
-					selectedPeriod: selectedPeriod,
-					onToggleLike: onToggleLike
+					selectedPeriod: selectedPeriod
 				)
 			}
 		}
@@ -45,10 +41,9 @@ struct SearchTabView<Period: PeriodType>: View {
 @available(iOS 26, *)
 #Preview {
 	SearchTabView(
-		produce: previewCoordinator.produceData ?? [],
+		produce: previewCoordinator.produce ?? [],
 		selectedTab: .period(AnyPeriod(Months.currentPeriod)),
 		selectedPeriod: Months.currentPeriod,
-		selectedCategory: .constant(.all),
-		onToggleLike: { _ in }
+		selectedCategory: .constant(.all)
 	)
 }

@@ -10,7 +10,11 @@ import SwiftUI
 
 typealias ToggleLikeCallback = ((Produce) -> Void)?
 
-struct ProduceListRow: View {
+struct ProduceListRow<Period: PeriodType>: View {
+
+	// TODO: for testing
+	let selectedPeriod: Period
+
 	@Binding var produce: Produce
 	var onToggleLike: ToggleLikeCallback
 
@@ -19,10 +23,14 @@ struct ProduceListRow: View {
 			Color(.systemBackground)
 			VStack(spacing: 6) {
 				ZStack {
-					Text(produce.name ?? "")
+//					Text(produce.name ?? "")
+					Text(selectedPeriod.name) // TODO: for testing
 						.font(.headline)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
+//						.lineLimit(2) // TODO: Remove this and the 2 lines below?
+//						.minimumScaleFactor(0.8) // shrinks if needed
+//						.fixedSize(horizontal: false, vertical: true)
 					HStack {
 						Image(produce.imageName ?? "")
 							.resizable()
@@ -50,14 +58,14 @@ struct ProduceListRow: View {
 	}
 }
 #Preview {
-	ProduceListRow(produce: .constant(.init(
-		id: 1,
-		name: "Bananas",
-		category: .fruit,
-		imageName: "Bananas",
-		description: "",
-		months: [.august],
-		seasons: [.spring],
-		liked: true
-	)), onToggleLike: { _ in })
+//	ProduceListRow(produce: .constant(.init(
+//		id: 1,
+//		name: "Bananas",
+//		category: .fruit,
+//		imageName: "Bananas",
+//		description: "",
+//		months: [.august],
+//		seasons: [.spring],
+//		liked: true
+//	)), onToggleLike: { _ in })
 }

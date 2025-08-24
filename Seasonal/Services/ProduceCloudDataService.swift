@@ -13,9 +13,11 @@ actor ProduceCloudDataService {
 
 	private let cloudKitDataService: CloudKitDataService = CloudKitDataService()
 	private let location: StateLocation
+	@MainActor private let produceCache: ProduceCache
 
-	init(location: StateLocation) {
+	init(location: StateLocation, produceCache: ProduceCache) {
 		self.location = location
+		self.produceCache = produceCache
 	}
 
 	// MARK: CloudKit Database

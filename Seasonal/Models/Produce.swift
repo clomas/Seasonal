@@ -6,6 +6,13 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
+enum ProduceCacheKey: Hashable {
+	case favourites
+	case month(Months)
+	case season(Seasons)
+	case search(String)
+}
+
 struct Produce: Identifiable, Sendable {
 	let id: Int?
 	let name: String?
@@ -29,9 +36,6 @@ extension Array where Element == Produce {
 			.filter { period.allCases.contains(period) && (category == .all || $0.category == category) }
 			.filter { search.isEmpty || $0.name?.localizedCaseInsensitiveContains(search) == true }
 	}
-}
-
-extension Array where Element == Produce {
 
 	func sortIntoFavourites() -> [ProduceOld] {
 		return self.map { ProduceOld(produce: $0) }.filter {

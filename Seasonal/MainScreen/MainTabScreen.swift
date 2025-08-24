@@ -54,7 +54,7 @@ struct MainTabScreen: View {
 	@State private var isSearching = false
 
 	private var produce: [Produce] {
-		appCoordinator.produceData ?? []
+		appCoordinator.produceFavourites()
 	}
 
 	private var tab: some View {
@@ -139,15 +139,17 @@ struct MainTabScreen: View {
 		switch tab {
 		case .favourites:
 			return AnyView(
-				ProduceList<NoPeriod>(
-					selectedPeriod: .none,
-					parentTab: selectedTab,
-					selectedCategory: $selectedCategory,
-					produce: produce, // TODO: pass liked in here
-					onToggleLike: {
-						storeLikeInDatabase(for: $0)
-					}
-				)
+				NavigationView {
+					ProduceList<NoPeriod>(
+						selectedPeriod: .none,
+						parentTab: selectedTab,
+						selectedCategory: $selectedCategory,
+						produce: appCoordinator.produceFavourites()
+					)
+					.navigationTitle(tab.title)
+					.navigationBarTitleDisplayMode(.large)
+					.toolbarBackground(.hidden, for: .navigationBar)
+				}
 			)
 		// Period - Months or Seasons
 		case .period(let type):
@@ -176,11 +178,9 @@ struct MainTabScreen: View {
 		AnyView(
 			TransparentBackgroundNavigationStack {
 				PeriodTabView<P>(
-					produce: produce,
 					selectedTab: tab,
 					selectedCategory: $selectedCategory,
-					selectedPeriod: period,
-					onToggleLike: { storeLikeInDatabase(for: $0) }
+					selectedPeriod: period
 				)
 			}
 		)
@@ -192,17 +192,9 @@ struct MainTabScreen: View {
 				produce: produce,
 				selectedTab: previousTab,
 				selectedPeriod: period,
-				selectedCategory: $selectedCategory,
-				onToggleLike: { storeLikeInDatabase(for: $0) }
+				selectedCategory: $selectedCategory
 			)
 		)
-	}
-
-	private func storeLikeInDatabase(for produce: Produce) {
-		guard let id = produce.id, let liked = produce.liked else {
-			return
-		}
-		appCoordinator.updateLikedProduce(id: id, liked: liked)
 	}
 }
 

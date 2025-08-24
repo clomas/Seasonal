@@ -10,21 +10,25 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct ProduceList<Period: PeriodType>: View {
+	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	let selectedPeriod: Period
-	let parentTab: MainTabScreen.Tabs
-
+	@State var selectedPeriod: Period
+	@State var parentTab: MainTabScreen.Tabs
 	@Binding var selectedCategory: ProduceCategory
 
-	@State var produce: [Produce]
-	@State private var query: String = ""
+	@State private var produce: [Produce] = []
+	private let initialProduce: [Produce]?
 
-	@FocusState private var searchIsFocused: Bool
-
-	var onToggleLike: ToggleLikeCallback
-
-	private var filteredProduce: [Produce] {
-		produce.filtered(by: selectedPeriod, category: selectedCategory, search: query)
+	init(
+		selectedPeriod: Period,
+		parentTab: MainTabScreen.Tabs,
+		selectedCategory: Binding<ProduceCategory>,
+		produce: [Produce]? = nil
+	) {
+		self.selectedPeriod = selectedPeriod
+		self.parentTab = parentTab
+		self._selectedCategory = selectedCategory
+		self.initialProduce = produce
 	}
 
 	var body: some View {
@@ -36,25 +40,30 @@ struct ProduceList<Period: PeriodType>: View {
 					.padding(.bottom, .largePadding)
 			} else {
 				List($produce, id: \.id) { $item in
-					ProduceListRow(produce: $item, onToggleLike: onToggleLike)
-						.listRowSeparator(.hidden)
-						.listRowInsets(.topListRowInset)
-						.listRowBackground(Color.clear)
-
+					ProduceListRow<Period>(
+						selectedPeriod: selectedPeriod,
+						produce: $item,
+						onToggleLike: { tappedProduce in
+							appCoordinator.updateLikedProduce(id: tappedProduce.id ?? 0, liked: tappedProduce.liked ?? false)
+						}
+					)
+					.listRowSeparator(.hidden)
+					.listRowInsets(.topListRowInset)
+					.listRowBackground(Color.clear)
 				}
-//				.searchable(text: $query, placement: .sidebar, prompt: "Search produce")
-//				.focused($searchIsFocused)
-//				.onAppear {
-//					if case .search = parentTab {
-//						searchIsFocused = true
-//					}
-//				}
 				.listStyle(.plain)
 				.scrollContentBackground(.hidden)
 				.scrollIndicators(.hidden)
 				.safeAreaInset(edge: .bottom) {
 					Color.clear.frame(height: .largePadding)
 				}
+			}
+		}
+		.onAppear {
+			if let initialProduce {
+				produce = initialProduce
+			} else {
+				produce = appCoordinator.produceByPeriod(period: selectedPeriod)
 			}
 		}
 	}

@@ -16,6 +16,8 @@
 		27157E6E254FE02D0001CD4D /* LikedProduce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27157E6D254FE02D0001CD4D /* LikedProduce.swift */; };
 		2718494C233614BB0070380C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27F4218E22328FA40009922C /* Assets.xcassets */; };
 		2718E2D5225F809200B802F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2718E2CF225F809100B802F9 /* Constants.swift */; };
+		2719509C2E5980B7006AC377 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719509B2E5980B5006AC377 /* Cache.swift */; };
+		2719509F2E59810D006AC377 /* ProduceCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719509E2E59810B006AC377 /* ProduceCache.swift */; };
 		27216E1821E800100042B4F4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27216E1621E800100042B4F4 /* WelcomeViewController.swift */; };
 		272C7A192E220DBE00661BAA /* LikedHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C7A182E220DAD00661BAA /* LikedHeartView.swift */; };
 		272C7A1B2E220DC900661BAA /* EmptyHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */; };
@@ -144,6 +146,8 @@
 		2715421622F9957900375D64 /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		27157E6D254FE02D0001CD4D /* LikedProduce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedProduce.swift; sourceTree = "<group>"; };
 		2718E2CF225F809100B802F9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		2719509B2E5980B5006AC377 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		2719509E2E59810B006AC377 /* ProduceCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceCache.swift; sourceTree = "<group>"; };
 		27216E1621E800100042B4F4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		272C7A182E220DAD00661BAA /* LikedHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedHeartView.swift; sourceTree = "<group>"; };
 		272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyHeartView.swift; sourceTree = "<group>"; };
@@ -282,6 +286,15 @@
 				27E698E725EE5DCC004B45E9 /* ProduceDataSevice.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		2719509D2E598103006AC377 /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				2719509E2E59810B006AC377 /* ProduceCache.swift */,
+				2719509B2E5980B5006AC377 /* Cache.swift */,
+			);
+			path = Cache;
 			sourceTree = "<group>";
 		};
 		2723154F2E3F5779006474A2 /* TabViews */ = {
@@ -581,6 +594,7 @@
 				2794F07B2E1A72D100BFFB12 /* MainScreen */,
 				272D84DF266B7355002CEE1A /* Models */,
 				27157E7925529FA60001CD4D /* Services */,
+				2719509D2E598103006AC377 /* Cache */,
 				27FACED12E5580B5000E4A75 /* < iOS 26 */,
 				27EFF3CB215A5C1500CFB31D /* Main.storyboard */,
 				27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */,
@@ -835,6 +849,7 @@
 				277A6834263A3C2600E4389A /* Extension-UIButton.swift in Sources */,
 				27FACED62E55828A000E4A75 /* Produce.swift in Sources */,
 				27E989AE2E518B94006C7739 /* InfiniteTabToolbar.swift in Sources */,
+				2719509F2E59810D006AC377 /* ProduceCache.swift in Sources */,
 				2794F0822E1A735A00BFFB12 /* ProduceListRow.swift in Sources */,
 				272C7A1F2E220E2100661BAA /* MonthsInSeasonCapsuleView.swift in Sources */,
 				27ECB41622EF19090097A8D4 /* InfoViewController.swift in Sources */,
@@ -878,6 +893,7 @@
 				277A6836263A9F1700E4389A /* Extension-Month.swift in Sources */,
 				27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */,
 				276DDC4F237671AC00929E77 /* LocalDataHandler.swift in Sources */,
+				2719509C2E5980B7006AC377 /* Cache.swift in Sources */,
 				27949E812625CB6B007F3930 /* MenuBarCollectionViewCell.swift in Sources */,
 				27BF31CA2E56A4F2004795DB /* PreviewConstants.swift in Sources */,
 				27FB2EC62E18F4C800CA6DCE /* LocationInformationManager.swift in Sources */,

@@ -12,15 +12,24 @@ import Foundation
 actor ProduceServicesManager {
 
 	static func getDataFromCloudKit(for location: StateLocation) async throws -> Result<[Produce], Error> {
-		let cloudKitService: ProduceCloudDataService = .init(location: location)
+		let produceCache: ProduceCache = await ProduceCache()
+		let cloudKitService: ProduceCloudDataService = .init(location: location, produceCache: produceCache)
 
-		return await Task {
-			await cloudKitService.getData(for: location)
-		}.value
+		switch await Task(operation: { await cloudKitService.getData(for: location) }).value {
+		case let .success(produce):
+			await produceCache.bySeason(Seasons.currentPeriod, from: produce)
+			return await .success(produceCache.byMonth(Months.currentPeriod, from: produce))
+		default:
+			return .failure(CloudKitError.databaseError)
+		}
 	}
 
 	static func updateLike(id: Int, liked: Bool) async {
-		let cloudKitService: ProduceCloudDataService = await .init(location: StateLocation(rawValue: GlobalSettings.location.state) ?? .noState)
+		let produceCache: ProduceCache = await ProduceCache()
+		let cloudKitService: ProduceCloudDataService = await .init(
+			location: StateLocation(rawValue: GlobalSettings.location.state) ?? .noState,
+			produceCache: produceCache
+		)
 		let likedProduce: LikedProduce = LikedProduce(id: id)
 
 		if liked {

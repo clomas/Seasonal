@@ -52,12 +52,12 @@ actor CloudKitDataService: ObservableObject {
 				case .success(let record):
 					records.append(record)
 				case .failure(let error):
-					return .failure(error) // stop at first failure
+					return .failure(error)
 				}
 			}
 			return .success(records)
 		} catch {
-			return .failure(error) // top-level error
+			return .failure(error)
 		}
 	}
 

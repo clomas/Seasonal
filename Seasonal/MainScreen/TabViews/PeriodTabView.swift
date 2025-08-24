@@ -1,48 +1,58 @@
-//
-//  PeriodTabView.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 19/8/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+	//
+	//  PeriodTabView.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 19/8/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import SwiftUI
 
 @available(iOS 26, *)
 struct PeriodTabView<Period: PeriodType>: View {
 
-	let produce: [Produce]
-	let selectedTab: MainTabScreen.Tabs
+	@EnvironmentObject var appCoordinator: AppCoordinator
 
-	private let middleOffset = Period.allCases.count
+	let selectedTab: MainTabScreen.Tabs
+	private let allPeriods: [Period] = Period.allCases
 
 	@Binding var selectedCategory: ProduceCategory
 
 	@State var selectedPeriod: Period
-	@State private var scrollPosition: Int = 0
-
-	var onToggleLike: ToggleLikeCallback
-
-	private var infinitePeriods: [Period] {
-		Array(repeating: Period.allCases, count: 3).flatMap { $0 }
-	}
+	@State private var scrollPosition: Int?
 
 	private var periodScrollView: some View {
-		GeometryReader { geo in
-			ScrollView(.horizontal) {
-				LazyHStack(spacing: 0) {
-					ForEach(Array(infinitePeriods.enumerated()), id: \.offset) { index, period in
-						periodCell(for: period, index: index)
+		ScrollView(.horizontal) {
+			LazyHStack(spacing: 0) {
+				ForEach(allPeriods.indices, id: \.self) { index in
+					let period = allPeriods[index]
+//					periodCell(for: period, index: index)   // <- use index
+//						.id(index)                           // <- ID type matches Int?
+					if index % 2 == 0 {
+						Color.blue
+							.id(index)
+					} else {
+						Color.green
+							.id(index)
 					}
 				}
-				.scrollTargetLayout()
 			}
-			.scrollTargetBehavior(.paging)
-			.scrollPosition(id: .init(
-				get: { scrollPosition },
-				set: { updateScrollPosition(to: $0) }
-			))
+			.scrollTargetLayout()
 		}
+		.scrollTargetBehavior(.paging)
+		.scrollPosition(id: $scrollPosition)               // <- simple binding
+	}
+
+	private func periodCell(for period: Period, index: Int) -> some View {
+		ProduceList(
+			selectedPeriod: period,
+			parentTab: selectedTab,
+			selectedCategory: $selectedCategory
+		)
+		.containerRelativeFrame(.horizontal)
+		.padding(.top, -100)
+		.onAppear { print("Cell appeared at index \(index)") }
+		.onDisappear { print("Cell disappeared at index \(index)") }
 	}
 
 	var body: some View {
@@ -50,14 +60,13 @@ struct PeriodTabView<Period: PeriodType>: View {
 			periodScrollView
 				.ignoresSafeArea(edges: .bottom)
 				.onAppear {
-					selectedPeriod = .currentPeriod
-					updateScrollPosition(to: selectedPeriod.index + middleOffset)
+					selectedPeriod = .currentPeriod        // only used to seed
+					scrollPosition = selectedPeriod.index  // initial index
 				}
 				.toolbar {
 					InfiniteTabToolbar<Period>(
 						selectedPeriod: $selectedPeriod,
-						scrollPosition: $scrollPosition,
-						middleOffset: middleOffset
+						scrollPosition: $scrollPosition
 					)
 				}
 				.toolbarBackground(.hidden, for: .navigationBar)
@@ -65,39 +74,35 @@ struct PeriodTabView<Period: PeriodType>: View {
 		.toolbarBackground(.hidden, for: .navigationBar)
 	}
 
-	private func periodCell(for period: Period, index: Int) -> some View {
+	
+
+	private func periodCell(for period: Period, index: Int, scrollPosition: Int, preloadBefore: Int, preloadAfter: Int) -> some View {
 		ProduceList(
 			selectedPeriod: period,
 			parentTab: selectedTab,
-			selectedCategory: $selectedCategory,
-			produce: produce.filtered(by: period, category: selectedCategory, search: ""),
-			onToggleLike: onToggleLike
+			selectedCategory: $selectedCategory
 		)
 		.containerRelativeFrame(.horizontal)
-		.id(index)
+		.id(period)
 		.padding(.top, -100)
-	}
-
-	private func updateScrollPosition(to newPosition: Int?) {
-		guard let newPosition: Int else {
-			return
+		.onAppear {
+			print("index loaded - \(index)")
+			print("before - \(scrollPosition - preloadBefore)")
+			print("after \(scrollPosition + preloadAfter)")
 		}
-		scrollPosition = newPosition
-		updateCurrentPeriod(from: newPosition)
 	}
 
-	private func updateCurrentPeriod(from scrollPosition: Int) {
-		let periodIndex: Int = scrollPosition % Period.allCases.count
-		print("before: \(selectedPeriod) index: \(periodIndex)")
-		selectedPeriod = Array(Period.allCases)[periodIndex]
-		print("after: \(selectedPeriod)")
+	private func updateSelectedPeriod(from newPosition: Int?) {
+		guard let newPosition: Int else { return }
+		selectedPeriod = Array(Period.allCases).element(atCyclicIndex: newPosition)
 	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	NavigationStack {
-		PeriodTabView<Months>(produce: previewCoordinator.produceData ?? [], selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april, onToggleLike: { _ in })
-			.environmentObject(previewCoordinator)
+		PeriodTabView<Months>(selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
+			.environmentObject(previewCoordinator)	
 	}
 }
+

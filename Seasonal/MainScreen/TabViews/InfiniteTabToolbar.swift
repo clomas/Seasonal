@@ -1,10 +1,10 @@
-//
-//  InfiniteTabToolbar.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 17/8/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+	//
+	//  InfiniteTabToolbar.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 17/8/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import SwiftUI
 
@@ -18,50 +18,48 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 	private let allCases = Array(Period.allCases)
 
 	@Binding var selectedPeriod: Period
-	@Binding var scrollPosition: Int
-	private let middleOffset: Int
+	@Binding var scrollPosition: Int?
 
-	init(selectedPeriod: Binding<Period>, scrollPosition: Binding<Int>, middleOffset: Int) {
-		self._selectedPeriod = selectedPeriod
-		self._scrollPosition = scrollPosition
-		self.middleOffset = middleOffset
+	private var displayedPeriod: Period {
+		let idx = scrollPosition ?? selectedPeriod.index
+		return allCases.element(atCyclicIndex: idx)
 	}
 
 	var body: some ToolbarContent {
-		// <-
-		ToolbarItem(placement: .navigationBarLeading) {
+		// Title
+		ToolbarItem(placement: .topBarLeading) {
+			Text(displayedPeriod.name)
+				.font(.title)
+				.fixedSize()
+				.animation(.smooth, value: displayedPeriod.name)
+		}
+		.sharedBackgroundVisibility(.hidden)
+
+			// (🗓️ ->)
+		ToolbarItemGroup(placement: .navigationBarTrailing) {
+				// <-
 			Button {
-				navigateToAdjacent(.previous)
+				incrementScrollPosition(.previous)
 			} label: {
 				Image.arrowLeft
 			}
 			.foregroundStyle(.black) // TODO: Update to my colours for dark mode
-		}
-        // Title
-        ToolbarItem(placement: .topBarLeading) {
-            Text(selectedPeriod.name)
-                .font(.title)
-                .fixedSize()
-        }
-        .sharedBackgroundVisibility(.hidden)
 
-		// (🗓️ ->)
-		ToolbarItemGroup(placement: .navigationBarTrailing) {
-			// 🗓️ picker
+				// 🗓️ picker
 			Menu {
 				ForEach(Period.allCases, id: \.self) { period in
 					Button(period.name) {
-						jumpToPeriod(period)
+						jumpToPeriod(period) // TODO: This doesn't work
 					}
 				}
 			} label: {
-				selectedPeriod.image
+				displayedPeriod.image
 			}
 			.foregroundStyle(.black)
 
-			// ->
+				// ->
 			Button {
-				navigateToAdjacent(.next)
+				incrementScrollPosition(.next)
 			} label: {
 				Image.arrowRight
 			}
@@ -69,27 +67,22 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 		}
 	}
 
-	private func navigateToAdjacent(_ direction: NavigationDirection) {
-		let newPosition = switch direction {
-		case .next: scrollPosition + 1
-		case .previous: scrollPosition - 1
-		}
+	private func incrementScrollPosition(_ direction: NavigationDirection) {
+		let current = scrollPosition ?? selectedPeriod.index
+		let newPosition = (direction == .next) ? current + 1 : current - 1
 
-			// Update selected item immediately for UI responsiveness
-		let periodIndex = newPosition % allCases.count
-		let adjustedIndex = periodIndex < 0 ? periodIndex + allCases.count : periodIndex
-		selectedPeriod = allCases[adjustedIndex]
-
-			// Animate to new position
 		withAnimation(.easeInOut(duration: 0.5)) {
 			scrollPosition = newPosition
+			print("infinitetabtoolbar: \(newPosition)")
 		}
 	}
 
 	private func jumpToPeriod(_ period: Period) {
-		selectedPeriod = period
 		withAnimation(.easeInOut(duration: 0.5)) {
-			scrollPosition = period.index + middleOffset
+			scrollPosition = period.index
+			print("infinite jump: \(String(describing: scrollPosition))")
 		}
 	}
 }
+// TODO: Prevent reaching the end and changing the titles still
+

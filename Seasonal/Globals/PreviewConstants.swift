@@ -13,7 +13,7 @@
 let previewCoordinator: AppCoordinator = {
 	let coord = AppCoordinator(window: .create())
 	coord.state = .locationNotFound
-	coord.produceData = [
+	coord.produce = [
 		Produce(
 			id: 0,
 			name: "Apples",

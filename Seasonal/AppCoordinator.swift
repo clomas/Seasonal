@@ -41,9 +41,10 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 
 	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
+	private let produceCache: ProduceCache = ProduceCache()
 
 	@Published var state: AppCoordinatorState = .initial
-	@Published var produceData: [Produce]?
+	var produce: [Produce]?
 
 	private(set) var childCoordinators: [Coordinator] = []
 
@@ -112,12 +113,6 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 
-	func updateLikedProduce(id: Int, liked: Bool) {
-		Task {
-			await ProduceServicesManager.updateLike(id: id, liked: liked)
-		}
-	}
-
 	// Let the user chose a location once then store it
 	func updateChosenLocationUserDefaults(to location: StateLocation) {
 
@@ -147,15 +142,41 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 
+	// MARK: Data
+
+	func produceFavourites() -> [Produce] {
+		produceCache.favourites(from: produce ?? [])
+	}
+
+	func produceByPeriod<Period: PeriodType>(period: Period) -> [Produce] {
+		switch period {
+		case let month as Months:
+			produceCache.byMonth(month, from: produce ?? [])
+		case let season as Seasons:
+			produceCache.bySeason(season, from: produce ?? [])
+		default:
+			[]
+		}
+	}
+
+	func updateLikedProduce(id: Int?, liked: Bool?) {
+		guard let id, let liked else {
+			return
+		}
+		Task {
+			await ProduceServicesManager.updateLike(id: id, liked: liked)
+		}
+	}
+
 	private func getDataFromCloudKit(for location: StateLocation) {
 		Task {
 			do {
 				let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
 				switch result {
-				case .success(let data):
-					await MainActor.run {
-						self.produceData = data
-						self.state = .dataIsReady
+				case .success(let produce):
+					await MainActor.run { [weak self] in
+						self?.produce = produce
+						self?.state = .dataIsReady
 					}
 				case .failure(let failure):
 					state = .dataFailed

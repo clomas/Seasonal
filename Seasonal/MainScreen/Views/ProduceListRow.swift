@@ -49,7 +49,7 @@ struct ProduceListRow<Period: PeriodType>: View {
 						.padding(.trailing, 16)
 					}
 				}
-				MonthsInSeasonCapsuleView()
+//				MonthsInSeasonCapsuleView()
 			}
 			.padding(.bottom, 4)
 			.padding(.leading, 4)

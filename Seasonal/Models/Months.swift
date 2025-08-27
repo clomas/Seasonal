@@ -9,6 +9,7 @@
 import SwiftUI
 
 enum Months: Int, PeriodType {
+
 	case january = 1
 	case february
 	case march
@@ -23,6 +24,10 @@ enum Months: Int, PeriodType {
 	case december
 
 	static let currentPeriod: Months = Months(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
+
+	var index: CGFloat {
+		CGFloat(self.rawValue)
+	}
 
 	var image: Image {
 		.calendar

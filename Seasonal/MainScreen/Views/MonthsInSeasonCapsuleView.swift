@@ -94,5 +94,9 @@ struct MonthRangeOverlay: View {
 }
 
 #Preview {
-	MonthsInSeasonCapsuleView()
+	VStack {
+		MonthsInSeasonCapsuleView()
+		MonthsInSeasonCapsuleView()
+		MonthsInSeasonCapsuleView()
+	}
 }

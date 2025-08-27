@@ -153,14 +153,15 @@ actor ProduceCloudDataService {
 				}
 			}
 
-			let produce: Produce = Produce(id: id,
-													 name: name,
-													 category: category,
-													 imageName: imageName,
-													 description: description, // Not implemented yet
-													 months: months,
-													 seasons: seasons,
-													 liked: liked
+			let produce: Produce = Produce(
+				id: id,
+				name: name,
+				category: category,
+				imageName: imageName,
+				description: description, // Not implemented yet
+				months: months,
+				seasons: seasons,
+				liked: liked
 			)
 			produceArray.append(produce)
 		}

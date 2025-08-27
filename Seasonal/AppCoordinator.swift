@@ -12,15 +12,6 @@ import Network
 import SwiftUI
 import CoreLocation
 
-enum AppLaunchMode {
-	static var useSwiftUI: Bool {
-		if #available(iOS 26, *) {
-			true
-		} else {
-			false
-		}
-	}
-}
 @available(iOS 26, *)
 enum AppCoordinatorState {
 	case dataIsReady
@@ -67,19 +58,13 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 #endif
 	}
 
-		// MARK: App initialisation
+	let featureToggleHelper = FeatureToggleHelper()
 
 	func start() {
-		if AppLaunchMode.useSwiftUI {
-				// SwiftUI root
 			let swiftUIView = RootView()
-			window?.rootViewController = UIHostingController(rootView: swiftUIView.environmentObject(self))
-		} else {
-				// UIKit root
-			let legacyRootVC = navigationController
-			window?.rootViewController = UINavigationController(rootViewController: legacyRootVC)
-		}
-
+				.environmentObject(self)
+				.environmentObject(featureToggleHelper)
+			window?.rootViewController = UIHostingController(rootView: swiftUIView)
 		networkService = NetworkService(delegate: self)
 
 		window?.makeKeyAndVisible()

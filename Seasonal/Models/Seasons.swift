@@ -33,6 +33,10 @@ enum Seasons: Int, PeriodType {
 		.seasons
 	}
 
+	var index: CGFloat {
+		CGFloat(self.rawValue)
+	}
+
 	// TODO: Can I decode this instead?
 	var shortName: String {
 		switch self {

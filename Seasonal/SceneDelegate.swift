@@ -11,6 +11,8 @@ import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+	let featureToggleHelper = FeatureToggleHelper()
+
 	var window: UIWindow?
 
     var appCoordinatorVersionProtocol: AppCoordinatorVersionProtocol?
@@ -21,8 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 		let window: UIWindow = UIWindow(windowScene: scene)
 		self.window = window
 
-        if AppLaunchMode.useSwiftUI, #available(iOS 26, *) {
-            appCoordinatorVersionProtocol = AppCoordinator(window: window)
+		if featureToggleHelper.isEnabled(.useSwiftUI), #available(iOS 26, *) {
+			appCoordinatorVersionProtocol = AppCoordinator(window: window)
             appCoordinatorVersionProtocol?.start()
 		} else {
             appCoordinatorVersionProtocol = AppCoordinatorOld(window: window)

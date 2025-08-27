@@ -20,7 +20,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 	@Binding var selectedPeriod: Period
 	@Binding var scrollPosition: Int?
 
-	private var displayedPeriod: Period {
+	private var displayedPeriod: Period { // TODO: not sure i need this, binding should work
 		let idx = scrollPosition ?? selectedPeriod.index
 		return allCases.element(atCyclicIndex: idx)
 	}

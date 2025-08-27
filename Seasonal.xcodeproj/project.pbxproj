@@ -18,6 +18,7 @@
 		2718E2D5225F809200B802F9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2718E2CF225F809100B802F9 /* Constants.swift */; };
 		2719509C2E5980B7006AC377 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719509B2E5980B5006AC377 /* Cache.swift */; };
 		2719509F2E59810D006AC377 /* ProduceCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2719509E2E59810B006AC377 /* ProduceCache.swift */; };
+		271950A12E5B16D2006AC377 /* FeatureToggleHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 271950A02E5B16D1006AC377 /* FeatureToggleHelper.swift */; };
 		27216E1821E800100042B4F4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27216E1621E800100042B4F4 /* WelcomeViewController.swift */; };
 		272C7A192E220DBE00661BAA /* LikedHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C7A182E220DAD00661BAA /* LikedHeartView.swift */; };
 		272C7A1B2E220DC900661BAA /* EmptyHeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */; };
@@ -78,6 +79,7 @@
 		27EFF3C8215A5C1500CFB31D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EFF3C7215A5C1500CFB31D /* AppDelegate.swift */; };
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
 		27EFF3D2215A5C1700CFB31D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */; };
+		27F9E25A2E5F265A00D999EC /* SwipeOnboardingTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */; };
 		27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED32E558133000E4A75 /* ProduceOld.swift */; };
 		27FACED62E55828A000E4A75 /* Produce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED52E558286000E4A75 /* Produce.swift */; };
 		27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */; };
@@ -148,6 +150,7 @@
 		2718E2CF225F809100B802F9 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		2719509B2E5980B5006AC377 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		2719509E2E59810B006AC377 /* ProduceCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceCache.swift; sourceTree = "<group>"; };
+		271950A02E5B16D1006AC377 /* FeatureToggleHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureToggleHelper.swift; sourceTree = "<group>"; };
 		27216E1621E800100042B4F4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		272C7A182E220DAD00661BAA /* LikedHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedHeartView.swift; sourceTree = "<group>"; };
 		272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyHeartView.swift; sourceTree = "<group>"; };
@@ -218,6 +221,7 @@
 		27EFF3D1215A5C1700CFB31D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27EFF3D3215A5C1700CFB31D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27F4218E22328FA40009922C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeOnboardingTip.swift; sourceTree = "<group>"; };
 		27FACED32E558133000E4A75 /* ProduceOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceOld.swift; sourceTree = "<group>"; };
 		27FACED52E558286000E4A75 /* Produce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Produce.swift; sourceTree = "<group>"; };
 		27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabScreen.swift; sourceTree = "<group>"; };
@@ -521,6 +525,7 @@
 		2794F07D2E1A731B00BFFB12 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */,
 				27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */,
 				27949C0F2E35EE9E00B56E3E /* ProduceList.swift */,
 				272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */,
@@ -647,6 +652,7 @@
 		27FACED82E55832C000E4A75 /* Globals */ = {
 			isa = PBXGroup;
 			children = (
+				271950A02E5B16D1006AC377 /* FeatureToggleHelper.swift */,
 				2718E2CF225F809100B802F9 /* Constants.swift */,
 				278951F329FD39FD00C47B18 /* GlobalSettings.swift */,
 				27BF31C92E56A4ED004795DB /* PreviewConstants.swift */,
@@ -859,6 +865,7 @@
 				27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */,
 				276F35D924D695CC00D223A0 /* CloudKitDataServiceOld.swift in Sources */,
 				272C7A1B2E220DC900661BAA /* EmptyHeartView.swift in Sources */,
+				27F9E25A2E5F265A00D999EC /* SwipeOnboardingTip.swift in Sources */,
 				2706C4102374C685006CB989 /* Seasonal.xcdatamodeld in Sources */,
 				277A682E2638F8EA00E4389A /* InfoViewModel.swift in Sources */,
 				27FB2EBE2E13E19600CA6DCE /* CloudKitDataService.swift in Sources */,
@@ -897,6 +904,7 @@
 				27949E812625CB6B007F3930 /* MenuBarCollectionViewCell.swift in Sources */,
 				27BF31CA2E56A4F2004795DB /* PreviewConstants.swift in Sources */,
 				27FB2EC62E18F4C800CA6DCE /* LocationInformationManager.swift in Sources */,
+				271950A12E5B16D2006AC377 /* FeatureToggleHelper.swift in Sources */,
 				27E698E825EE5DCC004B45E9 /* ProduceDataSevice.swift in Sources */,
 				27FB2ECA2E1A199600CA6DCE /* LocationManagerOld.swift in Sources */,
 				27892C2525E7132B00ADD81F /* MainViewController.swift in Sources */,

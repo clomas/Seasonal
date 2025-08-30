@@ -9,9 +9,14 @@
 import SwiftUI
 
 enum NoPeriod: PeriodType {
+
 	case `none`
 
 	static let currentPeriod: NoPeriod = `none`
+
+	var typeName: String {
+		"Unknown"
+	}
 
 	var image: Image {
 		Image(systemName: "")
@@ -27,6 +32,7 @@ protocol PeriodType: CaseIterable, Equatable, Hashable where AllCases: RandomAcc
 	var nameLowercased: String { get }
 	var index: Int { get }
 	var image: Image { get }
+	var typeName: String { get }
 }
 
 extension PeriodType {

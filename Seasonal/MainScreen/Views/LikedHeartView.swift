@@ -13,14 +13,23 @@ struct GradientHeartView: View {
 		Image.heartFill
 			.resizable()
 			.aspectRatio(contentMode: .fit)
-			.frame(width: 35, height: 40)
+			.frame(width: 40, height: 40)
 			.foregroundStyle(
-				LinearGradient(
-					colors: [.pink, .red],
-					startPoint: .topLeading,
-					endPoint: .bottomTrailing
+				RadialGradient(
+					colors: [.red, .pink, .white],
+					center: .topLeading,
+					startRadius: 0,
+					endRadius: 65
 				)
 			)
-			.shadow(color: .pink.opacity(0.4), radius: 10, x: 0, y: 5)
+			.shadow(color: .red.opacity(0.3), radius: 14, x: -5, y: 0)
+			.shadow(color: .gray.opacity(0.3), radius: 14, x: 10, y: 10)
+	}
+}
+
+#Preview {
+	HStack {
+		GradientHeartView()
+		EmptyHeartView()
 	}
 }

@@ -20,7 +20,7 @@ let previewCoordinator: AppCoordinator = {
 			category: .fruit,
 			imageName: "Apples",
 			description: "",
-			months: [.march],
+			months: [.march, .april, .may, .june, .july, .august],
 			seasons: [.autumn, .spring],
 			liked: true
 		),
@@ -30,7 +30,7 @@ let previewCoordinator: AppCoordinator = {
 			category: .fruit,
 			imageName: "Bananas",
 			description: "",
-			months: [.april, .august, .december, .january, .june, .september, .february],
+			months: [.april, .august, .december, .january, .june, .september, .february, .august, .july],
 			seasons: [.autumn, .spring],
 			liked: true
 		),

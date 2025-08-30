@@ -25,6 +25,10 @@ enum Months: Int, PeriodType {
 
 	static let currentPeriod: Months = Months(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
 
+	var typeName: String {
+		Constants.months
+	}
+
 	var index: CGFloat {
 		CGFloat(self.rawValue)
 	}

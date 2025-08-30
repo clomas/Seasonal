@@ -22,49 +22,47 @@ struct PeriodTabView<Period: PeriodType>: View {
 	@State var selectedPeriod: Period
 	@State private var peekOffset: CGFloat = 0
 	@State private var scrollPosition: ScrollPosition = .init()
-	@State private var showGuide = true
 
 	private var periodScrollView: some View {
-		ScrollView(.horizontal) {
-			LazyHStack(spacing: 0) {
-				ForEach(allPeriods.indices, id: \.self) { index in
-					let period = allPeriods[index]
-					periodCell(for: period, index: index)
-						.id(index)
+		ZStack {
+			ScrollView(.horizontal) {
+				LazyHStack(spacing: 0) {
+					ForEach(allPeriods.indices, id: \.self) { index in
+						let period = allPeriods[index]
+						periodCell(for: period, index: index)
+							.id(index)
+					}
 				}
-//					.frame(width: geo.size.height, height: geo.size.height)
+				.scrollTargetLayout()
 			}
-			.scrollTargetLayout()
-		}
-		.scrollTargetBehavior(.viewAligned)
-		.scrollPosition($scrollPosition)
-		.onAppear {
-			showGuide = true
-//			selectedPeriod = .currentPeriod
-			let ogPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-			scrollPosition = ogPosition
+			.scrollTargetBehavior(.viewAligned)
+			.scrollPosition($scrollPosition)
+			.onAppear {
 
-			DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-				withAnimation(.easeInOut(duration: 2)) {
-					// These values don't actually work, but I'll leave this here in case that changes
-					scrollPosition = .init(x: ogPosition.x! - 250)
-				}
 
-				DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-					withAnimation(.easeInOut(duration: 1)) {
-						scrollPosition = .init(x: ogPosition.x! + 250)
-						showGuide = false
+				selectedPeriod = .currentPeriod
+				let ogPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
+				scrollPosition = ogPosition
+
+				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+					withAnimation(.easeInOut(duration: 2)) {
+							// These values don't actually work, but I'll leave this here in case that changes
+						scrollPosition = .init(x: ogPosition.x! - 250)
 					}
 
-//					DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-//						withAnimation(.easeInOut(duration: 0.5)) {
-//							scrollPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-//						}
-//					}
+					DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+						withAnimation(.easeInOut(duration: 1.5)) {
+							scrollPosition = .init(x: ogPosition.x! + 250)
+
+						}
+					}
 				}
 			}
 		}
-		.popoverTip(SwipeOnboardingTip(context: selectedPeriod.nameLowercased), isPresented: $showGuide)
+	}
+
+	private var tip: SwipeOnboardingTip {
+		SwipeOnboardingTip(context: selectedPeriod.nameLowercased)
 	}
 
 	private func periodCell(for period: Period, index: Int) -> some View {
@@ -74,37 +72,12 @@ struct PeriodTabView<Period: PeriodType>: View {
 			selectedCategory: $selectedCategory
 		)
 		.containerRelativeFrame(.horizontal)
-		.padding(.top, -100)
-		.onAppear { print("Cell appeared at index \(index)") } // TODO: Delete
-		.onDisappear { print("Cell disappeared at index \(index)") }
+//		.padding(.top, -100)
 	}
 
 	var body: some View {
-		NavigationView {
+		NavigationStack {
 			periodScrollView
-				.ignoresSafeArea(edges: .bottom)
-				.onAppear {
-					selectedPeriod = .currentPeriod
-					scrollPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-
-					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						withAnimation(.easeInOut(duration: 0.5)) {
-							scrollPosition = ScrollPosition(x: scrollPosition.x! - 150)
-						}
-
-						DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-							withAnimation(.easeInOut(duration: 0.5)) {
-								scrollPosition = ScrollPosition(x: scrollPosition.x! + 150)
-							}
-
-							DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-								withAnimation(.easeInOut(duration: 0.5)) {
-									scrollPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-								}
-							}
-						}
-					}
-				}
 				.toolbar {
 					if featureToggleHelper.isEnabled(.useToolbarButtons) {
 //						InfiniteTabToolbar<Period>(
@@ -126,7 +99,8 @@ struct PeriodTabView<Period: PeriodType>: View {
 #Preview {
 	NavigationStack {
 		PeriodTabView<Months>(selectedTab: .favourites, selectedCategory: .constant(.all), selectedPeriod: .april)
-			.environmentObject(previewCoordinator)	
+			.environmentObject(previewCoordinator)
+			.environmentObject(FeatureToggleHelper())
 	}
 }
 

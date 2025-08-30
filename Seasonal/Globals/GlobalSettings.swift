@@ -28,5 +28,7 @@ struct Colour {
 	static let welcomeBackground = Color("welcomeBackground")
 	static let inSeason = Color("inSeason")
 	static let background = Color("tableViewCell")
+	static let emptyHeartGradient1 = Color("emptyHeartGradient1")
+	static let emptyHeartGradient2 = Color("emptyHeartGradient2")
 }
 

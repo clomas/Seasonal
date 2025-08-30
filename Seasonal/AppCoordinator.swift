@@ -70,7 +70,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		window?.makeKeyAndVisible()
 	}
 
-	func tryDetectLocationAgain() {
+	func retryStart() {
 		Task {
 			await networkService?.retry()
 		}

@@ -28,7 +28,7 @@ struct FloatingSearchButton: View {
 						.background(.ultraThinMaterial, in: Circle())
 						.glassEffect(.regular)
 				}
-				.foregroundStyle(.black)
+				.foregroundStyle(.primary)
 				.padding(.bottom, 24)
 				.padding(.trailing, 24)
 				.accessibilityLabel("Search")

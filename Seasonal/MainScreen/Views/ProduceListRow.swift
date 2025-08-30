@@ -23,8 +23,7 @@ struct ProduceListRow<Period: PeriodType>: View {
 			Color(.systemBackground)
 			VStack(spacing: 6) {
 				ZStack {
-//					Text(produce.name ?? "")
-					Text(selectedPeriod.name) // TODO: for testing
+					Text(produce.name ?? "")
 						.font(.headline)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
@@ -49,7 +48,7 @@ struct ProduceListRow<Period: PeriodType>: View {
 						.padding(.trailing, 16)
 					}
 				}
-//				MonthsInSeasonCapsuleView()
+				MonthsInSeasonCapsuleView(months: produce.months ?? [])
 			}
 			.padding(.bottom, 4)
 			.padding(.leading, 4)
@@ -58,14 +57,19 @@ struct ProduceListRow<Period: PeriodType>: View {
 	}
 }
 #Preview {
-//	ProduceListRow(produce: .constant(.init(
-//		id: 1,
-//		name: "Bananas",
-//		category: .fruit,
-//		imageName: "Bananas",
-//		description: "",
-//		months: [.august],
-//		seasons: [.spring],
-//		liked: true
-//	)), onToggleLike: { _ in })
+	ProduceListRow(
+		selectedPeriod: NoPeriod.none,
+		produce: .constant(.init(
+			id: 1,
+			name: "Bananas",
+			category: .fruit,
+			imageName: "Bananas",
+			description: "",
+			months: [.august, .september, .january, .december],
+			seasons: [.spring],
+			liked: true
+
+		)
+		),
+		onToggleLike: { _ in })
 }

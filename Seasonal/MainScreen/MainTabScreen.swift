@@ -7,6 +7,7 @@
 	//
 
 import SwiftUI
+import TipKit
 
 @available(iOS 26, *)
 struct MainTabScreen: View {
@@ -18,11 +19,17 @@ struct MainTabScreen: View {
 		case search(AnyPeriod) // TODO: Make optional? to search faves?
 
 		var title: String {
-			switch self {
+			return switch self {
 			case .favourites:
 				"Favourites"
-			case .period(let p):
-				p.name
+			case .period(let period):
+				if let months = period.cast(Months.self) {
+					months.typeName
+				} else if let seasons = period.cast(Seasons.self) {
+					seasons.typeName
+				} else {
+					"Unknown"
+				}
 			case .categories:
 				"Categories"
 			case .search:
@@ -52,6 +59,7 @@ struct MainTabScreen: View {
 	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
 	@State private var isSearching = false
+	@State private var showTip = true
 
 	private var produce: [Produce] {
 		appCoordinator.produceFavourites()
@@ -70,7 +78,7 @@ struct MainTabScreen: View {
 			}) {
 				Label(category.title, systemImage: category.image)
 					.padding()
-					.tint(category == selectedCategory ? Colour.inSeason : .black)
+					.tint(category == selectedCategory ? Colour.inSeason : .primary)
 			}
 		}
 		.presentationCompactAdaptation(.popover)
@@ -85,6 +93,13 @@ struct MainTabScreen: View {
 
 	var body: some View {
 		ZStack {
+			Color.clear.frame(width: 1, height: 200)
+				.popoverTip(
+					SwipeOnboardingTip(context: selectedTab.title.lowercased()),
+					isPresented: $showTip,
+//					attachmentAnchor: .point(.center),
+					arrowEdges: .horizontal
+				)
 			TabView(selection: $selectedTab) {
 				Tab("Favourites", systemImage: "heart", value: .favourites) { tab }
 				Tab("Months", systemImage: "calendar", value: .period(AnyPeriod(Months.currentPeriod))) { tab }
@@ -101,6 +116,7 @@ struct MainTabScreen: View {
 			}
 			.tint(Colour.inSeason)
 		}
+
 		// This onChange triggers when the selectedTab changes.
 		// It updates showCategoryMenu and previousTab accordingly.
 		// WARNING: It sets selectedTab inside the block, which may immediately re-trigger this onChange, potentially causing a feedback loop or excessive updates.
@@ -125,6 +141,10 @@ struct MainTabScreen: View {
 			default:
 				previousTab = newTab
 				showCategoryMenu = false
+
+				try? Tips.resetDatastore()
+				try? Tips.configure()
+				showTip = true
 			}
 		}
 		.alert("Title", isPresented: $showAlert) {
@@ -176,13 +196,13 @@ struct MainTabScreen: View {
 
 	private func periodTabView<P: PeriodType>(periodType: P.Type, period: P, tab: MainTabScreen.Tabs) -> AnyView {
 		AnyView(
-			TransparentBackgroundNavigationStack {
+//			TransparentBackgroundNavigationStack {
 				PeriodTabView<P>(
 					selectedTab: tab,
 					selectedCategory: $selectedCategory,
 					selectedPeriod: period
 				)
-			}
+//			}
 		)
 	}
 

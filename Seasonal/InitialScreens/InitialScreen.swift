@@ -30,16 +30,10 @@ struct InitialScreen: View {
 
 	var body: some View {
 		VStack {
-			ZStack {
-//				GlassIconBackground()
-                Image("Logo")
-                    .resizable()
-                    .glassEffect(.regular)
-//						.opacity(8)
-				
-			}
-			.frame(width: 150, height: 150)
-			.padding()
+			Image("Logo")
+				.resizable()
+				.frame(width: 150, height: 150)
+				.padding()
 
 			switch appCoordinator.state {
 			case .networkFailed, .dataFailed:
@@ -47,15 +41,14 @@ struct InitialScreen: View {
 					Text("Unable to connect to the internet")
 						.padding(.all)
 					GlassButton(label: "Try again") {
-
+						appCoordinator.retryStart()
 					}
 				}
-				.transition(.fallFromTop)
+
 			case .locationNotFound:
 				VStack {
                     Text("Choose your location")
                         .font(.title3)
-                        .glassEffect(.regular)
                         .padding(.bottom)
 
 					ForEach(StateLocation.allCases, id: \.self) { state in
@@ -63,24 +56,22 @@ struct InitialScreen: View {
 							GlassButton(label: state.fullName.capitalized) {
 								appCoordinator.updateChosenLocationUserDefaults(to:  state)
 							}
-							.padding(.horizontal, 20)
 							.padding(.vertical, 8)
 						}
 					}
-					// TODO: we want to do this?
 					GlassButton(label: "Try find location again") {
-//						coordinator.
+						appCoordinator.retryStart()
 					}
 					.padding(50)
 				}
 			case .initial:
 				ProgressView()
 					.frame(width: 35, height: 35)
-					.transition(.fallFromTop)
 			default:
 				EmptyView()
 			}
 			Spacer()
+				.transition(.fallFromTop)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color(.welcomeBackground))
@@ -100,31 +91,16 @@ struct GlassButton: View {
 			}) {
 				Text(label)
 					.font(.headline)
-					.frame(maxWidth: .infinity)
 			}
-//			.background(.white.opacity(0.4))
+//			.frame(width: 300)
 //			.glassEffect(.regular.interactive())
-			.clipShape(Capsule())
-//			.shadow(radius: 4)
+//			.clipShape(Capsule())
 			.buttonStyle(GlassButtonStyle())
+			.frame(minWidth: 300)
+
 		}
 	}
 }
-//struct GlassIconBackground: View {
-//	var body: some View {
-//		RoundedRectangle(cornerRadius: 24, style: .continuous)
-//			.fill(.ultraThinMaterial)
-//			.background(
-//				RoundedRectangle(cornerRadius: 24)
-//					.fill(Color.white.opacity(0.05))
-//			)
-//			.overlay(
-//				RoundedRectangle(cornerRadius: 24)
-//					.strokeBorder(Color.white.opacity(0.2), lineWidth: 1)
-//			)
-//			.shadow(color: Color.black.opacity(0.1), radius: 10, y: 4)
-//	}
-//}
 
 extension AnyTransition {
 	static var fallFromTop: AnyTransition {

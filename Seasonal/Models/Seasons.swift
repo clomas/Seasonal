@@ -29,6 +29,10 @@ enum Seasons: Int, PeriodType {
 		}
 	}
 
+	var typeName: String {
+		Constants.season
+	}
+
 	var image: Image {
 		.seasons
 	}
@@ -37,7 +41,6 @@ enum Seasons: Int, PeriodType {
 		CGFloat(self.rawValue)
 	}
 
-	// TODO: Can I decode this instead?
 	var shortName: String {
 		switch self {
 		case .summer: return "sum"

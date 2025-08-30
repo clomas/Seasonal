@@ -1,10 +1,10 @@
-//
-//  ProduceCache.swift
-//  Seasonal
-//
-//  Created by Clint Thomas on 23/8/2025.
-//  Copyright © 2025 Clint Thomas. All rights reserved.
-//
+	//
+	//  ProduceCache.swift
+	//  Seasonal
+	//
+	//  Created by Clint Thomas on 23/8/2025.
+	//  Copyright © 2025 Clint Thomas. All rights reserved.
+	//
 
 import Foundation
 
@@ -12,32 +12,35 @@ import Foundation
 final class ProduceCache: ObservableObject {
 	private var cache = Cache<ProduceCacheKey, [Produce]>()
 
-	@discardableResult
 	func favourites(from produce: [Produce]) -> [Produce] {
 		cache.value(for: .favourites) {
-			produce.filter { $0.liked == true }
+			produce
+				.filter { $0.liked == true }
+				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}
 
-	// TODO: These aint sorted by alphabet
-	@discardableResult
 	func byMonth(_ month: Months, from produce: [Produce]) -> [Produce] {
 		cache.value(for: .month(month)) {
-			produce.filter { $0.months?.contains(month) == true }
+			produce
+				.filter { $0.months?.contains(month) == true }
+				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}
 
-	@discardableResult
 	func bySeason(_ season: Seasons, from produce: [Produce]) -> [Produce] {
 		cache.value(for: .season(season)) {
-			produce.filter { $0.seasons?.contains(season) == true }
+			produce
+				.filter { $0.seasons?.contains(season) == true }
+				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}
 
-	@discardableResult
 	func search(_ query: String, from produce: [Produce]) -> [Produce] {
 		cache.value(for: .search(query)) {
-			produce.filter { query.isEmpty == false && $0.name?.localizedCaseInsensitiveContains(query) == true }
+			produce
+				.filter { query.isEmpty == false && $0.name?.localizedCaseInsensitiveContains(query) == true }
+				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}
 }

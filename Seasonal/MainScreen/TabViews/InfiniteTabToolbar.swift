@@ -49,13 +49,13 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			Menu {
 				ForEach(Period.allCases, id: \.self) { period in
 					Button(period.name) {
-						jumpToPeriod(period) // TODO: This doesn't work
+						jumpToPeriod(period) // TODO: This doesn't work, should I use this in the period views?
 					}
 				}
 			} label: {
 				displayedPeriod.image
 			}
-			.foregroundStyle(.black)
+			.foregroundStyle(.primary)
 
 				// ->
 			Button {
@@ -63,7 +63,7 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 			} label: {
 				Image.arrowRight
 			}
-			.foregroundStyle(.black)
+			.foregroundStyle(.primary)
 		}
 	}
 

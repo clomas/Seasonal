@@ -8,14 +8,13 @@
 
 import SwiftUI
 
-// TODO: List
+// TODO:
 // Info screen
 // Search screen
 // CloudKit works? (old and new)
 // Wire up like button
 // Work on like button appearance
-// The months capsule needs work
-// Cache everything, it's never updated
+// Cache everything, test cache
 
 @available(iOS 26, *)
 struct RootView: View {

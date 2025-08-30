@@ -10,18 +10,24 @@ import SwiftUI
 
 struct EmptyHeartView: View {
 	var body: some View {
-		Image.heart
+		Image.heartFill
 			.resizable()
 			.aspectRatio(contentMode: .fit)
 			.frame(width: 40, height: 60)
-			.foregroundColor(.black)
-			
-			//			.foregroundStyle(
-			//				LinearGradient(
-			//					colors: [Color.black, Color.red],
-			//					startPoint: .bottomTrailing,
-			//					endPoint: .topLeading
-			//				)
-			//			)
+			.foregroundStyle(
+				RadialGradient(
+					colors: [Colour.emptyHeartGradient1, Colour.emptyHeartGradient2],
+					center: .topLeading,
+					startRadius: 0,
+					endRadius: 50
+				)
+			)
+	}
+}
+
+#Preview {
+	HStack {
+		GradientHeartView()
+		EmptyHeartView()
 	}
 }

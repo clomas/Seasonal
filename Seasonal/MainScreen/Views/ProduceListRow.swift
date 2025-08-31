@@ -8,15 +8,12 @@
 
 import SwiftUI
 
-typealias ToggleLikeCallback = ((Produce) -> Void)?
+@available(iOS 26, *)
+struct ProduceListRow: View {
 
-struct ProduceListRow<Period: PeriodType>: View {
-
-	// TODO: for testing
-	let selectedPeriod: Period
+	@EnvironmentObject var produceStore: ProduceStore
 
 	@Binding var produce: Produce
-	var onToggleLike: ToggleLikeCallback
 
 	var body: some View {
 		ZStack {
@@ -27,9 +24,6 @@ struct ProduceListRow<Period: PeriodType>: View {
 						.font(.headline)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
-//						.lineLimit(2) // TODO: Remove this and the 2 lines below?
-//						.minimumScaleFactor(0.8) // shrinks if needed
-//						.fixedSize(horizontal: false, vertical: true)
 					HStack {
 						Image(produce.imageName ?? "")
 							.resizable()
@@ -39,8 +33,8 @@ struct ProduceListRow<Period: PeriodType>: View {
 						Spacer()
 
 						Button(action: {
-							produce.liked?.toggle()
-							onToggleLike?(produce)
+							produceStore.toggleLiked(for: produce.id)
+
 						}) {
 							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
 						}
@@ -56,20 +50,22 @@ struct ProduceListRow<Period: PeriodType>: View {
 		}
 	}
 }
+
+@available(iOS 26, *)
 #Preview {
 	ProduceListRow(
-		selectedPeriod: NoPeriod.none,
-		produce: .constant(.init(
-			id: 1,
-			name: "Bananas",
-			category: .fruit,
-			imageName: "Bananas",
-			description: "",
-			months: [.august, .september, .january, .december],
-			seasons: [.spring],
-			liked: true
-
+		produce: .constant(
+			.init(
+				id: 1,
+				name: "Bananas",
+				category: .fruit,
+				imageName: "Bananas",
+				description: "",
+				months: [.august, .september, .january, .december],
+				seasons: [.spring],
+				liked: true
+			)
 		)
-		),
-		onToggleLike: { _ in })
+	)
+	.environmentObject(previewCoordinator)
 }

@@ -154,7 +154,7 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 		if liked == true {
 			if let selectedProduce: ProduceOld = produce {
 				favouritesProduce?.insert(selectedProduce, at: 0)
-				favouritesProduce = favouritesProduce?.sorted(by: { $0.produceName < $1.produceName })
+				favouritesProduce = favouritesProduce?.sorted(by: { $0.name < $1.name })
 			}
 		} else {
 			favouritesProduce = favouritesProduce?.filter { $0.id != produce?.id }
@@ -189,7 +189,7 @@ extension MainViewModel {
 
 			if searchString != "" {
 				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter {
-					$0.produceName.lowercased().contains(searchString.lowercased()) }
+					$0.name.lowercased().contains(searchString.lowercased()) }
 				}
 			} else {
 				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce
@@ -199,7 +199,7 @@ extension MainViewModel {
 			if searchString != "" {
 				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter {
 					$0.category == category
-					&& $0.produceName.lowercased().contains(searchString.lowercased()) }
+					&& $0.name.lowercased().contains(searchString.lowercased()) }
 				}
 			} else {
 				allMonthsAndTheirProduceToDisplay = allMonthsAndTheirProduce?.map { $0.filter { $0.category == category }}
@@ -214,7 +214,7 @@ extension MainViewModel {
 
 			if searchString != "" {
 				favouritesProduceToDisplay = favouritesProduce?.filter {
-					$0.produceName.lowercased().contains(searchString.lowercased())
+					$0.name.lowercased().contains(searchString.lowercased())
 				}
 			} else {
 				favouritesProduceToDisplay = favouritesProduce
@@ -224,7 +224,7 @@ extension MainViewModel {
 
 			if searchString != "" {
 				favouritesProduceToDisplay = favouritesProduce?.filter { $0.category == category &&
-					$0.produceName.lowercased().contains(searchString.lowercased())
+					$0.name.lowercased().contains(searchString.lowercased())
 				}
 			} else {
 				favouritesProduceToDisplay = favouritesProduce?.filter { $0.category == category }

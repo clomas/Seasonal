@@ -9,40 +9,12 @@
 import Foundation
 
 struct ProduceOld: Identifiable {
-
-	var produce: Produce
-
-	var id: Int {
-		produce.id ?? -1
-	}
-	var name: String {
-		produce.name ?? ""
-	}
-	var imageName: String {
-		produce.imageName ?? ""
-	}
-	var description: String {
-		produce.description ?? ""
-	}
-	var liked: Bool {
-		get {
-			return produce.liked == true
-		} set(liked) {
-			produce.liked = liked
-		}
-	}
-
-		// Commented out redundant properties now provided by protocol conformance
-	var produceName: String {
-		produce.name ?? ""
-	}
-	var category: ViewDisplayed.ProduceCategory? {
-		produce.category?.toOld ?? .all
-	}
-	var months: [MonthOld] {
-		produce.months?.toOld ?? []
-	}
-	var seasons: [SeasonsOld] {
-		produce.seasons?.toOld ?? []
-	}
+	var id: Int
+	var name: String
+	var category: ViewDisplayed.ProduceCategory?
+	var imageName: String
+	var description: String
+	var months: [MonthOld]
+	var seasons: [SeasonsOld]
+	var liked: Bool
 }

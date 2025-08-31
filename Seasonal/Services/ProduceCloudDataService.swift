@@ -183,11 +183,6 @@ actor ProduceCloudDataService {
 		}
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
-
-			if let index: Array<ProduceOld>.Index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
-				produceArray[index].liked = true
-			}
-
 			let result = saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
 #if DEBUG
 			if result == true {
@@ -221,5 +216,23 @@ extension String {
 		return seasons
 	}
 
+	func createMonthArray() -> [Months] {
+		var months: [Months] = [Months]()
+		var searchStartIndex: String.Index = self.startIndex
+
+		while searchStartIndex < self.endIndex,
+			  // find 1 in month string which indicates the produce is in season
+			  let range: Range<String.Index> = self.range(of: "1", range: searchStartIndex..<self.endIndex),
+			  !range.isEmpty {
+			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
+
+			// Add 1 - January rawValue == 1
+			if let month: Months = Months(rawValue: index + 1) {
+				months.append(month)
+			}
+			searchStartIndex = range.upperBound
+		}
+		return months
+	}
 }
 

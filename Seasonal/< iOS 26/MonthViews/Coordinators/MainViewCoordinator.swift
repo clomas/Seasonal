@@ -25,6 +25,16 @@ enum ViewDisplayed: Int {
 		case vegetables = 6
 		case herbs = 7
 		case cancelled = 8
+
+		static func fromString(_ string: String) -> ViewDisplayed.ProduceCategory {
+			switch string {
+			case "fruit": .fruit
+			case "vegetable": .vegetables
+			case "herb": .herbs
+			default:
+				.cancelled
+			}
+		}
 	}
 }
 
@@ -44,7 +54,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	weak var monthSelectedDelegate: MonthSelectedDelegate?
 
 	private var mainViewController: MainViewController?
-	private var dataFetched: [Produce]?
+	private var dataFetched: [ProduceOld]?
 	private var determinedLocation: StateLocation
 	private var monthAndSeason: (MonthOld, SeasonsOld) = DateHandler().findMonthAndSeasonOld()
 	private var currentMonth: MonthOld { monthAndSeason.0 }
@@ -52,7 +62,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 	init(navigationController: UINavigationController,
 		 cloudKitDataService: CloudKitDataServiceOld,
-		 dataFetched: [Produce]?,
+		 dataFetched: [ProduceOld]?,
 		 location: StateLocation) {
 		self.navigationController = navigationController
 		self.cloudKitDataServiceOld = cloudKitDataService
@@ -208,4 +218,34 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 
 		return transition
 	}
- }
+}
+
+extension Array where Element == ProduceOld {
+
+	func sortIntoFavourites() -> [ProduceOld] {
+		self.map { $0 }.filter { $0.liked == true }
+	}
+
+	func sortIntoMonths() -> [[ProduceOld]] {
+			// create array of 12 months
+		var monthProduceArray: [[ProduceOld]] = .init(repeating: [], count: 12)
+
+		for monthIndex in 0...11 {
+			var monthArray: [ProduceOld] = [ProduceOld]()
+
+			self.forEach({ (item: ProduceOld) in
+
+				if let month: MonthOld = MonthOld(rawValue: (monthIndex	+ 1)) {
+					if item.months.contains(month) == true {
+						monthArray.append(item)
+					}
+				}
+			})
+			monthProduceArray[monthIndex] = monthArray
+		}
+		monthProduceArray.insert(monthProduceArray[11], at: 0)
+		monthProduceArray.append(monthProduceArray[1])
+
+		return monthProduceArray
+	}
+}

@@ -124,7 +124,7 @@ final class SeasonsViewModel: MenuBarDelegate {
 	}
 }
 
-extension Array where Element == Produce {
+extension Array where Element == ProduceOld {
 
 	func sortIntoSeasons() -> [SeasonsOld: [ProduceOld]] {
 		var seasonsArray: [SeasonsOld: [ProduceOld]] = [SeasonsOld: [ProduceOld]]()
@@ -134,8 +134,8 @@ extension Array where Element == Produce {
 
 			if season != .cancelled {
 				forEach { item in
-					if item.seasons?.toOld.contains(season) == true {
-						seasonsProduce.append(ProduceOld(produce: item))
+					if item.seasons.contains(season) == true {
+						seasonsProduce.append(item)
 					}
 				}
 				seasonsArray[season] = seasonsProduce
@@ -156,7 +156,7 @@ extension SeasonsViewModel {
 
 			if searchString != "" {
 				seasonProduceToDisplay = seasonData.filter {
-					$0.produceName.lowercased().contains(searchString.lowercased())
+					$0.name.lowercased().contains(searchString.lowercased())
 				}
 			} else {
 				seasonProduceToDisplay = seasonData
@@ -166,7 +166,7 @@ extension SeasonsViewModel {
 			if searchString != "" {
 				seasonProduceToDisplay = seasonData.filter {
 					$0.category == category
-					&& $0.produceName.lowercased().contains(searchString.lowercased())
+					&& $0.name.lowercased().contains(searchString.lowercased())
 				}
 			} else {
 				seasonProduceToDisplay = seasonData.filter { $0.category == category }

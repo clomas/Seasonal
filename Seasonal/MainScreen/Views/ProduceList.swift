@@ -40,16 +40,10 @@ struct ProduceList<Period: PeriodType>: View {
 					.padding(.bottom, .largePadding)
 			} else {
 				List($produce, id: \.id) { $item in
-					ProduceListRow<Period>(
-						selectedPeriod: selectedPeriod,
-						produce: $item,
-						onToggleLike: { tappedProduce in
-							appCoordinator.updateLikedProduce(id: tappedProduce.id, liked: tappedProduce.liked)
-						}
-					)
-					.listRowSeparator(.hidden)
-					.listRowInsets(.topListRowInset)
-					.listRowBackground(Color.clear)
+					ProduceListRow(produce: $item,)
+						.listRowSeparator(.hidden)
+						.listRowInsets(.topListRowInset)
+						.listRowBackground(Color.clear)
 				}
 				.listStyle(.plain)
 				.scrollContentBackground(.hidden)

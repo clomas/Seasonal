@@ -25,7 +25,7 @@ class CloudKitDataServiceOld {
 
     // MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[Produce], CloudKitError>) -> Void) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceOld], CloudKitError>) -> Void) {
         currentLocation = locationFound
 		let predicate: NSPredicate = NSPredicate(value: true)
 		let publicQuery: CKQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
@@ -64,18 +64,18 @@ class CloudKitDataServiceOld {
 
     // MARK: Sort Data
 
-    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
-		var produceArray: [Produce] = [Produce]()
+    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [ProduceOld] {
+		var produceArray: [ProduceOld] = [ProduceOld]()
 		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
         for record in publicRecords {
 			var id: Int = 0
 			var name: String = Constants.apple
 			var imageName: String = Constants.apple
-			var category: ProduceCategory = ProduceCategory.fruit
+			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
             let description: String = ""
-			var months: [Months] = [Months]()
-			var seasons: [Seasons] = [Seasons]()
+			var months: [MonthOld] = [MonthOld]()
+			var seasons: [SeasonsOld] = [SeasonsOld]()
 			var liked: Bool = false
 
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
@@ -86,23 +86,23 @@ class CloudKitDataServiceOld {
 				id = recordID
                 name = nameRecord
                 imageName = nameRecord
-				category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
-                months = monthsRecord.createMonthArray()
-                seasons = seasonsRecord.createSeasonArray()
+				category = ViewDisplayed.ProduceCategory.fromString(categoryRecord)
+                months = monthsRecord.createMonthArrayOld()
+                seasons = seasonsRecord.createSeasonArrayOld()
             }
 
 			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
 				liked = Bool(truncating: id as NSNumber)
 			}
 
-			let produce: Produce = Produce(id: id,
-								                     name: name,
-								                     category: category,
-								                     imageName: imageName,
-								                     description: description, // Not implemented yet
-								                     months: months,
-								                     seasons: seasons,
-								                     liked: liked
+			let produce: ProduceOld = ProduceOld(id: id,
+												 name: name,
+												 category: category,
+												 imageName: imageName,
+												 description: description, // Not implemented yet
+												 months: months,
+												 seasons: seasons,
+												 liked: liked
 			)
 			produceArray.append(produce)
         }
@@ -116,8 +116,8 @@ class CloudKitDataServiceOld {
 
     // Update cloudKit with local data if there is a disparity
     // local data should always be accurate
-    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
-		let likedArray: [Produce] = produceArray.filter { $0.liked == true}
+    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [ProduceOld]) {
+		let likedArray: [ProduceOld] = produceArray.filter { $0.liked == true}
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
 
@@ -174,7 +174,6 @@ class CloudKitDataServiceOld {
 	// string matching is required to convert database data to useable app data.
 extension String {
 
-		// Parse Seasons
 	func createSeasonArrayOld() -> [SeasonsOld] {
 		var seasons: [SeasonsOld] = [SeasonsOld]()
 
@@ -193,9 +192,8 @@ extension String {
 		return seasons
 	}
 
-	// Parse Months
-	func createMonthArray() -> [Months] {
-		var months: [Months] = [Months]()
+	func createMonthArrayOld() -> [MonthOld] {
+		var months: [MonthOld] = [MonthOld]()
 		var searchStartIndex: String.Index = self.startIndex
 
 		while searchStartIndex < self.endIndex,
@@ -205,7 +203,7 @@ extension String {
 			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
 				// add 1 here for infiniteCollectionView offset
-			if let month: Months = Months(rawValue: index + 1) {
+			if let month: MonthOld = MonthOld(rawValue: index + 1) {
 				months.append(month)
 			}
 			searchStartIndex = range.upperBound

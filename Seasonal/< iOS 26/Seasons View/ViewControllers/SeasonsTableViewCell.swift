@@ -28,7 +28,7 @@ class SeasonsTableViewCell: UITableViewCell {
 		backgroundColor = UIColor.TableViewCell.tint
 
 		id = produce.id
-		foodLabel.text = produce.produceName
+		foodLabel.text = produce.name
         foodImage.image = image
 
 		likeButton.isSelected = produce.liked

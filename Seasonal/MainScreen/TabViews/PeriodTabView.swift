@@ -88,11 +88,6 @@ struct PeriodTabView<Period: PeriodType>: View {
 				}
 		}
 	}
-
-	private func updateSelectedPeriod(from newPosition: Int?) {
-		guard let newPosition: Int else { return }
-		selectedPeriod = Array(Period.allCases).element(atCyclicIndex: newPosition)
-	}
 }
 
 @available(iOS 26, *)

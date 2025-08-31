@@ -86,3 +86,18 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 }
 // TODO: Prevent reaching the end and changing the titles still
 
+
+private extension Collection where Element: PeriodType {
+		// TODO: Rename and remove fatal error? optional?
+	func element(atCyclicIndex index: Int) -> Element {
+		let count = self.count
+		guard count > 0 else {
+			fatalError("Cannot access elements of empty collection")
+		}
+		var adjustedIndex = index % count
+		if adjustedIndex < 0 {
+			adjustedIndex += count
+		}
+		return self[self.index(self.startIndex, offsetBy: adjustedIndex)]
+	}
+}

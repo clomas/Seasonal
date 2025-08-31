@@ -80,6 +80,7 @@
 		27EFF3CD215A5C1500CFB31D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3CB215A5C1500CFB31D /* Main.storyboard */; };
 		27EFF3D2215A5C1700CFB31D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 27EFF3D0215A5C1700CFB31D /* LaunchScreen.storyboard */; };
 		27F9E25A2E5F265A00D999EC /* SwipeOnboardingTip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */; };
+		27F9E25C2E63EEBF00D999EC /* ProduceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9E25B2E63EEB900D999EC /* ProduceStore.swift */; };
 		27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED32E558133000E4A75 /* ProduceOld.swift */; };
 		27FACED62E55828A000E4A75 /* Produce.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FACED52E558286000E4A75 /* Produce.swift */; };
 		27FB2EBA2E12AE3700CA6DCE /* MainTabScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */; };
@@ -222,6 +223,7 @@
 		27EFF3D3215A5C1700CFB31D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27F4218E22328FA40009922C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeOnboardingTip.swift; sourceTree = "<group>"; };
+		27F9E25B2E63EEB900D999EC /* ProduceStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceStore.swift; sourceTree = "<group>"; };
 		27FACED32E558133000E4A75 /* ProduceOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceOld.swift; sourceTree = "<group>"; };
 		27FACED52E558286000E4A75 /* Produce.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Produce.swift; sourceTree = "<group>"; };
 		27FB2EB92E12AE3400CA6DCE /* MainTabScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabScreen.swift; sourceTree = "<group>"; };
@@ -652,6 +654,7 @@
 		27FACED82E55832C000E4A75 /* Globals */ = {
 			isa = PBXGroup;
 			children = (
+				27F9E25B2E63EEB900D999EC /* ProduceStore.swift */,
 				271950A02E5B16D1006AC377 /* FeatureToggleHelper.swift */,
 				2718E2CF225F809100B802F9 /* Constants.swift */,
 				278951F329FD39FD00C47B18 /* GlobalSettings.swift */,
@@ -875,6 +878,7 @@
 				27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */,
 				275EBD3C25F769D500F6D3F4 /* MenuBarCollectionView.swift in Sources */,
 				27FCA54225DB952E00AD2020 /* WelcomeViewModel.swift in Sources */,
+				27F9E25C2E63EEBF00D999EC /* ProduceStore.swift in Sources */,
 				272C7A232E23788C00661BAA /* FloatingSearchButton.swift in Sources */,
 				27216E1821E800100042B4F4 /* WelcomeViewController.swift in Sources */,
 				27E989B52E530336006C7739 /* PeriodType.swift in Sources */,

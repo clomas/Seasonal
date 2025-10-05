@@ -11,7 +11,7 @@ import SwiftUI
 @available(iOS 26, *)
 struct ProduceListRow: View {
 
-	@EnvironmentObject var produceStore: ProduceStore
+	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@Binding var produce: Produce
 
@@ -33,7 +33,7 @@ struct ProduceListRow: View {
 						Spacer()
 
 						Button(action: {
-							produceStore.toggleLiked(for: produce.id)
+							appCoordinator.produceStore.toggleLiked(for: produce.id)
 
 						}) {
 							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }

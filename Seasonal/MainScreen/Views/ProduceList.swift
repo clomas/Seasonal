@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct ProduceList<Period: PeriodType>: View {
-	@EnvironmentObject var appCoordinator: AppCoordinator
+	@EnvironmentObject var produceStore: ProduceStore
 
 	@State var selectedPeriod: Period
 	@State var parentTab: MainTabScreen.Tabs
@@ -57,7 +57,7 @@ struct ProduceList<Period: PeriodType>: View {
 			if let initialProduce {
 				produce = initialProduce
 			} else {
-				produce = appCoordinator.produceByPeriod(period: selectedPeriod)
+				produce = produceStore.byPeriod(selectedPeriod)
 			}
 		}
 	}

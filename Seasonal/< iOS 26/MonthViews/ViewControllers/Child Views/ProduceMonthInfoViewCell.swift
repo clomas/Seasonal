@@ -51,7 +51,7 @@ class ProduceMonthInfoViewCell: UITableViewCell {
 			likeButton.isSelected = false
         }
 
-        // find month
+		// find month
 		var monthIndex: Int = 1
 
         for uiView in monthImages {
@@ -70,7 +70,7 @@ class ProduceMonthInfoViewCell: UITableViewCell {
         }
     }
 
-    // MARK: Buttons
+	// MARK: Buttons
 
     @IBAction func monthsLikeButtonWasTapped(_ sender: Any) {
 

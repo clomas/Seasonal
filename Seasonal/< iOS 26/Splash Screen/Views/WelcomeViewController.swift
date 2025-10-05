@@ -78,7 +78,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 		animateWelcomeLabel()
     }
 
-    // MARK: Video
+// MARK: Video
 
     private func playVideo() {
         guard let path = Bundle.main.path(forResource: videoName, ofType: "mp4") else {
@@ -107,7 +107,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 		}
     }
 
-    // Start video over after completion
+// Start video over after completion
     @objc private func playerItemDidReachEnd(notification: Notification) {
 		if let playerItem: AVPlayerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
@@ -115,7 +115,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
         }
     }
 
-    // MARK: Animations
+// MARK: Animations
 
 	private func animateWelcomeLabel() {
 		if dismissButton.isHidden == false {
@@ -124,7 +124,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 		welcomeLabel.animatedWelcomeLabel(initialLabelText: viewModel?.welcomeLabel ?? "")
 	}
 
-    // MARK: Buttons
+// MARK: Buttons
 
     @IBAction func dismissButtonWasTapped(_ sender: Any) {
 		viewModel?.dismissWasTapped()

@@ -46,7 +46,7 @@ class SeasonsTableViewCell: UITableViewCell {
         }
     }
 
-    // MARK: Like Button
+// MARK: Like Button
 
     @IBAction func likeButtonWasTapped(_ sender: Any) {
         likeButton.animateLikeButton(selected: likeButton.isSelected)

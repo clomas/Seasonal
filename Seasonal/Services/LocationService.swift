@@ -70,7 +70,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 		locationManager.stopUpdatingLocation()
     }
 
-    // MARK: Location Updated
+	// MARK: Location Updated
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		authStatus = status
@@ -86,7 +86,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 		}
     }
 
-    // MARK: Failure
+	// MARK: Failure
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		stop()

@@ -27,6 +27,7 @@ struct SearchTabView<Period: PeriodType>: View {
 					selectedCategory: $selectedCategory,
 					produce: produce
 				)
+				.environmentObject(ProduceStore())
 			} else {
 				PeriodTabView(
 					selectedTab: selectedTab,
@@ -41,7 +42,7 @@ struct SearchTabView<Period: PeriodType>: View {
 @available(iOS 26, *)
 #Preview {
 	SearchTabView(
-		produce: previewCoordinator.produce ?? [],
+		produce: previewCoordinator.produceStore.allProduce,
 		selectedTab: .period(AnyPeriod(Months.currentPeriod)),
 		selectedPeriod: Months.currentPeriod,
 		selectedCategory: .constant(.all)

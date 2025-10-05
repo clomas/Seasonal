@@ -28,7 +28,7 @@ extension Calendar {
 	}
 }
 
-	// MARK: - Category mapping
+// MARK: - Category mapping
 extension ProduceCategory {
 	var toOld: ViewDisplayed.ProduceCategory {
 		switch self {
@@ -41,7 +41,7 @@ extension ProduceCategory {
 	}
 }
 
-	// MARK: - Months mapping
+// MARK: - Months mapping
 extension Months {
 	var toOld: MonthOld {
 		switch self {
@@ -65,7 +65,7 @@ extension Array where Element == Months {
 	var toOld: [MonthOld] { map(\.toOld) }
 }
 
-	// MARK: - Seasons mapping
+// MARK: - Seasons mapping
 extension Seasons {
 	var toOld: SeasonsOld {
 		switch self {
@@ -73,7 +73,6 @@ extension Seasons {
 		case .autumn: .autumn
 		case .winter: .winter
 		case .spring: .spring
-		default: .cancelled
 		}
 	}
 }

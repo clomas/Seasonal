@@ -40,6 +40,11 @@ actor NetworkService {
 
 	func startMonitoring() async {
 		monitor.pathUpdateHandler = { [weak self] path in
+
+			print("Path status:", path.status)
+			print("Interfaces:", path.availableInterfaces)
+			print("Uses expensive:", path.isExpensive)
+
 			Task { @MainActor in
 				await self?.delegate?.internetStatusDidChange(status: path.status)
 			}

@@ -23,7 +23,7 @@ class CloudKitDataServiceOld {
 	private let container: CKContainer = CKContainer.default()
     var currentLocation: StateLocation = .noState
 
-    // MARK: CloudKit Database
+	// MARK: CloudKit Database
 
     func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceOld], CloudKitError>) -> Void) {
         currentLocation = locationFound
@@ -62,7 +62,7 @@ class CloudKitDataServiceOld {
         }
     }
 
-    // MARK: Sort Data
+	// MARK: Sort Data
 
     private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [ProduceOld] {
 		var produceArray: [ProduceOld] = [ProduceOld]()
@@ -114,8 +114,8 @@ class CloudKitDataServiceOld {
         return produceArray
     }
 
-    // Update cloudKit with local data if there is a disparity
-    // local data should always be accurate
+	// Update cloudKit with local data if there is a disparity
+	// local data should always be accurate
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [ProduceOld]) {
 		let likedArray: [ProduceOld] = produceArray.filter { $0.liked == true}
 
@@ -134,7 +134,7 @@ class CloudKitDataServiceOld {
 		}
 	}
 
-    // MARK: Save
+	// MARK: Save
 
 	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
 
@@ -170,8 +170,8 @@ class CloudKitDataServiceOld {
 		}
 	}
 }
-	// On creating the database I made some questionable decisions, I could have maybe handled it better.
-	// string matching is required to convert database data to useable app data.
+// On creating the database I made some questionable decisions, I could have maybe handled it better.
+// string matching is required to convert database data to useable app data.
 extension String {
 
 	func createSeasonArrayOld() -> [SeasonsOld] {

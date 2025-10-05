@@ -15,7 +15,6 @@ extension UserDefaults {
 
 		if isFirstLaunch {
 			GlobalSettings.hasBeenLaunchedBeforeFlag = App(launchedBefore: true)
-			UserDefaults.standard.synchronize()
 		}
 		return isFirstLaunch
 	}

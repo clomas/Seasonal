@@ -30,12 +30,12 @@ protocol AppCoordinatorVersionProtocol {
 @MainActor
 final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, NetworkObserverDelegate, @preconcurrency AppCoordinatorVersionProtocol {
 
+	let produceStore = ProduceStore()
+
 	private let window: UIWindow?
 	private let navigationController: UINavigationController = UINavigationController()
-	private let produceCache: ProduceCache = ProduceCache()
 
 	@Published var state: AppCoordinatorState = .initial
-	var produce: [Produce]?
 
 	private(set) var childCoordinators: [Coordinator] = []
 
@@ -52,7 +52,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 
 #if DEBUG
 		if CommandLine.arguments.contains("enable-testing") {
-				// if testing UI disable animations.
+			// if testing UI disable animations.
 			UIView.setAnimationsEnabled(false)
 		}
 #endif
@@ -127,48 +127,9 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 		}
 	}
 
-	// MARK: Data
-
-	func produceFavourites() -> [Produce] {
-		produceCache.favourites(from: produce ?? [])
-	}
-
-	func produceByPeriod<Period: PeriodType>(period: Period) -> [Produce] {
-		switch period {
-		case let month as Months:
-			produceCache.byMonth(month, from: produce ?? [])
-		case let season as Seasons:
-			produceCache.bySeason(season, from: produce ?? [])
-		default:
-			[]
-		}
-	}
-
-	func updateLikedProduce(id: Int?, liked: Bool?) {
-		guard let id, let liked, id > 0 else {
-			return
-		}
-		Task {
-			await ProduceServicesManager.updateLike(id: id, liked: liked)
-		}
-	}
-
 	private func getDataFromCloudKit(for location: StateLocation) {
 		Task {
-			do {
-				let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
-				switch result {
-				case .success(let produce):
-					await MainActor.run { [weak self] in
-						self?.produce = produce
-						self?.state = .dataIsReady
-					}
-				case .failure(let failure):
-					state = .dataFailed
-				}
-			} catch {
-				state = .dataFailed
-			}
+			state = await produceStore.fetchFromCloudKit(for: location) ? .dataIsReady : .dataFailed
 		}
 	}
 }

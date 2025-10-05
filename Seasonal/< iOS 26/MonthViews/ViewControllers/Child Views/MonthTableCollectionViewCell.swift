@@ -34,7 +34,7 @@ class MonthTableCollectionViewCell: UICollectionViewCell, LikeButtonDelegate {
         tableView.dataSource = self
     }
 
-    // MARK: Like Button
+// MARK: Like Button
 
 	func likeButtonWasTapped(cell: ProduceMonthInfoViewCell, viewDisplayed: ViewDisplayed) {
 		if let id: Int = cell.id {

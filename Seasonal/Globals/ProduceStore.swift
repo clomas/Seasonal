@@ -9,11 +9,27 @@
 import SwiftUI
 
 @MainActor
+@available(iOS 26, *)
 final class ProduceStore: ObservableObject {
-	@Published private(set) var produce: [Int: Produce] = [:] 
+	@Published private(set) var produce: [Int: Produce] = [:]
+	private let cache = ProduceCache()
+
+	lazy var allProduce: [Produce] = Array(produce.values)
+
+	var favourites: [Produce] {
+		cache.favourites(from: Array(produce.values))
+	}
+
+	func byPeriod<Period: PeriodType>(_ period: Period) -> [Produce] {
+		switch period {
+		case let month as Months: return cache.byMonth(month, from: Array(produce.values))
+		case let season as Seasons: return cache.bySeason(season, from: Array(produce.values))
+		default: return []
+		}
+	}
 
 	func toggleLiked(for id: Int) {
-		guard var item: Produce = produce[id] else { return }
+		guard let item: Produce = produce[id] else { return }
 
 		let updatedLiked: Bool = !item.liked
 
@@ -28,11 +44,27 @@ final class ProduceStore: ObservableObject {
 			liked: updatedLiked
 		)
 
-		updateCache(produce[id]!)
+		updateCache(produce[id])
 		syncToCloudKit(id: id, liked: updatedLiked)
 	}
 
-	private func updateCache(_ produce: Produce) {
+	func fetchFromCloudKit(for location: StateLocation) async -> Bool {
+		do {
+			let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
+			switch result {
+			case .success(let produceList):
+				let dict = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
+				await MainActor.run { self.produce = dict }
+				return true
+			case .failure:
+				return false
+			}
+		} catch {
+			return false
+		}
+	}
+
+	private func updateCache(_ produce: Produce?) {
 			// write to your cache (e.g. UserDefaults, CoreData, file, etc.)
 	}
 

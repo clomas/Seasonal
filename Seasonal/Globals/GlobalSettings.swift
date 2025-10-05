@@ -13,6 +13,42 @@ enum GlobalSettings {
 	// Storing location (Australian State) into User Defaults
 	@UserDefault("state", defaultValue: Location(state: "")) static var location: Location
 	@UserDefault("hasBeenLaunchedBeforeFlag", defaultValue: App(launchedBefore: false)) static var hasBeenLaunchedBeforeFlag: App
+	@UserDefault("selectedTab", defaultValue: .favourites) static var selectedTab: StoredSelectedTab
+}
+
+@MainActor
+enum StoredSelectedTab: Codable {
+	case favourites, months, seasons
+
+	@available(iOS 26, *)
+	static func storeTab(_ tab: MainTabScreen.Tabs) {
+		switch tab {
+		case .favourites:
+			GlobalSettings.selectedTab = .favourites
+
+		case .period(let anyPeriod):
+			if let _ = anyPeriod.cast(Months.self) {
+				GlobalSettings.selectedTab = .months
+			} else if let _ = anyPeriod.cast(Seasons.self) {
+				GlobalSettings.selectedTab = .seasons
+			}
+
+		default:
+			break
+		}
+	}
+
+	@available(iOS 26, *)
+	static var tab: MainTabScreen.Tabs {
+		switch GlobalSettings.selectedTab {
+		case .favourites:
+			return .favourites
+		case .months:
+			return .period(AnyPeriod(Months.currentPeriod))
+		case .seasons:
+			return .period(AnyPeriod(Seasons.currentPeriod))
+		}
+	}
 }
 
 @MainActor

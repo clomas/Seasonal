@@ -49,7 +49,7 @@ struct MainTabScreen: View {
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	// TODO: track last tab in user d's
-	@State private var selectedTab: Tabs = .favourites
+	@State private var selectedTab: Tabs = StoredSelectedTab.tab
 	@State private var previousTab: Tabs = .favourites
 	@State private var originalTabBeforeCategories: Tabs = .favourites
 	@State private var showCategoryMenu: Bool = false
@@ -62,7 +62,7 @@ struct MainTabScreen: View {
 	@State private var showTip = true
 
 	private var produce: [Produce] {
-		appCoordinator.produceFavourites()
+		appCoordinator.produceStore.allProduce
 	}
 
 	private var tab: some View {
@@ -146,6 +146,8 @@ struct MainTabScreen: View {
 				try? Tips.configure()
 				showTip = true
 			}
+
+			StoredSelectedTab.storeTab(newTab)
 		}
 		.alert("Title", isPresented: $showAlert) {
 			Text("Message")
@@ -164,7 +166,7 @@ struct MainTabScreen: View {
 						selectedPeriod: .none,
 						parentTab: selectedTab,
 						selectedCategory: $selectedCategory,
-						produce: appCoordinator.produceFavourites()
+						produce: appCoordinator.produceStore.favourites
 					)
 					.navigationTitle(tab.title)
 					.navigationBarTitleDisplayMode(.large)
@@ -221,5 +223,6 @@ struct MainTabScreen: View {
 @available(iOS 26, *)
 #Preview {
 	MainTabScreen()
-	.environmentObject(previewCoordinator)
+		.environmentObject(previewCoordinator)
 }
+

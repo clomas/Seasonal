@@ -14,7 +14,7 @@ import Foundation
 // Will be kept in sync with CloudKit
 public class LocalDataHandler {
 
-    // Get document directory
+	// Get document directory
     static fileprivate func getDocumentDirectory () -> URL {
 		if let url: URL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             return url
@@ -23,7 +23,7 @@ public class LocalDataHandler {
         }
     }
 
-    // Save any kind of codable object
+	// Save any kind of codable object
     static func save <T: Encodable> (_ object: T, with fileName: String) {
         let url: URL = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
 		let encoder: JSONEncoder = JSONEncoder()
@@ -41,7 +41,7 @@ public class LocalDataHandler {
         }
     }
 
-    // Load any kind of codable objects
+	// Load any kind of codable objects
     static func load <T: Decodable> (_ fileName: String, with type: T.Type) -> T {
         let url: URL = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -60,7 +60,7 @@ public class LocalDataHandler {
         }
     }
 
-    // Load data from a file
+	// Load data from a file
     static func loadData (_ fileName: String) -> Foundation.Data? {
         let url: URL = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
         if !FileManager.default.fileExists(atPath: url.path) {
@@ -73,7 +73,7 @@ public class LocalDataHandler {
         }
     }
 
-    // Load all files from a directory
+	// Load all files from a directory
     static func loadAll <T: Decodable> (_ type: T.Type) -> [T] {
         do {
 			let filePaths: [String] = try FileManager.default.contentsOfDirectory(atPath: getDocumentDirectory().path)
@@ -89,7 +89,7 @@ public class LocalDataHandler {
         }
     }
 
-    // Delete a file
+	// Delete a file
     static func delete (_ fileName: String) {
         let url: URL = getDocumentDirectory().appendingPathComponent(fileName, isDirectory: false)
 

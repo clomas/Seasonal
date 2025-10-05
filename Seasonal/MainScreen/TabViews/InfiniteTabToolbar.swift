@@ -86,7 +86,6 @@ struct InfiniteTabToolbar<Period: PeriodType>: ToolbarContent {
 }
 // TODO: Prevent reaching the end and changing the titles still
 
-
 private extension Collection where Element: PeriodType {
 		// TODO: Rename and remove fatal error? optional?
 	func element(atCyclicIndex index: Int) -> Element {

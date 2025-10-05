@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 @available(iOS 26, *)
 struct PeriodTabView<Period: PeriodType>: View {
@@ -22,38 +23,70 @@ struct PeriodTabView<Period: PeriodType>: View {
 	@State var selectedPeriod: Period
 	@State private var peekOffset: CGFloat = 0
 	@State private var scrollPosition: ScrollPosition = .init()
+	@State private var showTip: Bool = !GlobalSettings.swipeTipShown.swipe
 
-	private var periodScrollView: some View {
-		ZStack {
-			ScrollView(.horizontal) {
-				LazyHStack(spacing: 0) {
-					ForEach(allPeriods.indices, id: \.self) { index in
-						let period = allPeriods[index]
-						periodCell(for: period, index: index)
-							.id(index)
+	var body: some View {
+		NavigationStack {
+			periodScrollView
+				.overlay {
+					if showTip {
+						TipView(tip)
+							.transition(AnyTransition.opacity.combined(with: AnyTransition.scale))
+							.onAppear {
+								withAnimation(.easeInOut(duration: 2)) {
+									showTip = false
+								}
+							}
 					}
 				}
-				.scrollTargetLayout()
-			}
-			.scrollTargetBehavior(.viewAligned)
-			.scrollPosition($scrollPosition)
-			.onAppear {
-
-
-				selectedPeriod = .currentPeriod
-				let ogPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-				scrollPosition = ogPosition
-
-				DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-					withAnimation(.easeInOut(duration: 2)) {
-							// These values don't actually work, but I'll leave this here in case that changes
-						scrollPosition = .init(x: ogPosition.x! - 250)
+				.toolbar {
+					if featureToggleHelper.isEnabled(.useToolbarButtons) {
+						//						InfiniteTabToolbar<Period>(
+						//							selectedPeriod: $selectedPeriod,
+						//							scrollPosition: $scrollPosition
+						//						)
 					}
+				}
+		}
+	}
 
-					DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-						withAnimation(.easeInOut(duration: 1.5)) {
-							scrollPosition = .init(x: ogPosition.x! + 250)
+	private var periodScrollView: some View {
+		GeometryReader { proxy in
+			ZStack {
+				ScrollView(.horizontal) {
+					LazyHStack(spacing: 0) {
+						ForEach(allPeriods.indices, id: \.self) { index in
+							let period = allPeriods[index]
+							periodCell(for: period, index: index)
+								.id(index)
+						}
+					}
+					.scrollTargetLayout()
+				}
+				.scrollTargetBehavior(.viewAligned)
+				.scrollPosition($scrollPosition)
+				.onAppear {
+					selectedPeriod = .currentPeriod
+					let ogPosition: ScrollPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
+					let ogXPosition: CGFloat = ogPosition.x ?? 0
+					scrollPosition = ogPosition
 
+					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+						withAnimation(.easeInOut(duration: 2)) {
+							// These should be smaller "peek" values but they don't actually work
+							scrollPosition = .init(x: ogXPosition - proxy.size.width)
+						}
+
+						DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+							withAnimation(.easeInOut(duration: 1.5)) {
+								scrollPosition = .init(x: ogXPosition + proxy.size.width * 2)
+							}
+
+							DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
+								withAnimation(.easeInOut(duration: 2)) {
+									scrollPosition = .init(x: ogXPosition - proxy.size.width)
+								}
+							}
 						}
 					}
 				}
@@ -72,21 +105,8 @@ struct PeriodTabView<Period: PeriodType>: View {
 			selectedCategory: $selectedCategory
 		)
 		.containerRelativeFrame(.horizontal)
+		.environmentObject(appCoordinator)
 //		.padding(.top, -100)
-	}
-
-	var body: some View {
-		NavigationStack {
-			periodScrollView
-				.toolbar {
-					if featureToggleHelper.isEnabled(.useToolbarButtons) {
-//						InfiniteTabToolbar<Period>(
-//							selectedPeriod: $selectedPeriod,
-//							scrollPosition: $scrollPosition
-//						)
-					}
-				}
-		}
 	}
 }
 
@@ -98,4 +118,3 @@ struct PeriodTabView<Period: PeriodType>: View {
 			.environmentObject(FeatureToggleHelper())
 	}
 }
-

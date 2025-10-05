@@ -171,6 +171,7 @@ struct MainTabScreen: View {
 					.navigationTitle(tab.title)
 					.navigationBarTitleDisplayMode(.large)
 					.toolbarBackground(.hidden, for: .navigationBar)
+					.environmentObject(appCoordinator)
 				}
 			)
 		// Period - Months or Seasons

@@ -36,7 +36,7 @@ extension ProduceCategory {
 		case .fruit:     .fruit
 		case .vegetables: .vegetables
 		case .herbs:      .herbs
-				// extend if you have more
+		// extend if you have more
 		}
 	}
 }

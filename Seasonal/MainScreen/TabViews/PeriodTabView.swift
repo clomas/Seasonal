@@ -40,7 +40,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 				}
 		}
 	}
-	
+
 	private var periodScrollView: some View {
 		GeometryReader { _ in
 			ZStack {
@@ -72,7 +72,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 		selectedPeriod = .currentPeriod
 		baseIndex = selectedPeriod.index
 		selectedIndex = baseIndex
-		
+
 		isPeeking = true
 
 		peekTask?.cancel()

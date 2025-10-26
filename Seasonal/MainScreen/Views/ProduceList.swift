@@ -87,7 +87,7 @@ struct ProduceList<Period: PeriodType>: View {
     private var navigationTitleText: String {
         switch parentTab {
         case .period(_):
-            return selectedPeriod.name
+            selectedPeriod.name
         default:
             parentTab.title
         }

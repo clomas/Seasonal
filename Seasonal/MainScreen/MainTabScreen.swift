@@ -155,7 +155,6 @@ struct MainTabScreen: View {
 		//			StoredSelectedTab.storeTab(newTab)
 		//		}
 		.onChange(of: selectedTab) { oldTab, newTab in
-			// Prevent feedback loop if same tab is re-selected programmatically
 			guard oldTab != newTab else { return }
 
 			switch newTab {
@@ -171,7 +170,6 @@ struct MainTabScreen: View {
 					}
 				}()
 
-				// Only update selectedTab if necessary — avoids recursive triggering
 				if currentPeriod != periodToSearch {
 					DispatchQueue.main.async {
 						selectedTab = .search(periodToSearch)
@@ -197,7 +195,6 @@ struct MainTabScreen: View {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
-
 		.overlay {
 			if showTip {
 				ZStack {
@@ -268,7 +265,6 @@ struct MainTabScreen: View {
 					.environmentObject(appCoordinator)
 				}
 			)
-			// Period - Months or Seasons
 		case .period(let type):
 			if type.is(Months.self) {
 				return periodTabView(periodType: Months.self, period: Months.currentPeriod, tab: tab)

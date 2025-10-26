@@ -11,22 +11,22 @@ import TipKit
 
 @available(iOS 26, *)
 struct PeriodTabView<Period: PeriodType>: View {
-	
+
 	@EnvironmentObject var appCoordinator: AppCoordinator
 	@EnvironmentObject var featureToggleHelper: FeatureToggleHelper
-	
+
 	let selectedTab: MainTabScreen.Tabs
 	private let allPeriods: [Period] = Period.allCases
-	
+
 	@Binding var selectedCategory: ProduceCategory
-	
+
 	@State var selectedPeriod: Period
 	@State private var peekOffset: CGFloat = 0
 	@State private var selectedIndex: Int?
 	@State private var baseIndex: Int = 0
 	@State private var isPeeking: Bool = false
 	@State private var peekTask: Task<Void, Never>?
-	
+
 	var body: some View {
 		NavigationStack {
 			periodScrollView
@@ -67,40 +67,40 @@ struct PeriodTabView<Period: PeriodType>: View {
 			}
 		}
 	}
-	
+
 	private func performIntroAnimation() {
 		selectedPeriod = .currentPeriod
 		baseIndex = selectedPeriod.index
 		selectedIndex = baseIndex
 		
 		isPeeking = true
-		
+
 		peekTask?.cancel()
 		let periodCount = allPeriods.count
 		peekTask = Task { @MainActor in
 			func clamp(_ i: Int) -> Int {
 				min(max(i, 0), periodCount - 1)
 			}
-			
+
 			try? await Task.sleep(nanoseconds: 500_000_000)
 			withAnimation(.easeInOut(duration: 2)) {
 				selectedIndex = clamp(baseIndex - 1)
 			}
-			
+
 			try? await Task.sleep(nanoseconds: 2_500_000_000)
 			withAnimation(.easeInOut(duration: 1.5)) {
 				selectedIndex = clamp(baseIndex + 1)
 			}
-			
+
 			try? await Task.sleep(nanoseconds: 2_000_000_000)
 			withAnimation(.easeInOut(duration: 2)) {
 				selectedIndex = baseIndex
 			}
-			
+
 			isPeeking = false
 		}
 	}
-	
+
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
 			selectedPeriod: period,

@@ -89,7 +89,7 @@ struct ProduceList<Period: PeriodType>: View {
         case .period(_):
             return selectedPeriod.name
         default:
-            return parentTab.title
+            parentTab.title
         }
     }
 }

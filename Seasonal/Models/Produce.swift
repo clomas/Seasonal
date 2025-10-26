@@ -7,6 +7,7 @@
 //
 
 enum ProduceCacheKey: Hashable {
+	case allProduce
 	case favourites
 	case month(Months)
 	case season(Seasons)

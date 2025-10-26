@@ -13,7 +13,7 @@
 let previewCoordinator: AppCoordinator = {
 	let coord = AppCoordinator(window: .create())
 	coord.state = .locationNotFound
-	coord.produceStore.allProduce = [
+	coord.produceStore.loadMockData([
 		Produce(
 			id: 0,
 			name: "Apples",
@@ -134,8 +134,7 @@ let previewCoordinator: AppCoordinator = {
 			seasons: [.autumn, .spring],
 			liked: true
 		),
-	]
+	])
 	return coord
 }()
-
 #endif

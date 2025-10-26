@@ -15,6 +15,7 @@ enum GlobalSettings {
 	@UserDefault("hasBeenLaunchedBeforeFlag", defaultValue: App(launchedBefore: false)) static var hasBeenLaunchedBeforeFlag: App
 	@UserDefault("selectedTab", defaultValue: .favourites) static var selectedTab: StoredSelectedTab
 	@UserDefault("swipeTipShown", defaultValue: TipShown(swipe: false)) static var swipeTipShown: TipShown
+	@UserDefault("produceCacheLastAppVersion", defaultValue: "") static var produceCacheAppVersion: String
 }
 
 @MainActor

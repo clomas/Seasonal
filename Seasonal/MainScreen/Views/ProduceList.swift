@@ -18,29 +18,39 @@ struct ProduceList<Period: PeriodType>: View {
 
 	@State private var produce: [Produce] = []
 	private let initialProduce: [Produce]?
+	var searchText: String = ""
+
+	var filteredProduce: [Produce] {
+		guard !searchText.isEmpty else { return produce }
+		return produce.filter {
+			$0.name?.localizedCaseInsensitiveContains(searchText) == true
+		}
+	}
 
 	init(
 		selectedPeriod: Period,
 		parentTab: MainTabScreen.Tabs,
 		selectedCategory: Binding<ProduceCategory>,
-		produce: [Produce]? = nil
+		produce: [Produce]? = nil,
+		searchText: String = ""
 	) {
 		self.selectedPeriod = selectedPeriod
 		self.parentTab = parentTab
 		self._selectedCategory = selectedCategory
 		self.initialProduce = produce
+		self.searchText = searchText
 	}
 
 	var body: some View {
 		ZStack {
 			Colour.background.ignoresSafeArea()
 
-			if produce.isEmpty {
+			if filteredProduce.isEmpty {
 				emptyProduceListView
 					.padding(.bottom, .largePadding)
 			} else {
-				List($produce, id: \.id) { $item in
-					ProduceListRow(produce: $item,)
+				List(filteredProduce, id: \.id) { item in
+					ProduceListRow(produce: .constant(item))
 						.listRowSeparator(.hidden)
 						.listRowInsets(.topListRowInset)
 						.listRowBackground(Color.clear)
@@ -60,6 +70,8 @@ struct ProduceList<Period: PeriodType>: View {
 				produce = appCoordinator.produceStore.byPeriod(selectedPeriod)
 			}
 		}
+		.navigationTitle(navigationTitleText)
+		.navigationBarTitleDisplayMode(.large)
 	}
 
 	private var emptyProduceListView: some View {
@@ -71,4 +83,13 @@ struct ProduceList<Period: PeriodType>: View {
 			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: selectedPeriod.nameLowercased))
 		}
 	}
+
+    private var navigationTitleText: String {
+        switch parentTab {
+        case .period(_):
+            return selectedPeriod.name
+        default:
+            return parentTab.title
+        }
+    }
 }

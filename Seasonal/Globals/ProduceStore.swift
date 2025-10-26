@@ -12,26 +12,32 @@ import SwiftUI
 @available(iOS 26, *)
 final class ProduceStore: ObservableObject {
 	@Published private(set) var produce: [Int: Produce] = [:]
+	@Published private(set) var allProduce: [Produce] = []
+
 	private let cache = ProduceCache()
 
-	lazy var allProduce: [Produce] = Array(produce.values)
+	// MARK: - Derived views
 
 	var favourites: [Produce] {
-		cache.favourites(from: Array(produce.values))
+		cache.favourites(from: allProduce)
 	}
 
 	func byPeriod<Period: PeriodType>(_ period: Period) -> [Produce] {
 		switch period {
-		case let month as Months: return cache.byMonth(month, from: Array(produce.values))
-		case let season as Seasons: return cache.bySeason(season, from: Array(produce.values))
-		default: return []
+		case let month as Months:
+			return cache.byMonth(month, from: allProduce)
+		case let season as Seasons:
+			return cache.bySeason(season, from: allProduce)
+		default:
+			return []
 		}
 	}
 
-	func toggleLiked(for id: Int) {
-		guard let item: Produce = produce[id] else { return }
+	// MARK: - Toggle Likes
 
-		let updatedLiked: Bool = !item.liked
+	func toggleLiked(for id: Int) {
+		guard let item = produce[id] else { return }
+		let updatedLiked = !item.liked
 
 		produce[id] = Produce(
 			id: item.id,
@@ -44,17 +50,30 @@ final class ProduceStore: ObservableObject {
 			liked: updatedLiked
 		)
 
-		updateCache(produce[id])
-		syncToCloudKit(id: id, liked: updatedLiked)
+		cache.favourites(from: Array(produce.values))
+
+		Task { await syncLikeToCloudKit(id: id, liked: updatedLiked) }
 	}
 
+	// MARK: - Fetch Produce
+
 	func fetchFromCloudKit(for location: StateLocation) async -> Bool {
+		let cached = cache.allProduce(from: [])
+		if !cached.isEmpty {
+			allProduce = cached
+			produce = Dictionary(uniqueKeysWithValues: cached.map { ($0.id, $0) })
+			return true
+		}
+
 		do {
 			let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
 			switch result {
 			case .success(let produceList):
-				let dict = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
-				await MainActor.run { self.produce = dict }
+				produce = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
+				allProduce = produceList.sorted { ($0.name ?? "") < ($1.name ?? "") }
+
+				cache.allProduce(from: produceList)
+
 				return true
 			case .failure:
 				return false
@@ -64,11 +83,18 @@ final class ProduceStore: ObservableObject {
 		}
 	}
 
-	private func updateCache(_ produce: Produce?) {
-			// write to your cache (e.g. UserDefaults, CoreData, file, etc.)
-	}
+	// MARK: - CloudKit Sync
 
-	private func syncToCloudKit(id: Int, liked: Bool) {
-			// CloudKit update call
+	private func syncLikeToCloudKit(id: Int, liked: Bool) async {
+		await ProduceServicesManager.updateLike(id: id, liked: liked)
 	}
 }
+#if DEBUG
+@available(iOS 26, *)
+extension ProduceStore {
+	func loadMockData(_ data: [Produce]) {
+		produce = Dictionary(uniqueKeysWithValues: data.map { ($0.id, $0) })
+		allProduce = data
+	}
+}
+#endif

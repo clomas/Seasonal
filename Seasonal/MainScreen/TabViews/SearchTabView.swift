@@ -10,13 +10,12 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct SearchTabView<Period: PeriodType>: View {
-
 	let produce: [Produce]
 	let selectedTab: MainTabScreen.Tabs
-
 	let selectedPeriod: Period
 
 	@Binding var selectedCategory: ProduceCategory
+	@State private var searchText = ""
 
 	var body: some View {
 		NavigationStack {
@@ -25,7 +24,8 @@ struct SearchTabView<Period: PeriodType>: View {
 					selectedPeriod: selectedPeriod,
 					parentTab: selectedTab,
 					selectedCategory: $selectedCategory,
-					produce: produce
+					produce: produce,
+					searchText: searchText
 				)
 				.environmentObject(ProduceStore())
 			} else {
@@ -36,6 +36,11 @@ struct SearchTabView<Period: PeriodType>: View {
 				)
 			}
 		}
+		.searchable(
+			text: $searchText,
+			placement: .navigationBarDrawer(displayMode: .automatic),
+			prompt: "Search produce"
+		)
 	}
 }
 

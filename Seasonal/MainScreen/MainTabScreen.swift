@@ -1,10 +1,10 @@
-	//
-	//  MainTabScreen.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 30/6/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  MainTabScreen.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 30/6/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 import TipKit
@@ -59,7 +59,18 @@ struct MainTabScreen: View {
 	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
 	@State private var isSearching = false
-	@State private var showTip = true
+	@State private var showTip: Bool = !GlobalSettings.swipeTipShown.swipe
+
+	private var tip: SwipeOnboardingTip {
+		if case .period(let period) = selectedTab {
+			if period.is(Months.self) {
+				return SwipeOnboardingTip(context: "months")
+			} else if period.is(Seasons.self) {
+				return SwipeOnboardingTip(context: "seasons")
+			}
+		}
+		return SwipeOnboardingTip(context: "default")
+	}
 
 	private var produce: [Produce] {
 		appCoordinator.produceStore.allProduce
@@ -97,7 +108,7 @@ struct MainTabScreen: View {
 				.popoverTip(
 					SwipeOnboardingTip(context: selectedTab.title.lowercased()),
 					isPresented: $showTip,
-//					attachmentAnchor: .point(.center),
+					//					attachmentAnchor: .point(.center),
 					arrowEdges: .horizontal
 				)
 			TabView(selection: $selectedTab) {
@@ -120,10 +131,43 @@ struct MainTabScreen: View {
 		// This onChange triggers when the selectedTab changes.
 		// It updates showCategoryMenu and previousTab accordingly.
 		// WARNING: It sets selectedTab inside the block, which may immediately re-trigger this onChange, potentially causing a feedback loop or excessive updates.
+//		.onChange(of: selectedTab) { oldTab, newTab in
+//			switch newTab {
+//			case .categories:
+//				showCategoryMenu.toggle()
+//			case .search(let currentPeriod):
+//				let periodToSearch: AnyPeriod = {
+//					switch previousTab {
+//					case .period(let period): return period
+//					case .search(let period): return period
+//					default: return currentPeriod
+//					}
+//				}()
+//				if currentPeriod != periodToSearch {
+//					selectedTab = .search(periodToSearch)
+//					return
+//				}
+//				previousTab = newTab
+//				showCategoryMenu = false
+//			default:
+//				previousTab = newTab
+//				showCategoryMenu = false
+//
+//				try? Tips.resetDatastore()
+//				try? Tips.configure()
+//				showTip = true
+//			}
+//
+//			StoredSelectedTab.storeTab(newTab)
+//		}
 		.onChange(of: selectedTab) { oldTab, newTab in
+			// Prevent feedback loop if same tab is re-selected programmatically
+			guard oldTab != newTab else { return }
+
 			switch newTab {
 			case .categories:
 				showCategoryMenu.toggle()
+
 			case .search(let currentPeriod):
 				let periodToSearch: AnyPeriod = {
 					switch previousTab {
@@ -132,12 +176,18 @@ struct MainTabScreen: View {
 					default: return currentPeriod
 					}
 				}()
+
+				// Only update selectedTab if necessary — avoids recursive triggering
 				if currentPeriod != periodToSearch {
-					selectedTab = .search(periodToSearch)
+					DispatchQueue.main.async {
+						selectedTab = .search(periodToSearch)
+					}
 					return
 				}
+
 				previousTab = newTab
 				showCategoryMenu = false
+
 			default:
 				previousTab = newTab
 				showCategoryMenu = false
@@ -153,6 +203,34 @@ struct MainTabScreen: View {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
+		.overlay {
+			if showTip {
+				dimBackgroundOverlay()
+				tipViewOverlay()
+			}
+		}
+	}
+
+	// MARK: Overlay helpers
+
+	private func dimBackgroundOverlay() -> some View {
+		Color.black.opacity(0.3)
+			.ignoresSafeArea()
+			.transition(.opacity)
+			.zIndex(9)
+	}
+
+	private func tipViewOverlay() -> some View {
+		TipView(tip)
+			.transition(.opacity.combined(with: .scale))
+			.zIndex(10)
+			.task {
+				try? await Task.sleep(for: .seconds(2))
+				withAnimation(.easeInOut(duration: 0.5)) {
+					showTip = false
+					//					GlobalSettings.swipeTipShown.swipe = true
+				}
+			}
 	}
 
 	// MARK: Main tab logic
@@ -174,7 +252,7 @@ struct MainTabScreen: View {
 					.environmentObject(appCoordinator)
 				}
 			)
-		// Period - Months or Seasons
+			// Period - Months or Seasons
 		case .period(let type):
 			if type.is(Months.self) {
 				return periodTabView(periodType: Months.self, period: Months.currentPeriod, tab: tab)
@@ -199,13 +277,13 @@ struct MainTabScreen: View {
 
 	private func periodTabView<P: PeriodType>(periodType: P.Type, period: P, tab: MainTabScreen.Tabs) -> AnyView {
 		AnyView(
-//			TransparentBackgroundNavigationStack {
-				PeriodTabView<P>(
-					selectedTab: tab,
-					selectedCategory: $selectedCategory,
-					selectedPeriod: period
-				)
-//			}
+			//			TransparentBackgroundNavigationStack {
+			PeriodTabView<P>(
+				selectedTab: tab,
+				selectedCategory: $selectedCategory,
+				selectedPeriod: period
+			)
+			//			}
 		)
 	}
 
@@ -226,4 +304,3 @@ struct MainTabScreen: View {
 	MainTabScreen()
 		.environmentObject(previewCoordinator)
 }
-

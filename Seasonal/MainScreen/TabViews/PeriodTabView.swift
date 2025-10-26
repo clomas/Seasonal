@@ -11,34 +11,25 @@ import TipKit
 
 @available(iOS 26, *)
 struct PeriodTabView<Period: PeriodType>: View {
-
+	
 	@EnvironmentObject var appCoordinator: AppCoordinator
 	@EnvironmentObject var featureToggleHelper: FeatureToggleHelper
-
+	
 	let selectedTab: MainTabScreen.Tabs
 	private let allPeriods: [Period] = Period.allCases
-
+	
 	@Binding var selectedCategory: ProduceCategory
-
+	
 	@State var selectedPeriod: Period
 	@State private var peekOffset: CGFloat = 0
-	@State private var scrollPosition: ScrollPosition = .init()
-	@State private var showTip: Bool = !GlobalSettings.swipeTipShown.swipe
-
+	@State private var selectedIndex: Int?
+	@State private var baseIndex: Int = 0
+	@State private var isPeeking: Bool = false
+	@State private var peekTask: Task<Void, Never>?
+	
 	var body: some View {
 		NavigationStack {
 			periodScrollView
-				.overlay {
-					if showTip {
-						TipView(tip)
-							.transition(AnyTransition.opacity.combined(with: AnyTransition.scale))
-							.onAppear {
-								withAnimation(.easeInOut(duration: 2)) {
-									showTip = false
-								}
-							}
-					}
-				}
 				.toolbar {
 					if featureToggleHelper.isEnabled(.useToolbarButtons) {
 						//						InfiniteTabToolbar<Period>(
@@ -49,9 +40,9 @@ struct PeriodTabView<Period: PeriodType>: View {
 				}
 		}
 	}
-
+	
 	private var periodScrollView: some View {
-		GeometryReader { proxy in
+		GeometryReader { _ in
 			ZStack {
 				ScrollView(.horizontal) {
 					LazyHStack(spacing: 0) {
@@ -64,40 +55,52 @@ struct PeriodTabView<Period: PeriodType>: View {
 					.scrollTargetLayout()
 				}
 				.scrollTargetBehavior(.viewAligned)
-				.scrollPosition($scrollPosition)
+				.scrollPosition(id: $selectedIndex)
+				.disabled(isPeeking)
 				.onAppear {
-					selectedPeriod = .currentPeriod
-					let ogPosition: ScrollPosition = ScrollPosition(x: CGFloat(selectedPeriod.index) * UIScreen.main.bounds.width)
-					let ogXPosition: CGFloat = ogPosition.x ?? 0
-					scrollPosition = ogPosition
-
-					DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						withAnimation(.easeInOut(duration: 2)) {
-							// These should be smaller "peek" values but they don't actually work
-							scrollPosition = .init(x: ogXPosition - proxy.size.width)
-						}
-
-						DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-							withAnimation(.easeInOut(duration: 1.5)) {
-								scrollPosition = .init(x: ogXPosition + proxy.size.width * 2)
-							}
-
-							DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
-								withAnimation(.easeInOut(duration: 2)) {
-									scrollPosition = .init(x: ogXPosition - proxy.size.width)
-								}
-							}
-						}
-					}
+					performIntroAnimation()
+				}
+				.onDisappear {
+					peekTask?.cancel()
+					isPeeking = false
 				}
 			}
 		}
 	}
-
-	private var tip: SwipeOnboardingTip {
-		SwipeOnboardingTip(context: selectedPeriod.nameLowercased)
+	
+	private func performIntroAnimation() {
+		selectedPeriod = .currentPeriod
+		baseIndex = selectedPeriod.index
+		selectedIndex = baseIndex
+		
+		isPeeking = true
+		
+		peekTask?.cancel()
+		let periodCount = allPeriods.count
+		peekTask = Task { @MainActor in
+			func clamp(_ i: Int) -> Int {
+				min(max(i, 0), periodCount - 1)
+			}
+			
+			try? await Task.sleep(nanoseconds: 500_000_000)
+			withAnimation(.easeInOut(duration: 2)) {
+				selectedIndex = clamp(baseIndex - 1)
+			}
+			
+			try? await Task.sleep(nanoseconds: 2_500_000_000)
+			withAnimation(.easeInOut(duration: 1.5)) {
+				selectedIndex = clamp(baseIndex + 1)
+			}
+			
+			try? await Task.sleep(nanoseconds: 2_000_000_000)
+			withAnimation(.easeInOut(duration: 2)) {
+				selectedIndex = baseIndex
+			}
+			
+			isPeeking = false
+		}
 	}
-
+	
 	private func periodCell(for period: Period, index: Int) -> some View {
 		ProduceList(
 			selectedPeriod: period,
@@ -106,7 +109,7 @@ struct PeriodTabView<Period: PeriodType>: View {
 		)
 		.containerRelativeFrame(.horizontal)
 		.environmentObject(appCoordinator)
-//		.padding(.top, -100)
+		//		.padding(.top, -100)
 	}
 }
 

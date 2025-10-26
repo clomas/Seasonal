@@ -105,12 +105,6 @@ struct MainTabScreen: View {
 	var body: some View {
 		ZStack {
 			Color.clear.frame(width: 1, height: 200)
-				.popoverTip(
-					SwipeOnboardingTip(context: selectedTab.title.lowercased()),
-					isPresented: $showTip,
-					//					attachmentAnchor: .point(.center),
-					arrowEdges: .horizontal
-				)
 			TabView(selection: $selectedTab) {
 				Tab("Favourites", systemImage: "heart", value: .favourites) { tab }
 				Tab("Months", systemImage: "calendar", value: .period(AnyPeriod(Months.currentPeriod))) { tab }
@@ -131,35 +125,35 @@ struct MainTabScreen: View {
 		// This onChange triggers when the selectedTab changes.
 		// It updates showCategoryMenu and previousTab accordingly.
 		// WARNING: It sets selectedTab inside the block, which may immediately re-trigger this onChange, potentially causing a feedback loop or excessive updates.
-//		.onChange(of: selectedTab) { oldTab, newTab in
-//			switch newTab {
-//			case .categories:
-//				showCategoryMenu.toggle()
-//			case .search(let currentPeriod):
-//				let periodToSearch: AnyPeriod = {
-//					switch previousTab {
-//					case .period(let period): return period
-//					case .search(let period): return period
-//					default: return currentPeriod
-//					}
-//				}()
-//				if currentPeriod != periodToSearch {
-//					selectedTab = .search(periodToSearch)
-//					return
-//				}
-//				previousTab = newTab
-//				showCategoryMenu = false
-//			default:
-//				previousTab = newTab
-//				showCategoryMenu = false
-//
-//				try? Tips.resetDatastore()
-//				try? Tips.configure()
-//				showTip = true
-//			}
-//
-//			StoredSelectedTab.storeTab(newTab)
-//		}
+		//		.onChange(of: selectedTab) { oldTab, newTab in
+		//			switch newTab {
+		//			case .categories:
+		//				showCategoryMenu.toggle()
+		//			case .search(let currentPeriod):
+		//				let periodToSearch: AnyPeriod = {
+		//					switch previousTab {
+		//					case .period(let period): return period
+		//					case .search(let period): return period
+		//					default: return currentPeriod
+		//					}
+		//				}()
+		//				if currentPeriod != periodToSearch {
+		//					selectedTab = .search(periodToSearch)
+		//					return
+		//				}
+		//				previousTab = newTab
+		//				showCategoryMenu = false
+		//			default:
+		//				previousTab = newTab
+		//				showCategoryMenu = false
+		//
+		//				try? Tips.resetDatastore()
+		//				try? Tips.configure()
+		//				showTip = true
+		//			}
+		//
+		//			StoredSelectedTab.storeTab(newTab)
+		//		}
 		.onChange(of: selectedTab) { oldTab, newTab in
 			// Prevent feedback loop if same tab is re-selected programmatically
 			guard oldTab != newTab else { return }
@@ -203,10 +197,32 @@ struct MainTabScreen: View {
 			Text("Message")
 			Button("OK", role: .cancel) { }
 		}
+
 		.overlay {
 			if showTip {
-				dimBackgroundOverlay()
-				tipViewOverlay()
+				ZStack {
+					Color.black.opacity(0.45)
+						.ignoresSafeArea()
+						.transition(.opacity)
+					TipView(tip)
+						.frame(maxWidth: 280)
+						.padding()
+						.transition(.opacity.combined(with: .scale))
+				}
+			}
+		}
+		.onAppear {
+			if showTip {
+				try? Tips.resetDatastore()
+				try? Tips.configure()
+			}
+		}
+		.task(id: showTip) {
+			guard showTip else { return }
+			try? await Task.sleep(for: .seconds(8))
+			withAnimation(.easeInOut(duration: 0.5)) {
+				showTip = false
+				GlobalSettings.swipeTipShown = TipShown(swipe: true)
 			}
 		}
 	}
@@ -304,3 +320,4 @@ struct MainTabScreen: View {
 	MainTabScreen()
 		.environmentObject(previewCoordinator)
 }
+

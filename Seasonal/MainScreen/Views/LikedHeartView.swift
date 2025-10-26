@@ -22,8 +22,8 @@ struct GradientHeartView: View {
 					endRadius: 65
 				)
 			)
-			.shadow(color: .red.opacity(0.3), radius: 14, x: -5, y: 0)
-			.shadow(color: .gray.opacity(0.3), radius: 14, x: 10, y: 10)
+			.shadow(color: .red.opacity(0.3), radius: 6, x: -5, y: 0)
+			.shadow(color: .gray.opacity(0.3), radius: 5, x: 3, y: 10)
 	}
 }
 

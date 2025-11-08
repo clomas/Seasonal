@@ -10,14 +10,16 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct ProduceList<Period: PeriodType>: View {
+	private let initialProduce: [Produce]?
+
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@State var selectedPeriod: Period
 	@State var parentTab: MainTabScreen.Tabs
+	@State private var produce: [Produce] = []
+
 	@Binding var selectedCategory: ProduceCategory
 
-	@State private var produce: [Produce] = []
-	private let initialProduce: [Produce]?
 	var searchText: String = ""
 
 	var filteredProduce: [Produce] {
@@ -61,6 +63,9 @@ struct ProduceList<Period: PeriodType>: View {
 				.safeAreaInset(edge: .bottom) {
 					Color.clear.frame(height: .largePadding)
 				}
+				.safeAreaInset(edge: .top) {
+					Color.clear.frame(height: 100)
+				}
 			}
 		}
 		.onAppear {
@@ -70,8 +75,6 @@ struct ProduceList<Period: PeriodType>: View {
 				produce = appCoordinator.produceStore.byPeriod(selectedPeriod)
 			}
 		}
-		.navigationTitle(navigationTitleText)
-		.navigationBarTitleDisplayMode(.large)
 	}
 
 	private var emptyProduceListView: some View {

@@ -65,7 +65,6 @@
 		27AE9A1E29E2518300C98823 /* MonthOld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27AE9A1D29E2518300C98823 /* MonthOld.swift */; };
 		27B4E45B22D99930003D51B8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B4E44D22D99930003D51B8 /* CoreLocation.framework */; };
 		27BF31CA2E56A4F2004795DB /* PreviewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF31C92E56A4ED004795DB /* PreviewConstants.swift */; };
-		27BF31CE2E56C12F004795DB /* TransparentBackgroundNavigationStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */; };
 		27E1379E25E219DC003A0BFC /* MainViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E1379D25E219DC003A0BFC /* MainViewCoordinator.swift */; };
 		27E137AB25E51CB6003A0BFC /* SeasonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AA25E51CB6003A0BFC /* SeasonsViewModel.swift */; };
 		27E137AD25E51D66003A0BFC /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E137AC25E51D65003A0BFC /* MainViewModel.swift */; };
@@ -205,7 +204,6 @@
 		27AE9A1D29E2518300C98823 /* MonthOld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthOld.swift; sourceTree = "<group>"; };
 		27B4E44D22D99930003D51B8 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		27BF31C92E56A4ED004795DB /* PreviewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewConstants.swift; sourceTree = "<group>"; };
-		27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentBackgroundNavigationStack.swift; sourceTree = "<group>"; };
 		27E1379D25E219DC003A0BFC /* MainViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewCoordinator.swift; sourceTree = "<group>"; };
 		27E137AA25E51CB6003A0BFC /* SeasonsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonsViewModel.swift; sourceTree = "<group>"; };
 		27E137AC25E51D65003A0BFC /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -528,7 +526,6 @@
 			isa = PBXGroup;
 			children = (
 				27F9E2592E5F265400D999EC /* SwipeOnboardingTip.swift */,
-				27BF31CD2E56C12D004795DB /* TransparentBackgroundNavigationStack.swift */,
 				27949C0F2E35EE9E00B56E3E /* ProduceList.swift */,
 				272C7A1A2E220DC200661BAA /* EmptyHeartView.swift */,
 				272C7A222E23788800661BAA /* FloatingSearchButton.swift */,
@@ -900,7 +897,6 @@
 				2795AA91222D0A0F009CE7D3 /* MonthPickerCell.swift in Sources */,
 				2790D8462E54144A00119F87 /* ProduceCategory.swift in Sources */,
 				27FACED42E558137000E4A75 /* ProduceOld.swift in Sources */,
-				27BF31CE2E56C12F004795DB /* TransparentBackgroundNavigationStack.swift in Sources */,
 				277A6836263A9F1700E4389A /* Extension-Month.swift in Sources */,
 				27949E7D2625A5D5007F3930 /* MonthPickerViewController.swift in Sources */,
 				276DDC4F237671AC00929E77 /* LocalDataHandler.swift in Sources */,

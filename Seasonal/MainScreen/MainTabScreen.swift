@@ -28,7 +28,7 @@ struct MainTabScreen: View {
 				} else if let seasons = period.cast(Seasons.self) {
 					seasons.typeName
 				} else {
-					"Unknown"
+					""
 				}
 			case .categories:
 				"Categories"
@@ -59,7 +59,7 @@ struct MainTabScreen: View {
 	@State private var searchString: String = ""
 	@State private var showAlert: Bool = false
 	@State private var isSearching = false
-	@State private var showTip: Bool = !GlobalSettings.swipeTipShown.swipe
+	@State private var showTip: Bool = true//!GlobalSettings.swipeTipShown.swipe
 
 	private var tip: SwipeOnboardingTip {
 		if case .period(let period) = selectedTab {
@@ -121,39 +121,6 @@ struct MainTabScreen: View {
 			}
 			.tint(Colour.inSeason)
 		}
-
-		// This onChange triggers when the selectedTab changes.
-		// It updates showCategoryMenu and previousTab accordingly.
-		// WARNING: It sets selectedTab inside the block, which may immediately re-trigger this onChange, potentially causing a feedback loop or excessive updates.
-		//		.onChange(of: selectedTab) { oldTab, newTab in
-		//			switch newTab {
-		//			case .categories:
-		//				showCategoryMenu.toggle()
-		//			case .search(let currentPeriod):
-		//				let periodToSearch: AnyPeriod = {
-		//					switch previousTab {
-		//					case .period(let period): return period
-		//					case .search(let period): return period
-		//					default: return currentPeriod
-		//					}
-		//				}()
-		//				if currentPeriod != periodToSearch {
-		//					selectedTab = .search(periodToSearch)
-		//					return
-		//				}
-		//				previousTab = newTab
-		//				showCategoryMenu = false
-		//			default:
-		//				previousTab = newTab
-		//				showCategoryMenu = false
-		//
-		//				try? Tips.resetDatastore()
-		//				try? Tips.configure()
-		//				showTip = true
-		//			}
-		//
-		//			StoredSelectedTab.storeTab(newTab)
-		//		}
 		.onChange(of: selectedTab) { oldTab, newTab in
 			guard oldTab != newTab else { return }
 
@@ -171,9 +138,9 @@ struct MainTabScreen: View {
 				}()
 
 				if currentPeriod != periodToSearch {
-					DispatchQueue.main.async {
+//					DispatchQueue.main.async {
 						selectedTab = .search(periodToSearch)
-					}
+//					}
 					return
 				}
 
@@ -198,11 +165,11 @@ struct MainTabScreen: View {
 		.overlay {
 			if showTip {
 				ZStack {
-					Color.black.opacity(0.45)
+					Color.black.opacity(0.15)
 						.ignoresSafeArea()
 						.transition(.opacity)
 					TipView(tip)
-						.frame(maxWidth: 280)
+						.frame(maxWidth: 350)
 						.padding()
 						.transition(.opacity.combined(with: .scale))
 				}
@@ -216,7 +183,7 @@ struct MainTabScreen: View {
 		}
 		.task(id: showTip) {
 			guard showTip else { return }
-			try? await Task.sleep(for: .seconds(8))
+//			try? await Task.sleep(for: .seconds(8))
 			withAnimation(.easeInOut(duration: 0.5)) {
 				showTip = false
 				GlobalSettings.swipeTipShown = TipShown(swipe: true)
@@ -224,24 +191,16 @@ struct MainTabScreen: View {
 		}
 	}
 
-	// MARK: Overlay helpers
-
-	private func dimBackgroundOverlay() -> some View {
-		Color.black.opacity(0.3)
-			.ignoresSafeArea()
-			.transition(.opacity)
-			.zIndex(9)
-	}
-
 	private func tipViewOverlay() -> some View {
 		TipView(tip)
 			.transition(.opacity.combined(with: .scale))
 			.zIndex(10)
 			.task {
-				try? await Task.sleep(for: .seconds(2))
+//				try? await Task.sleep(for: .seconds(2))
 				withAnimation(.easeInOut(duration: 0.5)) {
 					showTip = false
 					//					GlobalSettings.swipeTipShown.swipe = true
+					// TODO: set to user d
 				}
 			}
 	}
@@ -252,17 +211,14 @@ struct MainTabScreen: View {
 		switch tab {
 		case .favourites:
 			return AnyView(
-				NavigationView {
+				CustomNavigationView(title: tab.title) {
 					ProduceList<NoPeriod>(
 						selectedPeriod: .none,
 						parentTab: selectedTab,
 						selectedCategory: $selectedCategory,
 						produce: appCoordinator.produceStore.favourites
 					)
-					.navigationTitle(tab.title)
-					.navigationBarTitleDisplayMode(.large)
 					.toolbarBackground(.hidden, for: .navigationBar)
-					.environmentObject(appCoordinator)
 				}
 			)
 		case .period(let type):
@@ -289,13 +245,11 @@ struct MainTabScreen: View {
 
 	private func periodTabView<P: PeriodType>(periodType: P.Type, period: P, tab: MainTabScreen.Tabs) -> AnyView {
 		AnyView(
-			//			TransparentBackgroundNavigationStack {
 			PeriodTabView<P>(
 				selectedTab: tab,
 				selectedCategory: $selectedCategory,
 				selectedPeriod: period
 			)
-			//			}
 		)
 	}
 

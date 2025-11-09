@@ -61,7 +61,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 	let featureToggleHelper = FeatureToggleHelper()
 
 	func start() {
-			let swiftUIView = RootView()
+			let swiftUIView = RootScreen()
 				.environmentObject(self)
 				.environmentObject(featureToggleHelper)
 			window?.rootViewController = UIHostingController(rootView: swiftUIView)

@@ -17,7 +17,7 @@ import SwiftUI
 // Cache everything, test cache
 
 @available(iOS 26, *)
-struct RootView: View {
+struct RootScreen: View {
 	@EnvironmentObject var coordinator: AppCoordinator
 
 	var body: some View {

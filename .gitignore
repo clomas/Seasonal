@@ -4,6 +4,8 @@
 
 ### Xcode Patch ###
 *.xcodeproj/*
+*.xcuserdata/*
+*.xcuserstate/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcodeproj/project.xcworkspace/
@@ -11,4 +13,4 @@
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-/Seasonal.xcodeproj/xcuserdata
+.DS_Store

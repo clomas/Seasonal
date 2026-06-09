@@ -26,16 +26,12 @@ enum StoredSelectedTab: Codable {
 		switch tab {
 		case .favourites:
 			GlobalSettings.selectedTab = .favourites
-
-		case .period(let anyPeriod):
-			if let _ = anyPeriod.cast(Months.self) {
-				GlobalSettings.selectedTab = .months
-			} else if let _ = anyPeriod.cast(Seasons.self) {
-				GlobalSettings.selectedTab = .seasons
-			}
-
-		default:
-			break
+		case .months:
+			GlobalSettings.selectedTab = .months
+		case .seasons:
+			GlobalSettings.selectedTab = .seasons
+		case .search:
+			break 
 		}
 	}
 
@@ -45,9 +41,9 @@ enum StoredSelectedTab: Codable {
 		case .favourites:
 			return .favourites
 		case .months:
-			return .period(AnyPeriod(Months.currentPeriod))
+			return .months(Months.currentPeriod)
 		case .seasons:
-			return .period(AnyPeriod(Seasons.currentPeriod))
+			return .seasons(Seasons.currentPeriod)
 		}
 	}
 }

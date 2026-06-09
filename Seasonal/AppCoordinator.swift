@@ -12,18 +12,31 @@ import Network
 import SwiftUI
 import CoreLocation
 
+protocol AppCoordinatorVersionProtocol {
+    init(window: UIWindow?)
+    func start()
+}
+
 @available(iOS 26, *)
-enum AppCoordinatorState {
+enum AppCoordinatorState: Equatable {
 	case dataIsReady
 	case networkFailed
 	case locationNotFound
 	case initial
-	case dataFailed
-}
-
-protocol AppCoordinatorVersionProtocol {
-    init(window: UIWindow?)
-    func start()
+	case dataFailed(String)
+    
+    var alert: (title: String, message: String) {
+        switch self {
+        case .networkFailed:
+            (title: "Network Error", message: "Unable to connect to the internet")
+        case .locationNotFound:
+            (title: "Undetermined Location", message: "Choose your location")
+        case .dataFailed(let error):
+            (title: "Error", message: error)
+        default:
+            (title: "Sorry", message: "Something went wrong")
+        }
+    }
 }
 
 @available(iOS 26, *)
@@ -129,7 +142,12 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
 
 	private func getDataFromCloudKit(for location: StateLocation) {
 		Task {
-			state = await produceStore.fetchFromCloudKit(for: location) ? .dataIsReady : .dataFailed
+			switch await produceStore.fetchFromCloudKit(for: location) {
+			case .success:
+				state = .dataIsReady
+			case let .failure(error):
+                state = .dataFailed(error.errorDescription)
+			}
 		}
 	}
 }

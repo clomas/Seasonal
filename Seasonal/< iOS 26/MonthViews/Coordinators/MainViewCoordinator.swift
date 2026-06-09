@@ -189,7 +189,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	private func addLikedProduceToCloudKitDatabase(id: Int) {
-		cloudKitDataServiceOld?.saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitError>) in
+		cloudKitDataServiceOld?.saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitErrorOld>) in
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "added like record in CloudKit - id: \(id)")
@@ -199,7 +199,7 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 	}
 
 	private func removeLikedProduceToCloudKitDatabase(id: Int) {
-		cloudKitDataServiceOld?.deleteRecordsInPrivateDatabase(id: id) { (result: Result<Bool, CloudKitError>) in
+		cloudKitDataServiceOld?.deleteRecordsInPrivateDatabase(id: id) { (result: Result<Bool, CloudKitErrorOld>) in
 			#if DEBUG
 			if result == .success(true) {
 				print(result, "removed like record in CloudKit - id: \(id)")

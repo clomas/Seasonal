@@ -29,6 +29,19 @@ enum Seasons: Int, PeriodType {
 		}
 	}
 
+    var title: String {
+        switch self {
+        case .summer:
+            "Summer"
+        case .autumn:
+            "Autumn"
+        case .winter:
+            "Winter"
+        case .spring:
+            "Spring"
+        }
+    }
+    
 	var typeName: String {
 		Constants.season
 	}
@@ -37,8 +50,16 @@ enum Seasons: Int, PeriodType {
 		.seasons
 	}
 
-	var index: CGFloat {
-		CGFloat(self.rawValue)
+	var index: Int {
+		rawValue
+	}
+
+	var cacheKey: ProduceCacheKey {
+		.season(self)
+	}
+
+	func contains(_ produce: Produce) -> Bool {
+		produce.seasons?.contains(self) == true
 	}
 
 	var shortName: String {

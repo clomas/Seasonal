@@ -11,15 +11,15 @@ import Foundation
 @available(iOS 26, *)
 actor ProduceServicesManager {
 
-	static func getDataFromCloudKit(for location: StateLocation) async throws -> Result<[Produce], Error> {
+	static func getDataFromCloudKit(for location: StateLocation) async -> Result<[Produce], CloudKitError> {
 		let cloudKitService: ProduceCloudDataService = .init(location: location)
 
-		return switch await Task(operation: { await cloudKitService.getData(for: location) }).value {
-		case let .success(produce):
-			.success(produce)
-		default:
-			.failure(CloudKitError.databaseError)
-		}
+        return switch await Task(operation: { await cloudKitService.getData(for: location) }).value {
+        case let .success(produce):
+            .success(produce)
+        case let .failure(error):
+            .failure(CloudKitError(error))
+        }
 	}
 
 	static func updateLike(id: Int, liked: Bool) async {

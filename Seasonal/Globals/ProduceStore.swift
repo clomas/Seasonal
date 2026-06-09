@@ -22,15 +22,10 @@ final class ProduceStore: ObservableObject {
 		cache.favourites(from: allProduce)
 	}
 
-	func byPeriod<Period: PeriodType>(_ period: Period) -> [Produce] {
-		switch period {
-		case let month as Months:
-			return cache.byMonth(month, from: allProduce)
-		case let season as Seasons:
-			return cache.bySeason(season, from: allProduce)
-		default:
-			return []
-		}
+	func byPeriod<P: PeriodType>(_ period: P, query: String = "") -> [Produce] {
+		let base = cache.byPeriod(period, from: allProduce)
+		guard !query.isEmpty else { return base }
+		return base.filter { $0.name?.localizedCaseInsensitiveContains(query) == true }
 	}
 
 	// MARK: - Toggle Likes
@@ -57,29 +52,24 @@ final class ProduceStore: ObservableObject {
 
 	// MARK: - Fetch Produce
 
-	func fetchFromCloudKit(for location: StateLocation) async -> Bool {
-		let cached = cache.allProduce(from: [])
-		if !cached.isEmpty {
-			allProduce = cached
-			produce = Dictionary(uniqueKeysWithValues: cached.map { ($0.id, $0) })
-			return true
-		}
+	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CloudKitError> {
+        
+        if let cachedProduce = fetchFromCache() {
+            allProduce = cachedProduce
+            produce = Dictionary(uniqueKeysWithValues: cachedProduce.map { ($0.id, $0) })
+            return .success(())
+        }
 
-		do {
-			let result = try await ProduceServicesManager.getDataFromCloudKit(for: location)
-			switch result {
-			case .success(let produceList):
-				produce = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
-				allProduce = produceList.sorted { ($0.name ?? "") < ($1.name ?? "") }
+		switch await ProduceServicesManager.getDataFromCloudKit(for: location) {
+		case let .success(produceList):
+			produce = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
+			allProduce = produceList.sorted { ($0.name ?? "") < ($1.name ?? "") }
 
-				cache.allProduce(from: produceList)
+			cache.allProduce(from: produceList)
 
-				return true
-			case .failure:
-				return false
-			}
-		} catch {
-			return false
+			return .success(())
+		case let .failure(error):
+			return .failure(error)
 		}
 	}
 
@@ -88,6 +78,16 @@ final class ProduceStore: ObservableObject {
 	private func syncLikeToCloudKit(id: Int, liked: Bool) async {
 		await ProduceServicesManager.updateLike(id: id, liked: liked)
 	}
+    
+    private func fetchFromCache() -> [Produce]? {
+        let cached = cache.allProduce()
+        
+        return if !cached.isEmpty {
+            cached
+        } else {
+            nil
+        }
+    }
 }
 #if DEBUG
 @available(iOS 26, *)

@@ -6,15 +6,7 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-import Foundation
 import CloudKit
-
-enum CloudKitError: Error {
-	case databaseError
-	case invalidID
-	case likesError
-	case noToken
-}
 
 actor CloudKitDataService: ObservableObject {
 
@@ -52,12 +44,12 @@ actor CloudKitDataService: ObservableObject {
 				case .success(let record):
 					records.append(record)
 				case .failure(let error):
-					return .failure(error)
+					return .failure(CloudKitError(error))
 				}
 			}
 			return .success(records)
 		} catch {
-			return .failure(error)
+			return .failure(CloudKitError(error))
 		}
 	}
 
@@ -71,7 +63,7 @@ actor CloudKitDataService: ObservableObject {
 			let record = try await database.save(record)
 			return .success(record)
 		} catch {
-			return .failure(CloudKitError.likesError)
+			return .failure(CloudKitError(error))
 		}
 	}
 
@@ -85,7 +77,7 @@ actor CloudKitDataService: ObservableObject {
 			let recordID = try await database.deleteRecord(withID: record.recordID)
 			return .success(recordID)
 		} catch {
-			return .failure(CloudKitError.likesError)
+			return .failure(CloudKitError(error))
 		}
 	}
 }

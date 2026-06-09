@@ -75,7 +75,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 0,
+			id: 6,
 			name: "Apples",
 			category: .fruit,
 			imageName: "Apples",
@@ -85,7 +85,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 1,
+			id: 7,
 			name: "Bananas",
 			category: .fruit,
 			imageName: "Bananas",
@@ -95,7 +95,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 2,
+			id: 8,
 			name: "Carrots",
 			category: .vegetables,
 			imageName: "Carrots",
@@ -105,7 +105,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 3,
+			id: 9,
 			name: "Broccoli",
 			category: .vegetables,
 			imageName: "Broccoli",
@@ -115,7 +115,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 4,
+			id: 10,
 			name: "Spinach",
 			category: .vegetables,
 			imageName: "Spinach",
@@ -125,7 +125,7 @@ let previewCoordinator: AppCoordinator = {
 			liked: true
 		),
 		Produce(
-			id: 5,
+			id: 11,
 			name: "Tomatoes",
 			category: .vegetables,
 			imageName: "Tomatoes",

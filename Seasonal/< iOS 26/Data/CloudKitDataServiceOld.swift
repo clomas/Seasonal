@@ -13,6 +13,12 @@ import Foundation
 import UIKit
 import CloudKit
 
+enum CloudKitErrorOld: Error {
+    case databaseError
+    case invalidID
+    case likesError
+    case noToken
+}
 /// A protocol to allow mocking a CKDatabase.
 protocol CKDatabaseProtocol {
 	func perform(_ query: CKQuery, inZoneWith zoneID: CKRecordZone.ID?, completionHandler: @escaping ([CKRecord]?, Error?) -> Void)
@@ -124,7 +130,7 @@ class CloudKitDataServiceOld {
 			if let index: Array<ProduceOld>.Index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
 				produceArray[index].liked = true
 			}
-			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { (result: Result<Bool, CloudKitError>) in
+			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { (result: Result<Bool, CloudKitErrorOld>) in
 			#if DEBUG
 				if result == .success(true) {
 					print(result, "added like record in CloudKit - id: \(localLike.id)")
@@ -136,7 +142,7 @@ class CloudKitDataServiceOld {
 
 	// MARK: Save
 
-	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
+	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitErrorOld>) -> Void) {
 
         if FileManager.default.ubiquityIdentityToken != nil {
 			let newPrivateRecordID: CKRecord.ID = CKRecord.ID(recordName: "\(id)_")
@@ -153,7 +159,7 @@ class CloudKitDataServiceOld {
         }
     }
 
-	func deleteRecordsInPrivateDatabase(id: Int, result: @escaping(Result<Bool, CloudKitError>) -> Void) {
+	func deleteRecordsInPrivateDatabase(id: Int, result: @escaping(Result<Bool, CloudKitErrorOld>) -> Void) {
 
 		if FileManager.default.ubiquityIdentityToken != nil {
 			let operation: CKModifyRecordsOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [CKRecord.ID(recordName: "\(id)_")])

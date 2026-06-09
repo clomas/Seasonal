@@ -12,262 +12,147 @@ import TipKit
 @available(iOS 26, *)
 struct MainTabScreen: View {
 
-	enum Tabs: Hashable {
-		case favourites
-		case period(AnyPeriod)
-		case categories
-		case search(AnyPeriod) // TODO: Make optional? to search faves?
+    enum Tabs: Hashable {
+        case favourites
+        case months(Months)
+        case seasons(Seasons)
+        case search
 
-		var title: String {
-			return switch self {
-			case .favourites:
-				"Favourites"
-			case .period(let period):
-				if let months = period.cast(Months.self) {
-					months.typeName
-				} else if let seasons = period.cast(Seasons.self) {
-					seasons.typeName
-				} else {
-					""
-				}
-			case .categories:
-				"Categories"
-			case .search:
-				"Search"
-			}
-		}
+        var title: String {
+            return switch self {
+            case .favourites:
+                "Favourites"
+            case .months(let month):
+                month.title
+            case .seasons(let season):
+                season.title
+            case .search:
+                "Search"
+            }
+        }
 
-		var emptyProduceListViewMessage: String? {
-			return if case .favourites = self {
-				"❤️ Favourite some produce to see it in here."
-			} else {
-				nil
-			}
-		}
-	}
+        var emptyProduceListViewMessage: String? {
+            return if case .favourites = self {
+                "❤️ Favourite some produce to see it in here."
+            } else {
+                nil
+            }
+        }
+    }
 
-	@EnvironmentObject var appCoordinator: AppCoordinator
+    @EnvironmentObject var appCoordinator: AppCoordinator
 
-	// TODO: track last tab in user d's
-	@State private var selectedTab: Tabs = StoredSelectedTab.tab
-	@State private var previousTab: Tabs = .favourites
-	@State private var originalTabBeforeCategories: Tabs = .favourites
-	@State private var showCategoryMenu: Bool = false
+    @State private var selectedTab: Tabs = StoredSelectedTab.tab
+    @State private var selectedCategory: ProduceCategory = .all
+    @State private var searchQuery: String = ""
+    @State private var showTip: Bool = false
 
-	@State private var selectedCategory: ProduceCategory = .all
+    private var tip: SwipeOnboardingTip {
+        switch selectedTab {
+        case .months:
+            SwipeOnboardingTip(context: "months")
+        case .seasons:
+            SwipeOnboardingTip(context: "seasons")
+        default:
+            SwipeOnboardingTip(context: "default")
+        }
+    }
 
-	@State private var searchString: String = ""
-	@State private var showAlert: Bool = false
-	@State private var isSearching = false
-	@State private var showTip: Bool = true//!GlobalSettings.swipeTipShown.swipe
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            Tab("Favourites", systemImage: "heart", value: .favourites) {
+                produceListNavigationView(title: Tabs.favourites.title)
+            }
 
-	private var tip: SwipeOnboardingTip {
-		if case .period(let period) = selectedTab {
-			if period.is(Months.self) {
-				return SwipeOnboardingTip(context: "months")
-			} else if period.is(Seasons.self) {
-				return SwipeOnboardingTip(context: "seasons")
-			}
-		}
-		return SwipeOnboardingTip(context: "default")
-	}
+            Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
+                PeriodPagerView<Months>(
+                    periods: Months.allCases,
+                    selectedTab: .months(Months.currentPeriod),
+                    searchQuery: "",
+                    isSearching: false,
+                    selectedCategory: $selectedCategory,
+                    onPeekFinished: { peekFinished() }
+                )
+            }
 
-	private var produce: [Produce] {
-		appCoordinator.produceStore.allProduce
-	}
+            Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
+                PeriodPagerView<Seasons>(
+                    periods: Seasons.allCases,
+                    selectedTab: .seasons(Seasons.currentPeriod),
+                    searchQuery: "",
+                    isSearching: false,
+                    selectedCategory: $selectedCategory,
+                    onPeekFinished: { peekFinished() }
+                )
+            }
 
-	private var tab: some View {
-		tabView(for: selectedTab == .categories ? previousTab : selectedTab, produce: produce)
-	}
+            Tab(value: .search, role: .search) {
+                searchTab
+            }
+        }
+        .tint(Colour.inSeason)
+        .onChange(of: selectedTab) { _, newTab in
+            StoredSelectedTab.storeTab(newTab)
+        }
+        .overlay {
+            if showTip {
+                TipViewBlockingOverlay(showTip: $showTip, tip: tip)
+            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            FloatingCategoryButton(selectedCategory: $selectedCategory)
+                .padding(.trailing, 18)
+                .padding(.bottom, 60)
+        }
+        .overlay(alignment: .topTrailing) {
+//            if case .months = selectedTab {
+//                FloatingMonthsButton(action: {})
+//                    .padding(.trailing, 18)
+//                    .padding(.top, 60)
+//            }
+        }
+    }
 
-	private var categoriesPopOverView: some View {
-		ForEach(ProduceCategory.allCases, id: \.self) { category in
-			Button(action: {
-				selectedCategory = category
-				showCategoryMenu = false
-				selectedTab = previousTab
-			}) {
-				Label(category.title, systemImage: category.image)
-					.padding()
-					.tint(category == selectedCategory ? Colour.inSeason : .primary)
-			}
-		}
-		.presentationCompactAdaptation(.popover)
-		.onAppear {
-			originalTabBeforeCategories = previousTab
-		}
-		.onDisappear {
-			selectedTab = originalTabBeforeCategories
-			showCategoryMenu = false
-		}
-	}
+    // MARK: - Private
 
-	var body: some View {
-		ZStack {
-			Color.clear.frame(width: 1, height: 200)
-			TabView(selection: $selectedTab) {
-				Tab("Favourites", systemImage: "heart", value: .favourites) { tab }
-				Tab("Months", systemImage: "calendar", value: .period(AnyPeriod(Months.currentPeriod))) { tab }
-				Tab("Seasons", systemImage: "cloud.sun", value: .period(AnyPeriod(Seasons.currentPeriod))) { tab }
-				Tab("Categories", systemImage: .settings, value: .categories) { tab }
-					.popover(isPresented: $showCategoryMenu) {
-						categoriesPopOverView
-					}
-				Tab(value: .search(AnyPeriod(Months.currentPeriod)), role: .search) {
-					NavigationStack {
-						tab
-					}
-				}
-			}
-			.tint(Colour.inSeason)
-		}
-		.onChange(of: selectedTab) { oldTab, newTab in
-			guard oldTab != newTab else { return }
+    @ViewBuilder
+    private var searchTab: some View {
+        NavigationStack {
+            ProduceList(
+                produce: appCoordinator.produceStore.allProduce,
+                selectedPeriodName: "produce",
+                parentTab: .search,
+                selectedCategory: $selectedCategory,
+                searchText: searchQuery
+            )
+        }
+        .searchable(text: $searchQuery, prompt: "Search produce")
+    }
 
-			switch newTab {
-			case .categories:
-				showCategoryMenu.toggle()
+    @ViewBuilder
+    private func produceListNavigationView(title: String) -> some View {
+        ProduceListNavigationView(title: title) {
+            ProduceList(
+                produce: appCoordinator.produceStore.favourites,
+                selectedPeriodName: "favourites",
+                parentTab: selectedTab,
+                selectedCategory: $selectedCategory
+            )
+        }
+    }
 
-			case .search(let currentPeriod):
-				let periodToSearch: AnyPeriod = {
-					switch previousTab {
-					case .period(let period): return period
-					case .search(let period): return period
-					default: return currentPeriod
-					}
-				}()
-
-				if currentPeriod != periodToSearch {
-//					DispatchQueue.main.async {
-						selectedTab = .search(periodToSearch)
-//					}
-					return
-				}
-
-				previousTab = newTab
-				showCategoryMenu = false
-
-			default:
-				previousTab = newTab
-				showCategoryMenu = false
-
-				try? Tips.resetDatastore()
-				try? Tips.configure()
-				showTip = true
-			}
-
-			StoredSelectedTab.storeTab(newTab)
-		}
-		.alert("Title", isPresented: $showAlert) {
-			Text("Message")
-			Button("OK", role: .cancel) { }
-		}
-		.overlay {
-			if showTip {
-				ZStack {
-					Color.black.opacity(0.15)
-						.ignoresSafeArea()
-						.transition(.opacity)
-					TipView(tip)
-						.frame(maxWidth: 350)
-						.padding()
-						.transition(.opacity.combined(with: .scale))
-				}
-			}
-		}
-		.onAppear {
-			if showTip {
-				try? Tips.resetDatastore()
-				try? Tips.configure()
-			}
-		}
-		.task(id: showTip) {
-			guard showTip else { return }
-//			try? await Task.sleep(for: .seconds(8))
-			withAnimation(.easeInOut(duration: 0.5)) {
-				showTip = false
-				GlobalSettings.swipeTipShown = TipShown(swipe: true)
-			}
-		}
-	}
-
-	private func tipViewOverlay() -> some View {
-		TipView(tip)
-			.transition(.opacity.combined(with: .scale))
-			.zIndex(10)
-			.task {
-//				try? await Task.sleep(for: .seconds(2))
-				withAnimation(.easeInOut(duration: 0.5)) {
-					showTip = false
-					//					GlobalSettings.swipeTipShown.swipe = true
-					// TODO: set to user d
-				}
-			}
-	}
-
-	// MARK: Main tab logic
-
-	private func tabView(for tab: MainTabScreen.Tabs, produce: [Produce]) -> AnyView {
-		switch tab {
-		case .favourites:
-			return AnyView(
-				CustomNavigationView(title: tab.title) {
-					ProduceList<NoPeriod>(
-						selectedPeriod: .none,
-						parentTab: selectedTab,
-						selectedCategory: $selectedCategory,
-						produce: appCoordinator.produceStore.favourites
-					)
-					.toolbarBackground(.hidden, for: .navigationBar)
-				}
-			)
-		case .period(let type):
-			if type.is(Months.self) {
-				return periodTabView(periodType: Months.self, period: Months.currentPeriod, tab: tab)
-
-			} else if type.is(Seasons.self) {
-				return periodTabView(periodType: Seasons.self, period: Seasons.currentPeriod, tab: tab)
-
-			}
-		case .search(let period):
-			if let months = period.cast(Months.self) {
-				return searchTabView(with: months)
-
-			} else if let seasons = period.cast(Seasons.self) {
-				return searchTabView(with: seasons)
-
-			}
-		default:
-			return AnyView(EmptyView())
-		}
-		return AnyView(EmptyView())
-	}
-
-	private func periodTabView<P: PeriodType>(periodType: P.Type, period: P, tab: MainTabScreen.Tabs) -> AnyView {
-		AnyView(
-			PeriodTabView<P>(
-				selectedTab: tab,
-				selectedCategory: $selectedCategory,
-				selectedPeriod: period
-			)
-		)
-	}
-
-	private func searchTabView<P: PeriodType>(with period: P) -> AnyView {
-		AnyView(
-			SearchTabView(
-				produce: produce,
-				selectedTab: previousTab,
-				selectedPeriod: period,
-				selectedCategory: $selectedCategory
-			)
-		)
-	}
+    private func peekFinished() {
+        Task {
+            try? await Task.sleep(nanoseconds: 500_000_000)
+            withAnimation(.easeInOut(duration: 1.5)) {
+                showTip = false
+            }
+        }
+    }
 }
 
 @available(iOS 26, *)
 #Preview {
-	MainTabScreen()
-		.environmentObject(previewCoordinator)
+    MainTabScreen()
+        .environmentObject(previewCoordinator)
 }
-

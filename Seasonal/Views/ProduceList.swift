@@ -9,90 +9,75 @@
 import SwiftUI
 
 @available(iOS 26, *)
-struct ProduceList<Period: PeriodType>: View {
-	private let initialProduce: [Produce]?
+struct ProduceList: View {
 
-	@EnvironmentObject var appCoordinator: AppCoordinator
+    @State var parentTab: MainTabScreen.Tabs
+    @Binding var selectedCategory: ProduceCategory
+    
+    let produce: [Produce]
 
-	@State var selectedPeriod: Period
-	@State var parentTab: MainTabScreen.Tabs
-	@State private var produce: [Produce] = []
+    var searchText: String = ""
 
-	@Binding var selectedCategory: ProduceCategory
+    var filteredProduce: [Produce] {
+        let categoryFiltered: [Produce] = {
+            guard selectedCategory != .all else { return produce }
+            return produce.filter { $0.category == selectedCategory }
+        }()
 
-	var searchText: String = ""
+        guard !searchText.isEmpty else { return categoryFiltered }
 
-	var filteredProduce: [Produce] {
-		guard !searchText.isEmpty else { return produce }
-		return produce.filter {
-			$0.name?.localizedCaseInsensitiveContains(searchText) == true
-		}
-	}
+        return categoryFiltered.filter {
+            $0.name?.localizedCaseInsensitiveContains(searchText) == true
+        }
+    }
 
-	init(
-		selectedPeriod: Period,
-		parentTab: MainTabScreen.Tabs,
-		selectedCategory: Binding<ProduceCategory>,
-		produce: [Produce]? = nil,
-		searchText: String = ""
-	) {
-		self.selectedPeriod = selectedPeriod
-		self.parentTab = parentTab
-		self._selectedCategory = selectedCategory
-		self.initialProduce = produce
-		self.searchText = searchText
-	}
+    init(
+        produce: [Produce],
+        selectedPeriodName: String,
+        parentTab: MainTabScreen.Tabs,
+        selectedCategory: Binding<ProduceCategory>,
+        searchText: String = ""
+    ) {
+        self.produce = produce
+        self.selectedPeriodName = selectedPeriodName
+        self.parentTab = parentTab
+        self._selectedCategory = selectedCategory
+        self.searchText = searchText
+    }
 
-	var body: some View {
-		ZStack {
-			Colour.background.ignoresSafeArea()
+    let selectedPeriodName: String
 
-			if filteredProduce.isEmpty {
-				emptyProduceListView
-					.padding(.bottom, .largePadding)
-			} else {
-				List(filteredProduce, id: \.id) { item in
-					ProduceListRow(produce: .constant(item))
-						.listRowSeparator(.hidden)
-						.listRowInsets(.topListRowInset)
-						.listRowBackground(Color.clear)
-				}
-				.listStyle(.plain)
-				.scrollContentBackground(.hidden)
-				.scrollIndicators(.hidden)
-				.safeAreaInset(edge: .bottom) {
-					Color.clear.frame(height: .largePadding)
-				}
-				.safeAreaInset(edge: .top) {
-					Color.clear.frame(height: 100)
-				}
-			}
-		}
-		.onAppear {
-			if let initialProduce {
-				produce = initialProduce
-			} else {
-				produce = appCoordinator.produceStore.byPeriod(selectedPeriod)
-			}
-		}
-	}
+    var body: some View {
+        ZStack {
+            Colour.background.ignoresSafeArea()
 
-	private var emptyProduceListView: some View {
-		VStack(spacing: 6) {
-			Image.settings
-				.resizable()
-				.frame(width: 50, height: 50)
-				.padding(20)
-			Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: selectedPeriod.nameLowercased))
-		}
-	}
+            if filteredProduce.isEmpty {
+                emptyProduceListView
+                    .padding(.bottom, .largePadding)
+            } else {
+                List(filteredProduce, id: \.id) { item in
+                    ProduceListRow(produce: .constant(item))
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(.topListRowInset)
+                        .listRowBackground(Color.clear)
+                }
+                .listStyle(.plain)
+                .scrollContentBackground(.hidden)
+                .scrollIndicators(.hidden)
+                .safeAreaInset(edge: .bottom) {
+                    Color.clear.frame(height: .largePadding)
+                }
+            }
+        }
+    }
 
-    private var navigationTitleText: String {
-        switch parentTab {
-        case .period(_):
-            selectedPeriod.name
-        default:
-            parentTab.title
+    private var emptyProduceListView: some View {
+        VStack(spacing: 6) {
+            Image.settings
+                .resizable()
+                .frame(width: 50, height: 50)
+                .padding(20)
+            Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: selectedPeriodName.lowercased()))
         }
     }
 }

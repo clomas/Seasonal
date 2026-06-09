@@ -14,27 +14,19 @@ struct FloatingSearchButton: View {
 	@Binding var isSearching: Bool
 
 	var body: some View {
-		VStack {
-			Spacer()
-			HStack {
-				Button(action: {
-					isSearching.toggle()
-					UIImpactFeedbackGenerator(style: .light).impactOccurred()
-				}) {
-					Image.magnifyingGlass
-						.font(.system(size: 22, weight: .medium))
-						.foregroundStyle(.primary)
-						.padding(16)
-						.background(.ultraThinMaterial, in: Circle())
-						.glassEffect(.regular)
-				}
+		Button(action: {
+			isSearching.toggle()
+			UIImpactFeedbackGenerator(style: .light).impactOccurred()
+		}) {
+			Image.magnifyingGlass
+				.font(.system(size: 22, weight: .medium))
 				.foregroundStyle(.primary)
-				.padding(.bottom, 24)
-				.padding(.trailing, 24)
-				.accessibilityLabel("Search")
-			}
+				.padding(16)
+				.background(.ultraThinMaterial, in: Circle())
+				.glassEffect(.regular)
 		}
-		.ignoresSafeArea(edges: .bottom)
+		.foregroundStyle(.primary)
+		.accessibilityLabel("Search")
 	}
 	
 }

@@ -19,7 +19,7 @@ final class ProduceCache: ObservableObject {
 	}
 
 	@discardableResult
-	func allProduce(from produce: [Produce]) -> [Produce] {
+	func allProduce(from produce: [Produce] = []) -> [Produce] {
 		cache.value(for: .allProduce) {
 			produce.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
@@ -34,18 +34,10 @@ final class ProduceCache: ObservableObject {
 		}
 	}
 
-	func byMonth(_ month: Months, from produce: [Produce]) -> [Produce] {
-		cache.value(for: .month(month)) {
+	func byPeriod<P: PeriodType>(_ period: P, from produce: [Produce]) -> [Produce] {
+		cache.value(for: period.cacheKey) {
 			produce
-				.filter { $0.months?.contains(month) == true }
-				.sorted { ($0.name ?? "") < ($1.name ?? "") }
-		}
-	}
-
-	func bySeason(_ season: Seasons, from produce: [Produce]) -> [Produce] {
-		cache.value(for: .season(season)) {
-			produce
-				.filter { $0.seasons?.contains(season) == true }
+				.filter { period.contains($0) }
 				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}

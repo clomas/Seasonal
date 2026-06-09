@@ -17,17 +17,6 @@ struct InitialScreen: View {
 
 	@State private var showAlert: Bool = false
 
-	private var alertStrings: (title: String, message: String) {
-		switch appCoordinator.state {
-		case .networkFailed:
-			(title: "Network Error", message: "Unable to connect to the internet")
-		case .locationNotFound:
-			(title: "Undetermined Location", message: "Choose your location")
-		default:
-			(title: "Sorry", message: "Something went wrong")
-		}
-	}
-
 	var body: some View {
 		VStack {
 			Image("Logo")
@@ -38,8 +27,12 @@ struct InitialScreen: View {
 			switch appCoordinator.state {
 			case .networkFailed, .dataFailed:
 				VStack {
-					Text("Unable to connect to the internet")
+                    Text(appCoordinator.state.alert.title)
+						.multilineTextAlignment(.center)
 						.padding(.all)
+                    Text(appCoordinator.state.alert.message)
+                        .multilineTextAlignment(.center)
+                        .padding(.all)
 					GlassButton(label: "Try again") {
 						appCoordinator.retryStart()
 					}

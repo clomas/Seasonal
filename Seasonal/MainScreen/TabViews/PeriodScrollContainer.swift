@@ -30,6 +30,7 @@ struct PeriodScrollContainer<Cell: View>: View {
             LazyHStack(spacing: 0) {
                 ForEach(periods) { period in
                     cell(period)
+                        .containerRelativeFrame(.horizontal)
                 }
             }
             .scrollTargetLayout()

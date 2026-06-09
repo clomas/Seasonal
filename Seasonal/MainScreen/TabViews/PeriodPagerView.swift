@@ -66,8 +66,7 @@ struct PeriodPagerView<Period: PeriodType>: View {
                     parentTab: selectedTab,
                     selectedCategory: $selectedCategory
                 )
-                .containerRelativeFrame(.horizontal)
-            } 
+            }
         }
     }
 

@@ -15,26 +15,30 @@ struct FloatingCategoryButton: View {
 
     var body: some View {
         Menu {
-            ForEach(ProduceCategory.allCases, id: \.self) { category in
-                Button {
-                    selectedCategory = category
-                } label: {
+            Picker("Category", selection: $selectedCategory) {
+                ForEach(ProduceCategory.allCases, id: \.self) { category in
                     Label(category.title, systemImage: category.image)
-//                    Label(category.title, image: "fruit")
+                        .tag(category)
+                        .foregroundStyle(selectedCategory == category ? Colour.inSeason : .primary)
                 }
             }
         } label: {
-            Image(systemName: selectedCategory.image)
-//            Image(uiImage: UIImage(named: "fruit")!)
-                .font(.system(size: 24, weight: .semibold))
-                .foregroundStyle(.primary)
-                .padding(18)
-                .glassEffect(.regular.interactive(), in: Circle())
-
+            menuIcon
         }
-        .tint(.primary)
         .accessibilityLabel("Filter by category")
         .controlSize(.large)
+    }
+
+    @ViewBuilder
+    private var menuIcon: some View {
+        Image(systemName: selectedCategory.image)
+            .symbolRenderingMode(.hierarchical)
+            .font(.system(size: 24, weight: .semibold))
+            .foregroundStyle(Colour.inSeason)
+            .padding(18)
+            .glassEffect(.regular.interactive(), in: Circle())
+            .clipShape(Circle())
+            .contentShape(Circle())
     }
 }
 

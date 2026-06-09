@@ -101,8 +101,8 @@ struct MainTabScreen: View {
         }
         .overlay(alignment: .bottomTrailing) {
             FloatingCategoryButton(selectedCategory: $selectedCategory)
-                .padding(.trailing, 18)
-                .padding(.bottom, 60)
+                .padding(.trailing, 19)
+                .padding(.bottom, 56)
         }
         .overlay(alignment: .topTrailing) {
 //            if case .months = selectedTab {

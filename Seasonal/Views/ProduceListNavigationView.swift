@@ -23,9 +23,15 @@ struct ProduceListNavigationView<Content: View>: View {
 			content
 				.navigationTitle(title)
                 .navigationBarTitleDisplayMode(.automatic)
-//				.toolbarBackground(Color.black.opacity(0.35), for: .navigationBar)
-//				.toolbarBackgroundVisibility(.visible, for: .navigationBar)
-//				.toolbarColorScheme(.dark, for: .navigationBar)
+                .toolbar {
+                    ToolbarItem(placement: .largeTitle) {
+                        Text(title)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 20)
+                    }
+                }
 		}
 	}
 }

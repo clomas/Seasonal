@@ -16,20 +16,56 @@ struct PeriodItem: Identifiable {
 @available(iOS 26, *)
 struct PeriodScrollContainer<Cell: View>: View {
 
+    private struct BufferSlot: Identifiable {
+        let id: Int
+        let period: PeriodItem
+    }
+
     let periods: [PeriodItem]
     let initialIndex: Int
     var onPeekFinished: (() async -> Void)? = nil
     @ViewBuilder let cell: (PeriodItem) -> Cell
 
+    private let buffer: [BufferSlot]
+    private let startSlot: Int
+
     @State private var selectedIndex: Int?
     @State private var isPeeking: Bool = false
     @State private var peekTask: Task<Void, Never>?
 
+    init(
+        periods: [PeriodItem],
+        initialIndex: Int,
+        onPeekFinished: (() async -> Void)? = nil,
+        @ViewBuilder cell: @escaping (PeriodItem) -> Cell
+    ) {
+        self.periods = periods
+        self.initialIndex = initialIndex
+        self.onPeekFinished = onPeekFinished
+        self.cell = cell
+
+        let count = max(periods.count, 1)
+        let repeats = 21
+        let centerOffset = (repeats / 2) * count
+        let startSlot = centerOffset + initialIndex
+        self.startSlot = startSlot
+
+        var slots: [BufferSlot] = []
+        slots.reserveCapacity(repeats * count)
+        for slot in 0..<(repeats * count) {
+            let periodIdx = ((slot - centerOffset) % count + count) % count
+            slots.append(BufferSlot(id: slot, period: periods[periodIdx]))
+        }
+        self.buffer = slots
+
+        self._selectedIndex = State(initialValue: startSlot)
+    }
+
     var body: some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
-                ForEach(periods) { period in
-                    cell(period)
+                ForEach(buffer) { slot in
+                    cell(slot.period)
                         .containerRelativeFrame(.horizontal)
                 }
             }
@@ -48,24 +84,18 @@ struct PeriodScrollContainer<Cell: View>: View {
     }
 
     private func performIntroAnimation() {
-        selectedIndex = initialIndex
         isPeeking = true
         peekTask?.cancel()
 
-        let count = periods.count
-        let base = initialIndex
-
-        func clamp(_ i: Int) -> Int { min(max(i, 0), count - 1) }
-
         peekTask = Task { @MainActor in
             try? await Task.sleep(nanoseconds: 500_000_000)
-            withAnimation(.easeInOut(duration: 1.6)) { selectedIndex = clamp(base - 1) }
+            withAnimation(.easeInOut(duration: 1.6)) { selectedIndex = startSlot - 1 }
 
             try? await Task.sleep(nanoseconds: 2_500_000_000)
-            withAnimation(.easeInOut(duration: 1.2)) { selectedIndex = clamp(base + 1) }
+            withAnimation(.easeInOut(duration: 1.2)) { selectedIndex = startSlot + 1 }
 
             try? await Task.sleep(nanoseconds: 2_000_000_000)
-            withAnimation(.easeInOut(duration: 1)) { selectedIndex = base }
+            withAnimation(.easeInOut(duration: 1)) { selectedIndex = startSlot }
 
             isPeeking = false
             await onPeekFinished?()

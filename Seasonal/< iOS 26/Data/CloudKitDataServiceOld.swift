@@ -183,17 +183,10 @@ extension String {
 	func createSeasonArrayOld() -> [SeasonsOld] {
 		var seasons: [SeasonsOld] = [SeasonsOld]()
 
-		if self.contains(SeasonsOld.summer.shortName) {
-			seasons.append(.summer)
-		}
-		if self.contains(SeasonsOld.autumn.shortName) {
-			seasons.append(.autumn)
-		}
-		if self.contains(SeasonsOld.winter.shortName) {
-			seasons.append(.winter)
-		}
-		if self.contains(SeasonsOld.spring.shortName) {
-			seasons.append(.spring)
+		for (index, char) in self.enumerated() {
+			if char == "1", let season = SeasonsOld(rawValue: index) {
+				seasons.append(season)
+			}
 		}
 		return seasons
 	}

@@ -29,8 +29,8 @@ enum ViewDisplayed: Int {
 		static func fromString(_ string: String) -> ViewDisplayed.ProduceCategory {
 			switch string {
 			case "fruit": .fruit
-			case "vegetable": .vegetables
-			case "herb": .herbs
+			case "vegetables": .vegetables
+			case "herbs": .herbs
 			default:
 				.cancelled
 			}

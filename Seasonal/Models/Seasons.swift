@@ -41,10 +41,6 @@ enum Seasons: Int, PeriodType {
             "Spring"
         }
     }
-    
-	var typeName: String {
-		Constants.season
-	}
 
 	var image: Image {
 		.seasons

@@ -8,7 +8,8 @@
 
 import CloudKit
 
-enum CloudKitError: LocalizedError {
+enum CloudKitError: LocalizedError, Equatable {
+    
     case notAuthenticated
     case networkUnavailable
     case quotaExceeded
@@ -38,24 +39,38 @@ enum CloudKitError: LocalizedError {
         }
     }
 
-    var errorDescription: String {
+    var errorTitle: String {
+        "iCloud Error"
+    }
+    
+    var errorMessage: String {
         switch self {
-        case .notAuthenticated, .noToken:
-            "Sign in to iCloud in Settings to sync your favourites."
-        case .networkUnavailable:
-            "No internet connection. Check your network and try again."
-        case .quotaExceeded:
-            "Your iCloud storage is full."
-        case .serviceUnavailable:
-            "iCloud is temporarily unavailable. Try again later."
-        case .databaseError:
-            "Couldn't load produce data. Try again later."
-        case .invalidID:
-            "Couldn't update the favourite."
-        case .likesError:
-            "Couldn't save your favourite. Try again later."
+        case .notAuthenticated, .noToken:   "Your data is stored privately in your own iCloud. Open Settings to sign in."
+        case .networkUnavailable:           "Check your network and try again."
+        case .quotaExceeded:                "Free up iCloud storage to continue."
+        case .serviceUnavailable:           "iCloud is temporarily unavailable. Try again later."
+        case .databaseError:                "Couldn't load produce data. Try again later."
+        case .invalidID:                    "Couldn't update the favourite. Try again later."
+        case .likesError:                   "Couldn't save your favourite. Try again later."
+        case .unknown:                      "Try again later."
+        }
+    }
+    
+    static func == (lhs: CloudKitError, rhs: CloudKitError) -> Bool {
+        switch (lhs, rhs) {
+        case (.notAuthenticated, .notAuthenticated),
+             (.networkUnavailable, .networkUnavailable),
+             (.quotaExceeded, .quotaExceeded),
+             (.serviceUnavailable, .serviceUnavailable),
+             (.databaseError, .databaseError),
+             (.invalidID, .invalidID),
+             (.likesError, .likesError),
+             (.noToken, .noToken):
+            return true
+        case (.unknown(let l), .unknown(let r)):
+            return l.localizedDescription == r.localizedDescription
         default:
-            "Something went wrong. Try again later."
+            return false
         }
     }
 }

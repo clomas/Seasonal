@@ -55,6 +55,7 @@ actor CloudKitDataService: ObservableObject {
 
 	func saveItem(_ record: CKRecord) async -> Result<CKRecord, Error> {
 		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
+        
 		let database = databaseType == .private
 			? container.privateCloudDatabase
 			: container.publicCloudDatabase
@@ -69,6 +70,7 @@ actor CloudKitDataService: ObservableObject {
 
 	func deleteItem(_ record: CKRecord) async -> Result<CKRecord.ID, Error> {
 		guard hasUbiquityIdentityToken else { return .failure(CloudKitError.noToken) }
+        
 		let database = databaseType == .private
 			? container.privateCloudDatabase
 			: container.publicCloudDatabase

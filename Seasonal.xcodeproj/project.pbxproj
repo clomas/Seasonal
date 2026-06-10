@@ -29,6 +29,7 @@
 		272C7A232E23788C00661BAA /* FloatingSearchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272C7A222E23788800661BAA /* FloatingSearchButton.swift */; };
 		2738B2E22FD3EC1100E3AD54 /* CloudKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2738B2E12FD3EC0E00E3AD54 /* CloudKitError.swift */; };
 		2738B2E52FD7D65300E3AD54 /* FloatingMonthsButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2738B2E42FD7D65300E3AD54 /* FloatingMonthsButton.swift */; };
+		2738B2E72FD8E6E200E3AD54 /* TintedGlassCapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2738B2E62FD8E6E100E3AD54 /* TintedGlassCapsuleButton.swift */; };
 		2745344E2E558F5F0036A438 /* ProduceServicesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2745344D2E558F490036A438 /* ProduceServicesManager.swift */; };
 		274534512E5593A40036A438 /* Months.swift in Sources */ = {isa = PBXBuildFile; fileRef = 274534502E5593A30036A438 /* Months.swift */; };
 		27468374265D182B000C5456 /* SeasonalUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27468373265D182B000C5456 /* SeasonalUITests.swift */; };
@@ -165,6 +166,7 @@
 		272C7A222E23788800661BAA /* FloatingSearchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingSearchButton.swift; sourceTree = "<group>"; };
 		2738B2E12FD3EC0E00E3AD54 /* CloudKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitError.swift; sourceTree = "<group>"; };
 		2738B2E42FD7D65300E3AD54 /* FloatingMonthsButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingMonthsButton.swift; sourceTree = "<group>"; };
+		2738B2E62FD8E6E100E3AD54 /* TintedGlassCapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TintedGlassCapsuleButton.swift; sourceTree = "<group>"; };
 		2745344D2E558F490036A438 /* ProduceServicesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProduceServicesManager.swift; sourceTree = "<group>"; };
 		274534502E5593A30036A438 /* Months.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Months.swift; sourceTree = "<group>"; };
 		27468371265D182B000C5456 /* SeasonalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SeasonalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -540,6 +542,7 @@
 		2794F07D2E1A731B00BFFB12 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				2738B2E62FD8E6E100E3AD54 /* TintedGlassCapsuleButton.swift */,
 				271794982FCD5EE000E796EB /* SearchBar.swift */,
 				27886B4F2EC06D32001F947B /* TipViewBlockingOverlay.swift */,
 				27886B4D2EC0658F001F947B /* ProduceListNavigationView.swift */,
@@ -892,6 +895,7 @@
 				27949C102E35EE9E00B56E3E /* ProduceList.swift in Sources */,
 				271794992FCD5EE000E796EB /* SearchBar.swift in Sources */,
 				277A6830263A3B5700E4389A /* Extension-String.swift in Sources */,
+				2738B2E72FD8E6E200E3AD54 /* TintedGlassCapsuleButton.swift in Sources */,
 				27FCA53A25DB781400AD2020 /* SceneDelegate.swift in Sources */,
 				275EBD3C25F769D500F6D3F4 /* MenuBarCollectionView.swift in Sources */,
 				27FCA54225DB952E00AD2020 /* WelcomeViewModel.swift in Sources */,

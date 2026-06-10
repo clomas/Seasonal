@@ -32,6 +32,7 @@ struct PeriodScrollContainer<Cell: View>: View {
     @State private var selectedIndex: Int?
     @State private var isPeeking: Bool = false
     @State private var peekTask: Task<Void, Never>?
+    @State private var introOffset: CGFloat = 0
 
     init(
         periods: [PeriodItem],
@@ -62,24 +63,27 @@ struct PeriodScrollContainer<Cell: View>: View {
     }
 
     var body: some View {
-        ScrollView(.horizontal) {
-            LazyHStack(spacing: 0) {
-                ForEach(buffer) { slot in
-                    cell(slot.period)
-                        .containerRelativeFrame(.horizontal)
+        GeometryReader { geometry in
+            ScrollView(.horizontal) {
+                LazyHStack(spacing: 0) {
+                    ForEach(buffer) { slot in
+                        cell(slot.period)
+                            .containerRelativeFrame(.horizontal)
+                    }
                 }
+                .offset(x: introOffset)
+                .scrollTargetLayout()
             }
-            .scrollTargetLayout()
-        }
-        .scrollTargetBehavior(.viewAligned)
-        .scrollPosition(id: $selectedIndex)
-        .disabled(isPeeking)
-        .onAppear {
-            performIntroAnimation()
-        }
-        .onDisappear {
-            peekTask?.cancel()
-            isPeeking = false
+            .scrollTargetBehavior(.viewAligned)
+            .scrollPosition(id: $selectedIndex)
+            .disabled(isPeeking)
+            .onAppear {
+                performIntroAnimation()
+            }
+            .onDisappear {
+                peekTask?.cancel()
+                isPeeking = false
+            }
         }
     }
 
@@ -88,14 +92,23 @@ struct PeriodScrollContainer<Cell: View>: View {
         peekTask?.cancel()
 
         peekTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            withAnimation(.easeInOut(duration: 1.6)) { selectedIndex = startSlot - 1 }
+            try? await Task.sleep(nanoseconds: 150_000_000)
 
-            try? await Task.sleep(nanoseconds: 2_500_000_000)
-            withAnimation(.easeInOut(duration: 1.2)) { selectedIndex = startSlot + 1 }
+            withAnimation(.easeInOut(duration: 1.2)) {
+                introOffset = -150
+            }
 
-            try? await Task.sleep(nanoseconds: 2_000_000_000)
-            withAnimation(.easeInOut(duration: 1)) { selectedIndex = startSlot }
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+
+            withAnimation(.easeInOut(duration: 1.0)) {
+                introOffset = 150
+            }
+
+            try? await Task.sleep(nanoseconds: 1_300_000_000)
+
+            withAnimation(.easeInOut(duration: 0.8)) {
+                introOffset = 0
+            }
 
             isPeeking = false
             await onPeekFinished?()

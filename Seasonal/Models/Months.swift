@@ -52,10 +52,6 @@ enum Months: Int, PeriodType {
             ""
         }
     }
-    
-	var typeName: String {
-		Constants.months
-	}
 
 	var index: Int {
 		rawValue - 1

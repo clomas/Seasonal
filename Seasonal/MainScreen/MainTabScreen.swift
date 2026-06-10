@@ -45,16 +45,16 @@ struct MainTabScreen: View {
     @State private var selectedTab: Tabs = StoredSelectedTab.tab
     @State private var selectedCategory: ProduceCategory = .all
     @State private var searchQuery: String = ""
-    @State private var showTip: Bool = false
+    @State private var showTip: Bool = GlobalSettings.swipeTipShown.swipe
 
-    private var tip: SwipeOnboardingTip {
+    private var tip: SwipeOnboardingTip? {
         switch selectedTab {
         case .months:
             SwipeOnboardingTip(context: "months")
         case .seasons:
             SwipeOnboardingTip(context: "seasons")
         default:
-            SwipeOnboardingTip(context: "default")
+            nil
         }
     }
 
@@ -95,7 +95,7 @@ struct MainTabScreen: View {
             StoredSelectedTab.storeTab(newTab)
         }
         .overlay {
-            if showTip {
+            if let tip, showTip {
                 TipViewBlockingOverlay(showTip: $showTip, tip: tip)
             }
         }

@@ -10,49 +10,49 @@ import Foundation
 import CoreLocation
 import MapKit
 
-enum StateLocation: String, CaseIterable {
-
-    case noState = "aus"
-	case act
-	case newSouthWales = "nsw"
-	case northernTerritory = "nt"
-	case queensland = "qld"
-	case southAustralia = "sa"
-	case tasmania = "tas"
-	case victoria = "vic"
-	case westernAustralia = "wa"
-
-	var fullName: String {
-		switch self {
-		case .newSouthWales:  "New South Wales"
-		case .northernTerritory:  "Northern Territory"
-		case .queensland:  "Queensland"
-		case .southAustralia:  "South Australia"
-		case .tasmania:  "Tasmania"
-		case .victoria:  "Victoria"
-		case .westernAustralia:  "Western Australia"
-		default:
-			 "Error"
-		}
-	}
-}
-
 protocol LocationDelegate: AnyObject {
     func locationReady(location: CLLocation?)
 }
 
-class LocationManager: NSObject, CLLocationManagerDelegate {
+enum StateLocation: String, CaseIterable {
 
-	private let locationManager: CLLocationManager
+    case noState = "aus"
+    case act
+    case newSouthWales = "nsw"
+    case northernTerritory = "nt"
+    case queensland = "qld"
+    case southAustralia = "sa"
+    case tasmania = "tas"
+    case victoria = "vic"
+    case westernAustralia = "wa"
 
-	var authStatus: CLAuthorizationStatus?
+    var fullName: String {
+        switch self {
+        case .newSouthWales:  "New South Wales"
+        case .northernTerritory:  "Northern Territory"
+        case .queensland:  "Queensland"
+        case .southAustralia:  "South Australia"
+        case .tasmania:  "Tasmania"
+        case .victoria:  "Victoria"
+        case .westernAustralia:  "Western Australia"
+        default:
+             "Error"
+        }
+    }
+}
 
-	weak var locationDelegate: LocationDelegate?
+class LocationService: NSObject, CLLocationManagerDelegate {
 
-	init(delegate: LocationDelegate) {
-		locationDelegate = delegate
+    private let locationManager: CLLocationManager
+
+    var authStatus: CLAuthorizationStatus?
+
+    weak var locationDelegate: LocationDelegate?
+
+    init(delegate: LocationDelegate) {
+        locationDelegate = delegate
         locationManager = CLLocationManager()
-		super.init()
+        super.init()
 
         if #available(iOS 14.0, *) {
             locationManager.desiredAccuracy = kCLLocationAccuracyReduced
@@ -61,59 +61,61 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.delegate = self
     }
 
-	func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let mostRecentLocation = locations.last else {
             return
         }
 
-		locationDelegate?.locationReady(location: mostRecentLocation)
-		locationManager.stopUpdatingLocation()
+        locationDelegate?.locationReady(location: mostRecentLocation)
+        locationManager.stopUpdatingLocation()
     }
 
-	// MARK: Location Updated
+    // MARK: Location Updated
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-		authStatus = status
-		switch status {
-		case .notDetermined:
-			break
-		case .authorizedAlways, .authorizedWhenInUse:
-			locationManager.startUpdatingLocation()
-		case .denied, .restricted:
-			stop()
-		default:
-			stop()
-		}
+        switch status {
+        case .notDetermined:
+            break
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+            stop()
+        default:
+            stop()
+        }
     }
 
-	// MARK: Failure
+    // MARK: Failure
 
-	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-		stop()
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        stop()
 
-		#if DEBUG
-		print("Location not found \(error) - Use generalized Australian data")
-		#endif
-	}
+        #if DEBUG
+        print("Location not found \(error) - Use generalized Australian data")
+        #endif
+    }
 
-	// MARK: Start
+    // MARK: Start
 
-	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-		switch manager.authorizationStatus {
-		case .notDetermined:
-			locationManager.requestWhenInUseAuthorization()
-			locationManager.startUpdatingLocation()
-		case .authorizedAlways, .authorizedWhenInUse:
-			locationManager.startUpdatingLocation()
-		default:
-			break
-		}
-	}
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        authStatus = manager.authorizationStatus
 
-	// MARK: Stop
+        switch manager.authorizationStatus {
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        case .authorizedAlways, .authorizedWhenInUse:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+            stop()
+        default:
+            break
+        }
+    }
 
-	private func stop() {
-		locationManager.stopUpdatingLocation()
-		locationDelegate?.locationReady(location: nil)
-	}
+    // MARK: Stop
+
+    private func stop() {
+        locationManager.stopUpdatingLocation()
+        locationDelegate?.locationReady(location: nil)
+    }
 }

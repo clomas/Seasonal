@@ -14,7 +14,6 @@ struct InitialScreen: View {
 
 	@State private var selectedTab = 0
 	@State private var showErrorSheet = false
-
 	@State private var showAlert: Bool = false
 
 	var body: some View {
@@ -25,41 +24,50 @@ struct InitialScreen: View {
 				.padding()
 
 			switch appCoordinator.state {
-			case .networkFailed, .dataFailed:
-				VStack {
-                    Text(appCoordinator.state.alert.title)
-						.multilineTextAlignment(.center)
-						.padding(.all)
-                    Text(appCoordinator.state.alert.message)
-                        .multilineTextAlignment(.center)
-                        .padding(.all)
-					GlassButton(label: "Try again") {
-						appCoordinator.retryStart()
-					}
-				}
-
+            case .initial:
+                ProgressView()
+                    .frame(width: 35, height: 35)
+            case let .dataFailed(error):
+                failureStackView(
+                    title: "iCloud Error",
+                    message: error.errorMessage
+                ) {
+                    appCoordinator.retryFetchData()
+                }
+			case .networkFailed:
+                failureStackView(
+                    title: "Network Error",
+                    message: "Unable to connect to the internet"
+                ) {
+                    appCoordinator.retryFetchData()
+                }
 			case .locationNotFound:
-				VStack {
-                    Text("Choose your location")
-                        .font(.title3)
-                        .padding(.bottom)
+				VStack(spacing: 10) {
+					Text("Choose your location")
+						.font(.title3.weight(.semibold))
+						.padding(.bottom, 8)
 
 					ForEach(StateLocation.allCases, id: \.self) { state in
 						if state.fullName != StateLocation.noState.fullName {
-							GlassButton(label: state.fullName.capitalized) {
-								appCoordinator.updateChosenLocationUserDefaults(to:  state)
+							TintedGlassCapsuleButton(
+								label: state.fullName.capitalized,
+								systemImage: "mappin.and.ellipse"
+							) {
+								appCoordinator.updateChosenLocationUserDefaults(to: state)
 							}
-							.padding(.vertical, 8)
 						}
 					}
-					GlassButton(label: "Try find location again") {
+					Button {
 						appCoordinator.retryStart()
+					} label: {
+						Label("Try find location again", systemImage: "location.magnifyingglass")
+							.font(.subheadline)
+							.foregroundStyle(.secondary)
 					}
-					.padding(50)
+					.buttonStyle(.plain)
+					.padding(.top, 24)
 				}
-			case .initial:
-				ProgressView()
-					.frame(width: 35, height: 35)
+				.padding(.horizontal, 24)
 			default:
 				EmptyView()
 			}
@@ -67,32 +75,33 @@ struct InitialScreen: View {
 				.transition(.fallFromTop)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.background(Color(.welcomeBackground))
+        .background(Colour.background)
 		.animation(.easeInOut(duration: Constants.animationDuration), value: appCoordinator.state)
 	}
-}
-
-struct GlassButton: View {
-
-	let label: String
-	let tapHandler: Closure
-
-	var body: some View {
-		if #available(iOS 26.0, *) {
-			Button(action: {
-				tapHandler()
-			}) {
-				Text(label)
-					.font(.headline)
-			}
-//			.frame(width: 300)
-//			.glassEffect(.regular.interactive())
-//			.clipShape(Capsule())
-			.buttonStyle(GlassButtonStyle())
-			.frame(minWidth: 300)
-
-		}
-	}
+    
+    private func failureStackView(
+        title: String,
+        message: String,
+        buttonImage: String = "arrow.clockwise",
+        buttonLabel: String = "Try again",
+        tapHandler: @escaping Closure,
+    ) -> some View {
+        VStack {
+            Text(title)
+                .multilineTextAlignment(.center)
+            Text(message)
+                .multilineTextAlignment(.center)
+                .padding(.all)
+            
+            TintedGlassCapsuleButton(
+                label: buttonLabel,
+                systemImage: buttonImage,
+                style: .prominent,
+                tapHandler: tapHandler
+            )
+            .padding(.top, 16)
+        }
+    }
 }
 
 extension AnyTransition {

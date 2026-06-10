@@ -21,7 +21,7 @@ struct ProduceListRow: View {
 			VStack(spacing: 6) {
 				ZStack {
 					Text(produce.name ?? "")
-						.font(.headline)
+                        .font(.title2)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
 					HStack {
@@ -34,7 +34,6 @@ struct ProduceListRow: View {
 
 						Button(action: {
 							appCoordinator.produceStore.toggleLiked(for: produce.id)
-
 						}) {
 							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
 						}

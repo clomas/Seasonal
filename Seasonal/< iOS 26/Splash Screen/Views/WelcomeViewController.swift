@@ -40,10 +40,10 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
 
 	// Delegates passed down from the InitialViewCoordinator.
 	func dataIsReady() {
-		dismissButton.isHidden.toggle()
-		dismissArrowButton.isHidden.toggle()
-		dismissButton.isEnabled.toggle()
-		dismissArrowButton.isEnabled.toggle()
+		dismissButton.isHidden = false
+		dismissArrowButton.isHidden = false
+		dismissButton.isEnabled = true
+		dismissArrowButton.isEnabled = true
 		activityIndicator.stopAnimating()
 	}
 
@@ -111,7 +111,7 @@ class WelcomeViewController: UIViewController, InitialViewDelegate {
     @objc private func playerItemDidReachEnd(notification: Notification) {
 		if let playerItem: AVPlayerItem = notification.object as? AVPlayerItem {
             playerItem.seek(to: CMTime.zero, completionHandler: nil)
-			playVideo()
+            player.play()
         }
     }
 

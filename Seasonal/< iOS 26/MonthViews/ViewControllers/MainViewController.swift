@@ -35,6 +35,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		// month in the table view
 		// navigation bar title
 		viewModel?.updateMenuBar = { [weak self] in
+			self?.lastUserScrolledMonth = self?.viewModel?.monthToDisplay
 			self?.menuBarNeedsUpdate()
 		}
 	}
@@ -125,6 +126,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	}
 
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		infiniteMonthCollectionView.reloadData()
 		navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
@@ -197,7 +199,9 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 			appearance.configureWithOpaqueBackground()
 			appearance.backgroundColor = UIColor.NavigationBar.tint
 			UINavigationBar.appearance().standardAppearance = appearance
+			UINavigationBar.appearance().compactAppearance = appearance
 			UINavigationBar.appearance().scrollEdgeAppearance = appearance
+			UINavigationBar.appearance().compactScrollEdgeAppearance = appearance
 		}
 	}
 

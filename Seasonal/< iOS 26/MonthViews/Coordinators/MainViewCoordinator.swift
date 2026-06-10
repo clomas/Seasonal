@@ -108,8 +108,6 @@ final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDe
 		switch index {
 		case ViewDisplayed.monthPicker.rawValue:
 			presentMonthPickerViewController()
-		case ViewDisplayed.monthPicker.rawValue:
-			presentMonthPickerViewController()
 		case ViewDisplayed.seasons.rawValue:
 			presentSeasonsViewController()
 		default:

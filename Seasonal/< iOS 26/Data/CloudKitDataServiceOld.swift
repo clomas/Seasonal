@@ -31,7 +31,7 @@ class CloudKitDataServiceOld {
 
 	// MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceOld], CloudKitError>) -> Void) {
+    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceOld], Error>) -> Void) {
         currentLocation = locationFound
 		let predicate: NSPredicate = NSPredicate(value: true)
 		let publicQuery: CKQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
@@ -45,7 +45,7 @@ class CloudKitDataServiceOld {
 				#if DEBUG
                 print(error.localizedDescription)
 				#endif
-				dataFetched(.failure(.databaseError))
+				dataFetched(.failure(error))
             } else {
 				if let publicResults: [CKRecord] = results {
                     publicData = publicResults
@@ -87,14 +87,17 @@ class CloudKitDataServiceOld {
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
 			   let nameRecord: String = record.object(forKey: Constants.name) as? String,
 			   let categoryRecord: String = record.object(forKey: Constants.category) as? String,
-			   let monthsRecord: String = record.object(forKey: "months_\(currentLocation.rawValue)") as? String,
-			   let seasonsRecord: String = record.object(forKey: "seasons_\(currentLocation.rawValue)") as? String {
+			   let monthsRecord: String = record.object(forKey: "months_\(currentLocation.rawValue)") as? String {
 				id = recordID
                 name = nameRecord
                 imageName = nameRecord
 				category = ViewDisplayed.ProduceCategory.fromString(categoryRecord)
                 months = monthsRecord.createMonthArrayOld()
-                seasons = seasonsRecord.createSeasonArrayOld()
+
+				let seasonsKey = "seasons_\(currentLocation.rawValue)"
+				if let seasonsRecord = record.object(forKey: seasonsKey) as? String {
+					seasons = seasonsRecord.createSeasonArrayOld()
+				}
             }
 
 			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
@@ -183,11 +186,10 @@ extension String {
 	func createSeasonArrayOld() -> [SeasonsOld] {
 		var seasons: [SeasonsOld] = [SeasonsOld]()
 
-		for (index, char) in self.enumerated() {
-			if char == "1", let season = SeasonsOld(rawValue: index) {
-				seasons.append(season)
-			}
-		}
+		if self.contains(SeasonsOld.summer.shortName) { seasons.append(.summer) }
+		if self.contains(SeasonsOld.autumn.shortName) { seasons.append(.autumn) }
+		if self.contains(SeasonsOld.winter.shortName) { seasons.append(.winter) }
+		if self.contains(SeasonsOld.spring.shortName) { seasons.append(.spring) }
 		return seasons
 	}
 

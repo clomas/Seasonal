@@ -9,7 +9,7 @@
 import UIKit
 import CoreHaptics
 
-class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, SeasonsLikeButtonDelegate {
+class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResultsUpdating, UITableViewDelegate, SeasonsLikeButtonDelegate {
 
 	private var searchController: UISearchController = UISearchController(searchResultsController: nil)
 	@IBOutlet weak var tableView: UITableView!
@@ -30,6 +30,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
     }
 
 	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		navigationController?.setNavigationBarHidden(false, animated: animated)
 	}
 
@@ -72,6 +73,7 @@ class SeasonsViewController: UIViewController, UISearchBarDelegate, UISearchResu
 
 	private func setUpView() {
 		tableView.dataSource = self
+		tableView.delegate = self
 		title = viewModel?.updateTitle()
 
 		setUpSearchController()

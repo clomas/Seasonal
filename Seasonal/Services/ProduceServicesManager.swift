@@ -6,19 +6,20 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
+import CloudKit
 import Foundation
 
 @available(iOS 26, *)
 actor ProduceServicesManager {
 
-	static func getDataFromCloudKit(for location: StateLocation) async -> Result<[Produce], CloudKitError> {
+	static func getDataFromCloudKit(for location: StateLocation) async -> Result<[Produce], CKError> {
 		let cloudKitService: ProduceCloudDataService = .init(location: location)
 
         return switch await Task(operation: { await cloudKitService.getData(for: location) }).value {
         case let .success(produce):
             .success(produce)
         case let .failure(error):
-            .failure(CloudKitError(error))
+            .failure(error)
         }
 	}
 

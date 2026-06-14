@@ -45,6 +45,8 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     
     private var networkService: NetworkService?
     private var locationManager: LocationService?
+    private var cloudTask: Task<Void, Never>?
+    private var locationTask: Task<Void, Never>?
     
     init(window: UIWindow?) {
         self.window = window
@@ -74,7 +76,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     }
     
     func retryStart() {
-        state = .initial
+        setState(.initial)
         
         Task {
             await networkService?.retry()
@@ -82,7 +84,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     }
     
     func retryFetchData() {
-        state = .initial
+        setState(.initial)
         
         getDataFromCloudKit(for: currentLocation)
     }
@@ -98,25 +100,30 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     // MARK: Location delegate
     
     func locationReady(location: CLLocation?) {
-        Task {
+        // Cancel any in-flight location resolution to ensure single-flight behaviour
+        locationTask?.cancel()
+
+        locationTask = Task { @MainActor in
             let detectedState = await LocationInformationManager().parseLocation(location)
-            
+
+            if Task.isCancelled { return }
+
             let savedState = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
-            
+
             if detectedState != .noState {
                 currentLocation = detectedState
                 GlobalSettings.location = Location(state: detectedState.rawValue)
                 getDataFromCloudKit(for: detectedState)
                 return
             }
-            
+
             if savedState != .noState {
                 currentLocation = savedState
                 getDataFromCloudKit(for: savedState)
                 return
             }
-            
-            state = .locationNotFound
+
+            setState(.initial)
         }
     }
     
@@ -128,18 +135,36 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
             locationManager = LocationService(delegate: self)
             Task { await networkService?.stop() }
         default:
-            state = .networkFailed
+            setState(.networkFailed)
         }
     }
     
     private func getDataFromCloudKit(for location: StateLocation) {
-        Task {
-            switch await produceStore.fetchFromCloudKit(for: location) {
+        // Cancel any in-flight request to ensure single-flight behaviour
+        cloudTask?.cancel()
+
+        cloudTask = Task { @MainActor in
+            let result = await produceStore.fetchFromCloudKit(for: location)
+
+            // If cancelled, do not update state
+            if Task.isCancelled { return }
+
+            switch result {
             case .success:
-                state = .dataIsReady
+                setState(.dataIsReady)
             case let .failure(ckError):
-                state = .dataFailed(errorTitle: ckError.errorTitle, errorMessage: ckError.errorMessage)
+                setState(.dataFailed(errorTitle: ckError.errorTitle, errorMessage: ckError.errorMessage))
             }
         }
+    }
+
+    // Cleanup function for single-flight CloudKit tasks
+    func cancelCloudTasks() {
+        cloudTask?.cancel()
+        cloudTask = nil
+    }
+    
+    private func setState(_ newState: AppCoordinatorState) {
+        state = newState
     }
 }

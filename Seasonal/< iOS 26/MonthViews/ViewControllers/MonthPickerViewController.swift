@@ -11,6 +11,7 @@ import UIKit
 class MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate {
 
 	weak var coordinator: MainViewCoordinator?
+	private var monthWasSelected = false
 
 	@IBOutlet weak var monthCollectionView: UICollectionView!
 
@@ -42,7 +43,10 @@ class MonthPickerViewController: UIViewController, UIGestureRecognizerDelegate {
 	}
 
 	override func viewWillDisappear(_ animated: Bool) {
-		coordinator?.monthPickerFinished(display: nil)
+		super.viewWillDisappear(animated)
+		if !monthWasSelected {
+			coordinator?.monthPickerFinished(display: nil)
+		}
 	}
 }
 
@@ -73,6 +77,7 @@ extension MonthPickerViewController: UICollectionViewDelegate, UICollectionViewD
 	func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 		// Plus 1 given overflow Months
 		if let month: MonthOld = MonthOld(rawValue: (indexPath.row + 1)) {
+			monthWasSelected = true
 			coordinator?.monthPickerFinished(display: month)
 		}
 

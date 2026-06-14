@@ -11,226 +11,228 @@ import CloudKit
 @available(iOS 26, *)
 actor ProduceCloudDataService {
 
-	private let cloudKitDataService: CloudKitDataService = CloudKitDataService()
-	private let location: StateLocation
+    private let cloudKitDataService: CloudKitDataService = CloudKitDataService()
+    private let location: StateLocation
 
-	init(location: StateLocation) {
-		self.location = location
-	}
+    init(location: StateLocation) {
+        self.location = location
+    }
 
-	// MARK: CloudKit Database
+    // MARK: CloudKit Database
 
-	func getData(for locationFound: StateLocation) async -> Result<[Produce], Error> {
-		var publicRecords: [CKRecord] = []
-		var privateRecords: [CKRecord] = []
-		var fetchError: Error? = nil
+    func getData(for locationFound: StateLocation) async -> Result<[Produce], CKError> {
+        var publicRecords: [CKRecord] = []
+        var privateRecords: [CKRecord] = []
+        var fetchErrors: [Error] = []
 
-		await withTaskGroup(of: (CloudKitDataService.DatabaseType, Result<[CKRecord], Error>).self) { group in
-			group.addTask {
-				await self.cloudKitDataService.setDatabase(type: .public)
-				let recordsResult = await self.cloudKitDataService.fetchItems(.public, recordType: Constants.australianProduce, queryKey: Constants.id)
-				return (.public, recordsResult)
-			}
-			group.addTask {
-				await self.cloudKitDataService.setDatabase(type: .private)
-				let recordsResult = await self.cloudKitDataService.fetchItems(.private, recordType: Constants.australianProduceLikes, queryKey: Constants.id)
-				return (.private, recordsResult)
-			}
-			for await (type, result) in group {
-				switch (type, result) {
-				case (.public, .success(let records)):
-					publicRecords = records
-				case (.private, .success(let records)):
-					privateRecords = records
-				case (_, .failure(let error)):
-					fetchError = error
-				}
-			}
-		}
-		if let error = fetchError {
-			return .failure(error)
-		}
-		let produce = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
-		return .success(produce)
-	}
+        await withTaskGroup(of: (CloudKitDataService.DatabaseType, Result<[CKRecord], Error>).self) { group in
+            group.addTask {
+                await self.cloudKitDataService.setDatabase(type: .public)
+                do {
+                    let records = try await self.cloudKitDataService.fetchItems(.public, recordType: Constants.australianProduce, queryKey: Constants.id)
+                    return (.public, .success(records))
+                } catch {
+                    return (.public, .failure(error))
+                }
+            }
+            group.addTask {
+                await self.cloudKitDataService.setDatabase(type: .private)
+                do {
+                    let records = try await self.cloudKitDataService.fetchItems(.private, recordType: Constants.australianProduceLikes, queryKey: Constants.id)
+                    return (.private, .success(records))
+                } catch {
+                    return (.private, .failure(error))
+                }
+            }
+            for await (type, result) in group {
+                switch (type, result) {
+                case (.public, .success(let records)):
+                    publicRecords = records
+                case (.private, .success(let records)):
+                    privateRecords = records
+                case (_, .failure(let error)):
+                    fetchErrors.append(error)
+                }
+            }
+        }
+        if !fetchErrors.isEmpty && publicRecords.isEmpty && privateRecords.isEmpty {
+            return .failure(fetchErrors.first as? CKError ?? CKError(.internalError))
+        }
+        let produce = addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords)
+        return .success(produce)
+    }
 
-	// MARK: Save
+    // MARK: Save
 
-	@discardableResult
-	func saveLikeToPrivateDatabaseInCloudKit(id: Int) -> Bool {
-		var success: Bool = false
+    @discardableResult
+    func saveLikeToPrivateDatabaseInCloudKit(id: Int) -> Bool {
+        let record = recordWithID(id)
+        record.setValue(id, forKey: Constants.id)
 
-		let record = recordWithID(id)
-		record.setValue(id, forKey: Constants.id)
+        Task {
+            await cloudKitDataService.setDatabase(type: .private)
+            
+            do {
+                return try await cloudKitDataService.saveItem(record) != nil
+            } catch {
+                return false
+            }
+        }
+        return false
+    }
 
-		Task {
-			await cloudKitDataService.setDatabase(type: .private)
-			switch await cloudKitDataService.saveItem(record) {
-			case .success(_):
-				success = true
-			default:
-				success = false
-			}
-		}
-		return success
-	}
+    // MARK: Delete
 
-	// MARK: Delete
+    @discardableResult
+    func deleteRecordsInPrivateDatabase(id: Int) -> Bool {
+        let record = recordWithID(id)
 
-	@discardableResult
-	func deleteRecordsInPrivateDatabase(id: Int) -> Bool {
-		var success: Bool = false
+        Task {
+            await cloudKitDataService.setDatabase(type: .private)
+            do {
+                return try await cloudKitDataService.deleteItem(record) != nil
+            } catch {
+                return false
+            }
+        }
+        return false
+    }
 
-		let record = recordWithID(id)
+    private func recordWithID(_ id: Int) -> CKRecord {
+        CKRecord(
+            recordType: Constants.australianProduceLikes,
+            recordID: CKRecord.ID(recordName: "\(id)_")
+        )
+    }
 
-		Task {
-			await cloudKitDataService.setDatabase(type: .private)
-			switch await cloudKitDataService.deleteItem(record) {
-			case .success(_):
-				success = true
-			default:
-				success = false
-			}
-		}
-		return success
-	}
+    // MARK: Sort Data
 
-	private func recordWithID(_ id: Int) -> CKRecord {
-		CKRecord(
-			recordType: Constants.australianProduceLikes,
-			recordID: CKRecord.ID(recordName: "\(id)_")
-		)
-	}
+    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
+        var produceArray: [Produce] = [Produce]()
+        let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
-	// MARK: Sort Data
+        for record in publicRecords {
+            var id: Int = 0
+            var name: String = Constants.apple
+            var imageName: String = Constants.apple
+            var category: ProduceCategory = ProduceCategory.fruit
+            let description: String = ""
+            var months: [Months] = [Months]()
+            var seasons: [Seasons] = [Seasons]()
+            var liked: Bool = false
 
-	private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
-		var produceArray: [Produce] = [Produce]()
-		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
+            if let recordID: Int = record.object(forKey: Constants.id) as? Int,
+               let nameRecord: String = record.object(forKey: Constants.name) as? String,
+               let categoryRecord: String = record.object(forKey: Constants.category) as? String,
+               let monthsRecord: String = record.object(forKey: "months_\(location.rawValue)") as? String,
+               let seasonsRecord: String = record.object(forKey: "seasons_\(location.rawValue)") as? String {
+                id = recordID
+                name = nameRecord
+                imageName = nameRecord
+                category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
+                months = monthsRecord.createMonthArray()
+                seasons = seasonsRecord.createSeasonArray()
+            }
 
-		for record in publicRecords {
-			var id: Int = 0
-			var name: String = Constants.apple
-			var imageName: String = Constants.apple
-			var category: ProduceCategory = ProduceCategory.fruit
-			let description: String = ""
-			var months: [Months] = [Months]()
-			var seasons: [Seasons] = [Seasons]()
-			var liked: Bool = false
+            if let recordIdValue = record.object(forKey: Constants.id) {
 
-			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
-			   let nameRecord: String = record.object(forKey: Constants.name) as? String,
-			   let categoryRecord: String = record.object(forKey: Constants.category) as? String,
-			   let monthsRecord: String = record.object(forKey: "months_\(location.rawValue)") as? String,
-			   let seasonsRecord: String = record.object(forKey: "seasons_\(location.rawValue)") as? String {
-				id = recordID
-				name = nameRecord
-				imageName = nameRecord
-				category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
-				months = monthsRecord.createMonthArray()
-				seasons = seasonsRecord.createSeasonArray()
-			}
+                let recordIdInt: Int?
 
-			if let recordIdValue = record.object(forKey: Constants.id) {
+                if let intValue = recordIdValue as? Int {
+                    recordIdInt = intValue
 
-				let recordIdInt: Int?
+                } else if let stringValue = recordIdValue as? String, let intValue = Int(stringValue) {
+                    recordIdInt = intValue
 
-				if let intValue = recordIdValue as? Int {
-					recordIdInt = intValue
+                } else {
+                    recordIdInt = nil
 
-				} else if let stringValue = recordIdValue as? String, let intValue = Int(stringValue) {
-					recordIdInt = intValue
+                }
 
-				} else {
-					recordIdInt = nil
+                if let recordIdInt, likedArray.contains(recordIdInt) {
+                    liked = true
+                }
+            }
 
-				}
+            let produce: Produce = Produce(
+                id: id,
+                name: name,
+                category: category,
+                imageName: imageName,
+                description: description, // Not implemented yet
+                months: months,
+                seasons: seasons,
+                liked: liked
+            )
+            produceArray.append(produce)
+        }
 
-				if let recordIdInt, likedArray.contains(recordIdInt) {
-					liked = true
-				}
-			}
+        let localLikedData: [LikedProduce] = LocalDataHandler.loadAll(LikedProduce.self)
+        if !localLikedData.isEmpty {
+            compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
+        }
+        return produceArray
+    }
 
-			let produce: Produce = Produce(
-				id: id,
-				name: name,
-				category: category,
-				imageName: imageName,
-				description: description, // Not implemented yet
-				months: months,
-				seasons: seasons,
-				liked: liked
-			)
-			produceArray.append(produce)
-		}
+    // Update cloudKit with local data if there is a disparity
+    // local data should always be accurate
+    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
+        let likedArray: [Produce] = produceArray.filter { $0.liked == true}
 
-		let localLikedData: [LikedProduce] = LocalDataHandler.loadAll(LikedProduce.self)
-		if !localLikedData.isEmpty {
-			compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
-		}
-		return produceArray
-	}
+        Task {
+            await cloudKitDataService.setDatabase(type: .private)
+        }
 
-	// Update cloudKit with local data if there is a disparity
-	// local data should always be accurate
-	private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
-		let likedArray: [Produce] = produceArray.filter { $0.liked == true}
-
-		Task {
-			await cloudKitDataService.setDatabase(type: .private)
-		}
-
-		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
-			let result = saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
+        for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
+            let result = saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
 #if DEBUG
-			if result == true {
-				print(result, "Found disparity - added like record in CloudKit - id: \(localLike.id)")
-			}
+            if result == true {
+                print(result, "Found disparity - added like record in CloudKit - id: \(localLike.id)")
+            }
 #endif
-		}
-	}
+        }
+    }
 }
 
 // On creating the database I made some questionable decisions, I could have maybe handled it better.
 // string matching is required to convert database data to useable app data.
 extension String {
 
-	// Parse Seasons
-	func createSeasonArray() -> [Seasons] {
-		var seasons: [Seasons] = [Seasons]()
+    // Parse Seasons
+    func createSeasonArray() -> [Seasons] {
+        var seasons: [Seasons] = [Seasons]()
 
-		if self.contains(Seasons.summer.shortName) {
-			seasons.append(.summer)
-		}
-		if self.contains(Seasons.autumn.shortName) {
-			seasons.append(.autumn)
-		}
-		if self.contains(Seasons.winter.shortName) {
-			seasons.append(.winter)
-		}
-		if self.contains(Seasons.spring.shortName) {
-			seasons.append(.spring)
-		}
-		return seasons
-	}
+        if self.contains(Seasons.summer.shortName) {
+            seasons.append(.summer)
+        }
+        if self.contains(Seasons.autumn.shortName) {
+            seasons.append(.autumn)
+        }
+        if self.contains(Seasons.winter.shortName) {
+            seasons.append(.winter)
+        }
+        if self.contains(Seasons.spring.shortName) {
+            seasons.append(.spring)
+        }
+        return seasons
+    }
 
-	func createMonthArray() -> [Months] {
-		var months: [Months] = [Months]()
-		var searchStartIndex: String.Index = self.startIndex
+    func createMonthArray() -> [Months] {
+        var months: [Months] = [Months]()
+        var searchStartIndex: String.Index = self.startIndex
 
-		while searchStartIndex < self.endIndex,
-			  // find 1 in month string which indicates the produce is in season
-			  let range: Range<String.Index> = self.range(of: "1", range: searchStartIndex..<self.endIndex),
-			  !range.isEmpty {
-			let index: Int = distance(from: self.startIndex, to: range.lowerBound)
+        while searchStartIndex < self.endIndex,
+              // find 1 in month string which indicates the produce is in season
+              let range: Range<String.Index> = self.range(of: "1", range: searchStartIndex..<self.endIndex),
+              !range.isEmpty {
+            let index: Int = distance(from: self.startIndex, to: range.lowerBound)
 
-			// Add 1 - January rawValue == 1
-			if let month: Months = Months(rawValue: index + 1) {
-				months.append(month)
-			}
-			searchStartIndex = range.upperBound
-		}
-		return months
-	}
+            // Add 1 - January rawValue == 1
+            if let month: Months = Months(rawValue: index + 1) {
+                months.append(month)
+            }
+            searchStartIndex = range.upperBound
+        }
+        return months
+    }
 }
-

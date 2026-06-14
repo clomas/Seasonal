@@ -27,10 +27,10 @@ struct InitialScreen: View {
             case .initial:
                 ProgressView()
                     .frame(width: 35, height: 35)
-            case let .dataFailed(error):
+            case let .dataFailed(errorTitle, errorMessage):
                 failureStackView(
-                    title: "iCloud Error",
-                    message: error.errorMessage
+                    title: errorTitle,
+                    message: errorMessage
                 ) {
                     appCoordinator.retryFetchData()
                 }

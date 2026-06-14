@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import CloudKit
 
 @MainActor
 @available(iOS 26, *)
@@ -52,7 +53,7 @@ final class ProduceStore: ObservableObject {
 
 	// MARK: - Fetch Produce
 
-	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CloudKitError> {
+	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CKError> {
         
         if let cachedProduce = fetchFromCache() {
             allProduce = cachedProduce

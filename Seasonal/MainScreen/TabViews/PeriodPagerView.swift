@@ -25,13 +25,14 @@ struct PeriodPagerView<Period: PeriodType>: View {
 
     let selectedTab: MainTabScreen.Tabs
     let searchQuery: String
+    /// Whether the custom search bar is active; used to scope each period's title to the query.
     let isSearching: Bool
+
+    private let periods: [PeriodItem]
 
     @Binding var selectedCategory: ProduceCategory
 
     var onPeekFinished: (() async -> Void)? = nil
-
-    private let periods: [PeriodItem]
 
     init(
         periods: [Period],

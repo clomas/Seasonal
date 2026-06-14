@@ -61,6 +61,7 @@ struct ProduceList: View {
                         .listRowInsets(.topListRowInset)
                         .listRowBackground(Color.clear)
                 }
+                .accessibilityIdentifier("produceList")
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)

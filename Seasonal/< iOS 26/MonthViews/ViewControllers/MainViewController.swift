@@ -14,10 +14,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 	@IBOutlet weak var menuBar: MenuBarCollectionView!
 
 	var viewModel: MainViewModel?
-	var searchController: UISearchController = UISearchController(searchResultsController: nil)
 
-	private var hasSetInitialScroll: Bool = false
-	private var shouldIgnoreNextScrollEnd: Bool = false
 	private var userIsDragging: Bool = false
 
 	private var lastUserScrolledMonth: MonthOld?
@@ -40,11 +37,12 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		}
 	}
 
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
-
-		setupMenuBar()
-	}
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        infiniteMonthCollectionView.reloadData()
+        navigationController?.setNavigationBarHidden(false, animated: animated)
+        setupMenuBar()
+    }
 
 	private func setUpView() {
 		setupNavigationControllerView()
@@ -123,25 +121,6 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		}
 		infiniteMonthCollectionView?.contentInset = UIEdgeInsets.allZero
 		infiniteMonthCollectionView?.scrollIndicatorInsets = .allZero
-	}
-
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		infiniteMonthCollectionView.reloadData()
-		navigationController?.setNavigationBarHidden(false, animated: animated)
-	}
-
-	override func viewDidLayoutSubviews() {
-		super.viewDidLayoutSubviews()
-
-		if !hasSetInitialScroll,
-		   viewModel?.allMonthsAndTheirProduceToDisplay?.isEmpty == false,
-		   viewModel?.viewDisplayed != .favourites {
-
-			scrollToItemUpdateTitle(viewModel?.monthToDisplay.rawValue ?? 0)
-			hasSetInitialScroll = true
-			shouldIgnoreNextScrollEnd = true   // 👈 Reset here too
-		}
 	}
 
 	private func indexOfCenteredItem() -> Int? {
@@ -246,14 +225,10 @@ extension MainViewController: UICollectionViewDataSource {
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
 																					   for: indexPath) as? MonthTableCollectionViewCell {
-				// for my implementation of the infinite collectionView I need to change the subview cell tag
-				// based on the indexPath
-
 			if viewModel?.viewDisplayed == .favourites {
 				cell.tag = 0
 			} else {
 				cell.tag = indexPath.item
-					//				viewModel?.monthToDisplay = MonthOld(rawValue: cell.tag) ?? .december
 			}
 			cell.viewModel = viewModel
 			cell.tableView.reloadData()
@@ -296,11 +271,6 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 	// MARK: ScrollView did end decelerating
 
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		if shouldIgnoreNextScrollEnd {
-			shouldIgnoreNextScrollEnd = false
-			userIsDragging = false
-			return
-		}
 		guard userIsDragging else { return }
 		defer { userIsDragging = false }
 		guard viewModel?.viewDisplayed == .months else { return }
@@ -322,31 +292,31 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 			break
 		}
 
-			// this is the page currently displayed
-			// let page = scrollView.contentOffset.x / scrollView.bounds.size.width
+        // this is the page currently displayed
+        // let page = scrollView.contentOffset.x / scrollView.bounds.size.width
 		if var updatedMonth: MonthOld = MonthOld(rawValue: pageInt) {
-				// Map overflow indices to canonical months for comparison/animation
+            // Map overflow indices to canonical months for comparison/animation
 			if updatedMonth == .januaryOverflow { updatedMonth = .january }
 			else if updatedMonth == .decemberOverflow { updatedMonth = .december }
 
-				// Only react if the user actually moved to a different logical month
+            // Only react if the user actually moved to a different logical month
 			guard updatedMonth != viewModel?.monthToDisplay else { return }
 			guard updatedMonth != lastUserScrolledMonth else { return }
 
-				// Update VM state based on the user scroll
+            // Update VM state based on the user scroll
 			viewModel?.monthToDisplay = updatedMonth
 
-				// Animate the month icon strictly on user scroll
+            // Animate the month icon strictly on user scroll
 			menuBar.monthIconCarouselAnimation(
 				from: lastUserScrolledMonth ?? (viewModel?.previousMonth ?? .december),
 				to: updatedMonth
 			)
 
-				// Track last user-scrolled month separate from VM so external updates don't trigger animation
+            // Track last user-scrolled month separate from VM so external updates don't trigger animation
 			lastUserScrolledMonth = updatedMonth
 			viewModel?.previousMonth = updatedMonth
 
-				// Update the title for the newly visible month
+            // Update the title for the newly visible month
 			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)
 		}
 	}
@@ -358,16 +328,5 @@ extension MainViewController: UISearchControllerDelegate {
 	func updateSearchResults(for searchController: UISearchController) {
 		viewModel?.filterProduce(by: searchController.searchBar.text)
 		infiniteMonthCollectionView.reloadData()
-	}
-}
-
-extension IndexPath {
-
-	init(viewDisplayed: ViewDisplayed?) {
-		self.init(row: viewDisplayed?.rawValue ?? 0, section: 0)
-	}
-
-	init(produceCategory: ViewDisplayed.ProduceCategory?) {
-		self.init(row: produceCategory?.rawValue ?? 0, section: 0)
 	}
 }

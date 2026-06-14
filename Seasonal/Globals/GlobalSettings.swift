@@ -30,8 +30,6 @@ enum StoredSelectedTab: Codable {
 			GlobalSettings.selectedTab = .months
 		case .seasons:
 			GlobalSettings.selectedTab = .seasons
-		case .search:
-			break 
 		}
 	}
 

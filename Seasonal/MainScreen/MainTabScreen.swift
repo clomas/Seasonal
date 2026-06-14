@@ -11,12 +11,11 @@ import TipKit
 
 @available(iOS 26, *)
 struct MainTabScreen: View {
-
+    
     enum Tabs: Hashable {
         case favourites
         case months(Months)
         case seasons(Seasons)
-        case search
 
         var title: String {
             return switch self {
@@ -26,8 +25,6 @@ struct MainTabScreen: View {
                 month.title
             case .seasons(let season):
                 season.title
-            case .search:
-                "Search"
             }
         }
 
@@ -45,7 +42,8 @@ struct MainTabScreen: View {
     @State private var selectedTab: Tabs = StoredSelectedTab.tab
     @State private var selectedCategory: ProduceCategory = .all
     @State private var searchQuery: String = ""
-    @State private var showTip: Bool = GlobalSettings.swipeTipShown.swipe
+    @State private var isSearching: Bool = false
+    @State private var showTip: Bool = true //GlobalSettings.swipeTipShown.swipe
 
     private var tip: SwipeOnboardingTip? {
         switch selectedTab {
@@ -62,34 +60,34 @@ struct MainTabScreen: View {
         TabView(selection: $selectedTab) {
             Tab("Favourites", systemImage: "heart", value: .favourites) {
                 produceListNavigationView(title: Tabs.favourites.title)
+                    .toolbarVisibility(.hidden, for: .tabBar)
             }
 
             Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
                 PeriodPagerView<Months>(
                     periods: Months.allCases,
                     selectedTab: .months(Months.currentPeriod),
-                    searchQuery: "",
-                    isSearching: false,
+                    searchQuery: searchQuery,
+                    isSearching: isSearching,
                     selectedCategory: $selectedCategory,
                     onPeekFinished: { peekFinished() }
                 )
+                .toolbarVisibility(.hidden, for: .tabBar)
             }
 
             Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
                 PeriodPagerView<Seasons>(
                     periods: Seasons.allCases,
                     selectedTab: .seasons(Seasons.currentPeriod),
-                    searchQuery: "",
-                    isSearching: false,
+                    searchQuery: searchQuery,
+                    isSearching: isSearching,
                     selectedCategory: $selectedCategory,
                     onPeekFinished: { peekFinished() }
                 )
-            }
-
-            Tab(value: .search, role: .search) {
-                searchTab
+                .toolbarVisibility(.hidden, for: .tabBar)
             }
         }
+        .accessibilityIdentifier("mainTabView")
         .tint(Colour.inSeason)
         .onChange(of: selectedTab) { _, newTab in
             StoredSelectedTab.storeTab(newTab)
@@ -99,35 +97,19 @@ struct MainTabScreen: View {
                 TipViewBlockingOverlay(showTip: $showTip, tip: tip)
             }
         }
-        .overlay(alignment: .bottomTrailing) {
-            FloatingCategoryButton(selectedCategory: $selectedCategory)
-                .padding(.trailing, 19)
-                .padding(.bottom, 56)
-        }
-        .overlay(alignment: .topTrailing) {
-//            if case .months = selectedTab {
-//                FloatingMonthsButton(action: {})
-//                    .padding(.trailing, 18)
-//                    .padding(.top, 60)
-//            }
+        .overlay(alignment: .bottom) {
+            MainScreenTabBar(
+                selectedTab: $selectedTab,
+                isSearching: $isSearching,
+                searchQuery: $searchQuery,
+                selectedCategory: $selectedCategory
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 6)
         }
     }
 
     // MARK: - Private
-
-    @ViewBuilder
-    private var searchTab: some View {
-        NavigationStack {
-            ProduceList(
-                produce: appCoordinator.produceStore.allProduce,
-                selectedPeriodName: "produce",
-                parentTab: .search,
-                selectedCategory: $selectedCategory,
-                searchText: searchQuery
-            )
-        }
-        .searchable(text: $searchQuery, prompt: "Search produce")
-    }
 
     @ViewBuilder
     private func produceListNavigationView(title: String) -> some View {
@@ -136,7 +118,8 @@ struct MainTabScreen: View {
                 produce: appCoordinator.produceStore.favourites,
                 selectedPeriodName: "favourites",
                 parentTab: selectedTab,
-                selectedCategory: $selectedCategory
+                selectedCategory: $selectedCategory,
+                searchText: searchQuery
             )
         }
     }

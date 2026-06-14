@@ -26,6 +26,7 @@ struct FloatingMonthsButton: View {
                 .glassEffect(.regular)
         }
         .foregroundStyle(.primary)
+        .accessibilityIdentifier("pickMonthButton")
         .accessibilityLabel("Pick a month")
     }
 }

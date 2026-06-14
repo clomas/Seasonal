@@ -206,3 +206,14 @@ extension MenuBarCollectionView: UICollectionViewDelegateFlowLayout {
 		reloadData()
 	}
 }
+
+private extension IndexPath {
+
+    init(viewDisplayed: ViewDisplayed?) {
+        self.init(row: viewDisplayed?.rawValue ?? 0, section: 0)
+    }
+
+    init(produceCategory: ViewDisplayed.ProduceCategory?) {
+        self.init(row: produceCategory?.rawValue ?? 0, section: 0)
+    }
+}

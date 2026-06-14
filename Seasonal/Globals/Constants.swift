@@ -113,7 +113,7 @@ extension String {
 	static let calendarImage: String = "calendar"
 	static let fruit: String = "apple.logo"
 	static let herbs: String = "leaf.fill"
-	static let settings: String = "checklist"
+	static let settings: String = "checklist.checked"
 	static let vegetables: String = "carrot.fill"
 	static let seasons: String = "cloud.sun.fill"
 

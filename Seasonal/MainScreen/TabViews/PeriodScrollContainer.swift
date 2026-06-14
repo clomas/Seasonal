@@ -21,6 +21,8 @@ struct PeriodScrollContainer<Cell: View>: View {
         let period: PeriodItem
     }
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     let periods: [PeriodItem]
     let initialIndex: Int
     var onPeekFinished: (() async -> Void)? = nil
@@ -29,10 +31,8 @@ struct PeriodScrollContainer<Cell: View>: View {
     private let buffer: [BufferSlot]
     private let startSlot: Int
 
-    @State private var selectedIndex: Int?
-    @State private var isPeeking: Bool = false
-    @State private var peekTask: Task<Void, Never>?
-    @State private var introOffset: CGFloat = 0
+    @State private var scrollPosition: ScrollPosition
+    @State private var hasPeeked: Bool = false
 
     init(
         periods: [PeriodItem],
@@ -59,59 +59,49 @@ struct PeriodScrollContainer<Cell: View>: View {
         }
         self.buffer = slots
 
-        self._selectedIndex = State(initialValue: startSlot)
+        self._scrollPosition = State(initialValue: ScrollPosition(id: startSlot))
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 0) {
-                    ForEach(buffer) { slot in
-                        cell(slot.period)
-                            .containerRelativeFrame(.horizontal)
-                    }
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(buffer) { slot in
+                    cell(slot.period)
+                        .containerRelativeFrame(.horizontal)
                 }
-                .offset(x: introOffset)
-                .scrollTargetLayout()
             }
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(id: $selectedIndex)
-            .disabled(isPeeking)
-            .onAppear {
-                performIntroAnimation()
-            }
-            .onDisappear {
-                peekTask?.cancel()
-                isPeeking = false
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .scrollPosition($scrollPosition)
+        .onAppear {
+            guard !hasPeeked else { return }
+//            guard !hasPeeked, GlobalSettings.swipeTipShown.swipe else { return }
+            hasPeeked = true
+            Task {
+                await runPeekSequence()
             }
         }
     }
 
-    private func performIntroAnimation() {
-        isPeeking = true
-        peekTask?.cancel()
+    private func runPeekSequence() async {
+        try? await Task.sleep(for: .seconds(0.5))
 
-        peekTask = Task { @MainActor in
-            try? await Task.sleep(nanoseconds: 150_000_000)
+        await hop(to: startSlot + 1)
+        await hop(to: startSlot)
 
-            withAnimation(.easeInOut(duration: 1.2)) {
-                introOffset = -150
-            }
+        await hop(to: startSlot - 1)
+        await hop(to: startSlot)
 
-            try? await Task.sleep(nanoseconds: 1_500_000_000)
+        await onPeekFinished?()
+    }
 
-            withAnimation(.easeInOut(duration: 1.0)) {
-                introOffset = 150
-            }
-
-            try? await Task.sleep(nanoseconds: 1_300_000_000)
-
-            withAnimation(.easeInOut(duration: 0.8)) {
-                introOffset = 0
-            }
-
-            isPeeking = false
-            await onPeekFinished?()
+    /// Animates a single-cell scroll and waits long enough for the scroll view to
+    /// land and `LazyHStack` to settle before the next hop begins.
+    private func hop(to id: Int) async {
+        withAnimation(.easeInOut(duration: 1)) {
+            scrollPosition.scrollTo(id: id)
         }
+        try? await Task.sleep(for: .seconds(1))
     }
 }

@@ -19,32 +19,36 @@ struct ProduceListRow: View {
 		ZStack {
 			Color(.systemBackground)
 			VStack(spacing: 6) {
-				ZStack {
+				// Equal-width leading/trailing slots keep the name centred on the row while
+				// letting it wrap in the middle as Dynamic Type grows — so it never overlaps
+				// the image or heart the way a full-width ZStack overlay did.
+				HStack(spacing: 0) {
+					Image(produce.imageName ?? "")
+						.resizable()
+						.scaledToFit()
+						.frame(width: 60, height: 60)
+						.padding(.leading, 12)
+						.frame(width: 84, alignment: .leading)
+
 					Text(produce.name ?? "")
-                        .font(.title2)
+						.font(.title2)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
-					HStack {
-						Image(produce.imageName ?? "")
-							.resizable()
-							.scaledToFit()
-							.frame(width: 60, height: 60)
 
-						Spacer()
-
-						Button(action: {
-							appCoordinator.produceStore.toggleLiked(for: produce.id)
-						}) {
-							if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
-						}
-						.animation(.bouncy, value: produce.liked)
-						.padding(.trailing, 16)
+					Button(action: {
+						appCoordinator.produceStore.toggleLiked(for: produce.id)
+					}) {
+						if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
 					}
+					.animation(.bouncy, value: produce.liked)
+					.padding(.trailing, 16)
+					.frame(width: 84, alignment: .trailing)
+					.accessibilityIdentifier("produceLikeButton_\(produce.id)")
 				}
-				MonthsInSeasonCapsuleView(months: produce.months ?? [])
+                MonthsInSeasonCapsuleView(months: produce.months ?? [])
 			}
+			.accessibilityIdentifier("produceRow_\(produce.id)")
 			.padding(.bottom, 4)
-			.padding(.leading, 4)
 			.background(Colour.background)
 		}
 	}

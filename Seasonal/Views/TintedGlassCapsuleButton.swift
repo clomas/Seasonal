@@ -23,19 +23,17 @@ struct TintedGlassCapsuleButton: View {
 
     var body: some View {
         Button(action: tapHandler) {
-            HStack(spacing: 12) {
-                Image(systemName: systemImage)
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(Colour.inSeason)
+            HStack(spacing: .space3) {
+                AccentIconChip(systemImage: systemImage)
                 Text(label)
-                    .font(.headline)
+                    .font(.buttonLabel)
                     .foregroundStyle(.primary)
                 if style == .list {
                     Spacer(minLength: 0)
                 }
             }
-            .padding(.horizontal, style == .list ? 20 : 28)
-            .padding(.vertical, 14)
+            .padding(.horizontal, style == .list ? .space5 : .space8)
+            .padding(.vertical, .space4)
             .frame(maxWidth: style == .list ? 340 : nil)
             .glassEffect(
                 .regular.tint(Colour.inSeason.opacity(style == .list ? 0.35 : 0.45)).interactive(),

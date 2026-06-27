@@ -15,7 +15,11 @@ enum GlobalSettings {
 	@UserDefault("selectedTab", defaultValue: .favourites) static var selectedTab: StoredSelectedTab
 	@UserDefault("swipeTipShown", defaultValue: TipShown(swipe: false)) static var swipeTipShown: TipShown
 	@UserDefault("produceCacheLastAppVersion", defaultValue: "") static var produceCacheAppVersion: String
+	@UserDefault("appLaunchCount", defaultValue: 0) static var appLaunchCount: Int
 }
+
+/// Number of launches after which the tab bar drops its text labels for the cleaner icon-only look.
+let tabBarLabelHideLaunchCount = 10
 
 @MainActor
 enum StoredSelectedTab: Codable {
@@ -60,10 +64,25 @@ struct TipShown: Codable {
 }
 
 struct Colour {
-	static let welcomeBackground = Color("welcomeBackground")
 	static let inSeason = Color("inSeason")
 	static let background = Color("tableViewCell")
 	static let emptyHeartGradient1 = Color("emptyHeartGradient1")
 	static let emptyHeartGradient2 = Color("emptyHeartGradient2")
+
+	// MARK: Semantic aliases (design language)
+
+	/// Primary green accent. Semantic name for `inSeason`.
+	static let accent = inSeason
+	/// Card / cell surface.
+	static let surface = Color("cellColor")
+	/// Adaptive foreground for use on top of `accent` (white in light mode,
+	/// near-black-green in dark mode). Keeps glyphs/letters legible in both.
+	static let onAccent = Color("onAccent")
+	/// Translucent accent fill for in-season range capsules.
+	static let capsuleFill = inSeason.opacity(0.18)
+	/// Accent stroke for in-season range capsules.
+	static let capsuleStroke = inSeason.opacity(0.45)
+	/// Selection highlight behind active tab-bar / filter controls.
+	static let accentHighlight = inSeason.opacity(0.30)
 }
 

@@ -6,7 +6,7 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
 enum Seasons: Int, PeriodType {
 	case summer = 0
@@ -41,10 +41,6 @@ enum Seasons: Int, PeriodType {
             "Spring"
         }
     }
-
-	var image: Image {
-		.seasons
-	}
 
 	var index: Int {
 		rawValue

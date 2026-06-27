@@ -19,6 +19,7 @@ struct TabBarSearchButton: View {
     @Binding var isSearching: Bool
     @Binding var query: String
     let namespace: Namespace.ID
+    var hideLabel: Bool = false
 
     @FocusState private var focused: Bool
 
@@ -34,7 +35,12 @@ struct TabBarSearchButton: View {
         }
         .onChange(of: isSearching) { _, searching in
             focused = searching
-            if !searching { query = "" }
+            if !searching {
+                // Defer the reset one runloop past the collapse transaction so the full
+                // produce list rebuilding (and headers retitling) doesn't compete with the
+                // bar's first glass-merge frames and read as a delay before it rejoins.
+                DispatchQueue.main.async { query = "" }
+            }
         }
     }
 
@@ -42,13 +48,15 @@ struct TabBarSearchButton: View {
         Button(action: searchOpened) {
             VStack(spacing: 2) {
                 Image.magnifyingGlass
-                    .font(.system(.title3, weight: .medium))
-                Text("Search")
-                    .font(.system(.caption2, weight: .medium))
+                    .font(.system(hideLabel ? .title2 : .title3, weight: .medium))
+                if !hideLabel {
+                    Text("Search")
+                        .font(.tabCaption)
+                }
             }
             .foregroundStyle(.secondary)
-            .padding(.vertical, 14)
-            .padding(.horizontal, 16)
+            .padding(.vertical, hideLabel ? 22 : 14)
+            .padding(.horizontal, hideLabel ? 22 : 16)
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -98,7 +106,15 @@ struct TabBarSearchButton: View {
 
     private func searchClosed() {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
-        query = ""
+        // Resign focus up front so the keyboard begins dismissing in step with the spring,
+        // instead of a render cycle later via onChange (which drops the bar on the keyboard's
+        // own timing curve and lags the glass merge). The query reset is handled in onChange.
+        focused = false
+        // Force the keyboard down deterministically: when the field is empty, clearing
+        // `@FocusState` alone doesn't always resign first responder before the field is
+        // swapped out, leaving the keyboard floating after the bar collapses.
+        UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
             isSearching = false
         }

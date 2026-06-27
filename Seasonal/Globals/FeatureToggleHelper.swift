@@ -10,22 +10,39 @@ import Foundation
 import Combine
 
 enum Feature: String, CaseIterable {
-	case useScrollView
-	case useToolbarButtons
-	case useSwiftUI
-
-	var defaultValue: Bool {
-		switch self {
-		case .useToolbarButtons: false // False due to animation bug
-		case .useSwiftUI:
-			if #available(iOS 26, *) {
-				true
-			} else {
-				false
-			}
-		default: true
-		}
-	}
+    case useScrollView
+    case useToolbarButtons
+    case useSwiftUI
+    case hideTabBarLabels
+    
+    var defaultValue: Bool {
+        switch self {
+        case .useToolbarButtons: false // False due to animation bug
+        case .useSwiftUI:
+            if #available(iOS 26, *) {
+                true
+            } else {
+                false
+            }
+            // On so the cleaner icon-only bar is visible now. In production this starts off and is
+            // flipped on automatically once the app has been launched `tabBarLabelHideLaunchCount` times.
+        case .hideTabBarLabels: false
+        default: true
+        }
+    }
+    
+    var overrideDebugValue: Bool? {
+        #if DEBUG
+        switch self {
+        case .hideTabBarLabels:
+            false
+        default:
+            nil
+        }
+        #else
+        nil
+        #endif
+    }
 }
 
 @MainActor
@@ -35,7 +52,7 @@ final class FeatureToggleHelper: ObservableObject {
 	init() {
 		for feature in Feature.allCases {
 			let stored = UserDefaults.standard.object(forKey: feature.rawValue) as? Bool
-			toggles[feature] = stored ?? feature.defaultValue
+            toggles[feature] = feature.overrideDebugValue ?? stored ?? feature.defaultValue
 		}
 	}
 

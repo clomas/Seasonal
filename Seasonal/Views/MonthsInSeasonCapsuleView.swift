@@ -12,7 +12,7 @@ struct MonthsInSeasonCapsuleView: View {
 
 	let months: [Months]
 
-	private let overlayFrame: CGFloat = 30
+	private let overlayFrame: CGFloat = .capsuleRowHeight
 
 	private var thisMonth: Months {
 		Months.currentPeriod
@@ -32,12 +32,13 @@ struct MonthsInSeasonCapsuleView: View {
 					ForEach(Months.allCases, id: \.self) { month in
 						ZStack {
 							if thisMonth == month && isThisMonthInSeason {
-								currentMonthView(firstLetter: month.firstLetter, fill: Colour.inSeason)
+								currentMonthView(firstLetter: month.firstLetter)
 							} else if thisMonth == month {
-								currentMonthView(firstLetter: month.firstLetter, fill: .gray)
+								currentMonthRing(firstLetter: month.firstLetter)
 							} else {
 								Text(month.firstLetter)
-									.font(.subheadline)
+									.font(.label)
+									.foregroundStyle(months.contains(month) ? Color.primary : .secondary)
 							}
 						}
 						.frame(width: totalWidth / 12)
@@ -48,14 +49,30 @@ struct MonthsInSeasonCapsuleView: View {
 		.frame(height: overlayFrame)
 	}
 
-	func currentMonthView(firstLetter: String, fill: Color) -> some View {
+	/// The current month, when it *is* in season: a solid accent circle with an
+	/// adaptive (`onAccent`) letter so it stays legible in light and dark mode.
+	func currentMonthView(firstLetter: String) -> some View {
 		ZStack {
 			Circle()
-				.fill(fill)
+				.fill(Colour.accent)
 				.frame(width: overlayFrame + 1, height: overlayFrame + 1)
 			Text(firstLetter)
-				.foregroundColor(.white)
-				.font(.subheadline)
+				.foregroundColor(Colour.onAccent)
+				.font(.label)
+		}
+	}
+
+	/// The current month, when it is *not* in season: a light stroked ring rather
+	/// than a heavy grey blob — reads as "today, but not in season".
+	func currentMonthRing(firstLetter: String) -> some View {
+		ZStack {
+			Circle()
+//				.strokeBorder(Color.secondary, lineWidth: 1.5)
+                .fill(Color.secondary)
+				.frame(width: overlayFrame + 1, height: overlayFrame + 1)
+			Text(firstLetter)
+                .foregroundColor(Colour.onAccent)
+				.font(.label)
 		}
 	}
 
@@ -69,15 +86,20 @@ struct MonthsInSeasonCapsuleView: View {
 			guard !set.isEmpty else { return [] }
 
 			var result: [(start: Int, end: Int)] = []
-			var i = 1
-			while i <= 12 {
-				if set.contains(i) {
-					var j = i
-					while j + 1 <= 12 && set.contains(j + 1) { j += 1 }
-					result.append((start: i, end: j))
-					i = j + 1
+			var index = 1
+            
+			while index <= 12 {
+				if set.contains(index) {
+					var endIndex = index
+                    
+                    while endIndex + 1 <= 12 && set.contains(endIndex + 1) {
+                        endIndex += 1
+                    }
+					result.append((start: index, end: endIndex))
+                    index = endIndex + 1
+                    
 				} else {
-					i += 1
+                    index += 1
 				}
 			}
 			return result
@@ -108,10 +130,10 @@ struct MonthsInSeasonCapsuleView: View {
 			let overlayWidth = CGFloat(count) * monthWidth
 
 			return Capsule()
-				.fill(Colour.inSeason.opacity(0.25))
+				.fill(Colour.capsuleFill)
 				.overlay(
 					Capsule()
-						.stroke(Colour.inSeason.opacity(0.5), lineWidth: 1)
+						.stroke(Colour.capsuleStroke, lineWidth: 1)
 				)
 				.frame(width: overlayWidth, height: overlayFrame)
 				.offset(x: xOffset)

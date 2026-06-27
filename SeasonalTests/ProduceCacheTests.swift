@@ -2,6 +2,7 @@ import XCTest
 @testable import Seasonal
 
 @available(iOS 26, *)
+@MainActor
 final class ProduceCacheTests: XCTestCase {
 
     func makeProduce(id: Int, name: String, category: ProduceCategory? = .fruit, months: [Months]? = nil, seasons: [Seasons]? = nil, liked: Bool = false) -> Produce {
@@ -54,5 +55,35 @@ final class ProduceCacheTests: XCTestCase {
         let result = cache.search("app", from: [apple, banana])
         XCTAssertEqual(result.count, 1)
         XCTAssertEqual(result.first?.name, "Apple")
+    }
+
+    func testDerivedListsAreMemoisedUntilInvalidated() {
+        let cache = ProduceCache()
+        let liked = makeProduce(id: 1, name: "A", liked: true)
+
+        // First call computes and caches the result.
+        XCTAssertEqual(cache.favourites(from: [liked]).count, 1)
+
+        // A later call with *different* input returns the cached value — the
+        // argument is ignored until the cache is invalidated. This memoisation
+        // is what masked stale `liked` state before the like-button fix.
+        XCTAssertEqual(cache.favourites(from: []).count, 1)
+    }
+
+    func testInvalidateForcesRecomputeAcrossAllKeys() {
+        let cache = ProduceCache()
+        let liked = makeProduce(id: 1, name: "Apple", months: [.april], liked: true)
+
+        // Prime every derived key.
+        XCTAssertEqual(cache.favourites(from: [liked]).count, 1)
+        XCTAssertEqual(cache.byPeriod(Months.april, from: [liked]).count, 1)
+        XCTAssertEqual(cache.search("app", from: [liked]).count, 1)
+
+        cache.invalidate()
+
+        // After invalidation every key recomputes from the new (empty) input.
+        XCTAssertEqual(cache.favourites(from: []).count, 0)
+        XCTAssertEqual(cache.byPeriod(Months.april, from: []).count, 0)
+        XCTAssertEqual(cache.search("app", from: []).count, 0)
     }
 }

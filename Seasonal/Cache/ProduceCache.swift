@@ -50,6 +50,12 @@ final class ProduceCache: ObservableObject {
 		}
 	}
 
+	/// Clears all memoised derived lists. Call after mutating the underlying
+	/// produce (e.g. toggling a like) so `favourites`/`byPeriod` recompute.
+	func invalidate() {
+		cache.removeAll()
+	}
+
 	private func invalidateIfAppUpdated() {
 		if GlobalSettings.produceCacheAppVersion != appVersion {
 			cache = Cache<ProduceCacheKey, [Produce]>()

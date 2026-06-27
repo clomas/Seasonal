@@ -174,16 +174,36 @@ actor ProduceCloudDataService {
         return produceArray
     }
 
-    // Update cloudKit with local data if there is a disparity
-    // local data should always be accurate
+    // Local data is the source of truth for likes: apply it to the loaded produce
+    // (so a like persists even when the CloudKit private fetch lags or iCloud is
+    // unavailable) and back-fill CloudKit for any local like it is missing.
     private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [Produce]) {
-        let likedArray: [Produce] = produceArray.filter { $0.liked == true}
+        // ids already marked liked from the CloudKit private database
+        let cloudLikedIDs: Set<Int> = Set(produceArray.filter { $0.liked == true }.map { $0.id })
+        let locallyLikedIDs: Set<Int> = Set(locallyStoredData.map { $0.id })
 
         Task {
             await cloudKitDataService.setDatabase(type: .private)
         }
 
-        for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
+        // Apply local likes that CloudKit didn't already return.
+        for index in produceArray.indices
+        where locallyLikedIDs.contains(produceArray[index].id) && !cloudLikedIDs.contains(produceArray[index].id) {
+            let item: Produce = produceArray[index]
+            produceArray[index] = Produce(
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                imageName: item.imageName,
+                description: item.description,
+                months: item.months,
+                seasons: item.seasons,
+                liked: true
+            )
+        }
+
+        // Push any local like missing from the private database up to CloudKit.
+        for localLike in locallyStoredData where !cloudLikedIDs.contains(localLike.id) {
             let result = saveLikeToPrivateDatabaseInCloudKit(id: localLike.id)
 #if DEBUG
             if result == true {

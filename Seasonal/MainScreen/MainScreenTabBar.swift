@@ -23,8 +23,19 @@ struct MainScreenTabBar: View {
     @Binding var searchQuery: String
     @Binding var selectedCategory: ProduceCategory
 
+    @EnvironmentObject private var featureToggleHelper: FeatureToggleHelper
+
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     @Namespace private var glassNamespace
     @Namespace private var tabNamespace
+
+    /// Drops the text labels for an icon-only look either once the launch-count feature toggle
+    /// enables it, or when Dynamic Type reaches `.xLarge` (where the labels would otherwise cram).
+    /// With labels hidden, long-pressing a tab still surfaces its name via the large content viewer.
+    private var hideLabels: Bool {
+        featureToggleHelper.isEnabled(.hideTabBarLabels) || dynamicTypeSize >= .xLarge
+    }
 
     var body: some View {
         // One container so the search, tabs and filter glass surfaces blend into a single
@@ -34,16 +45,16 @@ struct MainScreenTabBar: View {
                 TabBarSearchButton(
                     isSearching: $isSearching,
                     query: $searchQuery,
-                    namespace: glassNamespace
+                    namespace: glassNamespace,
+                    hideLabel: hideLabels
                 )
                 .frame(maxWidth: isSearching ? .infinity : nil)
 
                 if !isSearching {
                     tabCluster
-                        .transition(.scale.combined(with: .opacity))
                 }
 
-                TabBarFilterButton(selectedCategory: $selectedCategory)
+                TabBarFilterButton(selectedCategory: $selectedCategory, hideLabel: hideLabels)
             }
             // Let the bar respond to Dynamic Type, but cap it so large accessibility sizes
             // don't blow out its height the way unbounded scaling would.
@@ -59,6 +70,10 @@ struct MainScreenTabBar: View {
         }
         .padding(6)
         .glassEffect(.regular, in: Capsule())
+        // Participate in the container's glass morph so the cluster flows in/out of the merged
+        // surface. A plain scale/opacity transition instead grows it from zero in the middle,
+        // which reads as the tab bar joining the side buttons late when search closes.
+        .glassEffectID("tabCluster", in: glassNamespace)
     }
 
     private func tabButton(_ tab: MainTabScreen.Tabs, icon: String, label: String) -> some View {
@@ -70,24 +85,35 @@ struct MainScreenTabBar: View {
             }
         } label: {
             VStack(spacing: 2) {
-                Image(systemName: icon)
-                    .font(.system(.title3, weight: .medium))
-                Text(label)
-                    .font(.system(.caption2, weight: .medium))
+                Image(symbol: icon)
+                    .font(.system(hideLabels ? .title2 : .title3, weight: .medium))
+                if !hideLabels {
+                    Text(label)
+                        .font(.tabCaption)
+                }
             }
             .foregroundStyle(selected ? .primary : .secondary)
-            .padding(.vertical, 8)
-            .padding(.horizontal, 10)
+            // Reclaim the space the label used to take as touch padding, so icon-only buttons
+            // keep a comfortable target instead of shrinking. Matching horizontal to vertical
+            // keeps the shape roughly square, so the Capsule reads as a ~height/2 radius pill.
+            .padding(.vertical, hideLabels ? 16 : 8)
+            .padding(.horizontal, hideLabels ? 16 : 10)
             .background {
                 if selected {
                     Capsule()
-                        .fill(Colour.inSeason.opacity(0.30))
+                        .fill(Colour.accentHighlight)
                         .matchedGeometryEffect(id: "tabHighlight", in: tabNamespace)
                 }
             }
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
+        // Restores the native tab bar's long-press behaviour: at accessibility text sizes,
+        // holding a tab shows an enlarged icon + name HUD. The custom bar doesn't get this
+        // for free, and it's the discovery path once labels are hidden at large type.
+        .accessibilityShowsLargeContentViewer {
+            Label(label, systemImage: icon)
+        }
         .accessibilityIdentifier("tab-\(label)")
         .accessibilityLabel(label)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)

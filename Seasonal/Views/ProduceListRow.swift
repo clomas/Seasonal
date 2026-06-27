@@ -14,6 +14,8 @@ struct ProduceListRow: View {
 	@EnvironmentObject var appCoordinator: AppCoordinator
 
 	@Binding var produce: Produce
+    
+    let showMonths: Bool
 
 	var body: some View {
 		ZStack {
@@ -27,28 +29,34 @@ struct ProduceListRow: View {
 						.resizable()
 						.scaledToFit()
 						.frame(width: 60, height: 60)
-						.padding(.leading, 12)
+						.padding(.leading, .space3)
 						.frame(width: 84, alignment: .leading)
 
 					Text(produce.name ?? "")
-						.font(.title2)
+						.font(.cardTitle)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
 
 					Button(action: {
-						appCoordinator.produceStore.toggleLiked(for: produce.id)
+						withAnimation(.easeInOut(duration: 0.35)) {
+							appCoordinator.produceStore.toggleLiked(for: produce.id)
+						}
 					}) {
-						if produce.liked == true { GradientHeartView() } else { EmptyHeartView() }
+						HeartView(liked: produce.liked == true)
 					}
-					.animation(.bouncy, value: produce.liked)
-					.padding(.trailing, 16)
+					.sensoryFeedback(trigger: produce.liked) { _, isLiked in
+						isLiked ? .impact(flexibility: .solid) : .impact(flexibility: .soft)
+					}
+					.padding(.trailing, .space4)
 					.frame(width: 84, alignment: .trailing)
 					.accessibilityIdentifier("produceLikeButton_\(produce.id)")
 				}
-                MonthsInSeasonCapsuleView(months: produce.months ?? [])
+                if showMonths {
+                    MonthsInSeasonCapsuleView(months: produce.months ?? [])
+                }
 			}
 			.accessibilityIdentifier("produceRow_\(produce.id)")
-			.padding(.bottom, 4)
+			.padding(.bottom, .space1)
 			.background(Colour.background)
 		}
 	}
@@ -68,7 +76,7 @@ struct ProduceListRow: View {
 				seasons: [.spring],
 				liked: true
 			)
-		)
+        ), showMonths: true
 	)
 	.environmentObject(previewCoordinator)
 }

@@ -25,11 +25,18 @@ struct PeriodScrollContainer<Cell: View>: View {
 
     let periods: [PeriodItem]
     let initialIndex: Int
+    /// Set to a period index to programmatically scroll to it; reset to nil once handled.
+    @Binding var jumpToIndex: Int?
+    /// Reports the period index currently centred in the pager, so callers (e.g. the jump
+    /// menu) can reflect what the user is looking at.
+    @Binding var currentIndex: Int
     var onPeekFinished: (() async -> Void)? = nil
     @ViewBuilder let cell: (PeriodItem) -> Cell
 
     private let buffer: [BufferSlot]
     private let startSlot: Int
+    private let count: Int
+    private let centerOffset: Int
 
     @State private var scrollPosition: ScrollPosition
     @State private var hasPeeked: Bool = false
@@ -37,11 +44,15 @@ struct PeriodScrollContainer<Cell: View>: View {
     init(
         periods: [PeriodItem],
         initialIndex: Int,
+        jumpToIndex: Binding<Int?> = .constant(nil),
+        currentIndex: Binding<Int> = .constant(0),
         onPeekFinished: (() async -> Void)? = nil,
         @ViewBuilder cell: @escaping (PeriodItem) -> Cell
     ) {
         self.periods = periods
         self.initialIndex = initialIndex
+        self._jumpToIndex = jumpToIndex
+        self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
         self.cell = cell
 
@@ -50,12 +61,14 @@ struct PeriodScrollContainer<Cell: View>: View {
         let centerOffset = (repeats / 2) * count
         let startSlot = centerOffset + initialIndex
         self.startSlot = startSlot
+        self.count = count
+        self.centerOffset = centerOffset
 
         var slots: [BufferSlot] = []
         slots.reserveCapacity(repeats * count)
         for slot in 0..<(repeats * count) {
-            let periodIdx = ((slot - centerOffset) % count + count) % count
-            slots.append(BufferSlot(id: slot, period: periods[periodIdx]))
+            let periodIndex = ((slot - centerOffset) % count + count) % count
+            slots.append(BufferSlot(id: slot, period: periods[periodIndex]))
         }
         self.buffer = slots
 
@@ -75,12 +88,31 @@ struct PeriodScrollContainer<Cell: View>: View {
         .scrollTargetBehavior(.viewAligned)
         .scrollPosition($scrollPosition)
         .onAppear {
-            guard !hasPeeked else { return }
-//            guard !hasPeeked, GlobalSettings.swipeTipShown.swipe else { return }
+            guard !hasPeeked, GlobalSettings.swipeTipShown.swipe else { return }
             hasPeeked = true
             Task {
                 await runPeekSequence()
             }
+        }
+        .onChange(of: jumpToIndex) { _, newValue in
+            guard let index = newValue else { return }
+            jump(to: index)
+            jumpToIndex = nil
+        }
+        .onChange(of: scrollPosition) {
+            guard let slot = scrollPosition.viewID(type: Int.self) else { return }
+            currentIndex = ((slot - centerOffset) % count + count) % count
+        }
+    }
+
+    /// Scrolls to the requested period index, choosing the buffer slot nearest the
+    /// current position so the jump animates the shortest distance.
+    private func jump(to index: Int) {
+        let current = scrollPosition.viewID(type: Int.self) ?? startSlot
+        let nearestRepeat = (Double(current - centerOffset - index) / Double(count)).rounded()
+        let target = centerOffset + index + Int(nearestRepeat) * count
+        withAnimation(.easeInOut(duration: 0.4)) {
+            scrollPosition.scrollTo(id: target)
         }
     }
 

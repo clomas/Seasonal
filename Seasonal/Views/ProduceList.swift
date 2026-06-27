@@ -11,9 +11,12 @@ import SwiftUI
 @available(iOS 26, *)
 struct ProduceList: View {
 
-    @State var parentTab: MainTabScreen.Tabs
+    let parentTab: MainTabScreen.Tabs
     @Binding var selectedCategory: ProduceCategory
-    
+    /// Drives the top overlay buttons: hidden while scrolling down, shown while
+    /// scrolling up or near the top.
+    @Binding var chromeVisible: Bool
+
     let produce: [Produce]
 
     var searchText: String = ""
@@ -36,13 +39,15 @@ struct ProduceList: View {
         selectedPeriodName: String,
         parentTab: MainTabScreen.Tabs,
         selectedCategory: Binding<ProduceCategory>,
-        searchText: String = ""
+        searchText: String = "",
+        chromeVisible: Binding<Bool> = .constant(true)
     ) {
         self.produce = produce
         self.selectedPeriodName = selectedPeriodName
         self.parentTab = parentTab
         self._selectedCategory = selectedCategory
         self.searchText = searchText
+        self._chromeVisible = chromeVisible
     }
 
     let selectedPeriodName: String
@@ -55,30 +60,58 @@ struct ProduceList: View {
                 emptyProduceListView
                     .padding(.bottom, .largePadding)
             } else {
-                List(filteredProduce, id: \.id) { item in
-                    ProduceListRow(produce: .constant(item))
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(.topListRowInset)
-                        .listRowBackground(Color.clear)
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(filteredProduce, id: \.id) { item in
+                            ProduceListRow(produce: .constant(item), showMonths: !parentTab.isSeasons)
+                                .padding(.topListRowInset)
+                                .transition(.slide.combined(with: .opacity))
+                        }
+                    }
+                    .padding(.bottom, .largePadding)
                 }
                 .accessibilityIdentifier("produceList")
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
-                .safeAreaInset(edge: .bottom) {
-                    Color.clear.frame(height: .largePadding)
+                .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                    geometry.contentOffset.y
+                } action: { oldOffset, newOffset in
+                    updateChromeVisibility(from: oldOffset, to: newOffset)
                 }
             }
         }
     }
 
+    /// Hides the top chrome when scrolling down, reveals it when scrolling up or
+    /// near the top. A small threshold avoids flicker from tiny offset changes.
+    private func updateChromeVisibility(from oldOffset: CGFloat, to newOffset: CGFloat) {
+        let threshold: CGFloat = 8
+        let shouldShow: Bool
+        
+        if newOffset < 60 {
+            shouldShow = true
+        } else if newOffset > oldOffset + threshold {
+            shouldShow = false
+        } else if newOffset < oldOffset - threshold {
+            shouldShow = true
+        } else {
+            return
+        }
+
+        guard shouldShow != chromeVisible else { return }
+        withAnimation(.easeInOut(duration: 0.25)) {
+            chromeVisible = shouldShow
+        }
+    }
+
     private var emptyProduceListView: some View {
-        VStack(spacing: 6) {
-            Image.settings
-                .resizable()
-                .frame(width: 50, height: 50)
-                .padding(20)
-            Text(parentTab.emptyProduceListViewMessage ?? String.nothingToSeeHereMessage(tryAnother: selectedPeriodName.lowercased()))
+        VStack(spacing: .space2) {
+            parentTab.emptyListIcon
+                .font(.largeTitle)
+                .foregroundStyle(.secondary)
+                .padding(.bottom, .space5)
+            Text(searchText.isEmpty == true ? parentTab.emptyProduceListViewMessage : "No search results")
+                .font(.bodyText)
+                .foregroundStyle(.secondary)
         }
     }
 }

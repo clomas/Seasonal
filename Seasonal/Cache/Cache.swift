@@ -35,4 +35,9 @@ final class Cache<Key: Hashable, Value> {
 		timestamps[key] = Date()
 		return newValue
 	}
+
+	func removeAll() {
+		storage.removeAll()
+		timestamps.removeAll()
+	}
 }

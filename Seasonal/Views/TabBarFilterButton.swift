@@ -8,10 +8,18 @@
 
 import SwiftUI
 
+/// The filter control inside `LiquidGlassTabBar`: an icon-over-label capsule that opens a category
+/// picker as a popover *above* the bar.
+///
+/// The picker uses `arrowEdge: .bottom`, which puts the arrow on the popover's bottom edge and so
+/// forces the content to open upward out of the button — the earlier `.top` did the opposite and
+/// dropped the menu off-screen once the keyboard floated the bar up. `presentationCompactAdaptation`
+/// keeps it a popover on iPhone instead of collapsing into a sheet.
 @available(iOS 26.0, *)
 struct TabBarFilterButton: View {
 
     @Binding var selectedCategory: ProduceCategory
+    var hideLabel: Bool = false
 
     @State private var isPresented = false
 
@@ -24,14 +32,14 @@ struct TabBarFilterButton: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel("Filter by category")
-        .accessibilityValue(isFiltering ? selectedCategory.title : "All categories")
+        .accessibilityValue(isFiltering ? selectedCategory.menuTitle : "All categories")
         .accessibilityHint("Filters the produce list by category")
         .accessibilityIdentifier("filterByCategoryButton")
-        // A popover honours the anchor (unlike `Menu`, which overlays the button): at the
-        // bottom of the screen it's forced upward, so it sits above the button with its arrow
-        // meeting the button's top edge. `.popover` adaptation keeps it a popover on iPhone
-        // instead of collapsing to a sheet.
-        .popover(isPresented: $isPresented, arrowEdge: .top) {
+        .popover(
+            isPresented: $isPresented,
+            attachmentAnchor: .point(.top),
+            arrowEdge: .bottom
+        ) {
             categoryPicker
                 .presentationCompactAdaptation(.popover)
         }
@@ -45,15 +53,19 @@ struct TabBarFilterButton: View {
                     isPresented = false
                 } label: {
                     HStack(spacing: 12) {
-                        Label(category.title, systemImage: category.image)
-                            .labelStyle(.titleAndIcon)
+                        Label {
+                            Text(category.menuTitle)
+                        } icon: {
+                            Image(symbol: category.image)
+                        }
+                        .labelStyle(.titleAndIcon)
                         Spacer(minLength: 16)
                         Image(systemName: "checkmark")
                             .font(.footnote.weight(.semibold))
                             .opacity(selectedCategory == category ? 1 : 0)
                     }
-                    .foregroundStyle(selectedCategory == category ? Colour.inSeason : .primary)
-                    .padding(.horizontal, 16)
+                    .foregroundStyle(selectedCategory == category ? Colour.accent : .primary)
+                    .padding(.horizontal, .space4)
                     .padding(.vertical, 11)
                     .contentShape(Rectangle())
                 }
@@ -62,25 +74,54 @@ struct TabBarFilterButton: View {
             }
         }
         .padding(.vertical, 6)
-        .frame(minWidth: 220)
+        .frame(width: 240)
     }
 
     private var isFiltering: Bool { selectedCategory != .all }
 
+    /// Lit while a filter is active *or* the picker is open, so the green blob persists with the menu.
+    private var isHighlighted: Bool { isFiltering || isPresented }
+
     @ViewBuilder
     private var menuIcon: some View {
         VStack(spacing: 2) {
-            Image(systemName: selectedCategory.image)
-                .font(.system(.title3, weight: .medium))
-            Text(selectedCategory.title)
-                .font(.system(.caption2, weight: .medium))
-                .lineLimit(1)
+            Image(symbol: selectedCategory.image)
+                .font(.system(hideLabel ? .title2 : .title3, weight: .medium))
+            if !hideLabel {
+                label
+            }
         }
-        .foregroundStyle(isFiltering ? Colour.inSeason : Color.secondary)
-        .padding(.vertical, 14)
-        .padding(.horizontal, 16)
+        .foregroundStyle(isHighlighted ? .primary : .secondary)
+        // Reclaim the label's space as touch padding when icon-only, keeping the target size
+        // roughly square so the Capsule reads as a ~height/2 radius pill.
+        .padding(.vertical, hideLabel ? 22 : 14)
+        .padding(.horizontal, hideLabel ? 22 : 16)
+        // Same green blob the selected tab uses, inset so it reads as a pill inside the button
+        // rather than filling its whole bounds.
+        .background {
+            if isHighlighted {
+                Capsule()
+                    .fill(Colour.accentHighlight)
+                    .padding(6)
+            }
+        }
         .glassEffect(.regular.interactive(), in: Capsule())
         .contentShape(Capsule())
+    }
+
+    /// Shows the current label but always reserves the width of the widest one (via hidden copies),
+    /// so the button doesn't resize as the selection changes. Sizing from real text metrics keeps
+    /// it correct under Dynamic Type.
+    private var label: some View {
+        ZStack {
+            ForEach(ProduceCategory.allCases, id: \.self) { category in
+                Text(category.buttonTitle).hidden()
+            }
+            Text(selectedCategory.buttonTitle)
+        }
+        .font(.tabCaption)
+        .lineLimit(1)
+        .accessibilityHidden(true)
     }
 }
 
@@ -90,6 +131,5 @@ struct TabBarFilterButton: View {
             Colour.background
             TabBarFilterButton(selectedCategory: .constant(.all))
         }
-            
     }
 }

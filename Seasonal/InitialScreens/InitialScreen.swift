@@ -16,18 +16,24 @@ struct InitialScreen: View {
 	@State private var showErrorSheet = false
 	@State private var showAlert: Bool = false
 
+    var logo: some View {
+        Image("Logo")
+            .resizable()
+            .frame(width: 150, height: 150)
+            .padding()
+    }
+    
 	var body: some View {
 		VStack {
-			Image("Logo")
-				.resizable()
-				.frame(width: 150, height: 150)
-				.padding()
-
 			switch appCoordinator.state {
             case .initial:
+                logo
                 ProgressView()
-                    .frame(width: 35, height: 35)
+                    .controlSize(.large)
+                    .tint(.primary)
+
             case let .dataFailed(errorTitle, errorMessage):
+                logo
                 failureStackView(
                     title: errorTitle,
                     message: errorMessage
@@ -35,6 +41,7 @@ struct InitialScreen: View {
                     appCoordinator.retryFetchData()
                 }
 			case .networkFailed:
+                logo
                 failureStackView(
                     title: "Network Error",
                     message: "Unable to connect to the internet"
@@ -42,10 +49,11 @@ struct InitialScreen: View {
                     appCoordinator.retryFetchData()
                 }
 			case .locationNotFound:
-				VStack(spacing: 10) {
+                logo
+				VStack(spacing: .space2) {
 					Text("Choose your location")
-						.font(.title3.weight(.semibold))
-						.padding(.bottom, 8)
+						.font(.sectionTitle)
+						.padding(.bottom, .space4)
 
 					ForEach(StateLocation.allCases, id: \.self) { state in
 						if state.fullName != StateLocation.noState.fullName {
@@ -61,22 +69,22 @@ struct InitialScreen: View {
 						appCoordinator.retryStart()
 					} label: {
 						Label("Try find location again", systemImage: "location.magnifyingglass")
-							.font(.subheadline)
-							.foregroundStyle(.secondary)
+							.font(.label)
+							.foregroundStyle(Colour.accent)
 					}
 					.buttonStyle(.plain)
-					.padding(.top, 24)
+					.padding(.top, .space6)
 				}
-				.padding(.horizontal, 24)
+				.padding(.horizontal, .space6)
 			default:
 				EmptyView()
 			}
-			Spacer()
-				.transition(.fallFromTop)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.bottom, .space8)
         .background(Colour.background)
 		.animation(.easeInOut(duration: Constants.animationDuration), value: appCoordinator.state)
+
 	}
     
     private func failureStackView(
@@ -88,29 +96,23 @@ struct InitialScreen: View {
     ) -> some View {
         VStack {
             Text(title)
+                .font(.sectionTitle)
                 .multilineTextAlignment(.center)
             Text(message)
+                .font(.bodyText)
+                .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .padding(.all)
-            
+
             TintedGlassCapsuleButton(
                 label: buttonLabel,
                 systemImage: buttonImage,
                 style: .prominent,
                 tapHandler: tapHandler
             )
-            .padding(.top, 16)
+            .padding(.top, .space4)
         }
     }
-}
-
-extension AnyTransition {
-	static var fallFromTop: AnyTransition {
-		.asymmetric(
-			insertion: .move(edge: .top).combined(with: .opacity),
-			removal: .opacity
-		)
-	}
 }
 
 @available(iOS 26, *)

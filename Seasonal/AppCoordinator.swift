@@ -47,11 +47,10 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     private var locationManager: LocationService?
     private var cloudTask: Task<Void, Never>?
     private var locationTask: Task<Void, Never>?
-    
+
     init(window: UIWindow?) {
         self.window = window
-        
-        
+
 #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
             // if testing UI disable animations.
@@ -67,6 +66,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     func start() {
         let rootScreen = RootScreen()
             .environmentObject(self)
+            .environmentObject(produceStore)
             .environmentObject(featureToggleHelper)
         
         window?.rootViewController = UIHostingController(rootView: rootScreen)
@@ -96,6 +96,18 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
         currentLocation = location
         getDataFromCloudKit(for: currentLocation)
     }
+
+    /// Switches to a different state from within the app: persists the choice,
+    /// clears the cached produce and re-fetches for the new location. Unlike
+    /// `updateChosenLocationUserDefaults`, this always overwrites the stored state.
+    func changeLocation(to location: StateLocation) {
+        guard location != currentLocation else { return }
+        GlobalSettings.location = Location(state: location.rawValue)
+        currentLocation = location
+        produceStore.prepareForLocationChange()
+        setState(.initial)
+        getDataFromCloudKit(for: location)
+    }
     
     // MARK: Location delegate
     
@@ -123,7 +135,7 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
                 return
             }
 
-            setState(.initial)
+            setState(.locationNotFound)
         }
     }
     
@@ -132,8 +144,15 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
     func internetStatusDidChange(status: NWPath.Status) {
         switch status {
         case .satisfied:
-            locationManager = LocationService(delegate: self)
             Task { await networkService?.stop() }
+
+            let savedState = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
+            if savedState != .noState {
+                currentLocation = savedState
+                getDataFromCloudKit(for: savedState)
+            } else {
+                locationManager = LocationService(delegate: self)
+            }
         default:
             setState(.networkFailed)
         }

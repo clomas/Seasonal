@@ -21,8 +21,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 .datastoreLocation(.applicationDefault)
             ])
         }
+
+        countLaunchForTabBarLabels()
 		return true
 	}
+
+    /// Tracks launches and, once the threshold is reached, switches on the icon-only tab bar so
+    /// returning users get a cleaner bar. Setting the toggle's UserDefault here (before the scene
+    /// connects) means `FeatureToggleHelper` picks it up when it initialises.
+    @MainActor
+    private func countLaunchForTabBarLabels() {
+        GlobalSettings.appLaunchCount += 1
+        if GlobalSettings.appLaunchCount >= tabBarLabelHideLaunchCount {
+            UserDefaults.standard.set(true, forKey: Feature.hideTabBarLabels.rawValue)
+        }
+    }
 
 	// MARK: UISceneSession Lifecycle
 	/// I've converted this Application to Scene Delegate model.

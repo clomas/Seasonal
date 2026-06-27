@@ -21,7 +21,7 @@ protocol PeriodType: CaseIterable, Hashable where AllCases == [Self] {
 @available(iOS 26, *)
 struct PeriodPagerView<Period: PeriodType>: View {
 
-    @EnvironmentObject var appCoordinator: AppCoordinator
+    @EnvironmentObject var produceStore: ProduceStore
 
     let selectedTab: MainTabScreen.Tabs
     let searchQuery: String
@@ -31,6 +31,12 @@ struct PeriodPagerView<Period: PeriodType>: View {
     private let periods: [PeriodItem]
 
     @Binding var selectedCategory: ProduceCategory
+    /// Drives the top overlay buttons' visibility as the produce list scrolls.
+    @Binding var chromeVisible: Bool
+    /// Set by the (lifted) calendar button to scroll this pager to a period; reset to nil once handled.
+    @Binding var jumpToIndex: Int?
+    /// Reports the period index currently centred in the pager, so the jump menu can tick it.
+    @Binding var currentIndex: Int
 
     var onPeekFinished: (() async -> Void)? = nil
 
@@ -40,12 +46,18 @@ struct PeriodPagerView<Period: PeriodType>: View {
         searchQuery: String,
         isSearching: Bool,
         selectedCategory: Binding<ProduceCategory>,
+        chromeVisible: Binding<Bool> = .constant(true),
+        jumpToIndex: Binding<Int?> = .constant(nil),
+        currentIndex: Binding<Int> = .constant(0),
         onPeekFinished: (() async -> Void)? = nil
     ) {
         self.selectedTab = selectedTab
         self.searchQuery = searchQuery
         self.isSearching = isSearching
         self._selectedCategory = selectedCategory
+        self._chromeVisible = chromeVisible
+        self._jumpToIndex = jumpToIndex
+        self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
         self.periods = periods.enumerated().map {
             PeriodItem(id: $0.offset, title: $0.element.title)
@@ -56,16 +68,19 @@ struct PeriodPagerView<Period: PeriodType>: View {
         PeriodScrollContainer(
             periods: periods,
             initialIndex: Period.currentPeriod.index,
+            jumpToIndex: $jumpToIndex,
+            currentIndex: $currentIndex,
             onPeekFinished: onPeekFinished
         ) { item in
             let period = Array(Period.allCases)[item.id]
 
             ProduceListNavigationView(title: cellTitle(for: period)) {
                 ProduceList(
-                    produce: appCoordinator.produceStore.byPeriod(period, query: searchQuery),
+                    produce: produceStore.byPeriod(period, query: searchQuery),
                     selectedPeriodName: item.title,
                     parentTab: selectedTab,
-                    selectedCategory: $selectedCategory
+                    selectedCategory: $selectedCategory,
+                    chromeVisible: $chromeVisible
                 )
             }
         }
@@ -90,6 +105,7 @@ struct PeriodPagerView<Period: PeriodType>: View {
             selectedCategory: Binding.constant(ProduceCategory.all)
         )
         .environmentObject(previewCoordinator)
+        .environmentObject(previewCoordinator.produceStore)
         .environmentObject(FeatureToggleHelper())
     }
 }

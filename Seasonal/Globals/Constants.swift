@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct Constants {
 
@@ -97,35 +98,30 @@ struct Constants {
 }
 
 extension Image {
-	static let arrowLeft: Image = .init(systemName: "arrow.left")
-	static let arrowRight: Image = .init(systemName: "arrow.right")
-	static let calendar: Image = .init(systemName: "calendar")
-	static let seasons: Image = .init(systemName: .seasons)
-	static let heart: Image = .init(systemName: "heart")
+    static let heart: Image = .init(systemName: "heart")
 	static let heartFill: Image = .init(systemName: "heart.fill")
 	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
-	static let settings: Image = .init(systemName: "slider.vertical.3")
+    static let settings: Image = .init(systemName: "slider.vertical.3")
+	static let xMarkCircle: Image = .init(systemName: "xmark.circle")
+
+	/// Loads a custom asset-catalog symbol (e.g. `apple.fruit`) when one exists
+	/// with this name, otherwise falls back to the matching SF Symbol.
+	init(symbol name: String) {
+		if UIImage(named: name) != nil {
+			self.init(name)
+		} else {
+			self.init(systemName: name)
+		}
+	}
 }
 
 // MARK: Image strings
 
 extension String {
-	static let calendarImage: String = "calendar"
-	static let fruit: String = "apple.logo"
-	static let herbs: String = "leaf.fill"
-	static let settings: String = "checklist.checked"
-	static let vegetables: String = "carrot.fill"
-	static let seasons: String = "cloud.sun.fill"
-
-	static func nothingToSeeHereMessage(tryAnother: String?) -> String {
-		"Nothing to see ere, try another \(tryAnother ?? "")."
-	}
-}
-
-// MARK: Time intervals
-
-extension TimeInterval {
-	static let lazyHStackScrollDuration: TimeInterval = 0.5
+	static let fruit: String = "apple.fruit"
+	static let herbs: String = "leaf"
+	static let category: String = "list.bullet"
+	static let vegetables: String = "carrot"
 }
 
 // MARK: Space

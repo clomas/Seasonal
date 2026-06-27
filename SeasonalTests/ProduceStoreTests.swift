@@ -2,6 +2,7 @@ import XCTest
 @testable import Seasonal
 
 @available(iOS 26, *)
+@MainActor
 final class ProduceStoreTests: XCTestCase {
 
     func makeProduce(id: Int, name: String, category: ProduceCategory? = .fruit, months: [Months]? = nil, seasons: [Seasons]? = nil, liked: Bool = false) -> Produce {
@@ -49,5 +50,22 @@ final class ProduceStoreTests: XCTestCase {
         // toggleLiked updates synchronously in-memory
         XCTAssertEqual(store.favourites.count, 1)
         XCTAssertTrue(store.produce[1]?.liked == true)
+    }
+
+    func testToggleLikedInvalidatesCachedDerivedLists() {
+        let store = ProduceStore()
+        let item = makeProduce(id: 1, name: "Apple", months: [.april], liked: false)
+        store.loadMockData([item])
+
+        // Prime the byPeriod/favourites caches with the un-liked state first,
+        // mirroring how the UI reads them before a tap.
+        XCTAssertEqual(store.byPeriod(Months.april).first?.liked, false)
+        XCTAssertEqual(store.favourites.count, 0)
+
+        store.toggleLiked(for: 1)
+
+        // Re-reading must reflect the new state, not the stale cached arrays.
+        XCTAssertEqual(store.byPeriod(Months.april).first?.liked, true)
+        XCTAssertEqual(store.favourites.count, 1)
     }
 }

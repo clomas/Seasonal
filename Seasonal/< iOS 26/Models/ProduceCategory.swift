@@ -11,12 +11,20 @@ import SwiftUI
 enum ProduceCategory: String, CaseIterable {
 
 	case fruit
-	case vegetables
+	case vegetables = "veg"
 	case herbs
 	case all
 
-	var title: String {
-		String(describing: self).capitalized
+    var menuTitle: String {
+        if case .vegetables = self {
+            String(describing: self).capitalized
+        } else {
+            buttonTitle
+        }
+    }
+
+	var buttonTitle: String {
+        self.rawValue.capitalized
 	}
 
 	var image: String {
@@ -28,7 +36,7 @@ enum ProduceCategory: String, CaseIterable {
 		case .herbs:
 			.herbs
 		case .all:
-			.settings
+			.category
 		}
 	}
 }

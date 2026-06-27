@@ -6,7 +6,7 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-import SwiftUI
+import Foundation
 
 enum Months: Int, PeriodType {
 	case january = 1
@@ -44,12 +44,12 @@ enum Months: Int, PeriodType {
             "August"
         case .september:
             "September"
+        case .october:
+            "October"
         case .november:
             "November"
         case .december:
             "December"
-        default:
-            ""
         }
     }
 
@@ -63,10 +63,6 @@ enum Months: Int, PeriodType {
 
 	func contains(_ produce: Produce) -> Bool {
 		produce.months?.contains(self) == true
-	}
-
-	var image: Image {
-		.calendar
 	}
 
 	var firstLetter: String {

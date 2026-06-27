@@ -35,7 +35,7 @@ final class ProduceStore: ObservableObject {
 		guard let item = produce[id] else { return }
 		let updatedLiked = !item.liked
 
-		produce[id] = Produce(
+		let updated = Produce(
 			id: item.id,
 			name: item.name,
 			category: item.category,
@@ -46,12 +46,31 @@ final class ProduceStore: ObservableObject {
 			liked: updatedLiked
 		)
 
-		cache.favourites(from: Array(produce.values))
+		produce[id] = updated
+
+		// `allProduce` is the source of truth for every derived list
+		// (favourites / byPeriod), so it must be updated too — otherwise the
+		// toggle is invisible in the UI.
+		if let index = allProduce.firstIndex(where: { $0.id == id }) {
+			allProduce[index] = updated
+		}
+
+		// Drop the memoised derived lists so they recompute with the new
+		// liked state on the next read.
+		cache.invalidate()
 
 		Task { await syncLikeToCloudKit(id: id, liked: updatedLiked) }
 	}
 
 	// MARK: - Fetch Produce
+
+	/// Clears cached and published produce so the next `fetchFromCloudKit` ignores
+	/// the (location-agnostic) cache and re-fetches for a newly chosen state.
+	func prepareForLocationChange() {
+		cache.invalidate()
+		produce = [:]
+		allProduce = []
+	}
 
 	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CKError> {
         

@@ -12,7 +12,7 @@
 @MainActor
 let previewCoordinator: AppCoordinator = {
 	let coord = AppCoordinator(window: .create())
-    coord.state = .networkFailed
+    coord.state = .initial
 	coord.produceStore.loadMockData([
 		Produce(
 			id: 0,

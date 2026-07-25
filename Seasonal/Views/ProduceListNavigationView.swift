@@ -11,10 +11,15 @@ import SwiftUI
 @available(iOS 26, *)
 struct ProduceListNavigationView<Content: View>: View {
 	let title: String
+	/// Leading inset for the large title. The pager's per-cell `NavigationStack`s sit at 0
+	/// system margin, but a standalone `NavigationStack` (e.g. Favourites) adds ~18pt of its
+	/// own large-title margin — so that call site passes a smaller value to line the titles up.
+	var titleLeadingPadding: CGFloat = 20
 	let content: Content
 
-	init(title: String, @ViewBuilder content: () -> Content) {
+	init(title: String, titleLeadingPadding: CGFloat = 20, @ViewBuilder content: () -> Content) {
 		self.title = title
+		self.titleLeadingPadding = titleLeadingPadding
 		self.content = content()
 	}
 
@@ -29,7 +34,7 @@ struct ProduceListNavigationView<Content: View>: View {
                             .font(.largeTitle)
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 20)
+                            .padding(.leading, titleLeadingPadding)
                     }
                 }
 		}

@@ -129,7 +129,14 @@ actor ProduceCloudDataService {
                 id = recordID
                 name = nameRecord
                 imageName = nameRecord
-                category = ProduceCategory(rawValue: categoryRecord) ?? .fruit
+                switch categoryRecord {
+                case "vegetables":
+                    category = .vegetables
+                case "herbs":
+                    category = .herbs
+                default:
+                    category = .fruit
+                }
                 months = monthsRecord.createMonthArray()
                 seasons = seasonsRecord.createSeasonArray()
             }

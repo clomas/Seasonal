@@ -93,7 +93,7 @@ struct MainTabScreen: View {
         .overlay(alignment: .topTrailing) {
             HStack(spacing: 12) {
                 if showsPeriodPicker {
-                    SelectMonthButton { periodPickerMenu }
+                    SelectMonthButton { dismiss in periodPickerMenu(dismiss: dismiss) }
                 }
                 InfoButton { showInfo = true }
             }
@@ -130,41 +130,73 @@ struct MainTabScreen: View {
         if case .favourites = selectedTab { false } else { true }
     }
 
-    /// Menu content for the lifted calendar button — scoped to the active tab so it jumps the
-    /// matching pager via its own jump binding.
+    /// Popover content for the lifted period button — scoped to the active tab so it jumps the
+    /// matching pager via its own jump binding. `dismiss` closes the popover after a selection.
     @ViewBuilder
-    private var periodPickerMenu: some View {
+    private func periodPickerMenu(dismiss: @escaping () -> Void) -> some View {
         switch selectedTab {
         case .seasons:
-            periodMenu(Seasons.self, title: "Jump to a season", current: currentSeasonIndex, jump: $jumpSeasonIndex)
+            periodMenu(Seasons.self, title: "Jump to a season", current: currentSeasonIndex, jump: $jumpSeasonIndex, dismiss: dismiss)
         default:
-            periodMenu(Months.self, title: "Jump to a month", current: currentMonthIndex, jump: $jumpMonthIndex)
+            periodMenu(Months.self, title: "Jump to a month", current: currentMonthIndex, jump: $jumpMonthIndex, dismiss: dismiss)
         }
     }
 
-    /// Builds a "jump to period" section for any `PeriodType`. The button index is the period's
-    /// position in `allCases`, which is what the pager's `jumpToIndex` binding expects. `current`
-    /// is the index the pager is showing, so it gets a checkmark.
+    /// Builds the "jump to period" picker for any `PeriodType` as popover rows (mirroring the
+    /// category filter popover). The row index is the period's position in `allCases`, which is
+    /// what the pager's `jumpToIndex` binding expects; `current` is the index the pager is
+    /// showing, so it gets a checkmark. Tapping a row jumps the pager and dismisses the popover.
     @ViewBuilder
-    private func periodMenu<P: PeriodType>(_ type: P.Type, title: String, current: Int, jump: Binding<Int?>) -> some View {
-        Section(title) {
-            ForEach(Array(P.allCases.enumerated()), id: \.offset) { index, period in
-                Button {
-                    jump.wrappedValue = index
-                } label: {
-                    if index == current {
-                        Label(period.title, systemImage: "checkmark")
-                    } else {
-                        Text(period.title)
+    private func periodMenu<P: PeriodType>(
+        _ type: P.Type,
+        title: String,
+        current: Int,
+        jump: Binding<Int?>,
+        dismiss: @escaping () -> Void
+    ) -> some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 0) {
+                Text(title)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, .space4)
+                    .padding(.top, 12)
+                    .padding(.bottom, 4)
+
+                ForEach(Array(P.allCases.enumerated()), id: \.offset) { index, period in
+                    Button {
+                        jump.wrappedValue = index
+                        dismiss()
+                    } label: {
+                        HStack(spacing: 12) {
+                            Text(period.title)
+                            Spacer(minLength: 16)
+                            Image(systemName: "checkmark")
+                                .font(.footnote.weight(.semibold))
+                                .opacity(index == current ? 1 : 0)
+                        }
+                        .foregroundStyle(index == current ? Colour.accent : .primary)
+                        .padding(.horizontal, .space4)
+                        .padding(.vertical, 11)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(index == current ? [.isButton, .isSelected] : .isButton)
                 }
             }
+            .padding(.vertical, 6)
         }
+        .scrollBounceBehavior(.basedOnSize)
+        .frame(width: 240)
+        .frame(maxHeight: 360)
     }
 
     @ViewBuilder
     private func produceListNavigationView(title: String) -> some View {
-        ProduceListNavigationView(title: title) {
+        // Favourites is a standalone NavigationStack, which adds its own ~18pt large-title
+        // margin on top of this inset — unlike the pager's nested stacks — so trim the inset
+        // here to keep the heading aligned with the month/season titles.
+        ProduceListNavigationView(title: title, titleLeadingPadding: 2) {
             ProduceList(
                 produce: produceStore.favourites,
                 selectedPeriodName: "favourites",

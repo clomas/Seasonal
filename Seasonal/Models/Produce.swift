@@ -14,7 +14,7 @@ enum ProduceCacheKey: Hashable {
 	case search(String)
 }
 
-struct Produce: Identifiable, Sendable {
+struct Produce: Identifiable, Sendable, Codable {
 	let id: Int
 	let name: String?
 	let category: ProduceCategory?

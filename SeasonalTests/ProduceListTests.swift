@@ -13,7 +13,7 @@ final class ProduceListTests: XCTestCase {
         let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
         let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
 
-        let view = ProduceList(produce: [p1, p2], selectedPeriodName: "test", parentTab: .favourites, selectedCategory: .constant(.all))
+        let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .all)
 
         XCTAssertEqual(view.filteredProduce.count, 2)
     }
@@ -22,7 +22,7 @@ final class ProduceListTests: XCTestCase {
         let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
         let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
 
-        let view = ProduceList(produce: [p1, p2], selectedPeriodName: "test", parentTab: .favourites, selectedCategory: .constant(.vegetables))
+        let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .vegetables)
 
         XCTAssertEqual(view.filteredProduce.count, 1)
         XCTAssertEqual(view.filteredProduce.first?.id, 2)
@@ -32,14 +32,14 @@ final class ProduceListTests: XCTestCase {
         let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
         let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
 
-        let view = ProduceList(produce: [p1, p2], selectedPeriodName: "test", parentTab: .favourites, selectedCategory: .constant(.all), searchText: "app")
+        let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .all, searchText: "app")
 
         XCTAssertEqual(view.filteredProduce.count, 1)
         XCTAssertEqual(view.filteredProduce.first?.id, 1)
     }
 
     func testEmptyListMessageForFavourites() {
-        let view = ProduceList(produce: [], selectedPeriodName: "favourites", parentTab: .favourites, selectedCategory: .constant(.all))
+        let view = ProduceList(produce: [], parentTab: .favourites, selectedCategory: .all)
         // The empty view text comes from `parentTab.emptyProduceListViewMessage` or a fallback string.
         XCTAssertNotNil(view.parentTab.emptyProduceListViewMessage)
     }

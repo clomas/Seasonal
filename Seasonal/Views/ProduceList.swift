@@ -11,15 +11,17 @@ import SwiftUI
 @available(iOS 26, *)
 struct ProduceList: View {
 
-    let parentTab: MainTabScreen.Tabs
-    @Binding var selectedCategory: ProduceCategory
-    /// Drives the top overlay buttons: hidden while scrolling down, shown while
-    /// scrolling up or near the top.
-    @Binding var chromeVisible: Bool
-
+    /// The filter inputs stay plain arguments rather than being read from `MainScreenState`,
+    /// so `filteredProduce` is a pure function of what's passed in and can be unit tested
+    /// without a rendered view hierarchy.
     let produce: [Produce]
-
+    let parentTab: MainTabScreen.Tabs
+    var selectedCategory: ProduceCategory = .all
     var searchText: String = ""
+
+    /// Only the ambient chrome comes from the environment: scrolling this list is what hides
+    /// and reveals the top buttons, and a tap in it drops the search keyboard.
+    @Environment(MainScreenState.self) private var state
 
     var filteredProduce: [Produce] {
         let categoryFiltered: [Produce] = {
@@ -33,24 +35,6 @@ struct ProduceList: View {
             $0.name?.localizedCaseInsensitiveContains(searchText) == true
         }
     }
-
-    init(
-        produce: [Produce],
-        selectedPeriodName: String,
-        parentTab: MainTabScreen.Tabs,
-        selectedCategory: Binding<ProduceCategory>,
-        searchText: String = "",
-        chromeVisible: Binding<Bool> = .constant(true)
-    ) {
-        self.produce = produce
-        self.selectedPeriodName = selectedPeriodName
-        self.parentTab = parentTab
-        self._selectedCategory = selectedCategory
-        self.searchText = searchText
-        self._chromeVisible = chromeVisible
-    }
-
-    let selectedPeriodName: String
 
     var body: some View {
         ZStack {
@@ -79,6 +63,11 @@ struct ProduceList: View {
                 }
             }
         }
+        // A tap anywhere in the list — a row, empty space below it — should also drop the
+        // search keyboard. Simultaneous so row taps still register normally; scoped to this
+        // subtree (not the whole screen) so it can't race with the tab bar's own search
+        // controls, which live in a separate overlay branch off the root view.
+        .simultaneousGesture(TapGesture().onEnded { state.dismissSearchKeyboard() })
     }
 
     /// Hides the top chrome when scrolling down, reveals it when scrolling up or
@@ -97,9 +86,9 @@ struct ProduceList: View {
             return
         }
 
-        guard shouldShow != chromeVisible else { return }
+        guard shouldShow != state.chromeVisible else { return }
         withAnimation(.easeInOut(duration: 0.25)) {
-            chromeVisible = shouldShow
+            state.chromeVisible = shouldShow
         }
     }
 

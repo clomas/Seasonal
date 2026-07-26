@@ -121,6 +121,7 @@ struct TabBarFilterButton: View {
         }
         .font(.tabCaption)
         .lineLimit(1)
+        .minimumScaleFactor(0.8)
         .accessibilityHidden(true)
     }
 }

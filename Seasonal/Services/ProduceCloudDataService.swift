@@ -62,6 +62,37 @@ actor ProduceCloudDataService {
         return .success(produce)
     }
 
+    /// Refreshes liked state from the CloudKit private database against an
+    /// already-known base produce array, without re-querying the public
+    /// database. Used when a valid disk cache of the base catalogue exists.
+    func getLikes(basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
+        await cloudKitDataService.setDatabase(type: .private)
+
+        do {
+            let privateRecords = try await cloudKitDataService.fetchItems(
+                .private,
+                recordType: Constants.australianProduceLikes,
+                queryKey: Constants.id
+            )
+            var produceArray = baseProduce.map {
+                Produce(
+                    id: $0.id,
+                    name: $0.name,
+                    category: $0.category,
+                    imageName: $0.imageName,
+                    description: $0.description,
+                    months: $0.months,
+                    seasons: $0.seasons,
+                    liked: false
+                )
+            }
+            applyLikes(privateRecords: privateRecords, to: &produceArray)
+            return .success(produceArray)
+        } catch {
+            return .failure(error as? CKError ?? CKError(.internalError))
+        }
+    }
+
     // MARK: Save
 
     @discardableResult
@@ -108,8 +139,13 @@ actor ProduceCloudDataService {
     // MARK: Sort Data
 
     private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [Produce] {
+        var produceArray = buildBaseProduce(from: publicRecords)
+        applyLikes(privateRecords: privateRecords, to: &produceArray)
+        return produceArray
+    }
+
+    private func buildBaseProduce(from publicRecords: [CKRecord]) -> [Produce] {
         var produceArray: [Produce] = [Produce]()
-        let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
         for record in publicRecords {
             var id: Int = 0
@@ -119,7 +155,6 @@ actor ProduceCloudDataService {
             let description: String = ""
             var months: [Months] = [Months]()
             var seasons: [Seasons] = [Seasons]()
-            var liked: Bool = false
 
             if let recordID: Int = record.object(forKey: Constants.id) as? Int,
                let nameRecord: String = record.object(forKey: Constants.name) as? String,
@@ -141,26 +176,6 @@ actor ProduceCloudDataService {
                 seasons = seasonsRecord.createSeasonArray()
             }
 
-            if let recordIdValue = record.object(forKey: Constants.id) {
-
-                let recordIdInt: Int?
-
-                if let intValue = recordIdValue as? Int {
-                    recordIdInt = intValue
-
-                } else if let stringValue = recordIdValue as? String, let intValue = Int(stringValue) {
-                    recordIdInt = intValue
-
-                } else {
-                    recordIdInt = nil
-
-                }
-
-                if let recordIdInt, likedArray.contains(recordIdInt) {
-                    liked = true
-                }
-            }
-
             let produce: Produce = Produce(
                 id: id,
                 name: name,
@@ -169,16 +184,38 @@ actor ProduceCloudDataService {
                 description: description, // Not implemented yet
                 months: months,
                 seasons: seasons,
-                liked: liked
+                liked: false
             )
             produceArray.append(produce)
+        }
+
+        return produceArray
+    }
+
+    /// Applies fresh private-database like records (plus local Core Data
+    /// reconciliation) onto an existing produce array. Used both for a full
+    /// fetch and for a likes-only refresh against a disk-cached base array.
+    private func applyLikes(privateRecords: [CKRecord], to produceArray: inout [Produce]) {
+        let likedIDs: Set<Int> = Set(privateRecords.compactMap { $0.object(forKey: Constants.id) as? Int })
+
+        for index in produceArray.indices where likedIDs.contains(produceArray[index].id) {
+            let item: Produce = produceArray[index]
+            produceArray[index] = Produce(
+                id: item.id,
+                name: item.name,
+                category: item.category,
+                imageName: item.imageName,
+                description: item.description,
+                months: item.months,
+                seasons: item.seasons,
+                liked: true
+            )
         }
 
         let localLikedData: [LikedProduce] = LocalDataHandler.loadAll(LikedProduce.self)
         if !localLikedData.isEmpty {
             compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
         }
-        return produceArray
     }
 
     // Local data is the source of truth for likes: apply it to the loaded produce

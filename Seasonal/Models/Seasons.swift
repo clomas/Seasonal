@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Seasons: Int, PeriodType {
+enum Seasons: Int, PeriodType, Codable {
 	case summer = 0
 	case autumn
 	case winter

@@ -18,10 +18,7 @@ import SwiftUI
 @available(iOS 26, *)
 struct MainScreenTabBar: View {
 
-    @Binding var selectedTab: MainTabScreen.Tabs
-    @Binding var isSearching: Bool
-    @Binding var searchQuery: String
-    @Binding var selectedCategory: ProduceCategory
+    @Environment(MainScreenState.self) private var state
 
     @EnvironmentObject private var featureToggleHelper: FeatureToggleHelper
 
@@ -38,23 +35,24 @@ struct MainScreenTabBar: View {
     }
 
     var body: some View {
+        @Bindable var state = state
         // One container so the search, tabs and filter glass surfaces blend into a single
         // connected cluster (and the search morph animates within it).
         GlassEffectContainer(spacing: 18) {
             HStack(spacing: 6) {
                 TabBarSearchButton(
-                    isSearching: $isSearching,
-                    query: $searchQuery,
+                    isSearching: $state.isSearching,
+                    query: $state.searchQuery,
                     namespace: glassNamespace,
                     hideLabel: hideLabels
                 )
-                .frame(maxWidth: isSearching ? .infinity : nil)
+                .frame(maxWidth: state.isSearching ? .infinity : nil)
 
-                if !isSearching {
+                if !state.isSearching {
                     tabCluster
                 }
 
-                TabBarFilterButton(selectedCategory: $selectedCategory, hideLabel: hideLabels)
+                TabBarFilterButton(selectedCategory: $state.selectedCategory, hideLabel: hideLabels)
             }
             // Let the bar respond to Dynamic Type, but cap it so large accessibility sizes
             // don't blow out its height the way unbounded scaling would.
@@ -81,7 +79,7 @@ struct MainScreenTabBar: View {
         return Button {
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-                selectedTab = tab
+                state.selectedTab = tab
             }
         } label: {
             VStack(spacing: 2) {
@@ -90,6 +88,8 @@ struct MainScreenTabBar: View {
                 if !hideLabels {
                     Text(label)
                         .font(.tabCaption)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
             }
             .foregroundStyle(selected ? .primary : .secondary)
@@ -120,7 +120,7 @@ struct MainScreenTabBar: View {
     }
 
     private func isSelected(_ tab: MainTabScreen.Tabs) -> Bool {
-        switch (selectedTab, tab) {
+        switch (state.selectedTab, tab) {
         case (.favourites, .favourites), (.months, .months), (.seasons, .seasons):
             true
         default:

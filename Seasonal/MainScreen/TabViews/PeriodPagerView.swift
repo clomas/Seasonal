@@ -8,7 +8,10 @@
 
 import SwiftUI
 
-protocol PeriodType: CaseIterable, Hashable where AllCases == [Self] {
+/// `Sendable` because a period is looked up off the main actor (in the pager's cell builder)
+/// and then handed to the main-actor-isolated `ProduceStore` — both conformers are plain
+/// `Int`-backed enums, so it costs nothing.
+protocol PeriodType: CaseIterable, Hashable, Sendable where AllCases == [Self] {
     static var currentPeriod: Self { get }
 
     var title: String { get }
@@ -22,17 +25,12 @@ protocol PeriodType: CaseIterable, Hashable where AllCases == [Self] {
 struct PeriodPagerView<Period: PeriodType>: View {
 
     @EnvironmentObject var produceStore: ProduceStore
-
-    let selectedTab: MainTabScreen.Tabs
-    let searchQuery: String
-    /// Whether the custom search bar is active; used to scope each period's title to the query.
-    let isSearching: Bool
+    /// The search query, category filter and selected tab all come from here rather than as
+    /// arguments — this view only forwards them, it never decides them.
+    @Environment(MainScreenState.self) private var state
 
     private let periods: [PeriodItem]
 
-    @Binding var selectedCategory: ProduceCategory
-    /// Drives the top overlay buttons' visibility as the produce list scrolls.
-    @Binding var chromeVisible: Bool
     /// Set by the (lifted) calendar button to scroll this pager to a period; reset to nil once handled.
     @Binding var jumpToIndex: Int?
     /// Reports the period index currently centred in the pager, so the jump menu can tick it.
@@ -42,20 +40,10 @@ struct PeriodPagerView<Period: PeriodType>: View {
 
     init(
         periods: [Period],
-        selectedTab: MainTabScreen.Tabs,
-        searchQuery: String,
-        isSearching: Bool,
-        selectedCategory: Binding<ProduceCategory>,
-        chromeVisible: Binding<Bool> = .constant(true),
         jumpToIndex: Binding<Int?> = .constant(nil),
         currentIndex: Binding<Int> = .constant(0),
         onPeekFinished: (() async -> Void)? = nil
     ) {
-        self.selectedTab = selectedTab
-        self.searchQuery = searchQuery
-        self.isSearching = isSearching
-        self._selectedCategory = selectedCategory
-        self._chromeVisible = chromeVisible
         self._jumpToIndex = jumpToIndex
         self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
@@ -74,22 +62,14 @@ struct PeriodPagerView<Period: PeriodType>: View {
         ) { item in
             let period = Array(Period.allCases)[item.id]
 
-            ProduceListNavigationView(title: cellTitle(for: period)) {
+            ProduceListNavigationView(title: state.listTitle(for: item.title)) {
                 ProduceList(
-                    produce: produceStore.byPeriod(period, query: searchQuery),
-                    selectedPeriodName: item.title,
-                    parentTab: selectedTab,
-                    selectedCategory: $selectedCategory,
-                    chromeVisible: $chromeVisible
+                    produce: produceStore.byPeriod(period, query: state.searchQuery),
+                    parentTab: state.selectedTab,
+                    selectedCategory: state.selectedCategory
                 )
             }
         }
-    }
-
-    private func cellTitle(for period: Period) -> String {
-        isSearching && !searchQuery.isEmpty
-            ? "\"\(searchQuery)\" in \(period.title)"
-            : period.title
     }
 }
 
@@ -97,16 +77,11 @@ struct PeriodPagerView<Period: PeriodType>: View {
 @available(iOS 26, *)
 #Preview {
     NavigationStack {
-        PeriodPagerView<Months>(
-            periods: Array(Months.allCases),
-            selectedTab: MainTabScreen.Tabs.months(.april),
-            searchQuery: "",
-            isSearching: false,
-            selectedCategory: Binding.constant(ProduceCategory.all)
-        )
-        .environmentObject(previewCoordinator)
-        .environmentObject(previewCoordinator.produceStore)
-        .environmentObject(FeatureToggleHelper())
+        PeriodPagerView<Months>(periods: Array(Months.allCases))
+            .environmentObject(previewCoordinator)
+            .environmentObject(previewCoordinator.produceStore)
+            .environmentObject(FeatureToggleHelper())
+            .environment(MainScreenState())
     }
 }
 #endif

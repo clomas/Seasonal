@@ -25,6 +25,12 @@ final class ProduceCache: ObservableObject {
 		}
 	}
 
+	/// Non-mutating check for cached produce — unlike `allProduce(from:)`, this
+	/// never writes an empty placeholder into the cache on a miss.
+	func cachedAllProduce() -> [Produce]? {
+		cache.peek(for: .allProduce)
+	}
+
 	@discardableResult
 	func favourites(from produce: [Produce]) -> [Produce] {
 		cache.value(for: .favourites) {

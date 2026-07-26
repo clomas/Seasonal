@@ -17,6 +17,10 @@ final class Cache<Key: Hashable, Value> {
 		self.expiryDate = expiryDate
 	}
 
+	func peek(for key: Key) -> Value? {
+		storage[key]
+	}
+
 	func value(for key: Key, orInsert build: () -> Value) -> Value {
 		if let cached = storage[key] {
 			if let expiryDate = expiryDate, let insertionDate = timestamps[key] {

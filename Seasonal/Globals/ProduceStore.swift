@@ -12,10 +12,10 @@ import CloudKit
 @MainActor
 @available(iOS 26, *)
 final class ProduceStore: ObservableObject {
-	@Published private(set) var produce: [Int: Produce] = [:]
 	@Published private(set) var allProduce: [Produce] = []
 
 	private let cache = ProduceCache()
+	private let diskCache = ProduceDiskCache()
 
 	// MARK: - Derived views
 
@@ -32,10 +32,11 @@ final class ProduceStore: ObservableObject {
 	// MARK: - Toggle Likes
 
 	func toggleLiked(for id: Int) {
-		guard let item = produce[id] else { return }
+		guard let index = allProduce.firstIndex(where: { $0.id == id }) else { return }
+		let item = allProduce[index]
 		let updatedLiked = !item.liked
 
-		let updated = Produce(
+		allProduce[index] = Produce(
 			id: item.id,
 			name: item.name,
 			category: item.category,
@@ -45,15 +46,6 @@ final class ProduceStore: ObservableObject {
 			seasons: item.seasons,
 			liked: updatedLiked
 		)
-
-		produce[id] = updated
-
-		// `allProduce` is the source of truth for every derived list
-		// (favourites / byPeriod), so it must be updated too — otherwise the
-		// toggle is invisible in the UI.
-		if let index = allProduce.firstIndex(where: { $0.id == id }) {
-			allProduce[index] = updated
-		}
 
 		// Drop the memoised derived lists so they recompute with the new
 		// liked state on the next read.
@@ -68,24 +60,37 @@ final class ProduceStore: ObservableObject {
 	/// the (location-agnostic) cache and re-fetches for a newly chosen state.
 	func prepareForLocationChange() {
 		cache.invalidate()
-		produce = [:]
+		diskCache.clear()
 		allProduce = []
 	}
 
 	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CKError> {
-        
+
         if let cachedProduce = fetchFromCache() {
             allProduce = cachedProduce
-            produce = Dictionary(uniqueKeysWithValues: cachedProduce.map { ($0.id, $0) })
             return .success(())
+        }
+
+        // The base catalogue (name/category/months/seasons) only changes with an
+        // app update, so once we have it on disk we skip the public CloudKit
+        // query and only refresh liked state from the private database.
+        if let baseProduce = diskCache.load(for: location) {
+            switch await ProduceServicesManager.getLikesFromCloudKit(for: location, basedOn: baseProduce) {
+            case let .success(produceList):
+                allProduce = produceList.sorted { ($0.name ?? "") < ($1.name ?? "") }
+                cache.allProduce(from: produceList)
+                return .success(())
+            case let .failure(error):
+                return .failure(error)
+            }
         }
 
 		switch await ProduceServicesManager.getDataFromCloudKit(for: location) {
 		case let .success(produceList):
-			produce = Dictionary(uniqueKeysWithValues: produceList.map { ($0.id, $0) })
 			allProduce = produceList.sorted { ($0.name ?? "") < ($1.name ?? "") }
 
 			cache.allProduce(from: produceList)
+			diskCache.save(produceList, for: location)
 
 			return .success(())
 		case let .failure(error):
@@ -100,20 +105,14 @@ final class ProduceStore: ObservableObject {
 	}
     
     private func fetchFromCache() -> [Produce]? {
-        let cached = cache.allProduce()
-        
-        return if !cached.isEmpty {
-            cached
-        } else {
-            nil
-        }
+        guard let cached = cache.cachedAllProduce(), !cached.isEmpty else { return nil }
+        return cached
     }
 }
 #if DEBUG
 @available(iOS 26, *)
 extension ProduceStore {
 	func loadMockData(_ data: [Produce]) {
-		produce = Dictionary(uniqueKeysWithValues: data.map { ($0.id, $0) })
 		allProduce = data
 	}
 }

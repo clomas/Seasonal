@@ -49,7 +49,7 @@ final class ProduceStoreTests: XCTestCase {
 
         // toggleLiked updates synchronously in-memory
         XCTAssertEqual(store.favourites.count, 1)
-        XCTAssertTrue(store.produce[1]?.liked == true)
+        XCTAssertTrue(store.allProduce.first(where: { $0.id == 1 })?.liked == true)
     }
 
     func testToggleLikedInvalidatesCachedDerivedLists() {

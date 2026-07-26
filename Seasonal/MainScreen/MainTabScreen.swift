@@ -24,12 +24,11 @@ struct MainTabScreen: View {
 
     @EnvironmentObject var produceStore: ProduceStore
 
-    @State private var selectedTab: Tabs = StoredSelectedTab.tab
-    @State private var selectedCategory: ProduceCategory = .all
-    @State private var searchQuery: String = ""
-    @State private var isSearching: Bool = false
+    /// Chrome shared with the tab bar and the produce lists — see `MainScreenState`. Everything
+    /// below it is state only this screen reads.
+    @State private var state = MainScreenState()
+
     @State private var showTip: Bool = GlobalSettings.swipeTipShown.swipe
-    @State private var chromeVisible: Bool = true
     @State private var showInfo: Bool = false
     @State private var jumpMonthIndex: Int? = nil
     @State private var jumpSeasonIndex: Int? = nil
@@ -37,7 +36,7 @@ struct MainTabScreen: View {
     @State private var currentSeasonIndex: Int = Seasons.currentPeriod.index
 
     private var tip: SwipeOnboardingTip? {
-        switch selectedTab {
+        switch state.selectedTab {
         case .months:
             SwipeOnboardingTip(context: "months")
         case .seasons:
@@ -48,7 +47,7 @@ struct MainTabScreen: View {
     }
 
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $state.selectedTab) {
             Tab("Favourites", systemImage: "heart", value: .favourites) {
                 produceListNavigationView(title: Tabs.favourites.title)
                     .toolbarVisibility(.hidden, for: .tabBar)
@@ -57,11 +56,6 @@ struct MainTabScreen: View {
             Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
                 PeriodPagerView<Months>(
                     periods: Months.allCases,
-                    selectedTab: .months(Months.currentPeriod),
-                    searchQuery: searchQuery,
-                    isSearching: isSearching,
-                    selectedCategory: $selectedCategory,
-                    chromeVisible: $chromeVisible,
                     jumpToIndex: $jumpMonthIndex,
                     currentIndex: $currentMonthIndex,
                     onPeekFinished: { peekFinished() }
@@ -72,11 +66,6 @@ struct MainTabScreen: View {
             Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
                 PeriodPagerView<Seasons>(
                     periods: Seasons.allCases,
-                    selectedTab: .seasons(Seasons.currentPeriod),
-                    searchQuery: searchQuery,
-                    isSearching: isSearching,
-                    selectedCategory: $selectedCategory,
-                    chromeVisible: $chromeVisible,
                     jumpToIndex: $jumpSeasonIndex,
                     currentIndex: $currentSeasonIndex,
                     onPeekFinished: { peekFinished() }
@@ -86,9 +75,9 @@ struct MainTabScreen: View {
         }
         .accessibilityIdentifier("mainTabView")
         .tint(Colour.inSeason)
-        .onChange(of: selectedTab) { _, newTab in
+        .onChange(of: state.selectedTab) { _, newTab in
             StoredSelectedTab.storeTab(newTab)
-            chromeVisible = true
+            state.chromeVisible = true
         }
         .overlay(alignment: .topTrailing) {
             HStack(spacing: 12) {
@@ -99,9 +88,9 @@ struct MainTabScreen: View {
             }
             .padding(.trailing, 16)
             .padding(.top, 8)
-            .opacity(chromeVisible ? 1 : 0)
-            .offset(y: chromeVisible ? 0 : -12)
-            .animation(.easeInOut(duration: 0.25), value: chromeVisible)
+            .opacity(state.chromeVisible ? 1 : 0)
+            .offset(y: state.chromeVisible ? 0 : -12)
+            .animation(.easeInOut(duration: 0.25), value: state.chromeVisible)
         }
         .sheet(isPresented: $showInfo) {
             InfoScreen()
@@ -112,29 +101,27 @@ struct MainTabScreen: View {
             }
         }
         .overlay(alignment: .bottom) {
-            MainScreenTabBar(
-                selectedTab: $selectedTab,
-                isSearching: $isSearching,
-                searchQuery: $searchQuery,
-                selectedCategory: $selectedCategory
-            )
-            .padding(.horizontal, 16)
-            .padding(.bottom, 6)
+            MainScreenTabBar()
+                .padding(.horizontal, 16)
+                .padding(.bottom, 6)
         }
+        // Outermost so the overlays above — the tab bar's own controls included — read the same
+        // state as the tab content.
+        .environment(state)
     }
 
     // MARK: - Private
 
     /// The calendar "jump to period" button is only meaningful on the month/season pagers.
     private var showsPeriodPicker: Bool {
-        if case .favourites = selectedTab { false } else { true }
+        if case .favourites = state.selectedTab { false } else { true }
     }
 
     /// Popover content for the lifted period button — scoped to the active tab so it jumps the
     /// matching pager via its own jump binding. `dismiss` closes the popover after a selection.
     @ViewBuilder
     private func periodPickerMenu(dismiss: @escaping () -> Void) -> some View {
-        switch selectedTab {
+        switch state.selectedTab {
         case .seasons:
             periodMenu(Seasons.self, title: "Jump to a season", current: currentSeasonIndex, jump: $jumpSeasonIndex, dismiss: dismiss)
         default:
@@ -199,11 +186,9 @@ struct MainTabScreen: View {
         ProduceListNavigationView(title: title, titleLeadingPadding: 2) {
             ProduceList(
                 produce: produceStore.favourites,
-                selectedPeriodName: "favourites",
-                parentTab: selectedTab,
-                selectedCategory: $selectedCategory,
-                searchText: searchQuery,
-                chromeVisible: $chromeVisible
+                parentTab: .favourites,
+                selectedCategory: state.selectedCategory,
+                searchText: state.searchQuery
             )
         }
     }

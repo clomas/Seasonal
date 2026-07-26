@@ -52,6 +52,8 @@ struct TabBarSearchButton: View {
                 if !hideLabel {
                     Text("Search")
                         .font(.tabCaption)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 }
             }
             .foregroundStyle(.secondary)
@@ -82,13 +84,13 @@ struct TabBarSearchButton: View {
                 .accessibilityIdentifier("searchField")
                 .accessibilityLabel("Search produce")
 
-            Button(action: searchClosed) {
+            Button(action: xButtonTapped) {
                 Image(systemName: "xmark.circle.fill")
                     .font(.system(size: 20))
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Close search")
+            .accessibilityLabel(query.isEmpty ? "Close search" : "Clear search text")
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
@@ -101,6 +103,18 @@ struct TabBarSearchButton: View {
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         withAnimation(.spring(response: 0.45, dampingFraction: 0.82)) {
             isSearching = true
+        }
+    }
+
+    /// The trailing X is contextual: while there's text, it clears the field and keeps
+    /// search focused (matches the clear-button behavior users expect from a real search
+    /// field); once the field is empty, the same tap collapses the bar.
+    private func xButtonTapped() {
+        if query.isEmpty {
+            searchClosed()
+        } else {
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            query = ""
         }
     }
 

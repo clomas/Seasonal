@@ -62,9 +62,11 @@ struct PeriodPagerView<Period: PeriodType>: View {
         ) { item in
             let period = Array(Period.allCases)[item.id]
 
-            ProduceListNavigationView(title: state.listTitle(for: item.title)) {
+            // No query scoping here: search is its own tab, so a period page always shows the
+            // whole period, filtered only by category.
+            ProduceListNavigationView(title: item.title) {
                 ProduceList(
-                    produce: produceStore.byPeriod(period, query: state.searchQuery),
+                    produce: produceStore.byPeriod(period),
                     parentTab: state.selectedTab,
                     selectedCategory: state.selectedCategory
                 )

@@ -16,9 +16,16 @@ struct MainTabScreen: View {
         case favourites
         case months(Months)
         case seasons(Seasons)
-        
+        case search
+
         var isSeasons: Bool {
             if case .seasons = self { true } else { false }
+        }
+
+        /// The system presents its search field when this tab is selected, so "is the search
+        /// tab showing" is the same question as "is search engaged".
+        var isSearch: Bool {
+            if case .search = self { true } else { false }
         }
     }
 
@@ -50,7 +57,6 @@ struct MainTabScreen: View {
         TabView(selection: $state.selectedTab) {
             Tab("Favourites", systemImage: "heart", value: .favourites) {
                 produceListNavigationView(title: Tabs.favourites.title)
-                    .toolbarVisibility(.hidden, for: .tabBar)
             }
 
             Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
@@ -60,7 +66,6 @@ struct MainTabScreen: View {
                     currentIndex: $currentMonthIndex,
                     onPeekFinished: { peekFinished() }
                 )
-                .toolbarVisibility(.hidden, for: .tabBar)
             }
 
             Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
@@ -70,11 +75,29 @@ struct MainTabScreen: View {
                     currentIndex: $currentSeasonIndex,
                     onPeekFinished: { peekFinished() }
                 )
-                .toolbarVisibility(.hidden, for: .tabBar)
+            }
+
+            // The search role is what anchors the field to the bottom bar and floats it above
+            // the keyboard — it only renders because the system tab bar is visible, which is
+            // why the custom glass bar this replaced had to go.
+            Tab("Search", systemImage: "magnifyingglass", value: Tabs.search, role: .search) {
+                SearchScreen()
             }
         }
         .accessibilityIdentifier("mainTabView")
         .tint(Colour.inSeason)
+        // Deliberately an overlay rather than `.tabViewBottomAccessory`: that slot draws its own
+        // full-width glass tray, which read as a stray bar behind a lone button. This puts the
+        // bare circle in line with the system search item instead.
+        .overlay(alignment: .bottomTrailing) {
+            TabBarFilterButton(selectedCategory: $state.selectedCategory, hideLabel: true)
+                .padding(.trailing, 16)
+                // Clears the system tab bar to sit directly above the search item, in the same
+                // column and at the same size. Hand-measured: an overlay on the `TabView` is
+                // laid out against the screen's safe area, not the bar's, so there's no metric
+                // to read the bar's height from — worth re-checking if the bar ever changes.
+                .padding(.bottom, tabBarClearance)
+        }
         .onChange(of: state.selectedTab) { _, newTab in
             StoredSelectedTab.storeTab(newTab)
             state.chromeVisible = true
@@ -100,21 +123,23 @@ struct MainTabScreen: View {
                 TipViewBlockingOverlay(showTip: $showTip, tip: tip)
             }
         }
-        .overlay(alignment: .bottom) {
-            MainScreenTabBar()
-                .padding(.horizontal, 16)
-                .padding(.bottom, 6)
-        }
-        // Outermost so the overlays above — the tab bar's own controls included — read the same
-        // state as the tab content.
+        // Outermost so the top-right chrome overlay reads the same state as the tab content.
         .environment(state)
     }
 
     // MARK: - Private
 
+    /// Vertical gap that lifts the category filter clear of the system tab bar, so it lands
+    /// directly above the search item rather than on top of it. Scales with Dynamic Type
+    /// alongside the button it's clearing.
+    @ScaledMetric(relativeTo: .title2) private var tabBarClearance: CGFloat = 64
+
     /// The calendar "jump to period" button is only meaningful on the month/season pagers.
     private var showsPeriodPicker: Bool {
-        if case .favourites = state.selectedTab { false } else { true }
+        switch state.selectedTab {
+        case .months, .seasons: true
+        case .favourites, .search: false
+        }
     }
 
     /// Popover content for the lifted period button — scoped to the active tab so it jumps the
@@ -187,8 +212,7 @@ struct MainTabScreen: View {
             ProduceList(
                 produce: produceStore.favourites,
                 parentTab: .favourites,
-                selectedCategory: state.selectedCategory,
-                searchText: state.searchQuery
+                selectedCategory: state.selectedCategory
             )
         }
     }
@@ -213,21 +237,28 @@ extension MainTabScreen.Tabs {
             month.title
         case .seasons(let season):
             season.title
+        case .search:
+            "Search"
         }
     }
     
     var emptyListIcon: Image {
-        if case .favourites = self {
-            .heart
-        } else {
-            .xMarkCircle
+        return switch self {
+        case .favourites: .heart
+        case .search: .magnifyingGlass
+        case .months, .seasons: .xMarkCircle
         }
     }
 
     var emptyProduceListViewMessage: String {
-        if case .favourites = self {
+        return switch self {
+        case .favourites:
             "No favourites selected"
-        } else {
+        case .search:
+            // The search tab opens on an empty query, so this is a prompt rather than a
+            // "nothing found" message — that case is handled by the search-results copy.
+            "Search for any produce"
+        case .months, .seasons:
             "Nothing to display, try something else"
         }
     }

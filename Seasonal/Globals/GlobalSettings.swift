@@ -34,6 +34,10 @@ enum StoredSelectedTab: Codable {
 			GlobalSettings.selectedTab = .months
 		case .seasons:
 			GlobalSettings.selectedTab = .seasons
+		case .search:
+			// Deliberately not persisted: relaunching straight into an empty search field
+			// with the keyboard up isn't where anyone left off.
+			break
 		}
 	}
 

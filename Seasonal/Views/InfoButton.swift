@@ -23,9 +23,13 @@ struct InfoButton: View {
                 .font(.system(size: iconSize, weight: .medium))
                 .frame(width: iconSize, height: iconSize)
                 .padding(16)
-                .background(.ultraThinMaterial, in: Circle())
-                .glassEffect(.regular)
+                // Matches SelectMonthButton exactly: one interactive glass circle. This used to
+                // stack .ultraThinMaterial under a shapeless .glassEffect, which defaulted to a
+                // capsule and made the two chrome buttons read as different controls.
+                .glassEffect(.regular.interactive(), in: Circle())
+                .contentShape(Circle())
         }
+        .buttonStyle(.plain)
         .tint(.primary)
         .accessibilityIdentifier("infoButton")
         .accessibilityLabel("App information")

@@ -12,7 +12,7 @@ import SwiftUI
 /// The chrome state shared across the main screen: which tab is showing, what's in the search
 /// field, the category filter, and whether the top overlay buttons are visible.
 ///
-/// Every one of these is written by a control in `MainScreenTabBar` and read by the produce
+/// Every one of these is written by the tab bar or the top-right chrome and read by the produce
 /// lists two levels down, so they travel through `.environment(_:)` rather than being threaded
 /// as a dozen separate bindings and closures through `PeriodPagerView`, which cares about none
 /// of them itself. State only one view needs — the onboarding tip, the info sheet, each pager's
@@ -29,27 +29,12 @@ final class MainScreenState {
     var selectedTab: MainTabScreen.Tabs = StoredSelectedTab.tab
     var selectedCategory: ProduceCategory = .all
 
+    /// Bound to the system search field the `Tab(role: .search)` puts in the tab bar. Search is
+    /// its own tab now, so this scopes `SearchScreen` only — the month and season pagers show
+    /// their full period lists regardless of what's typed here.
     var searchQuery: String = ""
-    /// Whether the search bar is expanded. The query can't stand in for this: an expanded but
-    /// still-empty field is a different state from search being closed.
-    var isSearching: Bool = false
 
     /// Drives the top overlay buttons: hidden while scrolling down, shown while scrolling up
     /// or near the top.
     var chromeVisible: Bool = true
-
-    /// Titles a period's list, scoped to the active query — `"apple" in April`.
-    func listTitle(for periodTitle: String) -> String {
-        isSearching && !searchQuery.isEmpty
-            ? "\"\(searchQuery)\" in \(periodTitle)"
-            : periodTitle
-    }
-
-    /// Drops the keyboard while leaving the bar expanded and the query intact, so tapping the
-    /// list for a better look at the results doesn't throw the search away.
-    func dismissSearchKeyboard() {
-        guard isSearching else { return }
-        UIApplication.shared.sendAction(
-            #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-    }
 }

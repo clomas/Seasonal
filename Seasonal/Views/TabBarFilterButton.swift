@@ -21,6 +21,9 @@ struct TabBarFilterButton: View {
     @Binding var selectedCategory: ProduceCategory
     var hideLabel: Bool = false
 
+    /// Same metric the other chrome buttons use, so all three scale together with Dynamic Type.
+    @ScaledMetric(relativeTo: .title2) private var iconSize: CGFloat = 22
+
     @State private var isPresented = false
 
     var body: some View {
@@ -84,29 +87,38 @@ struct TabBarFilterButton: View {
 
     @ViewBuilder
     private var menuIcon: some View {
-        VStack(spacing: 2) {
+        if hideLabel {
+            // Chrome-sized glass circle, built the same way as `InfoButton` and
+            // `SelectMonthButton` (22pt icon, 16pt padding) so it reads as one of the set and
+            // matches the system search item it sits with.
             Image(symbol: selectedCategory.image)
-                .font(.system(hideLabel ? .title2 : .title3, weight: .medium))
-            if !hideLabel {
+                .font(.system(size: iconSize, weight: .medium))
+                .frame(width: iconSize, height: iconSize)
+                .foregroundStyle(isHighlighted ? AnyShapeStyle(Colour.accent) : AnyShapeStyle(.primary))
+                .padding(16)
+                .glassEffect(.regular.interactive(), in: Circle())
+                .contentShape(Circle())
+        } else {
+            VStack(spacing: 2) {
+                Image(symbol: selectedCategory.image)
+                    .font(.system(.title3, weight: .medium))
                 label
             }
-        }
-        .foregroundStyle(isHighlighted ? .primary : .secondary)
-        // Reclaim the label's space as touch padding when icon-only, keeping the target size
-        // roughly square so the Capsule reads as a ~height/2 radius pill.
-        .padding(.vertical, hideLabel ? 22 : 14)
-        .padding(.horizontal, hideLabel ? 22 : 16)
-        // Same green blob the selected tab uses, inset so it reads as a pill inside the button
-        // rather than filling its whole bounds.
-        .background {
-            if isHighlighted {
-                Capsule()
-                    .fill(Colour.accentHighlight)
-                    .padding(6)
+            .foregroundStyle(isHighlighted ? .primary : .secondary)
+            .padding(.vertical, 14)
+            .padding(.horizontal, 16)
+            // Same green blob the selected tab uses, inset so it reads as a pill inside the
+            // button rather than filling its whole bounds.
+            .background {
+                if isHighlighted {
+                    Capsule()
+                        .fill(Colour.accentHighlight)
+                        .padding(6)
+                }
             }
+            .glassEffect(.regular.interactive(), in: Capsule())
+            .contentShape(Capsule())
         }
-        .glassEffect(.regular.interactive(), in: Capsule())
-        .contentShape(Capsule())
     }
 
     /// Shows the current label but always reserves the width of the widest one (via hidden copies),

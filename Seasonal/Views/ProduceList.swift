@@ -56,6 +56,9 @@ struct ProduceList: View {
                 }
                 .accessibilityIdentifier("produceList")
                 .scrollIndicators(.hidden)
+                // Replaces the old hand-rolled tap-to-dismiss gesture: the system drops the
+                // search keyboard as soon as the list is dragged.
+                .scrollDismissesKeyboard(.immediately)
                 .onScrollGeometryChange(for: CGFloat.self) { geometry in
                     geometry.contentOffset.y
                 } action: { oldOffset, newOffset in
@@ -63,11 +66,6 @@ struct ProduceList: View {
                 }
             }
         }
-        // A tap anywhere in the list — a row, empty space below it — should also drop the
-        // search keyboard. Simultaneous so row taps still register normally; scoped to this
-        // subtree (not the whole screen) so it can't race with the tab bar's own search
-        // controls, which live in a separate overlay branch off the root view.
-        .simultaneousGesture(TapGesture().onEnded { state.dismissSearchKeyboard() })
     }
 
     /// Hides the top chrome when scrolling down, reveals it when scrolling up or

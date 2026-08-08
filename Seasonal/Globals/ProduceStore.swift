@@ -23,6 +23,13 @@ final class ProduceStore: ObservableObject {
 		cache.favourites(from: allProduce)
 	}
 
+	/// Every produce matching the query, regardless of period — what the search tab shows.
+	/// Empty query means no results rather than everything, so the screen opens on its
+	/// prompt instead of the full catalogue.
+	func search(_ query: String) -> [Produce] {
+		cache.search(query, from: allProduce)
+	}
+
 	func byPeriod<P: PeriodType>(_ period: P, query: String = "") -> [Produce] {
 		let base = cache.byPeriod(period, from: allProduce)
 		guard !query.isEmpty else { return base }

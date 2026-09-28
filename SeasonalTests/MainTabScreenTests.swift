@@ -11,8 +11,8 @@ final class MainTabScreenTests: XCTestCase {
         XCTAssertEqual(MainTabScreen.Tabs.seasons(.summer).title, "Summer")
 
         // Empty-message behaviour
-        XCTAssertEqual(MainTabScreen.Tabs.favourites.emptyProduceListViewMessage, "❤️ Favourite some produce to see it in here.")
-        XCTAssertNil(MainTabScreen.Tabs.months(.april).emptyProduceListViewMessage)
+        XCTAssertEqual(MainTabScreen.Tabs.favourites.emptyProduceListViewMessage, "No favourites selected")
+        XCTAssertEqual(MainTabScreen.Tabs.months(.april).emptyProduceListViewMessage, "Nothing to display, try something else")
     }
 }
     func testAllMonthCasesProduceCorrectTitles() {

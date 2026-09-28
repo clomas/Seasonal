@@ -10,7 +10,7 @@ import Foundation
 
 struct LikedProduce: Codable {
 
-    var id: Int
+    let id: Int
 
     func saveItem() {
         LocalDataHandler.save(self, with: "\(id)")

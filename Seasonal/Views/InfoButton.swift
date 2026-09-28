@@ -8,7 +8,6 @@
 
 import SwiftUI
 
-/// Toolbar button that presents the in-app information screen.
 @available(iOS 26.0, *)
 struct InfoButton: View {
 
@@ -16,11 +15,11 @@ struct InfoButton: View {
 
     var body: some View {
         Button(action: action) {
-            Image(systemName: "info.circle")
+            Image(systemName: Symbol.info)
         }
         .tint(.primary)
         .accessibilityIdentifier("infoButton")
-        .accessibilityLabel("App information")
+        .accessibilityLabel(Strings.Info.button)
     }
 }
 

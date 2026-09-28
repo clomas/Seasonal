@@ -64,6 +64,7 @@
 		2794C8E7306A2E7B00FA276E /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				.swiftlint.yml,
 				Info.plist,
 			);
 			target = 27EFF3C3215A5C1500CFB31D /* Seasonal */;

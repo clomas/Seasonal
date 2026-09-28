@@ -8,61 +8,53 @@
 
 import XCTest
 
+/// Covers the UIKit interface used below iOS 26.
 class SeasonalUITests: XCTestCase {
+
+	private let launchTimeout: TimeInterval = 4
+	private let animationTimeout: TimeInterval = 1
+	private let menuBarCellCount = 5
 
 	var app: XCUIApplication!
 
-    override func setUpWithError() throws {
-        continueAfterFailure = false
+	override func setUpWithError() throws {
+		continueAfterFailure = false
 		app = XCUIApplication()
 		app.launchArguments = ["enable-testing"]
 		app.launch()
-		let collectionView = app.collectionViews["menuBar"]
-		_ = collectionView.waitForExistence(timeout: 4)
-    }
+		_ = app.collectionViews["menuBar"].waitForExistence(timeout: launchTimeout)
+	}
 
-    override func tearDownWithError() throws {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testLaunchPerformance() throws {
-		// This measures how long it takes to launch your application.
+	func testLaunchPerformance() throws {
 		measure(metrics: [XCTApplicationLaunchMetric()]) {
 			XCUIApplication().launch()
 		}
-    }
+	}
 
 	func testMenuBarAnimationAndNumberOfCells() {
 		let collectionView = app.collectionViews["menuBar"]
-		XCTAssertEqual(collectionView.cells.count, 5)
+		XCTAssertEqual(collectionView.cells.count, menuBarCellCount)
 		collectionView.cells.element(boundBy: 4).tap()
 
-		_ = collectionView.cells.element(boundBy: 5).waitForExistence(timeout: 1)
-		XCTAssertEqual(collectionView.cells.count, 5)
+		_ = collectionView.cells.element(boundBy: 5).waitForExistence(timeout: animationTimeout)
+		XCTAssertEqual(collectionView.cells.count, menuBarCellCount)
 
-		// cancel cell is visible after animation
-		let cell = collectionView.cells.element(matching: .cell, identifier: "cancelCell")
-		XCTAssertNotNil(cell)
+		let cancelCell = collectionView.cells.element(matching: .cell, identifier: "cancelCell")
+		XCTAssertNotNil(cancelCell)
 
-		cell.tap()
-		// slide back in and still see 5 cells
-		_ = collectionView.cells.element(boundBy: 5).waitForExistence(timeout: 1)
-		XCTAssertEqual(collectionView.cells.count, 5)
+		cancelCell.tap()
+		_ = collectionView.cells.element(boundBy: 5).waitForExistence(timeout: animationTimeout)
+		XCTAssertEqual(collectionView.cells.count, menuBarCellCount)
 	}
 
 	func testMonthPickerViewHasAllMonths() {
-		// tap menuBar to open Picker View
-		let collectionView = app.collectionViews["menuBar"]
-		collectionView.cells.element(boundBy: 1).tap()
-		// find the presented CollectionView
-		let monthPickerCollectionView = app.collectionViews["monthPicker"]
-		// Assert 12 months
-		XCTAssertEqual(monthPickerCollectionView.cells.count, 12)
-		// tap on cell 4 (April)
-		monthPickerCollectionView.cells.element(boundBy: 4).tap()
-		// Does navigation bar say April?
-		let navigationTitleElement = app.navigationBars.matching(identifier: "April").firstMatch
-		let navigationBarString = String(describing: navigationTitleElement)
-		XCTAssertEqual(navigationBarString, "\"April\" NavigationBar")
+		app.collectionViews["menuBar"].cells.element(boundBy: 1).tap()
+
+		let monthPicker = app.collectionViews["monthPicker"]
+		XCTAssertEqual(monthPicker.cells.count, 12)
+
+		monthPicker.cells.element(boundBy: 4).tap()
+		let navigationBar = app.navigationBars.matching(identifier: "April").firstMatch
+		XCTAssertEqual(String(describing: navigationBar), "\"April\" NavigationBar")
 	}
 }

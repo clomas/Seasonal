@@ -1,17 +1,21 @@
+//
+//  ProduceListTests.swift
+//  SeasonalTests
+//
+//  Created by Clint Thomas on 28/9/2026.
+//  Copyright © 2026 Clint Thomas. All rights reserved.
+//
+
+import SwiftUI
 import XCTest
 @testable import Seasonal
-import SwiftUI
 
 @available(iOS 26, *)
 final class ProduceListTests: XCTestCase {
 
-    func makeProduce(id: Int, name: String, category: ProduceCategory? = .fruit, months: [Months]? = nil, seasons: [Seasons]? = nil, liked: Bool = false) -> Produce {
-        Produce(id: id, name: name, category: category, imageName: nil, description: nil, months: months, seasons: seasons, liked: liked)
-    }
-
     func testFilteredProduceReturnsAllWhenCategoryAll() {
-        let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
-        let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
+        let p1 = Produce.fixture(id: 1, name: "Apple", category: .fruit)
+        let p2 = Produce.fixture(id: 2, name: "Carrot", category: .vegetables)
 
         let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .all)
 
@@ -19,8 +23,8 @@ final class ProduceListTests: XCTestCase {
     }
 
     func testCategoryFiltering() {
-        let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
-        let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
+        let p1 = Produce.fixture(id: 1, name: "Apple", category: .fruit)
+        let p2 = Produce.fixture(id: 2, name: "Carrot", category: .vegetables)
 
         let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .vegetables)
 
@@ -29,8 +33,8 @@ final class ProduceListTests: XCTestCase {
     }
 
     func testSearchFilteringIsCaseInsensitive() {
-        let p1 = makeProduce(id: 1, name: "Apple", category: .fruit)
-        let p2 = makeProduce(id: 2, name: "Carrot", category: .vegetables)
+        let p1 = Produce.fixture(id: 1, name: "Apple", category: .fruit)
+        let p2 = Produce.fixture(id: 2, name: "Carrot", category: .vegetables)
 
         let view = ProduceList(produce: [p1, p2], parentTab: .favourites, selectedCategory: .all, searchText: "app")
 
@@ -40,7 +44,6 @@ final class ProduceListTests: XCTestCase {
 
     func testEmptyListMessageForFavourites() {
         let view = ProduceList(produce: [], parentTab: .favourites, selectedCategory: .all)
-        // The empty view text comes from `parentTab.emptyProduceListViewMessage` or a fallback string.
-        XCTAssertNotNil(view.parentTab.emptyProduceListViewMessage)
+        XCTAssertEqual(view.parentTab.emptyProduceListViewMessage, Strings.EmptyState.favourites)
     }
 }

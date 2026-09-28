@@ -8,8 +8,6 @@
 
 import SwiftUI
 
-/// Toolbar menu that filters the produce lists by category. The icon is the selected
-/// category's; black normally, accent-tinted while a filter other than "All" is active.
 @available(iOS 26.0, *)
 struct CategoryFilterButton: View {
 
@@ -17,7 +15,7 @@ struct CategoryFilterButton: View {
 
     var body: some View {
         Menu {
-            Picker("Filter by category", selection: $selectedCategory) {
+            Picker(Strings.Filter.label, selection: $selectedCategory) {
                 ForEach(ProduceCategory.allCases, id: \.self) { category in
                     Label {
                         Text(category.menuTitle)
@@ -30,16 +28,16 @@ struct CategoryFilterButton: View {
         } label: {
             Image(symbol: selectedCategory.image)
         }
-        // Set here rather than inherited: the app-wide green tint would otherwise colour it
-        // even when no filter is applied.
         .tint(isFiltering ? Colour.accent : .primary)
-        .accessibilityLabel("Filter by category")
-        .accessibilityValue(isFiltering ? selectedCategory.menuTitle : "All categories")
-        .accessibilityHint("Filters the produce list by category")
+        .accessibilityLabel(Strings.Filter.label)
+        .accessibilityValue(isFiltering ? selectedCategory.menuTitle : Strings.Filter.allCategories)
+        .accessibilityHint(Strings.Filter.hint)
         .accessibilityIdentifier("filterByCategoryButton")
     }
 
-    private var isFiltering: Bool { selectedCategory != .all }
+    private var isFiltering: Bool {
+        selectedCategory != .all
+    }
 }
 
 @available(iOS 26.0, *)

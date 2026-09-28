@@ -6,14 +6,6 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-enum ProduceCacheKey: Hashable {
-	case allProduce
-	case favourites
-	case month(Months)
-	case season(Seasons)
-	case search(String)
-}
-
 struct Produce: Identifiable, Sendable, Codable {
 	let id: Int
 	let name: String?
@@ -23,4 +15,25 @@ struct Produce: Identifiable, Sendable, Codable {
 	let months: [Months]?
 	let seasons: [Seasons]?
 	let liked: Bool
+}
+
+extension Produce {
+	func withLiked(_ liked: Bool) -> Produce {
+		Produce(
+			id: id,
+			name: name,
+			category: category,
+			imageName: imageName,
+			description: description,
+			months: months,
+			seasons: seasons,
+			liked: liked
+		)
+	}
+}
+
+extension Array where Element == Produce {
+	func sortedByName() -> [Produce] {
+		sorted { ($0.name ?? "") < ($1.name ?? "") }
+	}
 }

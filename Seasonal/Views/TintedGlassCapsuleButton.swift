@@ -12,17 +12,23 @@ import SwiftUI
 struct TintedGlassCapsuleButton: View {
 
     enum Style {
-        case list      // leading-aligned, fills available width — for selection lists
-        case prominent // hugging, centered — for primary CTAs
+        /// Leading-aligned and full width, for selection lists.
+        case list
+        /// Hugs its content, for primary calls to action.
+        case prominent
     }
 
     let label: String
     let systemImage: String
     var style: Style = .list
-    let tapHandler: Closure
+    let action: () -> Void
+
+    private let listMaxWidth: CGFloat = 340
+    private let listTintOpacity = 0.35
+    private let prominentTintOpacity = 0.45
 
     var body: some View {
-        Button(action: tapHandler) {
+        Button(action: action) {
             HStack(spacing: .space3) {
                 AccentIconChip(systemImage: systemImage)
                 Text(label)
@@ -34,9 +40,9 @@ struct TintedGlassCapsuleButton: View {
             }
             .padding(.horizontal, style == .list ? .space5 : .space8)
             .padding(.vertical, .space4)
-            .frame(maxWidth: style == .list ? 340 : nil)
+            .frame(maxWidth: style == .list ? listMaxWidth : nil)
             .glassEffect(
-                .regular.tint(Colour.inSeason.opacity(style == .list ? 0.35 : 0.45)).interactive(),
+                .regular.tint(Colour.inSeason.opacity(style == .list ? listTintOpacity : prominentTintOpacity)).interactive(),
                 in: Capsule()
             )
         }

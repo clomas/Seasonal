@@ -17,8 +17,7 @@ let previewCoordinator: AppCoordinator = {
 	return coord
 }()
 
-/// Shared fixtures: the SwiftUI previews and the `use-mock-data` launch argument both load
-/// these, so a screenshot run and a preview show the same catalogue without touching CloudKit.
+/// Fixtures shared by the SwiftUI previews and the `use-mock-data` launch argument.
 @available(iOS 26, *)
 let previewProduce: [Produce] = [
 		Produce(

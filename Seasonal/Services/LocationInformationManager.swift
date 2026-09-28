@@ -6,48 +6,29 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-import Foundation
 import MapKit
 
 @available(iOS 26.0, *)
-class LocationInformationManager {
+struct LocationInformationManager {
 
 	func parseLocation(_ location: CLLocation?) async -> StateLocation {
-		guard let location else {
-			return .noState
-		}
+		guard let location else { return .noState }
 
 		let request = MKReverseGeocodingRequest(location: location)
-		let placemark: MKPlacemark? = try? await request?.mapItems.first?.placemark
-
-		return parseLocationForDelegate(state: placemark?.administrativeArea, country: placemark?.country)
+		let placemark = try? await request?.mapItems.first?.placemark
+		return state(from: placemark?.administrativeArea, country: placemark?.country)
 	}
 
-	// MARK: States in Aus
+	/// The ACT has no produce data of its own, so it uses New South Wales'.
+	private func state(from administrativeArea: String?, country: String?) -> StateLocation {
+		let area = administrativeArea?.lowercased() ?? ""
 
-	private func parseLocationForDelegate(state: String?, country: String?) -> StateLocation {
-		let lowercaseState: String = state?.lowercased() ?? ""
-
-		var stateFound: StateLocation = .noState
-
-		if lowercaseState == StateLocation.act.rawValue {
-			stateFound = StateLocation.newSouthWales
-		} else if lowercaseState == "ca" {
-			stateFound = StateLocation.noState
-		} else {
-			if country != Constants.straya {
-				if let stateLocation: StateLocation = StateLocation(rawValue: StateLocation.noState.rawValue) {
-					stateFound = stateLocation
-				}
-			} else if lowercaseState != "" {
-				if let locationInit: StateLocation = StateLocation(rawValue: lowercaseState) {
-					stateFound = locationInit
-				}
-			}
+		if area == StateLocation.act.rawValue {
+			return .newSouthWales
 		}
-#if DEBUG
-		print("location found - \(String(describing: state))")
-#endif
-		return stateFound
+		guard country == Constants.straya else {
+			return .noState
+		}
+		return StateLocation(rawValue: area) ?? .noState
 	}
 }

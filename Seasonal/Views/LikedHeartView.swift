@@ -8,38 +8,45 @@
 
 import SwiftUI
 
-/// A single, stable `heart.fill` symbol whose fill + shadow animate between the
-/// liked and unliked states. Keeping one symbol identity (rather than swapping
-/// two views) is what lets `.symbolEffect(.bounce)` actually fire on each toggle.
+/// One stable symbol whose fill animates, so `.symbolEffect(.bounce)` fires on every toggle.
 @available(iOS 26, *)
-struct HeartView: View {
+struct LikedHeartView: View {
+
 	let liked: Bool
+
+	private let size: CGFloat = 40
+	private let unlikedScale: CGFloat = 0.9
+	private let likedGradientRadius: CGFloat = 65
+	private let unlikedGradientRadius: CGFloat = 50
+
+	var body: some View {
+		Image.favouritesFilled
+			.resizable()
+			.aspectRatio(contentMode: .fit)
+			.frame(width: size, height: size)
+			.foregroundStyle(fill)
+			.scaleEffect(liked ? 1 : unlikedScale)
+			.symbolEffect(.bounce, value: liked)
+			.animation(.bouncy, value: liked)
+	}
 
 	private var fill: RadialGradient {
 		liked
-			? RadialGradient(colors: [.red, .pink, .white], center: .topLeading, startRadius: 0, endRadius: 65)
-			: RadialGradient(colors: [Colour.emptyHeartGradient1, Colour.emptyHeartGradient2], center: .topLeading, startRadius: 0, endRadius: 50)
-	}
-
-	var body: some View {
-		Image.heartFill
-			.resizable()
-			.aspectRatio(contentMode: .fit)
-			.frame(width: 40, height: 40)
-			.foregroundStyle(fill)
-//			.shadow(color: .red.opacity(liked ? 0.1 : 0), radius: 6, x: -5, y: 0)
-//			.shadow(color: .black.opacity(liked ? 0.1 : 0), radius: 5, x: 3, y: 10)
-			.scaleEffect(liked ? 1.0 : 0.9)
-			.symbolEffect(.bounce, value: liked)
-			.animation(.bouncy, value: liked)
+			? RadialGradient(colors: [.red, .pink, .white], center: .topLeading, startRadius: 0, endRadius: likedGradientRadius)
+			: RadialGradient(
+				colors: [Colour.emptyHeartGradient1, Colour.emptyHeartGradient2],
+				center: .topLeading,
+				startRadius: 0,
+				endRadius: unlikedGradientRadius
+			)
 	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	HStack {
-		HeartView(liked: false)
-		HeartView(liked: true)
+		LikedHeartView(liked: false)
+		LikedHeartView(liked: true)
 	}
-    .background(.white)
+	.background(.white)
 }

@@ -8,66 +8,55 @@
 
 import SwiftUI
 
-/// The in-app information screen — the SwiftUI equivalent of the legacy
-/// `InfoViewController`. Shows the app spiel, a state picker that re-fetches
-/// produce data, source/privacy links and an email contact.
 @available(iOS 26, *)
 struct InfoScreen: View {
 
     @EnvironmentObject private var coordinator: AppCoordinator
-
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    /// States the user can pick from — excludes `.noState` (and `.act`, which has
-    /// no `fullName`), matching the initial location picker.
-    private let selectableStates: [StateLocation] = StateLocation.allCases.filter {
-        $0.fullName != StateLocation.noState.fullName
-    }
-
-    @State private var selectedState: StateLocation = Self.currentState
+    @State private var selectedState = Self.savedState
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Text(infoText)
+                    Text(introText)
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Location") {
-                    Picker("Produce location", selection: $selectedState) {
-                        ForEach(selectableStates, id: \.self) { state in
+                Section(Strings.Info.locationSection) {
+                    Picker(Strings.Info.produceLocation, selection: $selectedState) {
+                        ForEach(StateLocation.selectable, id: \.self) { state in
                             Text(state.fullName).tag(state)
                         }
                     }
                 }
 
-                Section("About") {
-                    if let url = URL(string: "https://github.com/clomas/Seasonal") {
+                Section(Strings.Info.aboutSection) {
+                    if let url = ExternalLink.sourceCode {
                         Link(destination: url) {
-                            Label("View source on GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+                            Label(Strings.Info.viewSource, systemImage: Symbol.sourceCode)
                         }
                     }
-                    // TODO: Privacy policy link here
-                    if let url = URL(string: "https://github.com/clomas/Seasonal") {
+                    if let url = ExternalLink.privacyPolicy {
                         Link(destination: url) {
-                            Label("Privacy policy", systemImage: "hand.raised")
+                            Label(Strings.Info.privacyPolicy, systemImage: Symbol.privacy)
                         }
                     }
                     Button {
-                        if let url = URL(string: "mailto:clint.thomas@me.com") {
+                        if let url = ExternalLink.contactEmail {
                             openURL(url)
                         }
                     } label: {
-                        Label("Get in touch", systemImage: "envelope")
+                        Label(Strings.Info.getInTouch, systemImage: Symbol.email)
                     }
                 }
 
-                if let version = appVersion {
+                if let version = Bundle.main.shortVersion {
                     Section {
-                        Text("Seasonal \(version)")
+                        Text(Strings.Info.version(version))
                             .font(.footnote)
                             .foregroundStyle(.tertiary)
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -75,40 +64,29 @@ struct InfoScreen: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle("Seasonal")
+            .navigationTitle(Strings.Info.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button(Strings.Info.done) { dismiss() }
                 }
             }
             .tint(Colour.inSeason)
             .onChange(of: selectedState) { _, newState in
-                guard newState != Self.currentState else { return }
+                guard newState != Self.savedState else { return }
                 dismiss()
                 coordinator.changeLocation(to: newState)
             }
         }
     }
 
-    // MARK: - Helpers
-
-    /// The currently persisted state, or `.noState` if none is set.
-    private static var currentState: StateLocation {
+    private static var savedState: StateLocation {
         StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
     }
 
-    /// The info spiel, with "Australia" replaced by the user's state when one is set.
-    private var infoText: String {
-        let state = Self.currentState
-        guard state.fullName != StateLocation.noState.fullName else {
-            return Constants.infoPageSpiel
-        }
-        return Constants.infoPageSpiel.replacingOccurrences(of: Constants.straya, with: state.fullName)
-    }
-
-    private var appVersion: String? {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    private var introText: String {
+        let state = Self.savedState
+        return Strings.Info.intro(location: state.isSelectable ? state.fullName : Strings.Info.defaultLocation)
     }
 }
 

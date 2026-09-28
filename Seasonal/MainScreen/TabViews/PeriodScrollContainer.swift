@@ -8,11 +8,8 @@
 
 import SwiftUI
 
-struct PeriodItem: Identifiable {
-    let id: Int
-    let title: String
-}
-
+/// A horizontally paging, effectively infinite carousel of periods: the periods repeat in a
+/// buffer and scrolling starts from its middle.
 @available(iOS 26, *)
 struct PeriodScrollContainer<Cell: View>: View {
 
@@ -21,17 +18,19 @@ struct PeriodScrollContainer<Cell: View>: View {
         let period: PeriodItem
     }
 
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Binding var jumpToIndex: Int?
+    @Binding var currentIndex: Int
 
     let periods: [PeriodItem]
     let initialIndex: Int
-    /// Set to a period index to programmatically scroll to it; reset to nil once handled.
-    @Binding var jumpToIndex: Int?
-    /// Reports the period index currently centred in the pager, so callers (e.g. the jump
-    /// menu) can reflect what the user is looking at.
-    @Binding var currentIndex: Int
-    var onPeekFinished: (() async -> Void)? = nil
+    /// The onboarding peek runs only when this is set.
+    let onPeekFinished: (() async -> Void)?
     @ViewBuilder let cell: (PeriodItem) -> Cell
+
+    private static var bufferRepeats: Int { 21 }
+    private static var jumpDuration: TimeInterval { 0.4 }
+    private static var peekStartDelay: Duration { .milliseconds(500) }
+    private static var peekHopDuration: TimeInterval { 1 }
 
     private let buffer: [BufferSlot]
     private let startSlot: Int
@@ -39,7 +38,7 @@ struct PeriodScrollContainer<Cell: View>: View {
     private let centerOffset: Int
 
     @State private var scrollPosition: ScrollPosition
-    @State private var hasPeeked: Bool = false
+    @State private var hasPeeked = false
 
     init(
         periods: [PeriodItem],
@@ -49,29 +48,22 @@ struct PeriodScrollContainer<Cell: View>: View {
         onPeekFinished: (() async -> Void)? = nil,
         @ViewBuilder cell: @escaping (PeriodItem) -> Cell
     ) {
+        let count = max(periods.count, 1)
+        let centerOffset = (Self.bufferRepeats / 2) * count
+        let startSlot = centerOffset + initialIndex
+
         self.periods = periods
         self.initialIndex = initialIndex
         self._jumpToIndex = jumpToIndex
         self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
         self.cell = cell
-
-        let count = max(periods.count, 1)
-        let repeats = 21
-        let centerOffset = (repeats / 2) * count
-        let startSlot = centerOffset + initialIndex
-        self.startSlot = startSlot
         self.count = count
         self.centerOffset = centerOffset
-
-        var slots: [BufferSlot] = []
-        slots.reserveCapacity(repeats * count)
-        for slot in 0..<(repeats * count) {
-            let periodIndex = ((slot - centerOffset) % count + count) % count
-            slots.append(BufferSlot(id: slot, period: periods[periodIndex]))
+        self.startSlot = startSlot
+        self.buffer = (0..<(Self.bufferRepeats * count)).map { slot in
+            BufferSlot(id: slot, period: periods[((slot - centerOffset) % count + count) % count])
         }
-        self.buffer = slots
-
         self._scrollPosition = State(initialValue: ScrollPosition(id: startSlot))
     }
 
@@ -88,11 +80,9 @@ struct PeriodScrollContainer<Cell: View>: View {
         .scrollTargetBehavior(.viewAligned)
         .scrollPosition($scrollPosition)
         .onAppear {
-            guard !hasPeeked, GlobalSettings.swipeTipShown.swipe else { return }
+            guard !hasPeeked, onPeekFinished != nil else { return }
             hasPeeked = true
-            Task {
-                await runPeekSequence()
-            }
+            Task { await runPeekSequence() }
         }
         .onChange(of: jumpToIndex) { _, newValue in
             guard let index = newValue else { return }
@@ -103,8 +93,7 @@ struct PeriodScrollContainer<Cell: View>: View {
             guard let slot = scrollPosition.viewID(type: Int.self) else { return }
             currentIndex = periodIndex(for: slot)
         }
-        // Another pager sharing `currentIndex` moved (the months tab and the search tab each
-        // hold one), so follow it without animating — this one is off screen.
+        // Another pager sharing `currentIndex` moved; follow it without animating.
         .onChange(of: currentIndex) { _, newIndex in
             let current = scrollPosition.viewID(type: Int.self) ?? startSlot
             guard periodIndex(for: current) != newIndex else { return }
@@ -116,8 +105,6 @@ struct PeriodScrollContainer<Cell: View>: View {
         ((slot - centerOffset) % count + count) % count
     }
 
-    /// The buffer slot showing `index` that's nearest the current position, so a scroll to
-    /// it covers the shortest distance.
     private func nearestSlot(for index: Int) -> Int {
         let current = scrollPosition.viewID(type: Int.self) ?? startSlot
         let nearestRepeat = (Double(current - centerOffset - index) / Double(count)).rounded()
@@ -125,29 +112,24 @@ struct PeriodScrollContainer<Cell: View>: View {
     }
 
     private func jump(to index: Int) {
-        withAnimation(.easeInOut(duration: 0.4)) {
+        withAnimation(.easeInOut(duration: Self.jumpDuration)) {
             scrollPosition.scrollTo(id: nearestSlot(for: index))
         }
     }
 
     private func runPeekSequence() async {
-        try? await Task.sleep(for: .seconds(0.5))
-
+        try? await Task.sleep(for: Self.peekStartDelay)
         await hop(to: startSlot + 1)
         await hop(to: startSlot)
-
         await hop(to: startSlot - 1)
         await hop(to: startSlot)
-
         await onPeekFinished?()
     }
 
-    /// Animates a single-cell scroll and waits long enough for the scroll view to
-    /// land and `LazyHStack` to settle before the next hop begins.
     private func hop(to id: Int) async {
-        withAnimation(.easeInOut(duration: 1)) {
+        withAnimation(.easeInOut(duration: Self.peekHopDuration)) {
             scrollPosition.scrollTo(id: id)
         }
-        try? await Task.sleep(for: .seconds(1))
+        try? await Task.sleep(for: .seconds(Self.peekHopDuration))
     }
 }

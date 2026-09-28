@@ -12,13 +12,13 @@ struct SwipeOnboardingTip: Tip {
 
 	let context: String
 
-	var id: String = "scroll-guide"
+	var id = "scroll-guide"
 
 	var title: Text {
-		Text("Swipe to explore")
+		Text(Strings.Onboarding.swipeTitle)
 	}
 
 	var message: Text? {
-		Text("You can scroll left and right to see other \(context).")
+		Text(Strings.Onboarding.swipeMessage(context: context))
 	}
 }

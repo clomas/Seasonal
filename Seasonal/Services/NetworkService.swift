@@ -10,23 +10,15 @@
 import Foundation
 import Network
 
-@MainActor
-protocol NetworkObserverDelegate: AnyObject, Sendable {
-	func internetStatusDidChange(status: NWPath.Status)
-}
-
 actor NetworkService {
 
-	private let monitor: NWPathMonitor = NWPathMonitor()
+	private let monitor = NWPathMonitor()
 
 	weak var delegate: NetworkObserverDelegate?
 
 	init(delegate: NetworkObserverDelegate) {
 		self.delegate = delegate
-
-		Task {
-			await startMonitoring()
-		}
+		Task { await startMonitoring() }
 	}
 
 	func stop() {
@@ -38,13 +30,8 @@ actor NetworkService {
 		await startMonitoring()
 	}
 
-	func startMonitoring() async {
+	private func startMonitoring() async {
 		monitor.pathUpdateHandler = { [weak self] path in
-
-			print("Path status:", path.status)
-			print("Interfaces:", path.availableInterfaces)
-			print("Uses expensive:", path.isExpensive)
-
 			Task { @MainActor in
 				await self?.delegate?.internetStatusDidChange(status: path.status)
 			}

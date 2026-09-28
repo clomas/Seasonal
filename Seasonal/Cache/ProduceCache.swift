@@ -9,63 +9,42 @@
 import Foundation
 
 @MainActor
-final class ProduceCache: ObservableObject {
+final class ProduceCache {
+
+	private let appVersion = Bundle.main.shortVersion ?? "0"
+
 	private var cache = Cache<ProduceCacheKey, [Produce]>()
-	private let appVersion: String
 
 	init() {
-		appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
 		invalidateIfAppUpdated()
 	}
 
 	@discardableResult
 	func allProduce(from produce: [Produce] = []) -> [Produce] {
-		cache.value(for: .allProduce) {
-			produce.sorted { ($0.name ?? "") < ($1.name ?? "") }
-		}
+		cache.value(for: .allProduce) { produce.sortedByName() }
 	}
 
-	/// Non-mutating check for cached produce — unlike `allProduce(from:)`, this
-	/// never writes an empty placeholder into the cache on a miss.
+	/// Unlike `allProduce(from:)`, never writes an empty placeholder into the cache on a miss.
 	func cachedAllProduce() -> [Produce]? {
 		cache.peek(for: .allProduce)
 	}
 
 	@discardableResult
 	func favourites(from produce: [Produce]) -> [Produce] {
-		cache.value(for: .favourites) {
-			produce
-				.filter { $0.liked == true }
-				.sorted { ($0.name ?? "") < ($1.name ?? "") }
-		}
+		cache.value(for: .favourites) { produce.filter(\.liked).sortedByName() }
 	}
 
 	func byPeriod<P: PeriodType>(_ period: P, from produce: [Produce]) -> [Produce] {
-		cache.value(for: period.cacheKey) {
-			produce
-				.filter { period.contains($0) }
-				.sorted { ($0.name ?? "") < ($1.name ?? "") }
-		}
+		cache.value(for: period.cacheKey) { produce.filter(period.contains).sortedByName() }
 	}
 
-	func search(_ query: String, from produce: [Produce]) -> [Produce] {
-		cache.value(for: .search(query)) {
-			produce
-				.filter { query.isEmpty || $0.name?.localizedCaseInsensitiveContains(query) == true }
-				.sorted { ($0.name ?? "") < ($1.name ?? "") }
-		}
-	}
-
-	/// Clears all memoised derived lists. Call after mutating the underlying
-	/// produce (e.g. toggling a like) so `favourites`/`byPeriod` recompute.
 	func invalidate() {
 		cache.removeAll()
 	}
 
 	private func invalidateIfAppUpdated() {
-		if GlobalSettings.produceCacheAppVersion != appVersion {
-			cache = Cache<ProduceCacheKey, [Produce]>()
-			GlobalSettings.produceCacheAppVersion = appVersion
-		}
+		guard GlobalSettings.produceCacheAppVersion != appVersion else { return }
+		cache = Cache<ProduceCacheKey, [Produce]>()
+		GlobalSettings.produceCacheAppVersion = appVersion
 	}
 }

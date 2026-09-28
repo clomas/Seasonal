@@ -8,11 +8,8 @@
 
 import Foundation
 
-/// Persists the base produce catalogue (name/category/months/seasons) across app
-/// launches. This data only changes with an app update, so it is keyed by app
-/// version rather than a time-based expiry — liked state is intentionally not
-/// trusted from this cache and is always refreshed from the CloudKit private
-/// database (see `ProduceStore.fetchFromCloudKit`).
+/// The base catalogue only changes with an app update, so it's keyed by app version.
+/// Liked state isn't trusted from here; it's always refreshed from CloudKit.
 struct ProduceDiskCache {
 
     private struct Payload: Codable {
@@ -21,14 +18,10 @@ struct ProduceDiskCache {
         let produce: [Produce]
     }
 
-    private let fileURL: URL
-    private let appVersion: String
-
-    init() {
-        let cachesDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        fileURL = cachesDir.appendingPathComponent("produce_base_cache.json")
-        appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
-    }
+    private let fileURL = FileManager.default
+        .urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        .appendingPathComponent("produce_base_cache.json")
+    private let appVersion = Bundle.main.shortVersion ?? "0"
 
     func load(for location: StateLocation) -> [Produce]? {
         guard let data = try? Data(contentsOf: fileURL),

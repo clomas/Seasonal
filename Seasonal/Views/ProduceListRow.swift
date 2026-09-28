@@ -11,49 +11,38 @@ import SwiftUI
 @available(iOS 26, *)
 struct ProduceListRow: View {
 
-	@EnvironmentObject var appCoordinator: AppCoordinator
+	let produce: Produce
+	let showMonths: Bool
 
-	@Binding var produce: Produce
-    
-    let showMonths: Bool
+	private let rowSpacing: CGFloat = 6
+	private let imageSize: CGFloat = 60
+	/// Equal leading and trailing slots keep the name centred however it wraps.
+	private let sideSlotWidth: CGFloat = 84
 
 	var body: some View {
 		ZStack {
 			Color(.systemBackground)
-			VStack(spacing: 6) {
-				// Equal-width leading/trailing slots keep the name centred on the row while
-				// letting it wrap in the middle as Dynamic Type grows — so it never overlaps
-				// the image or heart the way a full-width ZStack overlay did.
+			VStack(spacing: rowSpacing) {
 				HStack(spacing: 0) {
 					Image(produce.imageName ?? "")
 						.resizable()
 						.scaledToFit()
-						.frame(width: 60, height: 60)
+						.frame(width: imageSize, height: imageSize)
 						.padding(.leading, .space3)
-						.frame(width: 84, alignment: .leading)
+						.frame(width: sideSlotWidth, alignment: .leading)
 
 					Text(produce.name ?? "")
 						.font(.cardTitle)
 						.multilineTextAlignment(.center)
 						.frame(maxWidth: .infinity)
 
-					Button(action: {
-						withAnimation(.easeInOut(duration: 0.35)) {
-							appCoordinator.produceStore.toggleLiked(for: produce.id)
-						}
-					}) {
-						HeartView(liked: produce.liked == true)
-					}
-					.sensoryFeedback(trigger: produce.liked) { _, isLiked in
-						isLiked ? .impact(flexibility: .solid) : .impact(flexibility: .soft)
-					}
-					.padding(.trailing, .space4)
-					.frame(width: 84, alignment: .trailing)
-					.accessibilityIdentifier("produceLikeButton_\(produce.id)")
+					LikeButton(produce: produce)
+						.padding(.trailing, .space4)
+						.frame(width: sideSlotWidth, alignment: .trailing)
 				}
-                if showMonths {
-                    MonthsInSeasonCapsuleView(months: produce.months ?? [])
-                }
+				if showMonths {
+					MonthsInSeasonCapsuleView(months: produce.months ?? [])
+				}
 			}
 			.accessibilityIdentifier("produceRow_\(produce.id)")
 			.padding(.bottom, .space1)
@@ -64,19 +53,6 @@ struct ProduceListRow: View {
 
 @available(iOS 26, *)
 #Preview {
-	ProduceListRow(
-		produce: .constant(
-			.init(
-				id: 122,
-				name: "Bananas",
-				category: .fruit,
-				imageName: "Bananas",
-				description: "",
-				months: [.august, .september, .january, .december],
-				seasons: [.spring],
-				liked: true
-			)
-        ), showMonths: true
-	)
-	.environmentObject(previewCoordinator)
+	ProduceListRow(produce: previewProduce[1], showMonths: true)
+		.environmentObject(previewCoordinator.produceStore)
 }

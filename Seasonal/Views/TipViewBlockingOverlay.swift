@@ -11,19 +11,23 @@ import TipKit
 
 @available(iOS 26, *)
 struct TipViewBlockingOverlay: View {
+
 	@Binding var showTip: Bool
+
 	let tip: any Tip
+
+	private let scrimOpacity = 0.3
+	private let tipMaxWidth: CGFloat = 350
 
 	var body: some View {
 		if showTip {
 			ZStack {
-				// Overlay background that blocks taps
-				Color.black.opacity(0.3)
+				Color.black.opacity(scrimOpacity)
 					.ignoresSafeArea()
 					.allowsHitTesting(true)
 
 				TipView(tip)
-					.frame(maxWidth: 350)
+					.frame(maxWidth: tipMaxWidth)
 					.padding()
 					.transition(.opacity.combined(with: .scale))
 			}

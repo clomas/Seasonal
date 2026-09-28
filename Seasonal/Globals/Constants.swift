@@ -6,33 +6,26 @@
 //  Copyright © 2019 Clint Thomas. All rights reserved.
 //
 
-import SwiftUI
-import UIKit
+import Foundation
 
 struct Constants {
 
-	// User defaults
-	static let location: String = "Location"
-
 	static let seasonal: String = "Seasonal"
 
-	// Locations
+	// MARK: - Locations
 	static let straya: String = "Australia"
 
-	// CloudKit db
+	// MARK: - CloudKit
 	static let australianProduce: String = "Australian_Produce"
 	static let australianProduceLikes: String = "Australian_Produce_Likes"
 
-	// General
+	// MARK: - Record fields
 	static let id: String = "id"
-	static let season: String = "season"
-	static let title: String = "title"
-	static let description: String = "description"
 	static let name: String = "name"
 	static let cancelled: String = "cancelled"
 	static let category: String = "category"
 
-	// Icons Images & Labels
+	// MARK: - Icons & labels
 	static let allCategories: String = "allCategories"
 	static let favourites: String = "favourites"
 	static let seasons: String = "seasons"
@@ -44,20 +37,17 @@ struct Constants {
 	static let herbs: String = "herbs"
 	static let cancel: String = "cancel"
 
-	// Titles
-	static let Seasons: String = "Seasons"
-	static let Months: String = "Months"
+	// MARK: - Titles
 	static let selectAMonth: String = "Select a Month"
 
-	// Cells
+	// MARK: - Cell identifiers
 	static let SeasonsTableViewCell: String = "SeasonsTableViewCell"
-	static let MenuBarCellSeason: String = "MenuBarCellSeason"
 	static let ProduceMonthInfoViewCell: String = "ProduceMonthInfoViewCell"
 	static let MenuBarCell: String = "MenuBarCell"
 	static let SelectMonthCell: String = "SelectMonthCollectionViewCell"
 	static let MonthTableCell: String = "MonthTableCollectionViewCell"
 
-	// Colours / Tints
+	// MARK: - Colours
 	static let tableViewCellColor: String = "cellColor"
 	static let searchBarColor: String = "searchBar"
 	static let likeButtonColor: String = "likeButton"
@@ -67,18 +57,18 @@ struct Constants {
 	static let menuBarSelectedColor: String = "menuBarSelected"
 	static let navigationBarColor: String = "navigationBar"
 
-	// Videos
+	// MARK: - Videos
 	static let lightWelcomeVideo: String = "lightwelcomevideo"
 	static let darkWelcomeVideo: String = "darkwelcomevideo"
 
-	// Likes
+	// MARK: - Likes
 	static let liked: String = "liked"
 	static let unliked: String = "unliked"
 
-	// Welcome
+	// MARK: - Welcome
 	static let welcomeToSeasonal: String = "Welcome to Seasonal"
 
-	// Info page spiel
+	// MARK: - Info
 	// swiftlint:disable:next line_length
 	static let infoPageSpiel: String = "Location of Produce Displayed: Australia.\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!"
 
@@ -94,38 +84,13 @@ struct Constants {
 		StateLocation.tasmania.fullName.capitalized
 	]
 
-	static let animationDuration: TimeInterval = 1.2
 }
 
-extension Image {
-    static let heart: Image = .init(systemName: "heart")
-	static let heartFill: Image = .init(systemName: "heart.fill")
-	static let magnifyingGlass: Image = .init(systemName: "magnifyingglass")
-    static let settings: Image = .init(systemName: "slider.vertical.3")
-	static let xMarkCircle: Image = .init(systemName: "xmark.circle")
-
-	/// Loads a custom asset-catalog symbol (e.g. `apple.fruit`) when one exists
-	/// with this name, otherwise falls back to the matching SF Symbol.
-	init(symbol name: String) {
-		if UIImage(named: name) != nil {
-			self.init(name)
-		} else {
-			self.init(systemName: name)
-		}
-	}
-}
-
-// MARK: Image strings
+// MARK: - Category symbols
 
 extension String {
 	static let fruit: String = "apple.fruit"
 	static let herbs: String = "leaf"
 	static let category: String = "list.bullet"
 	static let vegetables: String = "carrot"
-}
-
-// MARK: Space
-
-extension CGFloat {
-	static let largePadding: CGFloat = 200
 }

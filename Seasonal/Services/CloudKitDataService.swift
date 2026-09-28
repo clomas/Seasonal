@@ -8,66 +8,40 @@
 
 import CloudKit
 
-actor CloudKitDataService: ObservableObject {
+actor CloudKitDataService {
 
     enum DatabaseType {
         case `private`
         case `public`
     }
 
-    private let container: CKContainer = .default()
+    private let container = CKContainer.default()
 
-    private var databaseType: DatabaseType = .public
     private var hasUbiquityIdentityToken: Bool {
         FileManager.default.ubiquityIdentityToken != nil
     }
 
-    func setDatabase(type: DatabaseType) {
-        databaseType = type
-    }
-
-    /// Fetches all records for the given recordType and queryKey,
-    /// returning all results including both successes and failures.
     func fetchItems(_ databaseType: DatabaseType, recordType: String, queryKey: String) async throws -> [CKRecord] {
-        let database = databaseType == .private ? container.privateCloudDatabase : container.publicCloudDatabase
-
-        let predicate = NSPredicate(value: true)
-        let query = CKQuery(recordType: recordType, predicate: predicate)
+        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
         query.sortDescriptors = [NSSortDescriptor(key: queryKey, ascending: true)]
 
-        let (matchResults, _) = try await database.records(matching: query)
-
-        var records: [CKRecord] = []
-
-        for (_, result) in matchResults {
-            switch result {
-            case .success(let record):
-                records.append(record)
-            case .failure(let error):
-                throw error
-            }
-        }
-
-        return records
+        let (matchResults, _) = try await database(databaseType).records(matching: query)
+        return try matchResults.map { try $0.1.get() }
     }
 
-    func saveItem(_ record: CKRecord) async throws -> CKRecord? {
+    @discardableResult
+    func saveItem(_ record: CKRecord, in databaseType: DatabaseType) async -> CKRecord? {
         guard hasUbiquityIdentityToken else { return nil }
-        
-        let database = databaseType == .private
-            ? container.privateCloudDatabase
-            : container.publicCloudDatabase
-
-        return try? await database.save(record)
+        return try? await database(databaseType).save(record)
     }
 
-    func deleteItem(_ record: CKRecord) async throws -> CKRecord.ID? {
+    @discardableResult
+    func deleteItem(_ record: CKRecord, in databaseType: DatabaseType) async -> CKRecord.ID? {
         guard hasUbiquityIdentityToken else { return nil }
-        
-        let database = databaseType == .private
-            ? container.privateCloudDatabase
-            : container.publicCloudDatabase
+        return try? await database(databaseType).deleteRecord(withID: record.recordID)
+    }
 
-        return try? await database.deleteRecord(withID: record.recordID)
+    private func database(_ type: DatabaseType) -> CKDatabase {
+        type == .private ? container.privateCloudDatabase : container.publicCloudDatabase
     }
 }

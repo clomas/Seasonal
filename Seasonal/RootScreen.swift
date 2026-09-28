@@ -8,14 +8,6 @@
 
 import SwiftUI
 
-// TODO:
-// Info screen
-// Search screen
-// CloudKit works? (old and new)
-// Wire up like button
-// Work on like button appearance
-// Cache everything, test cache
-
 @available(iOS 26, *)
 struct RootScreen: View {
 	@EnvironmentObject var coordinator: AppCoordinator
@@ -28,7 +20,6 @@ struct RootScreen: View {
 			default:
 				InitialScreen()
 					.glassEffect()
-
 			}
 		}
 		.animation(.easeInOut, value: coordinator.state == .dataIsReady)

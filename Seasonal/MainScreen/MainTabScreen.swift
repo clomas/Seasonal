@@ -11,66 +11,36 @@ import TipKit
 
 @available(iOS 26, *)
 struct MainTabScreen: View {
-    
-    enum Tabs: Hashable {
-        case favourites
-        case months(Months)
-        case seasons(Seasons)
-        case search
-
-        var isSeasons: Bool {
-            if case .seasons = self { true } else { false }
-        }
-    }
 
     @EnvironmentObject var produceStore: ProduceStore
 
-    /// Chrome shared with the tab bar and the produce lists — see `MainScreenState`. Everything
-    /// below it is state only this screen reads.
     @State private var state = MainScreenState()
+    @State private var showTip = !GlobalSettings.swipeTipShown.swipe
+    @State private var showInfo = false
+    @State private var jumpMonthIndex: Int?
+    @State private var jumpSeasonIndex: Int?
+    @State private var currentMonthIndex = Months.currentPeriod.index
+    @State private var currentSeasonIndex = Seasons.currentPeriod.index
 
-    @State private var showTip: Bool = GlobalSettings.swipeTipShown.swipe
-    @State private var showInfo: Bool = false
-    @State private var jumpMonthIndex: Int? = nil
-    @State private var jumpSeasonIndex: Int? = nil
-    @State private var currentMonthIndex: Int = Months.currentPeriod.index
-    @State private var currentSeasonIndex: Int = Seasons.currentPeriod.index
-
-    private var tip: SwipeOnboardingTip? {
-        switch state.selectedTab {
-        case .months:
-            SwipeOnboardingTip(context: "months")
-        case .seasons:
-            SwipeOnboardingTip(context: "seasons")
-        default:
-            nil
-        }
-    }
+    private let tipDismissDelay: Duration = .milliseconds(500)
+    private let tipFadeDuration: TimeInterval = 1.5
 
     var body: some View {
         TabView(selection: $state.selectedTab) {
-            Tab("Favourites", systemImage: "heart", value: .favourites) {
+            Tab(Strings.Tab.favourites, systemImage: Symbol.favourites, value: .favourites) {
                 tabScreen(for: .favourites)
             }
-
-            Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
+            Tab(Strings.Tab.months, systemImage: Symbol.months, value: .months(Months.currentPeriod)) {
                 tabScreen(for: .months(Months.currentPeriod))
             }
-
-            Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
+            Tab(Strings.Tab.seasons, systemImage: Symbol.seasons, value: .seasons(Seasons.currentPeriod)) {
                 tabScreen(for: .seasons(Seasons.currentPeriod))
             }
-
-            // The search role is what anchors the field to the bottom bar and floats it above
-            // the keyboard. Its content is the screen search was opened from, filtered, so the
-            // month or season, its title and its toolbar all stay put while searching.
-            Tab("Search", systemImage: "magnifyingglass", value: Tabs.search, role: .search) {
+            Tab(Strings.Tab.search, systemImage: Symbol.search, value: Tabs.search, role: .search) {
                 tabScreen(for: state.searchOrigin, searchText: state.searchQuery)
             }
         }
         .accessibilityIdentifier("mainTabView")
-        // Selecting the search tab focuses the field straight away. Without this the field is
-        // presented but idle, so reaching the keyboard costs a second tap on it.
         .tabViewSearchActivation(.searchTabSelection)
         .tint(Colour.inSeason)
         .onChange(of: state.selectedTab) { _, newTab in
@@ -87,38 +57,20 @@ struct MainTabScreen: View {
         .environment(state)
     }
 
-    // MARK: - Private
-
-    /// One navigation stack per tab, around the whole screen — never one per pager page, which
-    /// would each claim the search field and fight over the title. The title is inline because a
-    /// collapsing large title tracks a scroll view, and the one a stack finds here is the
-    /// horizontal pager rather than the lists.
-    /// `searchText` is non-nil only on the search tab.
-    private func tabScreen(for tab: Tabs, searchText: String? = nil) -> some View {
-        NavigationStack {
-            browsingScreen(for: tab, searchText: searchText ?? "")
-                .navigationTitle(title(for: tab))
-                .toolbarTitleDisplayMode(.inline)
-                .modifier(TitleMenuIf(menu: titleMenu(for: tab)))
-                .toolbar { toolbar }
-                .modifier(SearchableIf(text: searchText == nil ? nil : $state.searchQuery))
+    private var tip: SwipeOnboardingTip? {
+        switch state.selectedTab {
+        case .months: SwipeOnboardingTip(context: Strings.Onboarding.monthsContext)
+        case .seasons: SwipeOnboardingTip(context: Strings.Onboarding.seasonsContext)
+        case .favourites, .search: nil
         }
     }
 
-    /// Tapping a period title jumps its pager. Favourites gets none — even an empty title menu
-    /// still draws the chevron.
-    private func titleMenu(for tab: Tabs) -> AnyView? {
-        switch tab {
-        case .months:
-            AnyView(PeriodJumpPicker<Months>(title: "Jump to a month", current: currentMonthIndex, jumpToIndex: $jumpMonthIndex))
-        case .seasons:
-            AnyView(PeriodJumpPicker<Seasons>(title: "Jump to a season", current: currentSeasonIndex, jumpToIndex: $jumpSeasonIndex))
-        case .favourites, .search:
-            nil
-        }
+    /// Only set while the swipe tip hasn't been shown, so the pager peeks just once.
+    private var peekFinishedHandler: (() async -> Void)? {
+        guard showTip else { return nil }
+        return { await dismissTipAfterPeek() }
     }
 
-    /// One control either side of the centred title.
     @ToolbarContentBuilder
     private var toolbar: some ToolbarContent {
         ToolbarItem(placement: .topBarLeading) {
@@ -129,7 +81,20 @@ struct MainTabScreen: View {
         }
     }
 
-    /// The period the tab's pager is showing, so the title follows swipes and jumps.
+    /// One stack per tab, never per pager page: a stack per page would each claim the search
+    /// field. The title stays inline because a collapsing title would track the horizontal pager.
+    private func tabScreen(for tab: Tabs, searchText: String? = nil) -> some View {
+        NavigationStack {
+            browsingScreen(for: tab, searchText: searchText ?? "")
+                .navigationTitle(title(for: tab))
+                .toolbarTitleDisplayMode(.inline)
+                .toolbarTitleMenuIfPresent(titleMenu(for: tab))
+                .toolbar { toolbar }
+                .searchableIfPresent(text: searchText == nil ? nil : $state.searchQuery, prompt: Strings.Search.prompt)
+                .searchPresentationToolbarBehavior(.avoidHidingContent)
+        }
+    }
+
     private func title(for tab: Tabs) -> String {
         switch tab {
         case .months: Months.allCases[currentMonthIndex].title
@@ -138,9 +103,19 @@ struct MainTabScreen: View {
         }
     }
 
-    /// The screen for a browsing tab. The search tab builds a second copy of the one it was
-    /// opened from, passing its query; the pagers share their index bindings, so both copies
-    /// stay on one period.
+    private func titleMenu(for tab: Tabs) -> AnyView? {
+        switch tab {
+        case .months:
+            AnyView(PeriodJumpPicker<Months>(jumpToIndex: $jumpMonthIndex, title: Strings.Jump.toMonth, currentIndex: currentMonthIndex))
+        case .seasons:
+            AnyView(PeriodJumpPicker<Seasons>(jumpToIndex: $jumpSeasonIndex, title: Strings.Jump.toSeason, currentIndex: currentSeasonIndex))
+        case .favourites, .search:
+            nil
+        }
+    }
+
+    /// The search tab builds a second copy of the screen it was opened from; the pagers share
+    /// index bindings so both copies stay on the same period.
     @ViewBuilder
     private func browsingScreen(for tab: Tabs, searchText: String) -> some View {
         switch tab {
@@ -153,95 +128,27 @@ struct MainTabScreen: View {
             )
         case .months:
             PeriodPagerView<Months>(
-                periods: Months.allCases,
                 jumpToIndex: $jumpMonthIndex,
                 currentIndex: $currentMonthIndex,
                 searchText: searchText,
-                onPeekFinished: { peekFinished() }
+                onPeekFinished: peekFinishedHandler
             )
         case .seasons:
             PeriodPagerView<Seasons>(
-                periods: Seasons.allCases,
                 jumpToIndex: $jumpSeasonIndex,
                 currentIndex: $currentSeasonIndex,
                 searchText: searchText,
-                onPeekFinished: { peekFinished() }
+                onPeekFinished: peekFinishedHandler
             )
         }
     }
 
-    private func peekFinished() {
-        Task {
-            try? await Task.sleep(nanoseconds: 500_000_000)
-            withAnimation(.easeInOut(duration: 1.5)) {
-                showTip = false
-            }
+    private func dismissTipAfterPeek() async {
+        try? await Task.sleep(for: tipDismissDelay)
+        withAnimation(.easeInOut(duration: tipFadeDuration)) {
+            showTip = false
         }
-    }
-}
-
-/// `.toolbarTitleMenu` only when there's a menu, so every tab can share `tabScreen(for:)`.
-@available(iOS 26, *)
-private struct TitleMenuIf: ViewModifier {
-    let menu: AnyView?
-
-    func body(content: Content) -> some View {
-        if let menu {
-            content.toolbarTitleMenu { menu }
-        } else {
-            content
-        }
-    }
-}
-
-/// `.searchable` only when given a binding, so every tab can share `tabScreen(for:)`.
-@available(iOS 26, *)
-private struct SearchableIf: ViewModifier {
-    let text: Binding<String>?
-
-    func body(content: Content) -> some View {
-        if let text {
-            content
-                .searchable(text: text, prompt: "Search produce")
-                // By default the system hides the navigation bar while searching, which takes
-                // the period title and toolbar with it.
-                .searchPresentationToolbarBehavior(.avoidHidingContent)
-        } else {
-            content
-        }
-    }
-}
-
-@available(iOS 26, *)
-extension MainTabScreen.Tabs {
-    var title: String {
-        return switch self {
-        case .favourites:
-            "Favourites"
-        case .months(let month):
-            month.title
-        case .seasons(let season):
-            season.title
-        case .search:
-            "Search"
-        }
-    }
-    
-    var emptyListIcon: Image {
-        return switch self {
-        case .favourites: .heart
-        case .search: .magnifyingGlass
-        case .months, .seasons: .xMarkCircle
-        }
-    }
-
-    var emptyProduceListViewMessage: String {
-        return switch self {
-        case .favourites:
-            "No favourites selected"
-        case .search, .months, .seasons:
-            "Nothing to display, try something else"
-        }
+        GlobalSettings.swipeTipShown = TipShown(swipe: true)
     }
 }
 
@@ -250,5 +157,4 @@ extension MainTabScreen.Tabs {
     MainTabScreen()
         .environmentObject(previewCoordinator)
         .environmentObject(previewCoordinator.produceStore)
-        .environmentObject(FeatureToggleHelper())
 }

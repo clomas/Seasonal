@@ -1,0 +1,108 @@
+//
+//  Strings.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 28/9/2026.
+//  Copyright © 2026 Clint Thomas. All rights reserved.
+//
+
+import Foundation
+
+enum Strings {
+
+    enum Tab {
+        static let favourites = String(localized: "Favourites")
+        static let months = String(localized: "Months")
+        static let seasons = String(localized: "Seasons")
+        static let search = String(localized: "Search")
+    }
+
+    enum Month {
+        static let january = String(localized: "January")
+        static let february = String(localized: "February")
+        static let march = String(localized: "March")
+        static let april = String(localized: "April")
+        static let may = String(localized: "May")
+        static let june = String(localized: "June")
+        static let july = String(localized: "July")
+        static let august = String(localized: "August")
+        static let september = String(localized: "September")
+        static let october = String(localized: "October")
+        static let november = String(localized: "November")
+        static let december = String(localized: "December")
+    }
+
+    enum Season {
+        static let summer = String(localized: "Summer")
+        static let autumn = String(localized: "Autumn")
+        static let winter = String(localized: "Winter")
+        static let spring = String(localized: "Spring")
+    }
+
+    enum Search {
+        static let prompt = String(localized: "Search produce")
+        static let noResults = String(localized: "No search results")
+    }
+
+    enum Filter {
+        static let label = String(localized: "Filter by category")
+        static let hint = String(localized: "Filters the produce list by category")
+        static let allCategories = String(localized: "All categories")
+    }
+
+    enum Jump {
+        static let toMonth = String(localized: "Jump to a month")
+        static let toSeason = String(localized: "Jump to a season")
+    }
+
+    enum EmptyState {
+        static let favourites = String(localized: "No favourites selected")
+        static let period = String(localized: "Nothing to display, try something else")
+    }
+
+    enum Launch {
+        static let networkErrorTitle = String(localized: "Network Error")
+        static let networkErrorMessage = String(localized: "Unable to connect to the internet")
+        static let chooseLocation = String(localized: "Choose your location")
+        static let findLocationAgain = String(localized: "Try find location again")
+        static let tryAgain = String(localized: "Try again")
+    }
+
+    enum CloudError {
+        static let title = String(localized: "iCloud Error")
+        static let notSignedIn = String(localized: "Your data is stored privately in your own iCloud. Open Settings to sign in.")
+        static let network = String(localized: "Check your network and try again.")
+        static let storageFull = String(localized: "Free up iCloud storage to continue.")
+        static let unavailable = String(localized: "iCloud is temporarily unavailable. Try again later.")
+    }
+
+    enum Info {
+        static let button = String(localized: "App information")
+        static let title = String(localized: "Seasonal")
+        static let locationSection = String(localized: "Location")
+        static let produceLocation = String(localized: "Produce location")
+        static let aboutSection = String(localized: "About")
+        static let viewSource = String(localized: "View source on GitHub")
+        static let privacyPolicy = String(localized: "Privacy policy")
+        static let getInTouch = String(localized: "Get in touch")
+        static let done = String(localized: "Done")
+        static let defaultLocation = String(localized: "Australia")
+
+        // swiftlint:disable:next line_length
+        static func intro(location: String) -> String { String(localized: "Location of Produce Displayed: \(location).\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!") }
+
+        static func version(_ version: String) -> String {
+            String(localized: "Seasonal \(version)")
+        }
+    }
+
+    enum Onboarding {
+        static let swipeTitle = String(localized: "Swipe to explore")
+        static let monthsContext = String(localized: "months")
+        static let seasonsContext = String(localized: "seasons")
+
+        static func swipeMessage(context: String) -> String {
+            String(localized: "You can scroll left and right to see other \(context).")
+        }
+    }
+}

@@ -21,12 +21,6 @@ struct MainTabScreen: View {
         var isSeasons: Bool {
             if case .seasons = self { true } else { false }
         }
-
-        /// The system presents its search field when this tab is selected, so "is the search
-        /// tab showing" is the same question as "is search engaged".
-        var isSearch: Bool {
-            if case .search = self { true } else { false }
-        }
     }
 
     @EnvironmentObject var produceStore: ProduceStore
@@ -56,64 +50,31 @@ struct MainTabScreen: View {
     var body: some View {
         TabView(selection: $state.selectedTab) {
             Tab("Favourites", systemImage: "heart", value: .favourites) {
-                produceListNavigationView(title: Tabs.favourites.title)
+                tabScreen(for: .favourites)
             }
 
             Tab("Months", systemImage: "calendar", value: .months(Months.currentPeriod)) {
-                PeriodPagerView<Months>(
-                    periods: Months.allCases,
-                    jumpToIndex: $jumpMonthIndex,
-                    currentIndex: $currentMonthIndex,
-                    onPeekFinished: { peekFinished() }
-                )
+                tabScreen(for: .months(Months.currentPeriod))
             }
 
             Tab("Seasons", systemImage: "cloud.sun", value: .seasons(Seasons.currentPeriod)) {
-                PeriodPagerView<Seasons>(
-                    periods: Seasons.allCases,
-                    jumpToIndex: $jumpSeasonIndex,
-                    currentIndex: $currentSeasonIndex,
-                    onPeekFinished: { peekFinished() }
-                )
+                tabScreen(for: .seasons(Seasons.currentPeriod))
             }
 
             // The search role is what anchors the field to the bottom bar and floats it above
-            // the keyboard — it only renders because the system tab bar is visible, which is
-            // why the custom glass bar this replaced had to go.
+            // the keyboard. Its content is the screen search was opened from, filtered, so the
+            // month or season, its title and its toolbar all stay put while searching.
             Tab("Search", systemImage: "magnifyingglass", value: Tabs.search, role: .search) {
-                SearchScreen()
+                tabScreen(for: state.searchOrigin, searchText: state.searchQuery)
             }
         }
         .accessibilityIdentifier("mainTabView")
+        // Selecting the search tab focuses the field straight away. Without this the field is
+        // presented but idle, so reaching the keyboard costs a second tap on it.
+        .tabViewSearchActivation(.searchTabSelection)
         .tint(Colour.inSeason)
-        // Deliberately an overlay rather than `.tabViewBottomAccessory`: that slot draws its own
-        // full-width glass tray, which read as a stray bar behind a lone button. This puts the
-        // bare circle in line with the system search item instead.
-        .overlay(alignment: .bottomTrailing) {
-            TabBarFilterButton(selectedCategory: $state.selectedCategory, hideLabel: true)
-                .padding(.trailing, 16)
-                // Clears the system tab bar to sit directly above the search item, in the same
-                // column and at the same size. Hand-measured: an overlay on the `TabView` is
-                // laid out against the screen's safe area, not the bar's, so there's no metric
-                // to read the bar's height from — worth re-checking if the bar ever changes.
-                .padding(.bottom, tabBarClearance)
-        }
         .onChange(of: state.selectedTab) { _, newTab in
             StoredSelectedTab.storeTab(newTab)
-            state.chromeVisible = true
-        }
-        .overlay(alignment: .topTrailing) {
-            HStack(spacing: 12) {
-                if showsPeriodPicker {
-                    SelectMonthButton { dismiss in periodPickerMenu(dismiss: dismiss) }
-                }
-                InfoButton { showInfo = true }
-            }
-            .padding(.trailing, 16)
-            .padding(.top, 8)
-            .opacity(state.chromeVisible ? 1 : 0)
-            .offset(y: state.chromeVisible ? 0 : -12)
-            .animation(.easeInOut(duration: 0.25), value: state.chromeVisible)
         }
         .sheet(isPresented: $showInfo) {
             InfoScreen()
@@ -123,96 +84,88 @@ struct MainTabScreen: View {
                 TipViewBlockingOverlay(showTip: $showTip, tip: tip)
             }
         }
-        // Outermost so the top-right chrome overlay reads the same state as the tab content.
         .environment(state)
     }
 
     // MARK: - Private
 
-    /// Vertical gap that lifts the category filter clear of the system tab bar, so it lands
-    /// directly above the search item rather than on top of it. Scales with Dynamic Type
-    /// alongside the button it's clearing.
-    @ScaledMetric(relativeTo: .title2) private var tabBarClearance: CGFloat = 64
-
-    /// The calendar "jump to period" button is only meaningful on the month/season pagers.
-    private var showsPeriodPicker: Bool {
-        switch state.selectedTab {
-        case .months, .seasons: true
-        case .favourites, .search: false
+    /// One navigation stack per tab, around the whole screen — never one per pager page, which
+    /// would each claim the search field and fight over the title. The title is inline because a
+    /// collapsing large title tracks a scroll view, and the one a stack finds here is the
+    /// horizontal pager rather than the lists.
+    /// `searchText` is non-nil only on the search tab.
+    private func tabScreen(for tab: Tabs, searchText: String? = nil) -> some View {
+        NavigationStack {
+            browsingScreen(for: tab, searchText: searchText ?? "")
+                .navigationTitle(title(for: tab))
+                .toolbarTitleDisplayMode(.inline)
+                .modifier(TitleMenuIf(menu: titleMenu(for: tab)))
+                .toolbar { toolbar }
+                .modifier(SearchableIf(text: searchText == nil ? nil : $state.searchQuery))
         }
     }
 
-    /// Popover content for the lifted period button — scoped to the active tab so it jumps the
-    /// matching pager via its own jump binding. `dismiss` closes the popover after a selection.
-    @ViewBuilder
-    private func periodPickerMenu(dismiss: @escaping () -> Void) -> some View {
-        switch state.selectedTab {
+    /// Tapping a period title jumps its pager. Favourites gets none — even an empty title menu
+    /// still draws the chevron.
+    private func titleMenu(for tab: Tabs) -> AnyView? {
+        switch tab {
+        case .months:
+            AnyView(PeriodJumpPicker<Months>(title: "Jump to a month", current: currentMonthIndex, jumpToIndex: $jumpMonthIndex))
         case .seasons:
-            periodMenu(Seasons.self, title: "Jump to a season", current: currentSeasonIndex, jump: $jumpSeasonIndex, dismiss: dismiss)
-        default:
-            periodMenu(Months.self, title: "Jump to a month", current: currentMonthIndex, jump: $jumpMonthIndex, dismiss: dismiss)
+            AnyView(PeriodJumpPicker<Seasons>(title: "Jump to a season", current: currentSeasonIndex, jumpToIndex: $jumpSeasonIndex))
+        case .favourites, .search:
+            nil
         }
     }
 
-    /// Builds the "jump to period" picker for any `PeriodType` as popover rows (mirroring the
-    /// category filter popover). The row index is the period's position in `allCases`, which is
-    /// what the pager's `jumpToIndex` binding expects; `current` is the index the pager is
-    /// showing, so it gets a checkmark. Tapping a row jumps the pager and dismisses the popover.
-    @ViewBuilder
-    private func periodMenu<P: PeriodType>(
-        _ type: P.Type,
-        title: String,
-        current: Int,
-        jump: Binding<Int?>,
-        dismiss: @escaping () -> Void
-    ) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 0) {
-                Text(title)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, .space4)
-                    .padding(.top, 12)
-                    .padding(.bottom, 4)
-
-                ForEach(Array(P.allCases.enumerated()), id: \.offset) { index, period in
-                    Button {
-                        jump.wrappedValue = index
-                        dismiss()
-                    } label: {
-                        HStack(spacing: 12) {
-                            Text(period.title)
-                            Spacer(minLength: 16)
-                            Image(systemName: "checkmark")
-                                .font(.footnote.weight(.semibold))
-                                .opacity(index == current ? 1 : 0)
-                        }
-                        .foregroundStyle(index == current ? Colour.accent : .primary)
-                        .padding(.horizontal, .space4)
-                        .padding(.vertical, 11)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityAddTraits(index == current ? [.isButton, .isSelected] : .isButton)
-                }
-            }
-            .padding(.vertical, 6)
+    /// One control either side of the centred title.
+    @ToolbarContentBuilder
+    private var toolbar: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            CategoryFilterButton(selectedCategory: $state.selectedCategory)
         }
-        .scrollBounceBehavior(.basedOnSize)
-        .frame(width: 240)
-        .frame(maxHeight: 360)
+        ToolbarItem(placement: .topBarTrailing) {
+            InfoButton { showInfo = true }
+        }
     }
 
+    /// The period the tab's pager is showing, so the title follows swipes and jumps.
+    private func title(for tab: Tabs) -> String {
+        switch tab {
+        case .months: Months.allCases[currentMonthIndex].title
+        case .seasons: Seasons.allCases[currentSeasonIndex].title
+        case .favourites, .search: Tabs.favourites.title
+        }
+    }
+
+    /// The screen for a browsing tab. The search tab builds a second copy of the one it was
+    /// opened from, passing its query; the pagers share their index bindings, so both copies
+    /// stay on one period.
     @ViewBuilder
-    private func produceListNavigationView(title: String) -> some View {
-        // Favourites is a standalone NavigationStack, which adds its own ~18pt large-title
-        // margin on top of this inset — unlike the pager's nested stacks — so trim the inset
-        // here to keep the heading aligned with the month/season titles.
-        ProduceListNavigationView(title: title, titleLeadingPadding: 2) {
+    private func browsingScreen(for tab: Tabs, searchText: String) -> some View {
+        switch tab {
+        case .favourites, .search:
             ProduceList(
                 produce: produceStore.favourites,
                 parentTab: .favourites,
-                selectedCategory: state.selectedCategory
+                selectedCategory: state.selectedCategory,
+                searchText: searchText
+            )
+        case .months:
+            PeriodPagerView<Months>(
+                periods: Months.allCases,
+                jumpToIndex: $jumpMonthIndex,
+                currentIndex: $currentMonthIndex,
+                searchText: searchText,
+                onPeekFinished: { peekFinished() }
+            )
+        case .seasons:
+            PeriodPagerView<Seasons>(
+                periods: Seasons.allCases,
+                jumpToIndex: $jumpSeasonIndex,
+                currentIndex: $currentSeasonIndex,
+                searchText: searchText,
+                onPeekFinished: { peekFinished() }
             )
         }
     }
@@ -223,6 +176,38 @@ struct MainTabScreen: View {
             withAnimation(.easeInOut(duration: 1.5)) {
                 showTip = false
             }
+        }
+    }
+}
+
+/// `.toolbarTitleMenu` only when there's a menu, so every tab can share `tabScreen(for:)`.
+@available(iOS 26, *)
+private struct TitleMenuIf: ViewModifier {
+    let menu: AnyView?
+
+    func body(content: Content) -> some View {
+        if let menu {
+            content.toolbarTitleMenu { menu }
+        } else {
+            content
+        }
+    }
+}
+
+/// `.searchable` only when given a binding, so every tab can share `tabScreen(for:)`.
+@available(iOS 26, *)
+private struct SearchableIf: ViewModifier {
+    let text: Binding<String>?
+
+    func body(content: Content) -> some View {
+        if let text {
+            content
+                .searchable(text: text, prompt: "Search produce")
+                // By default the system hides the navigation bar while searching, which takes
+                // the period title and toolbar with it.
+                .searchPresentationToolbarBehavior(.avoidHidingContent)
+        } else {
+            content
         }
     }
 }
@@ -254,11 +239,7 @@ extension MainTabScreen.Tabs {
         return switch self {
         case .favourites:
             "No favourites selected"
-        case .search:
-            // The search tab opens on an empty query, so this is a prompt rather than a
-            // "nothing found" message — that case is handled by the search-results copy.
-            "Search for any produce"
-        case .months, .seasons:
+        case .search, .months, .seasons:
             "Nothing to display, try something else"
         }
     }

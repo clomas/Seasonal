@@ -19,10 +19,6 @@ struct ProduceList: View {
     var selectedCategory: ProduceCategory = .all
     var searchText: String = ""
 
-    /// Only the ambient chrome comes from the environment: scrolling this list is what hides
-    /// and reveals the top buttons, and a tap in it drops the search keyboard.
-    @Environment(MainScreenState.self) private var state
-
     var filteredProduce: [Produce] {
         let categoryFiltered: [Produce] = {
             guard selectedCategory != .all else { return produce }
@@ -59,34 +55,7 @@ struct ProduceList: View {
                 // Replaces the old hand-rolled tap-to-dismiss gesture: the system drops the
                 // search keyboard as soon as the list is dragged.
                 .scrollDismissesKeyboard(.immediately)
-                .onScrollGeometryChange(for: CGFloat.self) { geometry in
-                    geometry.contentOffset.y
-                } action: { oldOffset, newOffset in
-                    updateChromeVisibility(from: oldOffset, to: newOffset)
-                }
             }
-        }
-    }
-
-    /// Hides the top chrome when scrolling down, reveals it when scrolling up or
-    /// near the top. A small threshold avoids flicker from tiny offset changes.
-    private func updateChromeVisibility(from oldOffset: CGFloat, to newOffset: CGFloat) {
-        let threshold: CGFloat = 8
-        let shouldShow: Bool
-        
-        if newOffset < 60 {
-            shouldShow = true
-        } else if newOffset > oldOffset + threshold {
-            shouldShow = false
-        } else if newOffset < oldOffset - threshold {
-            shouldShow = true
-        } else {
-            return
-        }
-
-        guard shouldShow != state.chromeVisible else { return }
-        withAnimation(.easeInOut(duration: 0.25)) {
-            state.chromeVisible = shouldShow
         }
     }
 

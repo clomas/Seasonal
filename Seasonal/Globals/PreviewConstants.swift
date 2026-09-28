@@ -13,7 +13,14 @@
 let previewCoordinator: AppCoordinator = {
 	let coord = AppCoordinator(window: .create())
     coord.state = .initial
-	coord.produceStore.loadMockData([
+	coord.produceStore.loadMockData(previewProduce)
+	return coord
+}()
+
+/// Shared fixtures: the SwiftUI previews and the `use-mock-data` launch argument both load
+/// these, so a screenshot run and a preview show the same catalogue without touching CloudKit.
+@available(iOS 26, *)
+let previewProduce: [Produce] = [
 		Produce(
 			id: 0,
 			name: "Apples",
@@ -134,7 +141,5 @@ let previewCoordinator: AppCoordinator = {
 			seasons: [.autumn, .spring],
 			liked: true
 		),
-	])
-	return coord
-}()
+]
 #endif

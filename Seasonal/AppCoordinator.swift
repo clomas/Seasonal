@@ -68,10 +68,25 @@ final class AppCoordinator: ObservableObject, @preconcurrency LocationDelegate, 
             .environmentObject(self)
             .environmentObject(produceStore)
             .environmentObject(featureToggleHelper)
-        
+
         window?.rootViewController = UIHostingController(rootView: rootScreen)
+
+#if DEBUG
+        // `use-mock-data` boots straight into the main screen on the same fixtures the
+        // SwiftUI previews use, skipping network, location and CloudKit entirely. Without it
+        // UI tests and screenshot runs depend on a live CloudKit fetch, which strands the app
+        // on the "iCloud is temporarily unavailable" screen whenever the container can't be
+        // reached from a simulator — nothing to do with the code under test.
+        if CommandLine.arguments.contains("use-mock-data") {
+            produceStore.loadMockData(previewProduce)
+            setState(.dataIsReady)
+            window?.makeKeyAndVisible()
+            return
+        }
+#endif
+
         networkService = NetworkService(delegate: self)
-        
+
         window?.makeKeyAndVisible()
     }
     

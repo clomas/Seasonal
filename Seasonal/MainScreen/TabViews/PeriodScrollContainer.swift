@@ -101,18 +101,32 @@ struct PeriodScrollContainer<Cell: View>: View {
         }
         .onChange(of: scrollPosition) {
             guard let slot = scrollPosition.viewID(type: Int.self) else { return }
-            currentIndex = ((slot - centerOffset) % count + count) % count
+            currentIndex = periodIndex(for: slot)
+        }
+        // Another pager sharing `currentIndex` moved (the months tab and the search tab each
+        // hold one), so follow it without animating — this one is off screen.
+        .onChange(of: currentIndex) { _, newIndex in
+            let current = scrollPosition.viewID(type: Int.self) ?? startSlot
+            guard periodIndex(for: current) != newIndex else { return }
+            scrollPosition.scrollTo(id: nearestSlot(for: newIndex))
         }
     }
 
-    /// Scrolls to the requested period index, choosing the buffer slot nearest the
-    /// current position so the jump animates the shortest distance.
-    private func jump(to index: Int) {
+    private func periodIndex(for slot: Int) -> Int {
+        ((slot - centerOffset) % count + count) % count
+    }
+
+    /// The buffer slot showing `index` that's nearest the current position, so a scroll to
+    /// it covers the shortest distance.
+    private func nearestSlot(for index: Int) -> Int {
         let current = scrollPosition.viewID(type: Int.self) ?? startSlot
         let nearestRepeat = (Double(current - centerOffset - index) / Double(count)).rounded()
-        let target = centerOffset + index + Int(nearestRepeat) * count
+        return centerOffset + index + Int(nearestRepeat) * count
+    }
+
+    private func jump(to index: Int) {
         withAnimation(.easeInOut(duration: 0.4)) {
-            scrollPosition.scrollTo(id: target)
+            scrollPosition.scrollTo(id: nearestSlot(for: index))
         }
     }
 

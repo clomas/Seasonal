@@ -24,8 +24,8 @@ final class ProduceStore: ObservableObject {
 	}
 
 	/// Every produce matching the query, regardless of period — what the search tab shows.
-	/// Empty query means no results rather than everything, so the screen opens on its
-	/// prompt instead of the full catalogue.
+	/// An empty query returns the full catalogue, so search opens on everything and narrows
+	/// as you type.
 	func search(_ query: String) -> [Produce] {
 		cache.search(query, from: allProduce)
 	}

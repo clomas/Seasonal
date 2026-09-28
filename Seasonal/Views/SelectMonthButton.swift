@@ -8,15 +8,6 @@
 
 import SwiftUI
 
-/// A glass, circular button that opens a period picker (months/seasons) as a popover
-/// anchored to the button.
-///
-/// It uses a `Button` + `.popover` rather than a `Menu` on purpose: a `Menu` dims the whole
-/// screen while open, and the glass label samples that dimmed backdrop and turns grey until
-/// the scrim fades on collapse. A popover doesn't dim, so the glass keeps its colour.
-///
-/// The picker content is supplied by the caller and is handed a `dismiss` closure so a
-/// selection can close the popover (the `Menu`'s automatic dismiss-on-select replacement).
 @available(iOS 26.0, *)
 struct SelectMonthButton<MenuContent: View>: View {
 
@@ -35,7 +26,8 @@ struct SelectMonthButton<MenuContent: View>: View {
                 .font(.system(size: iconSize, weight: .medium))
                 .frame(width: iconSize, height: iconSize)
                 .padding(16)
-                .glassEffect(.regular.interactive(), in: Circle())
+                .background(.ultraThinMaterial, in: Circle())
+                .glassEffect(.regular)
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)

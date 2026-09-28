@@ -51,7 +51,7 @@ final class ProduceCache: ObservableObject {
 	func search(_ query: String, from produce: [Produce]) -> [Produce] {
 		cache.value(for: .search(query)) {
 			produce
-				.filter { query.isEmpty == false && $0.name?.localizedCaseInsensitiveContains(query) == true }
+				.filter { query.isEmpty || $0.name?.localizedCaseInsensitiveContains(query) == true }
 				.sorted { ($0.name ?? "") < ($1.name ?? "") }
 		}
 	}

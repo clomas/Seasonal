@@ -25,11 +25,13 @@ protocol PeriodType: CaseIterable, Hashable, Sendable where AllCases == [Self] {
 struct PeriodPagerView<Period: PeriodType>: View {
 
     @EnvironmentObject var produceStore: ProduceStore
-    /// The search query, category filter and selected tab all come from here rather than as
-    /// arguments — this view only forwards them, it never decides them.
+    /// The category filter and browsing tab come from here rather than as arguments — this
+    /// view only forwards them, it never decides them.
     @Environment(MainScreenState.self) private var state
 
     private let periods: [PeriodItem]
+    /// Filters every page. Empty on the month and season tabs; the search tab passes its query.
+    private let searchText: String
 
     /// Set by the (lifted) calendar button to scroll this pager to a period; reset to nil once handled.
     @Binding var jumpToIndex: Int?
@@ -42,8 +44,10 @@ struct PeriodPagerView<Period: PeriodType>: View {
         periods: [Period],
         jumpToIndex: Binding<Int?> = .constant(nil),
         currentIndex: Binding<Int> = .constant(0),
+        searchText: String = "",
         onPeekFinished: (() async -> Void)? = nil
     ) {
+        self.searchText = searchText
         self._jumpToIndex = jumpToIndex
         self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
@@ -55,22 +59,22 @@ struct PeriodPagerView<Period: PeriodType>: View {
     var body: some View {
         PeriodScrollContainer(
             periods: periods,
-            initialIndex: Period.currentPeriod.index,
+            // Starts on whichever period the shared index holds, so the search tab's copy of
+            // this pager opens on the month or season you were already looking at.
+            initialIndex: currentIndex,
             jumpToIndex: $jumpToIndex,
             currentIndex: $currentIndex,
             onPeekFinished: onPeekFinished
         ) { item in
             let period = Array(Period.allCases)[item.id]
 
-            // No query scoping here: search is its own tab, so a period page always shows the
-            // whole period, filtered only by category.
-            ProduceListNavigationView(title: item.title) {
-                ProduceList(
-                    produce: produceStore.byPeriod(period),
-                    parentTab: state.selectedTab,
-                    selectedCategory: state.selectedCategory
-                )
-            }
+            // No navigation stack per page: the tab owns the one stack, titled with the period.
+            ProduceList(
+                produce: produceStore.byPeriod(period),
+                parentTab: state.browsingTab,
+                selectedCategory: state.selectedCategory,
+                searchText: searchText
+            )
         }
     }
 }

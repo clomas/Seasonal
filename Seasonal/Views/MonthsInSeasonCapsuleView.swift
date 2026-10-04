@@ -11,10 +11,11 @@ import SwiftUI
 struct MonthsInSeasonCapsuleView: View {
 
 	let months: [Months]
+	var thisMonth: Months = .currentPeriod
 
-	private let rowHeight: CGFloat = .capsuleRowHeight
 	private let indicatorOverhang: CGFloat = 1
-	private let thisMonth = Months.currentPeriod
+
+	@ScaledMetric(relativeTo: .subheadline) private var rowHeight: CGFloat = .capsuleRowHeight
 
 	var body: some View {
 		GeometryReader { geometry in
@@ -31,6 +32,10 @@ struct MonthsInSeasonCapsuleView: View {
 			}
 		}
 		.frame(height: rowHeight)
+		.accessibilityElement(children: .ignore)
+		.accessibilityLabel(Strings.Produce.inSeason)
+		.accessibilityValue(Self.accessibilityDescription(of: months))
+		.accessibilityIdentifier("monthsInSeason")
 	}
 
 	@ViewBuilder

@@ -13,7 +13,7 @@ struct AppLogo: View {
     private let size: CGFloat = 150
 
     var body: some View {
-        Image("Logo")
+        Image(decorative: "Logo")
             .resizable()
             .frame(width: size, height: size)
             .padding()

@@ -18,6 +18,7 @@ struct EmptyStateView: View {
             icon
                 .font(.largeTitle)
                 .padding(.bottom, .space5)
+                .accessibilityHidden(true)
             Text(message)
                 .font(.bodyText)
         }

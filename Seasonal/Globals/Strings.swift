@@ -39,6 +39,19 @@ enum Strings {
         static let spring = String(localized: "Spring")
     }
 
+    enum Produce {
+        static let inSeason = String(localized: "In season")
+        static let allYear = String(localized: "All year")
+
+        static func monthRange(from start: String, to end: String) -> String {
+            String(localized: "\(start) to \(end)")
+        }
+    }
+
+    enum Like {
+        static let label = String(localized: "Favourite")
+    }
+
     enum Search {
         static let prompt = String(localized: "Search produce")
         static let noResults = String(localized: "No search results")
@@ -66,6 +79,7 @@ enum Strings {
         static let chooseLocation = String(localized: "Choose your location")
         static let findLocationAgain = String(localized: "Try find location again")
         static let tryAgain = String(localized: "Try again")
+        static let loading = String(localized: "Loading produce")
     }
 
     enum CloudError {
@@ -86,6 +100,10 @@ enum Strings {
         static let privacyPolicy = String(localized: "Privacy policy")
         static let getInTouch = String(localized: "Get in touch")
         static let done = String(localized: "Done")
+        static let appearanceSection = String(localized: "Appearance")
+        static let themePicker = String(localized: "Colour")
+        static let appearancePicker = String(localized: "Mode")
+        static let themeFooter = String(localized: "Match season changes the accent colour through the year.")
         static let defaultLocation = String(localized: "Australia")
 
         // swiftlint:disable:next line_length
@@ -94,6 +112,20 @@ enum Strings {
         static func version(_ version: String) -> String {
             String(localized: "Seasonal \(version)")
         }
+    }
+
+    enum Theme {
+        static let automatic = String(localized: "Match season")
+        static let fresh = String(localized: "Fresh")
+        static let citrus = String(localized: "Citrus")
+        static let berry = String(localized: "Berry")
+        static let ocean = String(localized: "Ocean")
+    }
+
+    enum Appearance {
+        static let automatic = String(localized: "Automatic")
+        static let light = String(localized: "Light")
+        static let dark = String(localized: "Dark")
     }
 
     enum Onboarding {

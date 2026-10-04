@@ -36,6 +36,12 @@ struct MonthRangeOverlay: View {
     }
 
     private var ranges: [ClosedRange<Int>] {
+        Self.ranges(of: months)
+    }
+
+    /// Runs of consecutive month numbers (1 = January), in order.
+    static func ranges(of months: [Months]) -> [ClosedRange<Int>] {
+        let monthCount = Months.allCases.count
         let inSeason = Set(months.map(\.rawValue))
         var result: [ClosedRange<Int>] = []
         var index = 1

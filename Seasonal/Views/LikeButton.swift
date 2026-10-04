@@ -24,10 +24,14 @@ struct LikeButton: View {
 			}
 		} label: {
 			LikedHeartView(liked: produce.liked)
+				.frame(minWidth: .minimumTapTarget, minHeight: .minimumTapTarget)
+				.contentShape(.rect)
 		}
 		.sensoryFeedback(trigger: produce.liked) { _, isLiked in
 			isLiked ? .impact(flexibility: .solid) : .impact(flexibility: .soft)
 		}
+		.accessibilityLabel(Strings.Like.label)
+		.accessibilityAddTraits(produce.liked ? .isSelected : [])
 		.accessibilityIdentifier("produceLikeButton_\(produce.id)")
 	}
 }

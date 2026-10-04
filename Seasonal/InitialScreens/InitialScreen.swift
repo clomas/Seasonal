@@ -16,6 +16,23 @@ struct InitialScreen: View {
 	private let stateChangeAnimationDuration: TimeInterval = 1.2
 
 	var body: some View {
+		// Scrolls only when large Dynamic Type sizes push the content past the screen.
+		ViewThatFits(in: .vertical) {
+			content
+			ScrollView {
+				content
+			}
+		}
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.padding(.bottom, .space8)
+		.background(Colour.background)
+		.animation(.easeInOut(duration: stateChangeAnimationDuration), value: appCoordinator.state)
+		.onChange(of: appCoordinator.state) {
+			AccessibilityNotification.ScreenChanged().post()
+		}
+	}
+
+	private var content: some View {
 		VStack {
 			switch appCoordinator.state {
 			case .initial:
@@ -23,6 +40,7 @@ struct InitialScreen: View {
 				ProgressView()
 					.controlSize(.large)
 					.tint(.primary)
+					.accessibilityLabel(Strings.Launch.loading)
 			case let .dataFailed(errorTitle, errorMessage):
 				AppLogo()
 				FailureMessageView(title: errorTitle, message: errorMessage, onRetry: appCoordinator.retryFetchData)
@@ -40,10 +58,6 @@ struct InitialScreen: View {
 				EmptyView()
 			}
 		}
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.padding(.bottom, .space8)
-		.background(Colour.background)
-		.animation(.easeInOut(duration: stateChangeAnimationDuration), value: appCoordinator.state)
 	}
 }
 

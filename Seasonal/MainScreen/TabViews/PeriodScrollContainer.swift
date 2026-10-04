@@ -37,6 +37,8 @@ struct PeriodScrollContainer<Cell: View>: View {
     private let count: Int
     private let centerOffset: Int
 
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     @State private var scrollPosition: ScrollPosition
     @State private var hasPeeked = false
 
@@ -112,17 +114,22 @@ struct PeriodScrollContainer<Cell: View>: View {
     }
 
     private func jump(to index: Int) {
-        withAnimation(.easeInOut(duration: Self.jumpDuration)) {
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: Self.jumpDuration)) {
             scrollPosition.scrollTo(id: nearestSlot(for: index))
         }
     }
 
     private func runPeekSequence() async {
         try? await Task.sleep(for: Self.peekStartDelay)
-        await hop(to: startSlot + 1)
-        await hop(to: startSlot)
-        await hop(to: startSlot - 1)
-        await hop(to: startSlot)
+        let hops = [startSlot + 1, startSlot, startSlot - 1, startSlot]
+        if reduceMotion {
+            // Keep the tip on screen as long as the peek would have, without the motion.
+            try? await Task.sleep(for: .seconds(Self.peekHopDuration * Double(hops.count)))
+        } else {
+            for slot in hops {
+                await hop(to: slot)
+            }
+        }
         await onPeekFinished?()
     }
 

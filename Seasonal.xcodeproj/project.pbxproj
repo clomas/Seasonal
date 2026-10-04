@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2765920D223D2B1C00A2C9C8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2765920C223D2B1C00A2C9C8 /* CloudKit.framework */; };
+		2794CB48306A3DC100FA276E /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 2794CB47306A3DC100FA276E /* SnapshotTesting */; };
 		27B4E45B22D99930003D51B8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27B4E44D22D99930003D51B8 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
@@ -104,6 +105,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2794CB48306A3DC100FA276E /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +200,9 @@
 				2794C9DB306A2FA400FA276E /* SeasonalTests */,
 			);
 			name = SeasonalTests;
+			packageProductDependencies = (
+				2794CB47306A3DC100FA276E /* SnapshotTesting */,
+			);
 			productName = SeasonalTests;
 			productReference = 27ABEC45265D128E008FD7CC /* SeasonalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -267,6 +272,9 @@
 				Base,
 			);
 			mainGroup = 27EFF3BB215A5C1500CFB31D;
+			packageReferences = (
+				2794CB46306A3DC100FA276E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			productRefGroup = 27EFF3C5215A5C1500CFB31D /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -663,6 +671,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2794CB46306A3DC100FA276E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.19.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2794CB47306A3DC100FA276E /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2794CB46306A3DC100FA276E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 27EFF3BC215A5C1500CFB31D /* Project object */;
 }

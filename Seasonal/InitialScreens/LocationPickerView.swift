@@ -19,6 +19,7 @@ struct LocationPickerView: View {
             Text(Strings.Launch.chooseLocation)
                 .font(.sectionTitle)
                 .padding(.bottom, .space4)
+                .accessibilityAddTraits(.isHeader)
 
             ForEach(StateLocation.selectable, id: \.self) { state in
                 TintedGlassCapsuleButton(label: state.fullName.capitalized, systemImage: Symbol.location) {

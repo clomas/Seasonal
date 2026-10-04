@@ -20,6 +20,7 @@ struct FailureMessageView: View {
             Text(title)
                 .font(.sectionTitle)
                 .multilineTextAlignment(.center)
+                .accessibilityAddTraits(.isHeader)
             Text(message)
                 .font(.bodyText)
                 .foregroundStyle(.secondary)

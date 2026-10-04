@@ -15,6 +15,8 @@ struct InfoScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
+    @Bindable private var themeStore = ThemeStore.shared
+
     @State private var selectedState = Self.savedState
 
     var body: some View {
@@ -32,6 +34,23 @@ struct InfoScreen: View {
                             Text(state.fullName).tag(state)
                         }
                     }
+                }
+
+                Section {
+                    Picker(Strings.Info.themePicker, selection: $themeStore.theme) {
+                        ForEach(Theme.allCases) { theme in
+                            Text(theme.title).tag(theme)
+                        }
+                    }
+                    Picker(Strings.Info.appearancePicker, selection: $themeStore.appearance) {
+                        ForEach(Appearance.allCases) { appearance in
+                            Text(appearance.title).tag(appearance)
+                        }
+                    }
+                } header: {
+                    Text(Strings.Info.appearanceSection)
+                } footer: {
+                    Text(Strings.Info.themeFooter)
                 }
 
                 Section(Strings.Info.aboutSection) {
@@ -58,7 +77,7 @@ struct InfoScreen: View {
                     Section {
                         Text(Strings.Info.version(version))
                             .font(.footnote)
-                            .foregroundStyle(.tertiary)
+                            .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .center)
                     }
                     .listRowBackground(Color.clear)

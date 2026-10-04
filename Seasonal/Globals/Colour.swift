@@ -9,13 +9,17 @@
 import SwiftUI
 
 enum Colour {
-	static let inSeason = Color("inSeason")
-	static let accent = inSeason
+	private static let capsuleFillOpacity = 0.18
+	private static let capsuleStrokeOpacity = 0.45
+
+	@MainActor static var inSeason: Color { ThemeStore.shared.accent }
+	@MainActor static var accent: Color { inSeason }
 	/// Foreground for content drawn on `accent`; adapts so it stays legible in light and dark.
-	static let onAccent = Color("onAccent")
+	@MainActor static var onAccent: Color { ThemeStore.shared.onAccent }
+	@MainActor static var capsuleFill: Color { inSeason.opacity(capsuleFillOpacity) }
+	@MainActor static var capsuleStroke: Color { inSeason.opacity(capsuleStrokeOpacity) }
+
 	static let background = Color("tableViewCell")
-	static let capsuleFill = inSeason.opacity(0.18)
-	static let capsuleStroke = inSeason.opacity(0.45)
 	static let emptyHeartGradient1 = Color("emptyHeartGradient1")
 	static let emptyHeartGradient2 = Color("emptyHeartGradient2")
 }

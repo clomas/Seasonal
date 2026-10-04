@@ -15,11 +15,16 @@ enum Seasons: Int, PeriodType, Codable {
 	case spring
 
 	static var currentPeriod: Seasons {
-		switch Calendar.current.component(.month, from: Date()) {
-		case 3...5: .autumn
-		case 6...8: .winter
-		case 9...11: .spring
-		default: .summer
+		Seasons(containing: .currentPeriod)
+	}
+
+	/// Southern-hemisphere seasons.
+	init(containing month: Months) {
+		switch month {
+		case .march, .april, .may: self = .autumn
+		case .june, .july, .august: self = .winter
+		case .september, .october, .november: self = .spring
+		case .december, .january, .february: self = .summer
 		}
 	}
 

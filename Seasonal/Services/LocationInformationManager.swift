@@ -20,7 +20,7 @@ struct LocationInformationManager {
 	}
 
 	/// The ACT has no produce data of its own, so it uses New South Wales'.
-	private func state(from administrativeArea: String?, country: String?) -> StateLocation {
+	func state(from administrativeArea: String?, country: String?) -> StateLocation {
 		let area = administrativeArea?.lowercased() ?? ""
 
 		if area == StateLocation.act.rawValue {

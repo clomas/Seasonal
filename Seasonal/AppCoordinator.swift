@@ -37,6 +37,10 @@ final class AppCoordinator: ObservableObject, @preconcurrency AppCoordinatorVers
 #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
             UIView.setAnimationsEnabled(false)
+            GlobalSettings.swipeTipShown = TipShown(swipe: true)
+        }
+        if CommandLine.arguments.contains("reset-onboarding") {
+            GlobalSettings.swipeTipShown = TipShown(swipe: false)
         }
 #endif
     }

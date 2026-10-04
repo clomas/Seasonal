@@ -25,12 +25,14 @@ struct TipViewBlockingOverlay: View {
 				Color.black.opacity(scrimOpacity)
 					.ignoresSafeArea()
 					.allowsHitTesting(true)
+					.accessibilityHidden(true)
 
 				TipView(tip)
 					.frame(maxWidth: tipMaxWidth)
 					.padding()
 					.transition(.opacity.combined(with: .scale))
 			}
+			.accessibilityAddTraits(.isModal)
 		}
 	}
 }

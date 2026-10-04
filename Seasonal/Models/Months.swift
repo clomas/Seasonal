@@ -22,7 +22,11 @@ enum Months: Int, PeriodType, Codable {
 	case november
 	case december
 
-	static let currentPeriod = Months(rawValue: Calendar.current.component(.month, from: Date())) ?? .december
+	static let currentPeriod = Months(containing: Date())
+
+	init(containing date: Date, calendar: Calendar = .current) {
+		self = Months(rawValue: calendar.component(.month, from: date)) ?? .december
+	}
 
 	var title: String {
 		switch self {

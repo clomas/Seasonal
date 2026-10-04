@@ -15,12 +15,19 @@ struct AccentIconChip: View {
 
     private let glyphScale: CGFloat = 0.5
 
+    @ScaledMetric(relativeTo: .headline) private var dynamicTypeScale: CGFloat = 1
+
     var body: some View {
         Image(systemName: systemImage)
-            .font(.system(size: diameter * glyphScale, weight: .semibold))
+            .font(.system(size: scaledDiameter * glyphScale, weight: .semibold))
             .foregroundStyle(Colour.onAccent)
-            .frame(width: diameter, height: diameter)
+            .frame(width: scaledDiameter, height: scaledDiameter)
             .background(Circle().fill(Colour.accent))
+            .accessibilityHidden(true)
+    }
+
+    private var scaledDiameter: CGFloat {
+        diameter * dynamicTypeScale
     }
 }
 

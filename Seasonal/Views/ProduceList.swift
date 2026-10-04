@@ -13,6 +13,9 @@ struct ProduceList: View {
 
     let produce: [Produce]
     let parentTab: MainTabScreen.Tabs
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     var selectedCategory: ProduceCategory = .all
     var searchText = ""
 
@@ -29,7 +32,7 @@ struct ProduceList: View {
                         ForEach(filteredProduce, id: \.id) { item in
                             ProduceListRow(produce: item, showMonths: !parentTab.isSeasons)
                                 .padding(.topListRowInset)
-                                .transition(.slide.combined(with: .opacity))
+                                .transition(reduceMotion ? .opacity : .slide.combined(with: .opacity))
                         }
                     }
                     .padding(.bottom, .largePadding)

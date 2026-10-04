@@ -6,58 +6,57 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Seasonal
 
-final class PeriodTests: XCTestCase {
+struct PeriodTests {
 
-    func testMonthContainingDate() throws {
+    @Test func monthContainingDate() throws {
         let calendar = Calendar(identifier: .gregorian)
-        let date = try XCTUnwrap(calendar.date(from: DateComponents(year: 2026, month: 3, day: 15)))
+        let date = try #require(calendar.date(from: DateComponents(year: 2026, month: 3, day: 15)))
 
-        XCTAssertEqual(Months(containing: date, calendar: calendar), .march)
+        #expect(Months(containing: date, calendar: calendar) == .march)
     }
 
-    func testMonthIndexIsZeroBased() {
-        XCTAssertEqual(Months.january.index, 0)
-        XCTAssertEqual(Months.december.index, 11)
+    @Test(arguments: zip(Months.allCases, Months.allCases.indices))
+    func monthIndexIsZeroBased(_ month: Months, expected: Int) {
+        #expect(month.index == expected)
     }
 
-    func testMonthFirstLetter() {
-        XCTAssertEqual(Months.january.firstLetter, "J")
-        XCTAssertEqual(Months.august.firstLetter, "A")
+    @Test(arguments: zip(Months.allCases, ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"]))
+    func monthFirstLetter(_ month: Months, expected: String) {
+        #expect(month.firstLetter == expected)
     }
 
-    func testSouthernHemisphereSeasons() {
-        let expected: [Months: Seasons] = [
-            .december: .summer, .january: .summer, .february: .summer,
-            .march: .autumn, .april: .autumn, .may: .autumn,
-            .june: .winter, .july: .winter, .august: .winter,
-            .september: .spring, .october: .spring, .november: .spring
-        ]
-        for (month, season) in expected {
-            XCTAssertEqual(Seasons(containing: month), season, "\(month)")
-        }
+    @Test(arguments: [
+        (Months.december, Seasons.summer), (.january, .summer), (.february, .summer),
+        (.march, .autumn), (.april, .autumn), (.may, .autumn),
+        (.june, .winter), (.july, .winter), (.august, .winter),
+        (.september, .spring), (.october, .spring), (.november, .spring)
+    ])
+    func southernHemisphereSeason(of month: Months, expected: Seasons) {
+        #expect(Seasons(containing: month) == expected)
     }
 
-    func testPeriodsContainProduceByTheirOwnField() {
+    @Test func periodsContainProduceByTheirOwnField() {
         let produce = Produce.fixture(id: 1, name: "Apple", months: [.may], seasons: [.winter])
 
-        XCTAssertTrue(Months.may.contains(produce))
-        XCTAssertFalse(Months.june.contains(produce))
-        XCTAssertTrue(Seasons.winter.contains(produce))
-        XCTAssertFalse(Seasons.summer.contains(produce))
+        #expect(Months.may.contains(produce))
+        #expect(Months.june.contains(produce) == false)
+        #expect(Seasons.winter.contains(produce))
+        #expect(Seasons.summer.contains(produce) == false)
     }
 
-    func testProduceWithoutPeriodsIsNeverInSeason() {
+    @Test func produceWithoutPeriodsIsNeverInSeason() {
         let produce = Produce.fixture(id: 1, name: "Apple")
 
-        XCTAssertFalse(Months.may.contains(produce))
-        XCTAssertFalse(Seasons.winter.contains(produce))
+        #expect(Months.may.contains(produce) == false)
+        #expect(Seasons.winter.contains(produce) == false)
     }
 
-    func testCacheKeysAreDistinctPerPeriod() {
-        XCTAssertNotEqual(Months.may.cacheKey, Months.june.cacheKey)
-        XCTAssertNotEqual(Seasons.winter.cacheKey, Seasons.summer.cacheKey)
+    @Test func cacheKeysAreDistinctPerPeriod() {
+        #expect(Set(Months.allCases.map(\.cacheKey)).count == Months.allCases.count)
+        #expect(Set(Seasons.allCases.map(\.cacheKey)).count == Seasons.allCases.count)
     }
 }

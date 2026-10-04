@@ -7,52 +7,52 @@
 //
 
 import SwiftUI
-import XCTest
+import Testing
 @testable import Seasonal
 
 /// WCAG 2.2 AA: 4.5:1 for text, which is the stricter bar every accent pair is held to.
-@available(iOS 26, *)
 @MainActor
-final class ThemeContrastTests: XCTestCase {
+struct ThemeContrastTests {
 
     private let minimumContrast = 4.5
-    private let concreteThemes = Theme.allCases.filter { $0 != .automatic }
 
-    func testAccentIsLegibleAsTextOnSystemBackgrounds() {
+    @Test(arguments: Theme.allCases.filter { $0 != .automatic })
+    func accentIsLegibleAsTextOnSystemBackgrounds(_ theme: Theme) {
         let backgrounds: [UIColor] = [.systemBackground, .systemGroupedBackground, .secondarySystemGroupedBackground]
-        for theme in concreteThemes {
-            for traits in appearances {
-                let accent = UIColor(theme.accent).resolvedColor(with: traits)
-                for background in backgrounds {
-                    let ratio = contrast(accent, background.resolvedColor(with: traits))
-                    XCTAssertGreaterThanOrEqual(ratio, minimumContrast, "\(theme) accent on \(background) \(describe(traits))")
-                }
+        for traits in appearances {
+            let accent = UIColor(theme.accent).resolvedColor(with: traits)
+            for background in backgrounds {
+                let ratio = contrast(accent, background.resolvedColor(with: traits))
+                #expect(ratio >= minimumContrast, "accent on \(background) \(describe(traits))")
             }
         }
     }
 
-    func testOnAccentIsLegibleOnAccent() {
-        for theme in concreteThemes {
-            for traits in appearances {
-                let ratio = contrast(
-                    UIColor(theme.onAccent).resolvedColor(with: traits),
-                    UIColor(theme.accent).resolvedColor(with: traits)
-                )
-                XCTAssertGreaterThanOrEqual(ratio, minimumContrast, "\(theme) onAccent on accent \(describe(traits))")
-            }
+    @Test(arguments: Theme.allCases.filter { $0 != .automatic })
+    func onAccentIsLegibleOnAccent(_ theme: Theme) {
+        for traits in appearances {
+            let ratio = contrast(
+                UIColor(theme.onAccent).resolvedColor(with: traits),
+                UIColor(theme.accent).resolvedColor(with: traits)
+            )
+            #expect(ratio >= minimumContrast, "onAccent on accent \(describe(traits))")
         }
     }
 
-    func testEverySeasonMapsToAConcreteTheme() {
+    @Test func everySeasonMapsToADistinctConcreteTheme() {
         let themes = Seasons.allCases.map { Theme(season: $0) }
-        XCTAssertFalse(themes.contains(.automatic))
-        XCTAssertEqual(Set(themes).count, Seasons.allCases.count)
+
+        #expect(themes.contains(.automatic) == false)
+        #expect(Set(themes).count == Seasons.allCases.count)
     }
 
-    func testAppearanceColorSchemes() {
-        XCTAssertNil(Appearance.automatic.colorScheme)
-        XCTAssertEqual(Appearance.light.colorScheme, .light)
-        XCTAssertEqual(Appearance.dark.colorScheme, .dark)
+    @Test(arguments: [
+        (Appearance.automatic, ColorScheme?.none),
+        (.light, .light),
+        (.dark, .dark)
+    ])
+    func appearanceColorScheme(_ appearance: Appearance, expected: ColorScheme?) {
+        #expect(appearance.colorScheme == expected)
     }
 
     // MARK: - Helpers

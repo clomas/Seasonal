@@ -6,37 +6,41 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Testing
 @testable import Seasonal
 
-final class CacheTests: XCTestCase {
+struct CacheTests {
 
-    func testBuildsOnceThenReturnsCachedValue() {
+    @Test func buildsOnceThenReturnsCachedValue() {
         let cache = Cache<String, Int>()
         var builds = 0
 
         let first = cache.value(for: "key") { builds += 1; return 1 }
         let second = cache.value(for: "key") { builds += 1; return 2 }
 
-        XCTAssertEqual(first, 1)
-        XCTAssertEqual(second, 1)
-        XCTAssertEqual(builds, 1)
+        #expect(first == 1)
+        #expect(second == 1)
+        #expect(builds == 1)
     }
 
-    func testPeekNeverInserts() {
+    @Test func peekNeverInserts() {
         let cache = Cache<String, Int>()
+        var builds = 0
 
-        XCTAssertNil(cache.peek(for: "key"))
-        XCTAssertNil(cache.peek(for: "key"))
+        #expect(cache.peek(for: "key") == nil)
+        let value = cache.value(for: "key") { builds += 1; return 1 }
+
+        #expect(value == 1)
+        #expect(builds == 1)
     }
 
-    func testRemoveAllForcesRebuild() {
+    @Test func removeAllForcesRebuild() {
         let cache = Cache<String, Int>()
         _ = cache.value(for: "key") { 1 }
 
         cache.removeAll()
 
-        XCTAssertNil(cache.peek(for: "key"))
-        XCTAssertEqual(cache.value(for: "key") { 2 }, 2)
+        #expect(cache.peek(for: "key") == nil)
+        #expect(cache.value(for: "key") { 2 } == 2)
     }
 }

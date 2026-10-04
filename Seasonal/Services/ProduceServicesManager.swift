@@ -9,18 +9,17 @@
 import CloudKit
 
 @available(iOS 26, *)
-enum ProduceServicesManager {
+struct ProduceServicesManager: ProduceProviding {
 
-	static func getDataFromCloudKit(for location: StateLocation) async -> Result<[Produce], CKError> {
+	func produce(for location: StateLocation) async -> Result<[Produce], CKError> {
 		await ProduceCloudDataService(location: location).getData()
 	}
 
-	static func getLikesFromCloudKit(for location: StateLocation, basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
+	func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
 		await ProduceCloudDataService(location: location).getLikes(basedOn: baseProduce)
 	}
 
-	@MainActor
-	static func updateLike(id: Int, liked: Bool) async {
+	func updateLike(id: Int, liked: Bool) async {
 		let location = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
 		let service = ProduceCloudDataService(location: location)
 		let likedProduce = LikedProduce(id: id)

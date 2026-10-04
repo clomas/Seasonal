@@ -6,41 +6,53 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import Seasonal
 
-final class ProduceDiskCacheTests: XCTestCase {
+final class ProduceDiskCacheTests {
 
-    private let cache = ProduceDiskCache()
+    private let fileURL = URL.temporaryDirectory.appending(path: "produce-\(UUID().uuidString).json")
+    private let cache: ProduceDiskCache
 
-    override func setUp() {
-        cache.clear()
+    init() {
+        cache = ProduceDiskCache(fileURL: fileURL)
     }
 
-    override func tearDown() {
-        cache.clear()
+    deinit {
+        try? FileManager.default.removeItem(at: fileURL)
     }
 
-    func testRoundTripsForTheSameLocation() {
+    @Test func roundTripsForTheSameLocation() throws {
         cache.save([.fixture(id: 1, name: "Apple", months: [.may])], for: .victoria)
 
-        let loaded = cache.load(for: .victoria)
+        let loaded = try #require(cache.load(for: .victoria))
 
-        XCTAssertEqual(loaded?.map(\.id), [1])
-        XCTAssertEqual(loaded?.first?.months, [.may])
+        #expect(loaded.map(\.id) == [1])
+        #expect(loaded.first?.months == [.may])
     }
 
-    func testDifferentLocationMisses() {
+    @Test func emptyCacheMisses() {
+        #expect(cache.load(for: .victoria) == nil)
+    }
+
+    @Test func differentLocationMisses() {
         cache.save([.fixture(id: 1, name: "Apple")], for: .victoria)
 
-        XCTAssertNil(cache.load(for: .queensland))
+        #expect(cache.load(for: .queensland) == nil)
     }
 
-    func testClearRemovesEverything() {
+    @Test func clearRemovesEverything() {
         cache.save([.fixture(id: 1, name: "Apple")], for: .victoria)
 
         cache.clear()
 
-        XCTAssertNil(cache.load(for: .victoria))
+        #expect(cache.load(for: .victoria) == nil)
+    }
+
+    @Test func unreadableFileMisses() throws {
+        try Data("not json".utf8).write(to: fileURL)
+
+        #expect(cache.load(for: .victoria) == nil)
     }
 }

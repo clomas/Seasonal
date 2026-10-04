@@ -10,7 +10,7 @@ import Foundation
 
 /// The base catalogue only changes with an app update, so it's keyed by app version.
 /// Liked state isn't trusted from here; it's always refreshed from CloudKit.
-struct ProduceDiskCache {
+struct ProduceDiskCache: ProduceDiskCaching {
 
     private struct Payload: Codable {
         let location: String
@@ -18,10 +18,12 @@ struct ProduceDiskCache {
         let produce: [Produce]
     }
 
-    private let fileURL = FileManager.default
-        .urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        .appendingPathComponent("produce_base_cache.json")
+    private let fileURL: URL
     private let appVersion = Bundle.main.shortVersion ?? "0"
+
+    init(fileURL: URL = .cachesDirectory.appending(path: "produce_base_cache.json")) {
+        self.fileURL = fileURL
+    }
 
     func load(for location: StateLocation) -> [Produce]? {
         guard let data = try? Data(contentsOf: fileURL),

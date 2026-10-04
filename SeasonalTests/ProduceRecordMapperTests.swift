@@ -7,42 +7,59 @@
 //
 
 import CloudKit
-import XCTest
+import Testing
 @testable import Seasonal
 
-final class ProduceRecordMapperTests: XCTestCase {
+struct ProduceRecordMapperTests {
 
     private let mapper = ProduceRecordMapper(location: .victoria)
 
-    func testMapsAllFieldsForTheLocation() throws {
+    @Test func mapsAllFieldsForTheLocation() throws {
         let record = makeRecord(id: 7, name: "Apples", category: "fruit", months: "110000000011", seasons: "sum,aut")
 
-        let produce = try XCTUnwrap(mapper.produce(from: [record]).first)
+        let produce = try #require(mapper.produce(from: [record]).first)
 
-        XCTAssertEqual(produce.id, 7)
-        XCTAssertEqual(produce.name, "Apples")
-        XCTAssertEqual(produce.imageName, "Apples")
-        XCTAssertEqual(produce.category, .fruit)
-        XCTAssertEqual(produce.months, [.january, .february, .november, .december])
-        XCTAssertEqual(produce.seasons, [.summer, .autumn])
-        XCTAssertFalse(produce.liked)
+        #expect(produce.id == 7)
+        #expect(produce.name == "Apples")
+        #expect(produce.imageName == "Apples")
+        #expect(produce.category == .fruit)
+        #expect(produce.months == [.january, .february, .november, .december])
+        #expect(produce.seasons == [.summer, .autumn])
+        #expect(produce.liked == false)
     }
 
-    func testCategoryMapping() {
-        let records = ["vegetables", "herbs", "fruit", "anything-else"].enumerated().map { index, category in
-            makeRecord(id: index, name: "Item", category: category, months: "", seasons: "")
-        }
+    @Test(arguments: [
+        ("vegetables", ProduceCategory.vegetables),
+        ("herbs", .herbs),
+        ("fruit", .fruit),
+        ("anything-else", .fruit)
+    ])
+    func categoryMapping(_ category: String, expected: ProduceCategory) throws {
+        let record = makeRecord(id: 1, name: "Item", category: category, months: "", seasons: "")
 
-        XCTAssertEqual(mapper.produce(from: records).map(\.category), [.vegetables, .herbs, .fruit, .fruit])
+        let produce = try #require(mapper.produce(from: [record]).first)
+
+        #expect(produce.category == expected)
     }
 
-    func testSeasonsFollowCanonicalOrder() {
+    @Test(arguments: Seasons.allCases)
+    func seasonShortNameIsMapped(_ season: Seasons) throws {
+        let record = makeRecord(id: 1, name: "Item", category: "fruit", months: "", seasons: season.shortName)
+
+        let produce = try #require(mapper.produce(from: [record]).first)
+
+        #expect(produce.seasons == [season])
+    }
+
+    @Test func seasonsFollowCanonicalOrder() throws {
         let record = makeRecord(id: 1, name: "Item", category: "fruit", months: "", seasons: "spr win")
 
-        XCTAssertEqual(mapper.produce(from: [record]).first?.seasons, [.winter, .spring])
+        let produce = try #require(mapper.produce(from: [record]).first)
+
+        #expect(produce.seasons == [.winter, .spring])
     }
 
-    func testOtherStatesFieldsAreIgnored() {
+    @Test func otherStatesFieldsAreIgnored() throws {
         let record = CKRecord(recordType: Constants.australianProduce)
         record.setValue(1, forKey: Constants.id)
         record.setValue("Item", forKey: Constants.name)
@@ -50,19 +67,19 @@ final class ProduceRecordMapperTests: XCTestCase {
         record.setValue("111111111111", forKey: "months_nsw")
         record.setValue("sum", forKey: "seasons_nsw")
 
-        let produce = mapper.produce(from: [record]).first
+        let produce = try #require(mapper.produce(from: [record]).first)
 
-        XCTAssertEqual(produce?.id, 0, "A record missing this state's fields maps to the placeholder")
+        #expect(produce.id == 0, "A record missing this state's fields maps to the placeholder")
     }
 
-    func testIncompleteRecordMapsToPlaceholder() {
+    @Test func incompleteRecordMapsToPlaceholder() throws {
         let record = CKRecord(recordType: Constants.australianProduce)
 
-        let produce = mapper.produce(from: [record]).first
+        let produce = try #require(mapper.produce(from: [record]).first)
 
-        XCTAssertEqual(produce?.id, 0)
-        XCTAssertEqual(produce?.name, Constants.apple)
-        XCTAssertEqual(produce?.months, [])
+        #expect(produce.id == 0)
+        #expect(produce.name == Constants.apple)
+        #expect(produce.months == [])
     }
 
     private func makeRecord(id: Int, name: String, category: String, months: String, seasons: String) -> CKRecord {

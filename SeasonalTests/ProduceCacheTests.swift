@@ -6,71 +6,57 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Testing
 @testable import Seasonal
 
-@available(iOS 26, *)
 @MainActor
-final class ProduceCacheTests: XCTestCase {
+struct ProduceCacheTests {
 
-    func testAllProduceSortedAlphabetically() {
-        let cache = ProduceCache()
+    private let cache = ProduceCache()
+
+    @Test func allProduceSortedAlphabetically() {
         let banana = Produce.fixture(id: 1, name: "Banana")
         let apple = Produce.fixture(id: 2, name: "Apple")
 
-        let result = cache.allProduce(from: [banana, apple])
-        XCTAssertEqual(result.map { $0.name }, ["Apple", "Banana"])    }
+        #expect(cache.allProduce(from: [banana, apple]).map(\.name) == ["Apple", "Banana"])
+    }
 
-    func testFavouritesReturnsOnlyLiked() {
-        let cache = ProduceCache()
+    @Test func favouritesReturnsOnlyLiked() {
         let liked = Produce.fixture(id: 1, name: "A", liked: true)
         let notLiked = Produce.fixture(id: 2, name: "B", liked: false)
 
-        let result = cache.favourites(from: [liked, notLiked])
-        XCTAssertEqual(result.count, 1)
-        XCTAssertTrue(result.allSatisfy { $0.liked == true })
+        #expect(cache.favourites(from: [liked, notLiked]).map(\.id) == [1])
     }
 
-    func testByPeriodFiltersForMonths() {
-        let cache = ProduceCache()
-        let aprilProd = Produce.fixture(id: 1, name: "Apr", months: [.april])
-        let mayProd = Produce.fixture(id: 2, name: "May", months: [.may])
+    @Test func byPeriodFiltersForMonths() {
+        let april = Produce.fixture(id: 1, name: "Apr", months: [.april])
+        let may = Produce.fixture(id: 2, name: "May", months: [.may])
 
-        let result = cache.byPeriod(Months.april, from: [aprilProd, mayProd])
-        XCTAssertEqual(result.count, 1)
-        XCTAssertEqual(result.first?.id, 1)
+        #expect(cache.byPeriod(Months.april, from: [april, may]).map(\.id) == [1])
     }
 
-    func testByPeriodFiltersForSeasons() {
-        let cache = ProduceCache()
-        let summerProd = Produce.fixture(id: 1, name: "S", seasons: [.summer])
-        let winterProd = Produce.fixture(id: 2, name: "W", seasons: [.winter])
+    @Test func byPeriodFiltersForSeasons() {
+        let summer = Produce.fixture(id: 1, name: "S", seasons: [.summer])
+        let winter = Produce.fixture(id: 2, name: "W", seasons: [.winter])
 
-        let result = cache.byPeriod(Seasons.summer, from: [summerProd, winterProd])
-        XCTAssertEqual(result.count, 1)
-        XCTAssertEqual(result.first?.id, 1)
+        #expect(cache.byPeriod(Seasons.summer, from: [summer, winter]).map(\.id) == [1])
     }
 
-    func testDerivedListsAreMemoisedUntilInvalidated() {
-        let cache = ProduceCache()
+    @Test func derivedListsAreMemoisedUntilInvalidated() {
         let liked = Produce.fixture(id: 1, name: "A", liked: true)
 
-        XCTAssertEqual(cache.favourites(from: [liked]).count, 1)
-
-        // Different input still returns the cached value until the cache is invalidated.
-        XCTAssertEqual(cache.favourites(from: []).count, 1)
+        #expect(cache.favourites(from: [liked]).count == 1)
+        #expect(cache.favourites(from: []).count == 1)
     }
 
-    func testInvalidateForcesRecomputeAcrossAllKeys() {
-        let cache = ProduceCache()
+    @Test func invalidateForcesRecomputeAcrossAllKeys() {
         let liked = Produce.fixture(id: 1, name: "Apple", months: [.april], liked: true)
-
-        XCTAssertEqual(cache.favourites(from: [liked]).count, 1)
-        XCTAssertEqual(cache.byPeriod(Months.april, from: [liked]).count, 1)
+        #expect(cache.favourites(from: [liked]).count == 1)
+        #expect(cache.byPeriod(Months.april, from: [liked]).count == 1)
 
         cache.invalidate()
 
-        XCTAssertEqual(cache.favourites(from: []).count, 0)
-        XCTAssertEqual(cache.byPeriod(Months.april, from: []).count, 0)
+        #expect(cache.favourites(from: []).isEmpty)
+        #expect(cache.byPeriod(Months.april, from: []).isEmpty)
     }
 }

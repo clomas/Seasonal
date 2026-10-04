@@ -20,7 +20,7 @@ struct LikeButton: View {
 	var body: some View {
 		Button {
 			withAnimation(.easeInOut(duration: animationDuration)) {
-				produceStore.toggleLiked(for: produce.id)
+				_ = produceStore.toggleLiked(for: produce.id)
 			}
 		} label: {
 			LikedHeartView(liked: produce.liked)

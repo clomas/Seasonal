@@ -18,7 +18,8 @@ final class PeriodNavigationUITests: SeasonalUITestCase {
 
         let navigationBar = app.navigationBars[currentMonthName]
         XCTAssertTrue(navigationBar.waitForExistence(timeout: elementTimeout))
-        navigationBar.buttons.matching(NSPredicate(format: "label == %@", currentMonthName)).firstMatch.tap()
+        // iOS can label the title menu "<Month>, Actions Menu" rather than just the month.
+        navigationBar.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", currentMonthName)).firstMatch.tap()
         app.buttons[target].tap()
 
         XCTAssertTrue(app.navigationBars[target].waitForExistence(timeout: elementTimeout))

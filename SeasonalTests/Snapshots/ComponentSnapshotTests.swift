@@ -8,29 +8,29 @@
 
 import SnapshotTesting
 import SwiftUI
-import XCTest
+import Testing
 @testable import Seasonal
 
 /// Reference images are recorded on the iPhone 17 Pro simulator (iOS 26); other devices will differ.
-@available(iOS 26, *)
 @MainActor
-final class ComponentSnapshotTests: XCTestCase {
+@Suite(.tags(.snapshot))
+struct ComponentSnapshotTests {
 
     private let rowWidth: CGFloat = 402
     private let fixedMonth: Months = .september
 
-    func testLikedHeart() {
+    @Test func likedHeart() {
         assertComponentSnapshot(HStack { LikedHeartView(liked: false); LikedHeartView(liked: true) })
     }
 
-    func testCurrentMonthIndicator() {
+    @Test func currentMonthIndicator() {
         assertComponentSnapshot(HStack {
             CurrentMonthIndicator(letter: "S", isInSeason: true, diameter: .capsuleRowHeight)
             CurrentMonthIndicator(letter: "S", isInSeason: false, diameter: .capsuleRowHeight)
         })
     }
 
-    func testMonthsInSeasonCapsules() {
+    @Test func monthsInSeasonCapsules() {
         assertComponentSnapshot(
             VStack {
                 MonthsInSeasonCapsuleView(months: [.march, .april, .may], thisMonth: fixedMonth)
@@ -41,7 +41,7 @@ final class ComponentSnapshotTests: XCTestCase {
         )
     }
 
-    func testProduceListRow() {
+    @Test func produceListRow() {
         let store = ProduceStore()
         assertComponentSnapshot(
             VStack(spacing: 0) {
@@ -53,50 +53,54 @@ final class ComponentSnapshotTests: XCTestCase {
         )
     }
 
-    func testEmptyState() {
+    @Test func emptyState() {
         assertComponentSnapshot(EmptyStateView(icon: .favourites, message: Strings.EmptyState.favourites))
     }
 
-    func testAccentIconChip() {
+    @Test func accentIconChip() {
         assertComponentSnapshot(AccentIconChip(systemImage: Symbol.location))
     }
 
-    func testTintedGlassCapsuleButtons() {
+    @Test func tintedGlassCapsuleButtons() {
         assertComponentSnapshot(VStack {
             TintedGlassCapsuleButton(label: StateLocation.victoria.fullName, systemImage: Symbol.location) {}
             TintedGlassCapsuleButton(label: Strings.Launch.tryAgain, systemImage: Symbol.retry, style: .prominent) {}
         })
     }
 
-    func testFailureMessage() {
+    @Test func failureMessage() {
         assertComponentSnapshot(
             FailureMessageView(title: Strings.Launch.networkErrorTitle, message: Strings.Launch.networkErrorMessage) {}
                 .frame(width: rowWidth)
         )
     }
 
-    func testLocationPicker() {
+    @Test func locationPicker() {
         assertComponentSnapshot(LocationPickerView(onSelect: { _ in }, onFindLocationAgain: {}).frame(width: rowWidth))
     }
 
-    func testAppLogo() {
+    @Test func appLogo() {
         assertComponentSnapshot(AppLogo())
     }
 
     private func assertComponentSnapshot<V: View>(
         _ view: V,
-        file: StaticString = #filePath,
+        fileID: StaticString = #fileID,
+        filePath: StaticString = #filePath,
         testName: String = #function,
-        line: UInt = #line
+        line: UInt = #line,
+        column: UInt = #column
     ) {
         for style in [UIUserInterfaceStyle.light, .dark] {
             assertSnapshot(
                 of: view.padding().background(Colour.background),
                 as: .image(layout: .sizeThatFits, traits: UITraitCollection(userInterfaceStyle: style)),
                 named: style == .dark ? "dark" : "light",
-                file: file,
+                fileID: fileID,
+                file: filePath,
                 testName: testName,
-                line: line
+                line: line,
+                column: column
             )
         }
     }

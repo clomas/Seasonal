@@ -6,48 +6,44 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Testing
 @testable import Seasonal
 
-@available(iOS 26, *)
 @MainActor
-final class MainScreenStateTests: XCTestCase {
+struct MainScreenStateTests {
 
-    func testSearchMirrorsTheTabItWasOpenedFrom() {
-        let state = MainScreenState()
+    private let state = MainScreenState()
+
+    @Test func searchMirrorsTheTabItWasOpenedFrom() {
         state.selectedTab = .seasons(.winter)
 
         state.selectedTab = .search
 
-        XCTAssertEqual(state.searchOrigin, .seasons(.winter))
-        XCTAssertEqual(state.browsingTab, .seasons(.winter))
+        #expect(state.searchOrigin == .seasons(.winter))
+        #expect(state.browsingTab == .seasons(.winter))
     }
 
-    func testBrowsingTabIsTheSelectedTabOutsideSearch() {
-        let state = MainScreenState()
-
+    @Test func browsingTabIsTheSelectedTabOutsideSearch() {
         state.selectedTab = .favourites
 
-        XCTAssertEqual(state.browsingTab, .favourites)
+        #expect(state.browsingTab == .favourites)
     }
 
-    func testLeavingSearchClearsTheQuery() {
-        let state = MainScreenState()
+    @Test func leavingSearchClearsTheQuery() {
         state.selectedTab = .search
         state.searchQuery = "apple"
 
         state.selectedTab = .favourites
 
-        XCTAssertEqual(state.searchQuery, "")
+        #expect(state.searchQuery.isEmpty)
     }
 
-    func testQuerySurvivesWhileSearching() {
-        let state = MainScreenState()
+    @Test func querySurvivesWhileSearching() {
         state.selectedTab = .search
         state.searchQuery = "apple"
 
         state.selectedTab = .search
 
-        XCTAssertEqual(state.searchQuery, "apple")
+        #expect(state.searchQuery == "apple")
     }
 }

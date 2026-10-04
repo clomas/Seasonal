@@ -6,48 +6,42 @@
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
-import XCTest
+import Testing
 @testable import Seasonal
 
-final class LocationTests: XCTestCase {
+struct LocationTests {
 
-    func testSelectableStatesExcludeNoStateAndACT() {
+    private let manager = LocationInformationManager()
+
+    @Test func selectableStatesExcludeNoStateAndACT() {
         let selectable = StateLocation.selectable
 
-        XCTAssertFalse(selectable.contains(.noState))
-        XCTAssertFalse(selectable.contains(.act))
-        XCTAssertEqual(selectable.count, StateLocation.allCases.count - 2)
+        #expect(selectable.contains(.noState) == false)
+        #expect(selectable.contains(.act) == false)
+        #expect(selectable.count == StateLocation.allCases.count - 2)
     }
 
-    func testSelectableStatesHaveRealNames() {
-        for state in StateLocation.selectable {
-            XCTAssertNotEqual(state.fullName, "Error", "\(state)")
-        }
+    @Test(arguments: StateLocation.selectable)
+    func selectableStateHasARealName(_ state: StateLocation) {
+        #expect(state.fullName != "Error")
     }
 
-    @available(iOS 26, *)
-    func testAustralianStateIsParsedFromAbbreviation() {
-        let manager = LocationInformationManager()
-
-        XCTAssertEqual(manager.state(from: "VIC", country: Constants.straya), .victoria)
-        XCTAssertEqual(manager.state(from: "wa", country: Constants.straya), .westernAustralia)
+    @Test(arguments: StateLocation.selectable)
+    func australianStateIsParsedFromItsAbbreviation(_ state: StateLocation) {
+        #expect(manager.state(from: state.rawValue.uppercased(), country: Constants.straya) == state)
+        #expect(manager.state(from: state.rawValue, country: Constants.straya) == state)
     }
 
-    @available(iOS 26, *)
-    func testACTUsesNewSouthWales() {
-        XCTAssertEqual(LocationInformationManager().state(from: "ACT", country: Constants.straya), .newSouthWales)
+    @Test func actUsesNewSouthWales() {
+        #expect(manager.state(from: "ACT", country: Constants.straya) == .newSouthWales)
     }
 
-    @available(iOS 26, *)
-    func testOutsideAustraliaHasNoState() {
-        XCTAssertEqual(LocationInformationManager().state(from: "CA", country: "United States"), .noState)
+    @Test func outsideAustraliaHasNoState() {
+        #expect(manager.state(from: "CA", country: "United States") == .noState)
     }
 
-    @available(iOS 26, *)
-    func testUnknownOrMissingAreaHasNoState() {
-        let manager = LocationInformationManager()
-
-        XCTAssertEqual(manager.state(from: nil, country: Constants.straya), .noState)
-        XCTAssertEqual(manager.state(from: "Somewhere", country: Constants.straya), .noState)
+    @Test(arguments: [nil, "Somewhere"])
+    func unknownOrMissingAreaHasNoState(_ area: String?) {
+        #expect(manager.state(from: area, country: Constants.straya) == .noState)
     }
 }

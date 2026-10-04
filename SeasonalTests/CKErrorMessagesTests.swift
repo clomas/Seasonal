@@ -7,22 +7,25 @@
 //
 
 import CloudKit
-import XCTest
+import Testing
 @testable import Seasonal
 
-final class CKErrorMessagesTests: XCTestCase {
+struct CKErrorMessagesTests {
 
-    func testMessagesByErrorCode() {
-        XCTAssertEqual(CKError(.notAuthenticated).errorMessage, Strings.CloudError.notSignedIn)
-        XCTAssertEqual(CKError(.networkFailure).errorMessage, Strings.CloudError.network)
-        XCTAssertEqual(CKError(.networkUnavailable).errorMessage, Strings.CloudError.network)
-        XCTAssertEqual(CKError(.quotaExceeded).errorMessage, Strings.CloudError.storageFull)
-        XCTAssertEqual(CKError(.serviceUnavailable).errorMessage, Strings.CloudError.unavailable)
-        XCTAssertEqual(CKError(.internalError).errorMessage, Strings.CloudError.unavailable)
+    @Test(arguments: [
+        (CKError.Code.notAuthenticated, Strings.CloudError.notSignedIn),
+        (.networkFailure, Strings.CloudError.network),
+        (.networkUnavailable, Strings.CloudError.network),
+        (.quotaExceeded, Strings.CloudError.storageFull),
+        (.serviceUnavailable, Strings.CloudError.unavailable),
+        (.internalError, Strings.CloudError.unavailable)
+    ])
+    func messageForErrorCode(_ code: CKError.Code, expected: String) {
+        #expect(CKError(code).errorMessage == expected)
     }
 
-    func testTitleIsTheSameForEveryError() {
-        XCTAssertEqual(CKError(.notAuthenticated).errorTitle, Strings.CloudError.title)
-        XCTAssertEqual(CKError(.internalError).errorTitle, Strings.CloudError.title)
+    @Test(arguments: [CKError.Code.notAuthenticated, .networkFailure, .quotaExceeded, .internalError])
+    func titleIsTheSameForEveryError(_ code: CKError.Code) {
+        #expect(CKError(code).errorTitle == Strings.CloudError.title)
     }
 }

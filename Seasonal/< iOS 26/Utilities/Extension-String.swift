@@ -10,18 +10,6 @@ import Foundation
 
 extension String {
 
-	// Converts camel case to sentence case
-	func titleCase() -> String {
-		return self
-			.replacingOccurrences(of: "([A-Z])",
-								  with: " $1",
-								  options: .regularExpression,
-								  range: range(of: self))
-			.replacingOccurrences(of: "View", with: "")
-			.trimmingCharacters(in: .whitespacesAndNewlines)
-			.capitalized // If input is in llamaCase
-	}
-
 	/// Creates titles for ViewControllers
 	/// - Parameter category: uses the produce category in the title
 	/// - Returns: complete string for title

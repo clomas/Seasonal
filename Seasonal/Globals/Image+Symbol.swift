@@ -7,7 +7,6 @@
 //
 
 import SwiftUI
-import UIKit
 
 extension Image {
     static let favourites = Image(systemName: Symbol.favourites)
@@ -15,7 +14,6 @@ extension Image {
     static let search = Image(systemName: Symbol.search)
     static let nothingToShow = Image(systemName: Symbol.nothingToShow)
 
-    /// Prefers a custom asset-catalogue symbol with this name, falling back to the SF Symbol.
     init(symbol name: String) {
         if UIImage(named: name) != nil {
             self.init(name)

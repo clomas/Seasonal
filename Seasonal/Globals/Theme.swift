@@ -25,20 +25,19 @@ enum Theme: String, Codable, CaseIterable, Identifiable {
 
 	var accent: Color {
 		switch resolved {
-		case .fresh, .automatic: Color("inSeason")
-		case .citrus: Color("citrusAccent")
-		case .berry: Color("berryAccent")
-		case .ocean: Color("oceanAccent")
+		case .fresh, .automatic: Color(.inSeason)
+		case .citrus: Color(.citrusAccent)
+		case .berry: Color(.berryAccent)
+		case .ocean: Color(.oceanAccent)
 		}
 	}
 
-	/// Foreground for content drawn on `accent`; each pair meets WCAG AA (4.5:1) in every appearance.
 	var onAccent: Color {
 		switch resolved {
-		case .fresh, .automatic: Color("onAccent")
-		case .citrus: Color("onCitrusAccent")
-		case .berry: Color("onBerryAccent")
-		case .ocean: Color("onOceanAccent")
+		case .fresh, .automatic: Color(.onAccent)
+		case .citrus: Color(.onCitrusAccent)
+		case .berry: Color(.onBerryAccent)
+		case .ocean: Color(.onOceanAccent)
 		}
 	}
 

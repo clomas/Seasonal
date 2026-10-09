@@ -8,8 +8,6 @@
 
 import UIKit
 
-typealias AlertActionCallback = (UIAlertAction) -> Void
-
 extension UIViewController {
 
 	// MARK: Instantiating ViewControllers from storyboard

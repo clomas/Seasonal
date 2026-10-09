@@ -17,7 +17,6 @@ let previewCoordinator: AppCoordinator = {
 	return coord
 }()
 
-/// Fixtures shared by the SwiftUI previews and the `use-mock-data` launch argument.
 @available(iOS 26, *)
 let previewProduce: [Produce] = [
 		Produce(

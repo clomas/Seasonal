@@ -11,18 +11,14 @@ import SwiftUI
 @available(iOS 26, *)
 struct LikeButton: View {
 
-	@EnvironmentObject var produceStore: ProduceStore
+	@Environment(ProduceStore.self) private var produceStore
 
 	let produce: Produce
 
 	private let animationDuration: TimeInterval = 0.35
 
 	var body: some View {
-		Button {
-			withAnimation(.easeInOut(duration: animationDuration)) {
-				_ = produceStore.toggleLiked(for: produce.id)
-			}
-		} label: {
+		Button(action: toggleLike) {
 			LikedHeartView(liked: produce.liked)
 				.frame(minWidth: .minimumTapTarget, minHeight: .minimumTapTarget)
 				.contentShape(.rect)
@@ -34,10 +30,16 @@ struct LikeButton: View {
 		.accessibilityAddTraits(produce.liked ? .isSelected : [])
 		.accessibilityIdentifier("produceLikeButton_\(produce.id)")
 	}
+
+	private func toggleLike() {
+		withAnimation(.easeInOut(duration: animationDuration)) {
+			_ = produceStore.toggleLiked(for: produce.id)
+		}
+	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	LikeButton(produce: previewProduce[0])
-		.environmentObject(previewCoordinator.produceStore)
+		.environment(previewCoordinator.produceStore)
 }

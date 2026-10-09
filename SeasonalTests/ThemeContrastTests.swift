@@ -60,10 +60,10 @@ struct ThemeContrastTests {
     private var appearances: [UITraitCollection] {
         [UIUserInterfaceStyle.light, .dark].flatMap { style in
             [UIAccessibilityContrast.normal, .high].map { contrast in
-                UITraitCollection(traitsFrom: [
-                    UITraitCollection(userInterfaceStyle: style),
-                    UITraitCollection(accessibilityContrast: contrast)
-                ])
+                UITraitCollection { traits in
+                    traits.userInterfaceStyle = style
+                    traits.accessibilityContrast = contrast
+                }
             }
         }
     }

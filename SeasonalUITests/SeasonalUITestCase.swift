@@ -8,7 +8,6 @@
 
 import XCTest
 
-/// Launches the app on mock data and waits for the main screen.
 class SeasonalUITestCase: XCTestCase {
 
     enum LaunchArgument {

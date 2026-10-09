@@ -15,12 +15,12 @@ struct MainScreenStateTests {
     private let state = MainScreenState()
 
     @Test func searchMirrorsTheTabItWasOpenedFrom() {
-        state.selectedTab = .seasons(.winter)
+        state.selectedTab = .seasons
 
         state.selectedTab = .search
 
-        #expect(state.searchOrigin == .seasons(.winter))
-        #expect(state.browsingTab == .seasons(.winter))
+        #expect(state.searchOrigin == .seasons)
+        #expect(state.browsingTab == .seasons)
     }
 
     @Test func browsingTabIsTheSelectedTabOutsideSearch() {

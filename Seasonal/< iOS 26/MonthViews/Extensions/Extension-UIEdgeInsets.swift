@@ -7,16 +7,7 @@
 //
 
 import UIKit
-import SwiftUI
 
 extension UIEdgeInsets {
 	static let allZero: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-	static let bottomPadding: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 50, right: 0)
-}
-
-extension EdgeInsets {
-	static let bottomPadding: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 150, trailing: 0)
-	static let allZero: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
-
-	static let topListRowInset: EdgeInsets = EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 0)
 }

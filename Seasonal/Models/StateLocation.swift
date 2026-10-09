@@ -24,14 +24,15 @@ enum StateLocation: String, CaseIterable {
 
     var fullName: String {
         switch self {
-        case .newSouthWales: "New South Wales"
-        case .northernTerritory: "Northern Territory"
-        case .queensland: "Queensland"
-        case .southAustralia: "South Australia"
-        case .tasmania: "Tasmania"
-        case .victoria: "Victoria"
-        case .westernAustralia: "Western Australia"
-        case .noState, .act: "Error"
+        case .newSouthWales: Strings.State.newSouthWales
+        case .northernTerritory: Strings.State.northernTerritory
+        case .queensland: Strings.State.queensland
+        case .southAustralia: Strings.State.southAustralia
+        case .tasmania: Strings.State.tasmania
+        case .victoria: Strings.State.victoria
+        case .westernAustralia: Strings.State.westernAustralia
+        case .noState: Strings.State.australia
+        case .act: Strings.State.australianCapitalTerritory
         }
     }
 

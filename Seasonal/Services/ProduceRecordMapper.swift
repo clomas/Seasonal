@@ -8,8 +8,6 @@
 
 import CloudKit
 
-/// Converts public-database records into `Produce` for one state. Months and seasons are stored
-/// per state as strings, so parsing them relies on string matching.
 struct ProduceRecordMapper {
 
     let location: StateLocation
@@ -17,17 +15,17 @@ struct ProduceRecordMapper {
     private let inSeasonFlag: Character = "1"
 
     func produce(from records: [CKRecord]) -> [Produce] {
-        records.map(produce(from:))
+        records.compactMap(produce(from:))
     }
 
-    private func produce(from record: CKRecord) -> Produce {
+    private func produce(from record: CKRecord) -> Produce? {
         guard let id = record.object(forKey: Constants.id) as? Int,
               let name = record.object(forKey: Constants.name) as? String,
               let category = record.object(forKey: Constants.category) as? String,
               let monthFlags = record.object(forKey: "months_\(location.rawValue)") as? String,
               let seasonCodes = record.object(forKey: "seasons_\(location.rawValue)") as? String
         else {
-            return placeholder
+            return nil
         }
 
         return Produce(
@@ -38,19 +36,6 @@ struct ProduceRecordMapper {
             description: "",
             months: months(from: monthFlags),
             seasons: seasons(from: seasonCodes),
-            liked: false
-        )
-    }
-
-    private var placeholder: Produce {
-        Produce(
-            id: 0,
-            name: Constants.apple,
-            category: .fruit,
-            imageName: Constants.apple,
-            description: "",
-            months: [],
-            seasons: [],
             liked: false
         )
     }

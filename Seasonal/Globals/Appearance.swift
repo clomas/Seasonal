@@ -21,7 +21,6 @@ enum Appearance: String, Codable, CaseIterable, Identifiable {
 		}
 	}
 
-	/// `nil` follows the system setting.
 	var colorScheme: ColorScheme? {
 		switch self {
 		case .automatic: nil

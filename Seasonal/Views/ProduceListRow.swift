@@ -23,42 +23,39 @@ struct ProduceListRow: View {
 	private let maxMonthsDynamicTypeSize: DynamicTypeSize = .accessibility1
 
 	var body: some View {
-		ZStack {
-			Color(.systemBackground)
-			VStack(spacing: rowSpacing) {
-				HStack(spacing: 0) {
-					Image(decorative: produce.imageName ?? "")
-						.resizable()
-						.scaledToFit()
-						.frame(width: imageSize, height: imageSize)
-						.padding(.leading, .space3)
-						.frame(width: sideSlotWidth, alignment: .leading)
+		VStack(spacing: rowSpacing) {
+			HStack(spacing: 0) {
+				Image(decorative: produce.imageName ?? "")
+					.resizable()
+					.scaledToFit()
+					.frame(width: imageSize, height: imageSize)
+					.padding(.leading, .space3)
+					.frame(width: sideSlotWidth, alignment: .leading)
 
-					Text(produce.name ?? "")
-						.font(.cardTitle)
-						.multilineTextAlignment(.center)
-						.accessibilityAddTraits(.isHeader)
-						.frame(maxWidth: .infinity)
+				Text(produce.name ?? "")
+					.font(.cardTitle)
+					.multilineTextAlignment(.center)
+					.accessibilityAddTraits(.isHeader)
+					.frame(maxWidth: .infinity)
 
-					LikeButton(produce: produce)
-						.padding(.trailing, .space4)
-						.frame(width: sideSlotWidth, alignment: .trailing)
-				}
-				if showMonths {
-					MonthsInSeasonCapsuleView(months: produce.months ?? [], thisMonth: thisMonth)
-						.dynamicTypeSize(...maxMonthsDynamicTypeSize)
-				}
+				LikeButton(produce: produce)
+					.padding(.trailing, .space4)
+					.frame(width: sideSlotWidth, alignment: .trailing)
 			}
-			.accessibilityElement(children: .contain)
-			.accessibilityIdentifier("produceRow_\(produce.id)")
-			.padding(.bottom, .space1)
-			.background(Colour.background)
+			if showMonths {
+				MonthsInSeasonCapsuleView(months: produce.months ?? [], thisMonth: thisMonth)
+					.dynamicTypeSize(...maxMonthsDynamicTypeSize)
+			}
 		}
+		.accessibilityElement(children: .contain)
+		.accessibilityIdentifier("produceRow_\(produce.id)")
+		.padding(.bottom, .space1)
+		.background(Colour.background)
 	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	ProduceListRow(produce: previewProduce[1], showMonths: true)
-		.environmentObject(previewCoordinator.produceStore)
+		.environment(previewCoordinator.produceStore)
 }

@@ -9,13 +9,15 @@
 import CloudKit
 
 @available(iOS 26, *)
-actor ProduceCloudDataService {
+struct ProduceCloudDataService: Sendable {
 
     private let cloudKitDataService = CloudKitDataService()
     private let mapper: ProduceRecordMapper
+    private let localLikes: LocalLikes
 
-    init(location: StateLocation) {
+    init(location: StateLocation, localLikes: LocalLikes = LocalLikes()) {
         mapper = ProduceRecordMapper(location: location)
+        self.localLikes = localLikes
     }
 
     /// Fails only when a fetch errored and nothing at all came back.
@@ -39,24 +41,30 @@ actor ProduceCloudDataService {
         return .success(produce)
     }
 
-    /// Refreshes liked state only, for when the base catalogue is already cached.
-    func getLikes(basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
-        await fetch(.private, recordType: Constants.australianProduceLikes).map { privateRecords in
-            var produce = baseProduce.map { $0.withLiked(false) }
-            applyLikes(from: privateRecords, to: &produce)
-            return produce
-        }
+    /// Never fails: without the private database (e.g. no iCloud account) local likes still apply.
+    func getLikes(basedOn baseProduce: [Produce]) async -> [Produce] {
+        let privateRecords = (try? await fetch(.private, recordType: Constants.australianProduceLikes).get()) ?? []
+        var produce = baseProduce.map { $0.withLiked(false) }
+        applyLikes(from: privateRecords, to: &produce)
+        return produce
     }
 
-    func saveLike(id: Int) {
+    func saveLike(id: Int) async {
+        PendingUnlikes.remove(id)
         let record = likeRecord(id: id)
         record.setValue(id, forKey: Constants.id)
-        Task { await cloudKitDataService.saveItem(record, in: .private) }
+        try? await cloudKitDataService.saveItem(record, in: .private)
     }
 
-    func deleteLike(id: Int) {
-        let record = likeRecord(id: id)
-        Task { await cloudKitDataService.deleteItem(record, in: .private) }
+    /// Stays pending until CloudKit confirms the delete, so a failure is retried on the next fetch.
+    func deleteLike(id: Int) async {
+        PendingUnlikes.insert(id)
+        do {
+            try await cloudKitDataService.deleteItem(likeRecord(id: id), in: .private)
+            PendingUnlikes.remove(id)
+        } catch {
+            return
+        }
     }
 
     private func fetch(_ database: CloudKitDataService.DatabaseType, recordType: String) async -> Result<[CKRecord], CKError> {
@@ -71,19 +79,23 @@ actor ProduceCloudDataService {
         CKRecord(recordType: Constants.australianProduceLikes, recordID: CKRecord.ID(recordName: "\(id)_"))
     }
 
-    /// Local likes are the source of truth: they're applied even when CloudKit lags or is
-    /// unavailable, and any that CloudKit is missing are pushed back up.
+    /// Local likes are the source of truth: ones CloudKit is missing are pushed up, and pending
+    /// unlikes are retried rather than restored.
     private func applyLikes(from privateRecords: [CKRecord], to produce: inout [Produce]) {
+        let pendingUnlikes = PendingUnlikes.ids
         let cloudLikedIDs = Set(privateRecords.compactMap { $0.object(forKey: Constants.id) as? Int })
-        let localLikedIDs = Set(LocalDataHandler.loadAll(LikedProduce.self).map(\.id))
+            .subtracting(pendingUnlikes)
+        let localLikedIDs = localLikes.ids
         let likedIDs = cloudLikedIDs.union(localLikedIDs)
 
         for index in produce.indices where likedIDs.contains(produce[index].id) {
             produce[index] = produce[index].withLiked(true)
         }
 
-        for id in localLikedIDs.subtracting(cloudLikedIDs) {
-            saveLike(id: id)
+        let missingFromCloud = localLikedIDs.subtracting(cloudLikedIDs)
+        Task {
+            for id in missingFromCloud { await saveLike(id: id) }
+            for id in pendingUnlikes.subtracting(localLikedIDs) { await deleteLike(id: id) }
         }
     }
 }

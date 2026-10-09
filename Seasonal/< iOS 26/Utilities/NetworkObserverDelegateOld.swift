@@ -1,5 +1,5 @@
 //
-//  NetworkObserverDelegate.swift
+//  NetworkObserverDelegateOld.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 28/9/2026.
@@ -9,6 +9,6 @@
 import Network
 
 @MainActor
-protocol NetworkObserverDelegate: AnyObject, Sendable {
+protocol NetworkObserverDelegateOld: AnyObject, Sendable {
 	func internetStatusDidChange(status: NWPath.Status)
 }

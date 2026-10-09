@@ -49,12 +49,8 @@ struct ComponentSnapshotTests {
                 ProduceListRow(produce: previewProduce[6], showMonths: false, thisMonth: fixedMonth)
             }
             .frame(width: rowWidth)
-            .environmentObject(store)
+            .environment(store)
         )
-    }
-
-    @Test func emptyState() {
-        assertComponentSnapshot(EmptyStateView(icon: .favourites, message: Strings.EmptyState.favourites))
     }
 
     @Test func accentIconChip() {

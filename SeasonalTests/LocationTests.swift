@@ -28,20 +28,20 @@ struct LocationTests {
 
     @Test(arguments: StateLocation.selectable)
     func australianStateIsParsedFromItsAbbreviation(_ state: StateLocation) {
-        #expect(manager.state(from: state.rawValue.uppercased(), country: Constants.straya) == state)
-        #expect(manager.state(from: state.rawValue, country: Constants.straya) == state)
+        #expect(manager.state(from: state.rawValue.uppercased(), countryCode: LocationInformationManager.australiaCountryCode) == state)
+        #expect(manager.state(from: state.rawValue, countryCode: LocationInformationManager.australiaCountryCode) == state)
     }
 
     @Test func actUsesNewSouthWales() {
-        #expect(manager.state(from: "ACT", country: Constants.straya) == .newSouthWales)
+        #expect(manager.state(from: "ACT", countryCode: LocationInformationManager.australiaCountryCode) == .newSouthWales)
     }
 
     @Test func outsideAustraliaHasNoState() {
-        #expect(manager.state(from: "CA", country: "United States") == .noState)
+        #expect(manager.state(from: "CA", countryCode: "US") == .noState)
     }
 
     @Test(arguments: [nil, "Somewhere"])
     func unknownOrMissingAreaHasNoState(_ area: String?) {
-        #expect(manager.state(from: area, country: Constants.straya) == .noState)
+        #expect(manager.state(from: area, countryCode: LocationInformationManager.australiaCountryCode) == .noState)
     }
 }

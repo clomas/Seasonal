@@ -20,7 +20,7 @@ final class InfoUITests: SeasonalUITestCase {
         XCTAssertTrue(sheet.waitForExistence(timeout: elementTimeout))
         XCTAssertTrue(app.staticTexts["Produce location"].exists)
 
-        sheet.buttons["Done"].tap()
+        sheet.buttons["closeInfoButton"].tap()
 
         XCTAssertTrue(sheet.waitForNonExistence(timeout: elementTimeout))
     }

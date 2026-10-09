@@ -1,5 +1,5 @@
 //
-//  _NetworkService.swift
+//  NetworkServiceOld.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 16/2/21.
@@ -10,32 +10,36 @@
 import Foundation
 import Network
 
-actor NetworkService {
+actor NetworkServiceOld {
 
-	private let monitor = NWPathMonitor()
+	private var monitor: NWPathMonitor?
 
-	weak var delegate: NetworkObserverDelegate?
+	weak var delegate: NetworkObserverDelegateOld?
 
-	init(delegate: NetworkObserverDelegate) {
+	init(delegate: NetworkObserverDelegateOld) {
 		self.delegate = delegate
 		Task { await startMonitoring() }
 	}
 
 	func stop() {
-		monitor.cancel()
+		monitor?.cancel()
+		monitor = nil
 	}
 
-	func retry() async {
-		monitor.cancel()
-		await startMonitoring()
+	func retry() {
+		startMonitoring()
 	}
 
-	private func startMonitoring() async {
+	/// A cancelled `NWPathMonitor` never restarts, so every start needs a new one.
+	private func startMonitoring() {
+		monitor?.cancel()
+		let monitor = NWPathMonitor()
 		monitor.pathUpdateHandler = { [weak self] path in
 			Task { @MainActor in
 				await self?.delegate?.internetStatusDidChange(status: path.status)
 			}
 		}
 		monitor.start(queue: DispatchQueue.global(qos: .background))
+		self.monitor = monitor
 	}
 }

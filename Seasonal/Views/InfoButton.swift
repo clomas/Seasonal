@@ -14,12 +14,9 @@ struct InfoButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Image(systemName: Symbol.info)
-        }
-        .tint(.primary)
-        .accessibilityIdentifier("infoButton")
-        .accessibilityLabel(Strings.Info.button)
+        Button(Strings.Info.button, systemImage: Symbol.info, action: action)
+            .tint(.primary)
+            .accessibilityIdentifier("infoButton")
     }
 }
 

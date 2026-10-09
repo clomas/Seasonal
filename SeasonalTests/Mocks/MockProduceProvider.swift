@@ -13,7 +13,7 @@ import CloudKit
 final class MockProduceProvider: ProduceProviding {
 
     var produceResult: Result<[Produce], CKError> = .success([])
-    var likesResult: Result<[Produce], CKError> = .success([])
+    var likesResult: [Produce] = []
     private(set) var produceRequests: [StateLocation] = []
     private(set) var likesRequests: [[Int]] = []
     private(set) var likeUpdates: [Int: Bool] = [:]
@@ -23,7 +23,7 @@ final class MockProduceProvider: ProduceProviding {
         return produceResult
     }
 
-    func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
+    func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
         likesRequests.append(baseProduce.map(\.id))
         return likesResult
     }

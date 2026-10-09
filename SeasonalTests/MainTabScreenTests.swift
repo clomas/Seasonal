@@ -13,23 +13,18 @@ struct MainTabScreenTests {
 
     @Test func tabTitles() {
         #expect(MainTabScreen.Tabs.favourites.title == Strings.Tab.favourites)
+        #expect(MainTabScreen.Tabs.months.title == Strings.Tab.months)
+        #expect(MainTabScreen.Tabs.seasons.title == Strings.Tab.seasons)
         #expect(MainTabScreen.Tabs.search.title == Strings.Tab.search)
-        #expect(MainTabScreen.Tabs.months(.april).title == Strings.Month.april)
-        #expect(MainTabScreen.Tabs.seasons(.summer).title == Strings.Season.summer)
     }
 
     @Test func emptyMessages() {
         #expect(MainTabScreen.Tabs.favourites.emptyProduceListViewMessage == Strings.EmptyState.favourites)
-        #expect(MainTabScreen.Tabs.months(.april).emptyProduceListViewMessage == Strings.EmptyState.period)
+        #expect(MainTabScreen.Tabs.months.emptyProduceListViewMessage == Strings.EmptyState.period)
     }
 
-    @Test(arguments: Months.allCases)
-    func monthTabHasATitle(_ month: Months) {
-        #expect(MainTabScreen.Tabs.months(month).title.isEmpty == false)
-    }
-
-    @Test(arguments: Seasons.allCases)
-    func seasonTabHasATitle(_ season: Seasons) {
-        #expect(MainTabScreen.Tabs.seasons(season).title.isEmpty == false)
+    @Test(arguments: [(MainTabScreen.Tabs.months, true), (.seasons, true), (.favourites, false), (.search, false)])
+    func onlyPeriodTabsHaveAPicker(_ tab: MainTabScreen.Tabs, expected: Bool) {
+        #expect(tab.hasPeriodPicker == expected)
     }
 }

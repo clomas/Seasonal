@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol AppCoordinatorVersionProtocol {
     init(window: UIWindow?)
     func start()

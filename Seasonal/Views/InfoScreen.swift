@@ -11,9 +11,8 @@ import SwiftUI
 @available(iOS 26, *)
 struct InfoScreen: View {
 
-    @EnvironmentObject private var coordinator: AppCoordinator
+    @Environment(AppCoordinator.self) private var coordinator
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.openURL) private var openURL
 
     @Bindable private var themeStore = ThemeStore.shared
 
@@ -30,6 +29,9 @@ struct InfoScreen: View {
 
                 Section(Strings.Info.locationSection) {
                     Picker(Strings.Info.produceLocation, selection: $selectedState) {
+                        if selectedState == .noState {
+                            Text(StateLocation.noState.fullName).tag(StateLocation.noState)
+                        }
                         ForEach(StateLocation.selectable, id: \.self) { state in
                             Text(state.fullName).tag(state)
                         }
@@ -64,12 +66,10 @@ struct InfoScreen: View {
                             Label(Strings.Info.privacyPolicy, systemImage: Symbol.privacy)
                         }
                     }
-                    Button {
-                        if let url = ExternalLink.contactEmail {
-                            openURL(url)
+                    if let url = ExternalLink.contactEmail {
+                        Link(destination: url) {
+                            Label(Strings.Info.getInTouch, systemImage: Symbol.email)
                         }
-                    } label: {
-                        Label(Strings.Info.getInTouch, systemImage: Symbol.email)
                     }
                 }
 
@@ -84,10 +84,11 @@ struct InfoScreen: View {
                 }
             }
             .navigationTitle(Strings.Info.title)
-            .navigationBarTitleDisplayMode(.inline)
+            .toolbarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(Strings.Info.done) { dismiss() }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(role: .close, action: dismiss.callAsFunction)
+                        .accessibilityIdentifier("closeInfoButton")
                 }
             }
             .tint(Colour.inSeason)
@@ -104,13 +105,12 @@ struct InfoScreen: View {
     }
 
     private var introText: String {
-        let state = Self.savedState
-        return Strings.Info.intro(location: state.isSelectable ? state.fullName : Strings.Info.defaultLocation)
+        Strings.Info.intro(location: Self.savedState.fullName)
     }
 }
 
 @available(iOS 26, *)
 #Preview {
     InfoScreen()
-        .environmentObject(previewCoordinator)
+        .environment(previewCoordinator)
 }

@@ -8,54 +8,26 @@
 
 import CoreLocation
 
-final class LocationService: NSObject {
+@available(iOS 26, *)
+struct LocationService: Sendable {
 
-    weak var locationDelegate: LocationDelegate?
+    func currentLocation() async -> CLLocation? {
+        let session = CLServiceSession(authorization: .whenInUse)
+        defer { session.invalidate() }
 
-    private let locationManager = CLLocationManager()
-
-    init(delegate: LocationDelegate) {
-        locationDelegate = delegate
-        super.init()
-
-        locationManager.desiredAccuracy = kCLLocationAccuracyReduced
-        locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
-        locationManager.delegate = self
-    }
-
-    private func stop() {
-        locationManager.stopUpdatingLocation()
-        locationDelegate?.locationReady(location: nil)
-    }
-}
-
-// MARK: - CLLocationManagerDelegate
-
-extension LocationService: CLLocationManagerDelegate {
-
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        switch manager.authorizationStatus {
-        case .notDetermined:
-            locationManager.requestWhenInUseAuthorization()
-        case .authorizedAlways, .authorizedWhenInUse:
-            locationManager.startUpdatingLocation()
-        case .denied, .restricted:
-            stop()
-        @unknown default:
-            break
+        do {
+            for try await update in CLLocationUpdate.liveUpdates() {
+                if let location = update.location {
+                    return location
+                }
+                if update.authorizationDenied || update.authorizationDeniedGlobally
+                    || update.authorizationRestricted || update.locationUnavailable {
+                    return nil
+                }
+            }
+        } catch {
+            return nil
         }
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let mostRecentLocation = locations.last else { return }
-        locationDelegate?.locationReady(location: mostRecentLocation)
-        locationManager.stopUpdatingLocation()
-    }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        stop()
-#if DEBUG
-        print("Location not found \(error) - Use generalized Australian data")
-#endif
+        return nil
     }
 }

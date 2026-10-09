@@ -48,13 +48,31 @@ enum Strings {
         }
     }
 
+    enum State {
+        static let australia = String(localized: "Australia")
+        static let australianCapitalTerritory = String(localized: "Australian Capital Territory")
+        static let newSouthWales = String(localized: "New South Wales")
+        static let northernTerritory = String(localized: "Northern Territory")
+        static let queensland = String(localized: "Queensland")
+        static let southAustralia = String(localized: "South Australia")
+        static let tasmania = String(localized: "Tasmania")
+        static let victoria = String(localized: "Victoria")
+        static let westernAustralia = String(localized: "Western Australia")
+    }
+
     enum Like {
         static let label = String(localized: "Favourite")
     }
 
     enum Search {
         static let prompt = String(localized: "Search produce")
-        static let noResults = String(localized: "No search results")
+    }
+
+    enum Category {
+        static let fruit = String(localized: "Fruit")
+        static let vegetables = String(localized: "Vegetables")
+        static let herbs = String(localized: "Herbs")
+        static let all = String(localized: "All")
     }
 
     enum Filter {
@@ -99,12 +117,10 @@ enum Strings {
         static let viewSource = String(localized: "View source on GitHub")
         static let privacyPolicy = String(localized: "Privacy policy")
         static let getInTouch = String(localized: "Get in touch")
-        static let done = String(localized: "Done")
         static let appearanceSection = String(localized: "Appearance")
         static let themePicker = String(localized: "Colour")
         static let appearancePicker = String(localized: "Mode")
         static let themeFooter = String(localized: "Match season changes the accent colour through the year.")
-        static let defaultLocation = String(localized: "Australia")
 
         // swiftlint:disable:next line_length
         static func intro(location: String) -> String { String(localized: "Location of Produce Displayed: \(location).\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!") }

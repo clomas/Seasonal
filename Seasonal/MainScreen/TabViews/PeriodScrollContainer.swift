@@ -13,17 +13,11 @@ import SwiftUI
 @available(iOS 26, *)
 struct PeriodScrollContainer<Cell: View>: View {
 
-    private struct BufferSlot: Identifiable {
-        let id: Int
-        let period: PeriodItem
-    }
-
     @Binding var jumpToIndex: Int?
     @Binding var currentIndex: Int
 
     let periods: [PeriodItem]
     let initialIndex: Int
-    /// The onboarding peek runs only when this is set.
     let onPeekFinished: (() async -> Void)?
     @ViewBuilder let cell: (PeriodItem) -> Cell
 
@@ -32,7 +26,7 @@ struct PeriodScrollContainer<Cell: View>: View {
     private static var peekStartDelay: Duration { .milliseconds(500) }
     private static var peekHopDuration: TimeInterval { 1 }
 
-    private let buffer: [BufferSlot]
+    private let slotCount: Int
     private let startSlot: Int
     private let count: Int
     private let centerOffset: Int
@@ -63,17 +57,15 @@ struct PeriodScrollContainer<Cell: View>: View {
         self.count = count
         self.centerOffset = centerOffset
         self.startSlot = startSlot
-        self.buffer = (0..<(Self.bufferRepeats * count)).map { slot in
-            BufferSlot(id: slot, period: periods[((slot - centerOffset) % count + count) % count])
-        }
+        self.slotCount = Self.bufferRepeats * count
         self._scrollPosition = State(initialValue: ScrollPosition(id: startSlot))
     }
 
     var body: some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
-                ForEach(buffer) { slot in
-                    cell(slot.period)
+                ForEach(0..<slotCount, id: \.self) { slot in
+                    cell(periods[periodIndex(for: slot)])
                         .containerRelativeFrame(.horizontal)
                 }
             }
@@ -81,10 +73,10 @@ struct PeriodScrollContainer<Cell: View>: View {
         }
         .scrollTargetBehavior(.viewAligned)
         .scrollPosition($scrollPosition)
-        .onAppear {
+        .task {
             guard !hasPeeked, onPeekFinished != nil else { return }
             hasPeeked = true
-            Task { await runPeekSequence() }
+            await runPeekSequence()
         }
         .onChange(of: jumpToIndex) { _, newValue in
             guard let index = newValue else { return }

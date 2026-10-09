@@ -13,21 +13,21 @@ extension MainTabScreen {
 
     enum Tabs: Hashable {
         case favourites
-        case months(Months)
-        case seasons(Seasons)
+        case months
+        case seasons
         case search
 
         var title: String {
             switch self {
             case .favourites: Strings.Tab.favourites
-            case .months(let month): month.title
-            case .seasons(let season): season.title
+            case .months: Strings.Tab.months
+            case .seasons: Strings.Tab.seasons
             case .search: Strings.Tab.search
             }
         }
 
-        var isSeasons: Bool {
-            if case .seasons = self { true } else { false }
+        var hasPeriodPicker: Bool {
+            self == .months || self == .seasons
         }
 
         var emptyListIcon: Image {

@@ -18,7 +18,7 @@ struct CategoryFilterButton: View {
             Picker(Strings.Filter.label, selection: $selectedCategory) {
                 ForEach(ProduceCategory.allCases, id: \.self) { category in
                     Label {
-                        Text(category.menuTitle)
+                        Text(category.title)
                     } icon: {
                         Image(symbol: category.image)
                     }
@@ -26,11 +26,14 @@ struct CategoryFilterButton: View {
                 }
             }
         } label: {
-            Image(symbol: selectedCategory.image)
+            Label {
+                Text(Strings.Filter.label)
+            } icon: {
+                Image(symbol: selectedCategory.image)
+            }
         }
         .tint(isFiltering ? Colour.accent : .primary)
-        .accessibilityLabel(Strings.Filter.label)
-        .accessibilityValue(isFiltering ? selectedCategory.menuTitle : Strings.Filter.allCategories)
+        .accessibilityValue(isFiltering ? selectedCategory.title : Strings.Filter.allCategories)
         .accessibilityHint(Strings.Filter.hint)
         .accessibilityIdentifier("filterByCategoryButton")
     }

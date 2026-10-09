@@ -96,7 +96,7 @@ struct ProduceStoreTests {
     @Test(.tags(.networking)) func diskCacheHitOnlyRefreshesLikes() async throws {
         let apple = Produce.fixture(id: 1, name: "Apple")
         diskCache.save([apple], for: .victoria)
-        service.likesResult = .success([apple.withLiked(true)])
+        service.likesResult = [apple.withLiked(true)]
 
         try await store.fetchFromCloudKit(for: .victoria).get()
 

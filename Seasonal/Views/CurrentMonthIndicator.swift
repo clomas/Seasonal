@@ -14,14 +14,18 @@ struct CurrentMonthIndicator: View {
     let isInSeason: Bool
     let diameter: CGFloat
 
+    private let ringWidth: CGFloat = 1.5
+
     var body: some View {
         ZStack {
+            // Out of season is a ring, not a grey fill: onAccent text on grey fails WCAG AA in light mode.
             Circle()
-                .fill(isInSeason ? Colour.accent : .secondary)
+                .fill(isInSeason ? Colour.accent : .clear)
+                .stroke(isInSeason ? .clear : Color.secondary, lineWidth: ringWidth)
                 .frame(width: diameter, height: diameter)
             Text(letter)
                 .font(.label)
-                .foregroundStyle(Colour.onAccent)
+                .foregroundStyle(isInSeason ? Colour.onAccent : .primary)
         }
     }
 }

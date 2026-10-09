@@ -14,7 +14,7 @@ struct ProduceDataService {
 
 	func updateLike(id: Int, liked: Bool) {
 
-		let likedProduce: LikedProduce = LikedProduce(id: id)
+		let likedProduce: LikedProduceOld = LikedProduceOld(id: id)
 
 		if liked {
 			likedProduce.saveItem()

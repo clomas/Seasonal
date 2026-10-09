@@ -1,5 +1,5 @@
 //
-//  View+ToolbarTitleMenuIfPresent.swift
+//  View+ToolbarTitleMenu.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 28/9/2026.
@@ -11,9 +11,9 @@ import SwiftUI
 extension View {
     /// Needed because an empty `toolbarTitleMenu` still draws its chevron.
     @ViewBuilder
-    func toolbarTitleMenuIfPresent<Menu: View>(_ menu: Menu?) -> some View {
-        if let menu {
-            toolbarTitleMenu { menu }
+    func toolbarTitleMenu<Content: View>(isPresented: Bool, @ViewBuilder content: () -> Content) -> some View {
+        if isPresented {
+            toolbarTitleMenu(content: content)
         } else {
             self
         }

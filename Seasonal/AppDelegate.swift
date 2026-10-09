@@ -13,17 +13,15 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		if #available(iOS 17.0, *) {
 #if DEBUG
-			if CommandLine.arguments.contains("reset-onboarding") {
-				try? Tips.resetDatastore()
-			}
-#endif
-			try? Tips.configure([
-				.displayFrequency(.immediate),
-				.datastoreLocation(.applicationDefault)
-			])
+		if CommandLine.arguments.contains("reset-onboarding") {
+			try? Tips.resetDatastore()
 		}
+#endif
+		try? Tips.configure([
+			.displayFrequency(.immediate),
+			.datastoreLocation(.applicationDefault)
+		])
 		return true
 	}
 

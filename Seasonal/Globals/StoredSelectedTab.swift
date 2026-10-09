@@ -14,8 +14,8 @@ enum StoredSelectedTab: Codable {
 	static var tab: MainTabScreen.Tabs {
 		switch GlobalSettings.selectedTab {
 		case .favourites: .favourites
-		case .months: .months(Months.currentPeriod)
-		case .seasons: .seasons(Seasons.currentPeriod)
+		case .months: .months
+		case .seasons: .seasons
 		}
 	}
 

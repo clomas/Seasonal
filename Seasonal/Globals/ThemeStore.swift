@@ -9,7 +9,6 @@
 import Observation
 import SwiftUI
 
-/// Observable so any view that reads `Colour` or `colorScheme` in its body updates when the user changes theme.
 @MainActor
 @Observable
 final class ThemeStore {

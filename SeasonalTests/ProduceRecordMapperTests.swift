@@ -59,7 +59,7 @@ struct ProduceRecordMapperTests {
         #expect(produce.seasons == [.winter, .spring])
     }
 
-    @Test func otherStatesFieldsAreIgnored() throws {
+    @Test func otherStatesFieldsAreIgnored() {
         let record = CKRecord(recordType: Constants.australianProduce)
         record.setValue(1, forKey: Constants.id)
         record.setValue("Item", forKey: Constants.name)
@@ -67,19 +67,14 @@ struct ProduceRecordMapperTests {
         record.setValue("111111111111", forKey: "months_nsw")
         record.setValue("sum", forKey: "seasons_nsw")
 
-        let produce = try #require(mapper.produce(from: [record]).first)
-
-        #expect(produce.id == 0, "A record missing this state's fields maps to the placeholder")
+        #expect(mapper.produce(from: [record]).isEmpty, "A record missing this state's fields is skipped")
     }
 
-    @Test func incompleteRecordMapsToPlaceholder() throws {
-        let record = CKRecord(recordType: Constants.australianProduce)
+    @Test func incompleteRecordIsSkipped() {
+        let incomplete = CKRecord(recordType: Constants.australianProduce)
+        let complete = makeRecord(id: 7, name: "Apples", category: "fruit", months: "", seasons: "")
 
-        let produce = try #require(mapper.produce(from: [record]).first)
-
-        #expect(produce.id == 0)
-        #expect(produce.name == Constants.apple)
-        #expect(produce.months == [])
+        #expect(mapper.produce(from: [incomplete, complete, incomplete]).map(\.id) == [7])
     }
 
     private func makeRecord(id: Int, name: String, category: String, months: String, seasons: String) -> CKRecord {

@@ -12,9 +12,7 @@ import SwiftUI
 struct TintedGlassCapsuleButton: View {
 
     enum Style {
-        /// Leading-aligned and full width, for selection lists.
         case list
-        /// Hugs its content, for primary calls to action.
         case prominent
     }
 

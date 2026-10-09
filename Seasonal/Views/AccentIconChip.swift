@@ -22,7 +22,7 @@ struct AccentIconChip: View {
             .font(.system(size: scaledDiameter * glyphScale, weight: .semibold))
             .foregroundStyle(Colour.onAccent)
             .frame(width: scaledDiameter, height: scaledDiameter)
-            .background(Circle().fill(Colour.accent))
+            .background(Colour.accent, in: .circle)
             .accessibilityHidden(true)
     }
 

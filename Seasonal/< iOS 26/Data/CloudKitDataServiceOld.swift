@@ -14,15 +14,7 @@ import UIKit
 import CloudKit
 
 enum CloudKitErrorOld: Error {
-    case databaseError
-    case invalidID
     case likesError
-    case noToken
-}
-/// A protocol to allow mocking a CKDatabase.
-protocol CKDatabaseProtocol {
-	func perform(_ query: CKQuery, inZoneWith zoneID: CKRecordZone.ID?, completionHandler: @escaping ([CKRecord]?, Error?) -> Void)
-	func save(_ record: CKRecord, completionHandler: @escaping (CKRecord?, Error?) -> Void)
 }
 
 class CloudKitDataServiceOld {
@@ -116,7 +108,7 @@ class CloudKitDataServiceOld {
 			produceArray.append(produce)
         }
 
-		let localLikedData: [LikedProduce] = LocalDataHandler.loadAll(LikedProduce.self)
+		let localLikedData: [LikedProduceOld] = LocalDataHandlerOld.loadAll(LikedProduceOld.self)
 		if !localLikedData.isEmpty {
             compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
         }
@@ -125,7 +117,7 @@ class CloudKitDataServiceOld {
 
 	// Update cloudKit with local data if there is a disparity
 	// local data should always be accurate
-    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduce], produceArray: inout [ProduceOld]) {
+    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduceOld], produceArray: inout [ProduceOld]) {
 		let likedArray: [ProduceOld] = produceArray.filter { $0.liked == true}
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {

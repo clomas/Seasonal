@@ -8,7 +8,7 @@
 
 import CloudKit
 
-actor CloudKitDataService {
+struct CloudKitDataService: Sendable {
 
     enum DatabaseType {
         case `private`
@@ -25,20 +25,28 @@ actor CloudKitDataService {
         let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
         query.sortDescriptors = [NSSortDescriptor(key: queryKey, ascending: true)]
 
-        let (matchResults, _) = try await database(databaseType).records(matching: query)
+        let database = database(databaseType)
+        var (matchResults, cursor) = try await database.records(matching: query)
+        while let nextCursor = cursor {
+            let page = try await database.records(continuingMatchFrom: nextCursor)
+            matchResults += page.matchResults
+            cursor = page.queryCursor
+        }
         return try matchResults.map { try $0.1.get() }
     }
 
-    @discardableResult
-    func saveItem(_ record: CKRecord, in databaseType: DatabaseType) async -> CKRecord? {
-        guard hasUbiquityIdentityToken else { return nil }
-        return try? await database(databaseType).save(record)
+    func saveItem(_ record: CKRecord, in databaseType: DatabaseType) async throws {
+        guard hasUbiquityIdentityToken else { return }
+        _ = try await database(databaseType).save(record)
     }
 
-    @discardableResult
-    func deleteItem(_ record: CKRecord, in databaseType: DatabaseType) async -> CKRecord.ID? {
-        guard hasUbiquityIdentityToken else { return nil }
-        return try? await database(databaseType).deleteRecord(withID: record.recordID)
+    func deleteItem(_ record: CKRecord, in databaseType: DatabaseType) async throws {
+        guard hasUbiquityIdentityToken else { return }
+        do {
+            try await database(databaseType).deleteRecord(withID: record.recordID)
+        } catch let error as CKError where error.code == .unknownItem {
+            return
+        }
     }
 
     private func database(_ type: DatabaseType) -> CKDatabase {

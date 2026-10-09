@@ -7,17 +7,20 @@
 //
 
 import CloudKit
-import SwiftUI
+import Observation
 
 @MainActor
+@Observable
 @available(iOS 26, *)
-final class ProduceStore: ObservableObject {
+final class ProduceStore {
 
 	private let cache = ProduceCache()
 	private let service: any ProduceProviding
 	private let diskCache: any ProduceDiskCaching
 
-	@Published private(set) var allProduce: [Produce] = []
+	private(set) var allProduce: [Produce] = []
+
+	@ObservationIgnored private var likeSync: Task<Void, Never>?
 
 	var favourites: [Produce] {
 		cache.favourites(from: allProduce)
@@ -32,7 +35,7 @@ final class ProduceStore: ObservableObject {
 		cache.byPeriod(period, from: allProduce)
 	}
 
-	/// Updates synchronously so callers can animate it; the returned task is the sync to CloudKit.
+	/// Syncs are chained so a quick like then unlike reaches CloudKit in order.
 	@discardableResult
 	func toggleLiked(for id: Int) -> Task<Void, Never>? {
 		guard let index = allProduce.firstIndex(where: { $0.id == id }) else { return nil }
@@ -40,7 +43,13 @@ final class ProduceStore: ObservableObject {
 		allProduce[index] = allProduce[index].withLiked(liked)
 		cache.invalidate()
 
-		return Task { await service.updateLike(id: id, liked: liked) }
+		let previousSync = likeSync
+		let sync = Task {
+			await previousSync?.value
+			await service.updateLike(id: id, liked: liked)
+		}
+		likeSync = sync
+		return sync
 	}
 
 	func prepareForLocationChange() {
@@ -55,9 +64,8 @@ final class ProduceStore: ObservableObject {
 			return .success(())
 		}
 
-		// With the base catalogue on disk, only liked state needs refreshing from CloudKit.
 		if let baseProduce = diskCache.load(for: location) {
-			return await apply(service.likes(for: location, basedOn: baseProduce))
+			return await apply(.success(service.likes(for: location, basedOn: baseProduce)))
 		}
 
 		let result = await service.produce(for: location)

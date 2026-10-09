@@ -10,7 +10,7 @@ import SwiftUI
 
 @available(iOS 26, *)
 struct RootScreen: View {
-	@EnvironmentObject var coordinator: AppCoordinator
+	@Environment(AppCoordinator.self) private var coordinator
 
 	var body: some View {
 		Group {
@@ -19,7 +19,6 @@ struct RootScreen: View {
 				MainTabScreen()
 			default:
 				InitialScreen()
-					.glassEffect()
 			}
 		}
 		.animation(.easeInOut, value: coordinator.state == .dataIsReady)

@@ -11,16 +11,16 @@ import SwiftUI
 @available(iOS 26, *)
 struct InitialScreen: View {
 
-	@EnvironmentObject var appCoordinator: AppCoordinator
+	@Environment(AppCoordinator.self) private var appCoordinator
 
 	private let stateChangeAnimationDuration: TimeInterval = 1.2
 
 	var body: some View {
 		// Scrolls only when large Dynamic Type sizes push the content past the screen.
 		ViewThatFits(in: .vertical) {
-			content
+			LaunchStatusView()
 			ScrollView {
-				content
+				LaunchStatusView()
 			}
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -31,38 +31,10 @@ struct InitialScreen: View {
 			AccessibilityNotification.ScreenChanged().post()
 		}
 	}
-
-	private var content: some View {
-		VStack {
-			switch appCoordinator.state {
-			case .initial:
-				AppLogo()
-				ProgressView()
-					.controlSize(.large)
-					.tint(.primary)
-					.accessibilityLabel(Strings.Launch.loading)
-			case let .dataFailed(errorTitle, errorMessage):
-				AppLogo()
-				FailureMessageView(title: errorTitle, message: errorMessage, onRetry: appCoordinator.retryFetchData)
-			case .networkFailed:
-				AppLogo()
-				FailureMessageView(
-					title: Strings.Launch.networkErrorTitle,
-					message: Strings.Launch.networkErrorMessage,
-					onRetry: appCoordinator.retryFetchData
-				)
-			case .locationNotFound:
-				AppLogo()
-				LocationPickerView(onSelect: appCoordinator.chooseInitialLocation, onFindLocationAgain: appCoordinator.retryStart)
-			case .dataIsReady:
-				EmptyView()
-			}
-		}
-	}
 }
 
 @available(iOS 26, *)
 #Preview {
 	InitialScreen()
-		.environmentObject(previewCoordinator)
+		.environment(previewCoordinator)
 }

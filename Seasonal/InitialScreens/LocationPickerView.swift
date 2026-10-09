@@ -22,7 +22,7 @@ struct LocationPickerView: View {
                 .accessibilityAddTraits(.isHeader)
 
             ForEach(StateLocation.selectable, id: \.self) { state in
-                TintedGlassCapsuleButton(label: state.fullName.capitalized, systemImage: Symbol.location) {
+                TintedGlassCapsuleButton(label: state.fullName, systemImage: Symbol.location) {
                     onSelect(state)
                 }
             }
@@ -31,6 +31,8 @@ struct LocationPickerView: View {
                 Label(Strings.Launch.findLocationAgain, systemImage: Symbol.findLocation)
                     .font(.label)
                     .foregroundStyle(Colour.accent)
+                    .frame(minHeight: .minimumTapTarget)
+                    .contentShape(.rect)
             }
             .buttonStyle(.plain)
             .padding(.top, .space6)

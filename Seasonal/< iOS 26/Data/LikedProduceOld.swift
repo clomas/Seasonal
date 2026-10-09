@@ -1,5 +1,5 @@
 //
-//  LikedProduce.swift
+//  LikedProduceOld.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 2/11/20.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-struct LikedProduce: Codable {
+struct LikedProduceOld: Codable {
 
     let id: Int
 
     func saveItem() {
-        LocalDataHandler.save(self, with: "\(id)")
+        LocalDataHandlerOld.save(self, with: "\(id)")
     }
 
     func deleteItem() {
-        LocalDataHandler.delete("\(id)")
+        LocalDataHandlerOld.delete("\(id)")
     }
 }

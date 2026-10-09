@@ -14,11 +14,11 @@ import Testing
 struct StoredSelectedTabTests {
 
     @Test func browsingTabsRoundTrip() {
-        StoredSelectedTab.storeTab(.seasons(.winter))
-        #expect(StoredSelectedTab.tab == .seasons(Seasons.currentPeriod))
+        StoredSelectedTab.storeTab(.seasons)
+        #expect(StoredSelectedTab.tab == .seasons)
 
-        StoredSelectedTab.storeTab(.months(.march))
-        #expect(StoredSelectedTab.tab == .months(Months.currentPeriod))
+        StoredSelectedTab.storeTab(.months)
+        #expect(StoredSelectedTab.tab == .months)
 
         StoredSelectedTab.storeTab(.favourites)
         #expect(StoredSelectedTab.tab == .favourites)

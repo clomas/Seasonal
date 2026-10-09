@@ -6,26 +6,25 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
-import CoreLocation
 import Network
 import SwiftUI
-import UIKit
 
 @available(iOS 26, *)
 @MainActor
-final class AppCoordinator: ObservableObject, @preconcurrency AppCoordinatorVersionProtocol {
+@Observable
+final class AppCoordinator: AppCoordinatorVersionProtocol {
 
     let produceStore = ProduceStore()
 
-    private let window: UIWindow?
+    @ObservationIgnored private let window: UIWindow?
+    @ObservationIgnored private let locationService = LocationService()
 
-    @Published var state: AppCoordinatorState = .initial
+    var state: AppCoordinatorState = .initial
 
-    private var currentLocation: StateLocation = .noState
-    private var networkService: NetworkService?
-    private var locationManager: LocationService?
-    private var cloudTask: Task<Void, Never>?
-    private var locationTask: Task<Void, Never>?
+    @ObservationIgnored private var currentLocation: StateLocation = .noState
+    @ObservationIgnored private var networkTask: Task<Void, Never>?
+    @ObservationIgnored private var locationTask: Task<Void, Never>?
+    @ObservationIgnored private var cloudTask: Task<Void, Never>?
 
     private var savedLocation: StateLocation {
         StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
@@ -47,28 +46,26 @@ final class AppCoordinator: ObservableObject, @preconcurrency AppCoordinatorVers
 
     func start() {
         let rootScreen = RootScreen()
-            .environmentObject(self)
-            .environmentObject(produceStore)
+            .environment(self)
+            .environment(produceStore)
 
         window?.rootViewController = UIHostingController(rootView: rootScreen)
+        window?.makeKeyAndVisible()
 
 #if DEBUG
-        // Boots on the preview fixtures so UI tests don't depend on reaching CloudKit.
         if CommandLine.arguments.contains("use-mock-data") {
             produceStore.loadMockData(previewProduce)
             state = .dataIsReady
-            window?.makeKeyAndVisible()
             return
         }
 #endif
 
-        networkService = NetworkService(delegate: self)
-        window?.makeKeyAndVisible()
+        waitForNetwork()
     }
 
     func retryStart() {
         state = .initial
-        Task { await networkService?.retry() }
+        waitForNetwork()
     }
 
     func retryFetchData() {
@@ -76,7 +73,6 @@ final class AppCoordinator: ObservableObject, @preconcurrency AppCoordinatorVers
         fetchProduce(for: currentLocation)
     }
 
-    /// Stores the location only if none is saved yet; use `changeLocation(to:)` to replace it.
     func chooseInitialLocation(_ location: StateLocation) {
         if GlobalSettings.location.state.isEmpty {
             GlobalSettings.location = Location(state: location.rawValue)
@@ -94,32 +90,36 @@ final class AppCoordinator: ObservableObject, @preconcurrency AppCoordinatorVers
         fetchProduce(for: location)
     }
 
-    private func fetchProduce(for location: StateLocation) {
-        cloudTask?.cancel()
-        cloudTask = Task { @MainActor in
-            let result = await produceStore.fetchFromCloudKit(for: location)
-            if Task.isCancelled { return }
-
-            switch result {
-            case .success:
-                state = .dataIsReady
-            case let .failure(ckError):
-                state = .dataFailed(errorTitle: ckError.errorTitle, errorMessage: ckError.errorMessage)
+    private func waitForNetwork() {
+        networkTask?.cancel()
+        networkTask = Task {
+            for await path in NWPathMonitor() {
+                guard path.status == .satisfied else {
+                    state = .networkFailed
+                    continue
+                }
+                networkIsAvailable()
+                return
             }
         }
     }
-}
 
-// MARK: - LocationDelegate
+    private func networkIsAvailable() {
+        state = .initial
+        if savedLocation != .noState {
+            currentLocation = savedLocation
+            fetchProduce(for: savedLocation)
+        } else {
+            detectLocation()
+        }
+    }
 
-@available(iOS 26, *)
-extension AppCoordinator: @preconcurrency LocationDelegate {
-
-    func locationReady(location: CLLocation?) {
+    private func detectLocation() {
         locationTask?.cancel()
-        locationTask = Task { @MainActor in
+        locationTask = Task {
+            let location = await locationService.currentLocation()
             let detectedState = await LocationInformationManager().parseLocation(location)
-            if Task.isCancelled { return }
+            guard !Task.isCancelled else { return }
 
             if detectedState != .noState {
                 currentLocation = detectedState
@@ -133,26 +133,19 @@ extension AppCoordinator: @preconcurrency LocationDelegate {
             }
         }
     }
-}
 
-// MARK: - NetworkObserverDelegate
+    private func fetchProduce(for location: StateLocation) {
+        cloudTask?.cancel()
+        cloudTask = Task {
+            let result = await produceStore.fetchFromCloudKit(for: location)
+            guard !Task.isCancelled else { return }
 
-@available(iOS 26, *)
-extension AppCoordinator: NetworkObserverDelegate {
-
-    func internetStatusDidChange(status: NWPath.Status) {
-        guard status == .satisfied else {
-            state = .networkFailed
-            return
-        }
-
-        Task { await networkService?.stop() }
-
-        if savedLocation != .noState {
-            currentLocation = savedLocation
-            fetchProduce(for: savedLocation)
-        } else {
-            locationManager = LocationService(delegate: self)
+            switch result {
+            case .success:
+                state = .dataIsReady
+            case let .failure(ckError):
+                state = .dataFailed(errorTitle: ckError.errorTitle, errorMessage: ckError.errorMessage)
+            }
         }
     }
 }

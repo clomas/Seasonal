@@ -19,8 +19,8 @@ struct PeriodJumpPicker<Period: PeriodType>: View {
 
     var body: some View {
         Picker(title, selection: selection) {
-            ForEach(Array(Period.allCases.enumerated()), id: \.offset) { index, period in
-                Text(period.title).tag(index)
+            ForEach(Period.allCases, id: \.self) { period in
+                Text(period.title).tag(period.index)
             }
         }
     }

@@ -20,18 +20,16 @@ struct ProduceList: View {
     var searchText = ""
 
     var body: some View {
-        ZStack {
-            Colour.background.ignoresSafeArea()
-
-            if filteredProduce.isEmpty {
-                EmptyStateView(icon: parentTab.emptyListIcon, message: emptyMessage)
-                    .padding(.bottom, .largePadding)
+        let produce = filteredProduce
+        Group {
+            if produce.isEmpty {
+                emptyState
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
-                        ForEach(filteredProduce, id: \.id) { item in
-                            ProduceListRow(produce: item, showMonths: !parentTab.isSeasons)
-                                .padding(.topListRowInset)
+                        ForEach(produce) { item in
+                            ProduceListRow(produce: item, showMonths: parentTab != .seasons)
+                                .padding(.top, .space1)
                                 .transition(reduceMotion ? .opacity : .slide.combined(with: .opacity))
                         }
                     }
@@ -42,16 +40,28 @@ struct ProduceList: View {
                 .scrollDismissesKeyboard(.immediately)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Colour.background)
     }
 
-    /// Kept a pure function of the inputs so it can be unit tested without rendering.
     var filteredProduce: [Produce] {
         produce
             .filter { selectedCategory == .all || $0.category == selectedCategory }
-            .filter { searchText.isEmpty || $0.name?.localizedCaseInsensitiveContains(searchText) == true }
+            .filter { searchText.isEmpty || $0.name?.localizedStandardContains(searchText) == true }
     }
 
-    private var emptyMessage: String {
-        searchText.isEmpty ? parentTab.emptyProduceListViewMessage : Strings.Search.noResults
+    @ViewBuilder
+    private var emptyState: some View {
+        if searchText.isEmpty {
+            ContentUnavailableView {
+                Label {
+                    Text(parentTab.emptyProduceListViewMessage)
+                } icon: {
+                    parentTab.emptyListIcon
+                }
+            }
+        } else {
+            ContentUnavailableView.search
+        }
     }
 }

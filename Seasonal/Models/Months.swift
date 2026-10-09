@@ -22,7 +22,10 @@ enum Months: Int, PeriodType, Codable {
 	case november
 	case december
 
-	static let currentPeriod = Months(containing: Date())
+	/// Computed, not stored, so an app left running into a new month picks it up.
+	static var currentPeriod: Months {
+		Months(containing: .now)
+	}
 
 	init(containing date: Date, calendar: Calendar = .current) {
 		self = Months(rawValue: calendar.component(.month, from: date)) ?? .december

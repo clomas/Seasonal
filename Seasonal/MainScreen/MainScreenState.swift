@@ -7,7 +7,6 @@
 //
 
 import Observation
-import SwiftUI
 
 @MainActor
 @Observable
@@ -19,8 +18,14 @@ final class MainScreenState {
     }
     var selectedCategory: ProduceCategory = .all
     var searchQuery = ""
+    /// The search tab builds a second copy of the screen it was opened from; both copies' pagers
+    /// share these so they stay on the same period.
+    var currentMonthIndex = Months.currentPeriod.index
+    var currentSeasonIndex = Seasons.currentPeriod.index
+    /// Set by the title menu's picker; the pager scrolls there and clears it.
+    var jumpToMonthIndex: Int?
+    var jumpToSeasonIndex: Int?
 
-    /// The tab the search tab mirrors while searching.
     private(set) var searchOrigin: MainTabScreen.Tabs = StoredSelectedTab.tab
 
     var browsingTab: MainTabScreen.Tabs {

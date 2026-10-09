@@ -36,6 +36,12 @@ struct ProduceListTests {
         #expect(list.filteredProduce.map(\.id) == [1])
     }
 
+    @Test func searchIgnoresDiacritics() {
+        let list = ProduceList(produce: [.fixture(id: 3, name: "Jalapeño")], parentTab: .favourites, searchText: "jalapeno")
+
+        #expect(list.filteredProduce.map(\.id) == [3])
+    }
+
     @Test func searchAndCategoryCombine() {
         let list = ProduceList(produce: produce, parentTab: .favourites, selectedCategory: .vegetables, searchText: "app")
 

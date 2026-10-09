@@ -23,7 +23,7 @@ protocol InitialCoordinatorDelegate: AnyObject {
 	func locationNotFound()
 }
 
-final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObserverDelegate, @preconcurrency AppCoordinatorVersionProtocol {
+final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObserverDelegateOld, AppCoordinatorVersionProtocol {
 
 	let cloudKitDataService: CloudKitDataServiceOld = CloudKitDataServiceOld()
 
@@ -31,7 +31,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 	private let navigationController: UINavigationController = UINavigationController()
 
 	private(set) var childCoordinators: [Coordinator] = []
-	private var networkService: NetworkService?
+	private var networkService: NetworkServiceOld?
 	private var currentLocation: StateLocation = .noState
 	private var produceData: [ProduceOld]?
 	private var isFirstRun: Bool {
@@ -55,7 +55,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 
 	func start() {
 		loadInitialViewCoordinator()
-		networkService = NetworkService(delegate: self)
+		networkService = NetworkServiceOld(delegate: self)
 
 		window?.rootViewController = navigationController
 		window?.makeKeyAndVisible()

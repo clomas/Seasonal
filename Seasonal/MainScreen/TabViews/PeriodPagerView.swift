@@ -11,7 +11,7 @@ import SwiftUI
 @available(iOS 26, *)
 struct PeriodPagerView<Period: PeriodType>: View {
 
-    @EnvironmentObject var produceStore: ProduceStore
+    @Environment(ProduceStore.self) private var produceStore
     @Environment(MainScreenState.self) private var state
 
     @Binding var jumpToIndex: Int?
@@ -57,8 +57,8 @@ struct PeriodPagerView<Period: PeriodType>: View {
 #Preview {
     NavigationStack {
         PeriodPagerView<Months>()
-            .environmentObject(previewCoordinator)
-            .environmentObject(previewCoordinator.produceStore)
+            .environment(previewCoordinator)
+            .environment(previewCoordinator.produceStore)
             .environment(MainScreenState())
     }
 }

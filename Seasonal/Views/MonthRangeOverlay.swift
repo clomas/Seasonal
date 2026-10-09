@@ -75,7 +75,7 @@ struct MonthRangeOverlay: View {
 
         return Capsule()
             .fill(Colour.capsuleFill)
-            .overlay(Capsule().stroke(Colour.capsuleStroke, lineWidth: strokeWidth))
+            .stroke(Colour.capsuleStroke, lineWidth: strokeWidth)
             .frame(width: CGFloat(count) * monthWidth, height: height)
             .offset(x: xOffset)
     }

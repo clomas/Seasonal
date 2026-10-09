@@ -11,24 +11,25 @@ import CloudKit
 @available(iOS 26, *)
 struct ProduceServicesManager: ProduceProviding {
 
+	private let localLikes = LocalLikes()
+
 	func produce(for location: StateLocation) async -> Result<[Produce], CKError> {
-		await ProduceCloudDataService(location: location).getData()
+		await ProduceCloudDataService(location: location, localLikes: localLikes).getData()
 	}
 
-	func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> Result<[Produce], CKError> {
-		await ProduceCloudDataService(location: location).getLikes(basedOn: baseProduce)
+	func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
+		await ProduceCloudDataService(location: location, localLikes: localLikes).getLikes(basedOn: baseProduce)
 	}
 
 	func updateLike(id: Int, liked: Bool) async {
 		let location = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
-		let service = ProduceCloudDataService(location: location)
-		let likedProduce = LikedProduce(id: id)
+		let service = ProduceCloudDataService(location: location, localLikes: localLikes)
 
 		if liked {
-			likedProduce.saveItem()
+			localLikes.save(id)
 			await service.saveLike(id: id)
 		} else {
-			likedProduce.deleteItem()
+			localLikes.delete(id)
 			await service.deleteLike(id: id)
 		}
 	}

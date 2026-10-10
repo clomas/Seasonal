@@ -21,8 +21,6 @@ struct RootScreen: View {
 				InitialScreen()
 			}
 		}
-		.animation(.easeInOut, value: coordinator.state == .dataIsReady)
-		.transition(.opacity)
-		.preferredColorScheme(ThemeStore.shared.colorScheme)
+		.transition(.opacity.animation(.easeInOut))
 	}
 }

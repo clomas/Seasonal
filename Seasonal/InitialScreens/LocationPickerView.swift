@@ -11,6 +11,7 @@ import SwiftUI
 @available(iOS 26, *)
 struct LocationPickerView: View {
 
+    let isFindingLocation: Bool
     let onSelect: (StateLocation) -> Void
     let onFindLocationAgain: () -> Void
 
@@ -28,14 +29,22 @@ struct LocationPickerView: View {
             }
 
             Button(action: onFindLocationAgain) {
+                // Hidden rather than swapped out, so the button keeps its size while the spinner shows.
                 Label(Strings.Launch.findLocationAgain, systemImage: Symbol.findLocation)
-                    .font(.label)
-                    .foregroundStyle(Colour.accent)
-                    .frame(minHeight: .minimumTapTarget)
-                    .contentShape(.rect)
+                    .opacity(isFindingLocation ? 0 : 1)
+                    .overlay {
+                        if isFindingLocation {
+                            ProgressView()
+                        }
+                    }
             }
-            .buttonStyle(.plain)
-            .padding(.top, .space6)
+            .font(.buttonLabel)
+            .buttonStyle(.glass)
+            .disabled(isFindingLocation)
+            .accessibilityValue(isFindingLocation ? Strings.Launch.loading : "")
+                .controlSize(.large)
+                .tint(Colour.accent)
+                .padding(.top, .space6)
         }
         .padding(.horizontal, .space6)
     }
@@ -43,5 +52,5 @@ struct LocationPickerView: View {
 
 @available(iOS 26, *)
 #Preview {
-    LocationPickerView(onSelect: { _ in }, onFindLocationAgain: {})
+    LocationPickerView(isFindingLocation: false, onSelect: { _ in }, onFindLocationAgain: {})
 }

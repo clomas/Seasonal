@@ -50,7 +50,7 @@ struct BrowsingScreen: View {
                         CategoryFilterButton(selectedCategory: $state.selectedCategory)
                     }
                     ToolbarItem(placement: .topBarTrailing) {
-                        InfoButton(action: onShowInfo)
+                        SettingsButton(action: onShowInfo)
                     }
                 }
                 .searchableIfPresent(text: isSearchable ? $state.searchQuery : nil, prompt: Strings.Search.prompt)

@@ -21,5 +21,8 @@ enum Colour {
 	static let background = Color(.tableViewCell)
 	static let emptyHeartGradient1 = Color(.emptyHeartGradient1)
 	static let emptyHeartGradient2 = Color(.emptyHeartGradient2)
-	static let likedHeartGradient: [Color] = [.red, .pink, .white]
+	@available(iOS 26, *)
+	static var likedHeartGradient: [Color] {
+		[.pink.mix(with: .white, by: 0.3), .red, .red.mix(with: .black, by: 0.3)]
+	}
 }

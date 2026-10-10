@@ -47,12 +47,12 @@ struct ThemeContrastTests {
     }
 
     @Test(arguments: [
-        (Appearance.automatic, ColorScheme?.none),
+        (Appearance.automatic, UIUserInterfaceStyle.unspecified),
         (.light, .light),
         (.dark, .dark)
     ])
-    func appearanceColorScheme(_ appearance: Appearance, expected: ColorScheme?) {
-        #expect(appearance.colorScheme == expected)
+    func appearanceInterfaceStyle(_ appearance: Appearance, expected: UIUserInterfaceStyle) {
+        #expect(appearance.userInterfaceStyle == expected)
     }
 
     // MARK: - Helpers

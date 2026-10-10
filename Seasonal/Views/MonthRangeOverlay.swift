@@ -8,8 +8,8 @@
 
 import SwiftUI
 
-/// Capsules behind each run of consecutive in-season months; a run touching both December and
-/// January extends past the edge so the wrap-around reads as continuous.
+/// Capsules behind each run of consecutive in-season months. Each end is a true semicircle centred
+/// on its month, so the current-month circle sits exactly over it.
 struct MonthRangeOverlay: View {
 
     let months: [Months]
@@ -29,10 +29,6 @@ struct MonthRangeOverlay: View {
 
     private var monthWidth: CGFloat {
         totalWidth / CGFloat(monthCount)
-    }
-
-    private var wrapsAroundYearEnd: Bool {
-        months.contains(.january) && months.contains(.december)
     }
 
     private var ranges: [ClosedRange<Int>] {
@@ -62,21 +58,17 @@ struct MonthRangeOverlay: View {
     }
 
     private func capsule(for range: ClosedRange<Int>) -> some View {
-        var count = range.count
-        var xOffset = CGFloat(range.lowerBound - 1) * monthWidth
+        let firstMonth = CGFloat(range.lowerBound - 1)
+        let lastMonth = CGFloat(range.upperBound - 1)
 
-        if range.lowerBound == 1 && wrapsAroundYearEnd {
-            count += 1
-            xOffset -= monthWidth
-        }
-        if range.upperBound == monthCount && wrapsAroundYearEnd {
-            count += 1
-        }
-
-        return Capsule()
+        return Capsule(style: .circular)
             .fill(Colour.capsuleFill)
             .stroke(Colour.capsuleStroke, lineWidth: strokeWidth)
-            .frame(width: CGFloat(count) * monthWidth, height: height)
-            .offset(x: xOffset)
+            .frame(width: (lastMonth - firstMonth) * monthWidth + height, height: height)
+            .offset(x: centre(ofMonth: firstMonth) - height / 2)
+    }
+
+    private func centre(ofMonth index: CGFloat) -> CGFloat {
+        (index + 0.5) * monthWidth
     }
 }

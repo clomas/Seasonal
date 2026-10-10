@@ -1,5 +1,5 @@
 //
-//  InfoButton.swift
+//  SettingsButton.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 15/6/2026.
@@ -9,18 +9,18 @@
 import SwiftUI
 
 @available(iOS 26.0, *)
-struct InfoButton: View {
+struct SettingsButton: View {
 
     let action: () -> Void
 
     var body: some View {
-        Button(Strings.Info.button, systemImage: Symbol.info, action: action)
+        Button(Strings.Info.button, systemImage: Symbol.settings, action: action)
             .tint(.primary)
-            .accessibilityIdentifier("infoButton")
+            .accessibilityIdentifier("settingsButton")
     }
 }
 
 @available(iOS 26.0, *)
 #Preview {
-    InfoButton {}
+    SettingsButton {}
 }

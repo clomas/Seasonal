@@ -15,7 +15,7 @@ struct LikedHeartView: View {
 	let liked: Bool
 
 	private let unlikedScale: CGFloat = 0.9
-	private let likedGradientRadius: CGFloat = 65
+	private let likedGradientSpread: CGFloat = 1.1
 	private let unlikedGradientRadius: CGFloat = 50
 
 	@ScaledMetric(relativeTo: .title2) private var size: CGFloat = 40
@@ -33,7 +33,7 @@ struct LikedHeartView: View {
 
 	private var fill: RadialGradient {
 		liked
-			? RadialGradient(colors: Colour.likedHeartGradient, center: .topLeading, startRadius: 0, endRadius: likedGradientRadius)
+			? RadialGradient(colors: Colour.likedHeartGradient, center: .topLeading, startRadius: 0, endRadius: size * likedGradientSpread)
 			: RadialGradient(
 				colors: [Colour.emptyHeartGradient1, Colour.emptyHeartGradient2],
 				center: .topLeading,

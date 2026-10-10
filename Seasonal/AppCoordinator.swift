@@ -19,12 +19,16 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
     @ObservationIgnored private let window: UIWindow?
     @ObservationIgnored private let locationService = LocationService()
 
-    var state: AppCoordinatorState = .initial
+    var state: AppCoordinatorState = .initial {
+        didSet { isFindingLocation = false }
+    }
+    private(set) var isFindingLocation = false
 
     @ObservationIgnored private var currentLocation: StateLocation = .noState
     @ObservationIgnored private var networkTask: Task<Void, Never>?
     @ObservationIgnored private var locationTask: Task<Void, Never>?
     @ObservationIgnored private var cloudTask: Task<Void, Never>?
+    @ObservationIgnored private var appearanceTask: Task<Void, Never>?
 
     private var savedLocation: StateLocation {
         StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
@@ -50,6 +54,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
             .environment(produceStore)
 
         window?.rootViewController = UIHostingController(rootView: rootScreen)
+        followAppearanceSetting()
         window?.makeKeyAndVisible()
 
 #if DEBUG
@@ -68,6 +73,12 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
         waitForNetwork()
     }
 
+    /// Network is already up by the time the picker shows, so this skips straight to detection.
+    func findLocationAgain() {
+        isFindingLocation = true
+        detectLocation()
+    }
+
     func retryFetchData() {
         state = .initial
         fetchProduce(for: currentLocation)
@@ -78,6 +89,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
             GlobalSettings.location = Location(state: location.rawValue)
         }
         currentLocation = location
+        state = .initial
         fetchProduce(for: location)
     }
 
@@ -88,6 +100,17 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
         produceStore.prepareForLocationChange()
         state = .initial
         fetchProduce(for: location)
+    }
+
+    /// Set on the window rather than with `preferredColorScheme`, which doesn't restyle a sheet
+    /// that's already open or reliably undo an override when switched back to automatic.
+    private func followAppearanceSetting() {
+        window?.overrideUserInterfaceStyle = ThemeStore.shared.appearance.userInterfaceStyle
+        appearanceTask = Task {
+            for await appearance in Observations({ ThemeStore.shared.appearance }) {
+                window?.overrideUserInterfaceStyle = appearance.userInterfaceStyle
+            }
+        }
     }
 
     private func waitForNetwork() {

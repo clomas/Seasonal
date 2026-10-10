@@ -16,17 +16,22 @@ struct InitialScreen: View {
 	private let stateChangeAnimationDuration: TimeInterval = 1.2
 
 	var body: some View {
-		// Scrolls only when large Dynamic Type sizes push the content past the screen.
-		ViewThatFits(in: .vertical) {
-			LaunchStatusView()
-			ScrollView {
-				LaunchStatusView()
+		ZStack {
+			// Scrolls only when large Dynamic Type sizes push the content past the screen.
+			ViewThatFits(in: .vertical) {
+				LaunchStatusView(state: appCoordinator.state)
+				ScrollView {
+					LaunchStatusView(state: appCoordinator.state)
+				}
 			}
+			// A new identity per state cross-fades it. The animation is on the transition only:
+			// animating the state change itself also animates the new layout in from the top-left.
+			.id(appCoordinator.state)
+			.transition(.opacity.animation(.easeInOut(duration: stateChangeAnimationDuration)))
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.padding(.bottom, .space8)
 		.background(Colour.background)
-		.animation(.easeInOut(duration: stateChangeAnimationDuration), value: appCoordinator.state)
 		.onChange(of: appCoordinator.state) {
 			AccessibilityNotification.ScreenChanged().post()
 		}

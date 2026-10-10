@@ -12,7 +12,7 @@ enum Symbol {
     static let months = "calendar"
     static let seasons = "cloud.sun"
     static let search = "magnifyingglass"
-    static let info = "info.circle"
+    static let settings = "gearshape"
     static let nothingToShow = "xmark.circle"
     static let sourceCode = "chevron.left.forwardslash.chevron.right"
     static let privacy = "hand.raised"

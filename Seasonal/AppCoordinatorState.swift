@@ -7,7 +7,7 @@
 //
 
 @available(iOS 26, *)
-enum AppCoordinatorState: Equatable {
+enum AppCoordinatorState: Hashable {
     case initial
     case dataIsReady
     case networkFailed

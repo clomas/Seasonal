@@ -13,9 +13,12 @@ struct LaunchStatusView: View {
 
 	@Environment(AppCoordinator.self) private var appCoordinator
 
+	/// An input rather than read from the coordinator, so a copy fading out keeps showing its old state.
+	let state: AppCoordinatorState
+
 	var body: some View {
 		VStack {
-			switch appCoordinator.state {
+			switch state {
 			case .initial:
 				AppLogo()
 				ProgressView()
@@ -34,7 +37,11 @@ struct LaunchStatusView: View {
 				)
 			case .locationNotFound:
 				AppLogo()
-				LocationPickerView(onSelect: appCoordinator.chooseInitialLocation, onFindLocationAgain: appCoordinator.retryStart)
+				LocationPickerView(
+					isFindingLocation: appCoordinator.isFindingLocation,
+					onSelect: appCoordinator.chooseInitialLocation,
+					onFindLocationAgain: appCoordinator.findLocationAgain
+				)
 			case .dataIsReady:
 				EmptyView()
 			}

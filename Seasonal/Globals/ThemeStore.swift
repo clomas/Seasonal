@@ -24,7 +24,6 @@ final class ThemeStore {
 
 	var accent: Color { theme.accent }
 	var onAccent: Color { theme.onAccent }
-	var colorScheme: ColorScheme? { appearance.colorScheme }
 
 	init() {
 		theme = GlobalSettings.theme

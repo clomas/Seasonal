@@ -13,7 +13,7 @@ import Testing
 
 /// Reference images are recorded on the iPhone 17 Pro simulator (iOS 26); other devices will differ.
 @MainActor
-@Suite(.tags(.snapshot))
+@Suite(.tags(.snapshot), .freshTheme)
 struct ComponentSnapshotTests {
 
     private let rowWidth: CGFloat = 402
@@ -35,6 +35,7 @@ struct ComponentSnapshotTests {
             VStack {
                 MonthsInSeasonCapsuleView(months: [.march, .april, .may], thisMonth: fixedMonth)
                 MonthsInSeasonCapsuleView(months: [.december, .january, .september], thisMonth: fixedMonth)
+                MonthsInSeasonCapsuleView(months: [.september, .october, .november], thisMonth: fixedMonth)
                 MonthsInSeasonCapsuleView(months: Months.allCases, thisMonth: fixedMonth)
             }
             .frame(width: rowWidth)
@@ -72,7 +73,7 @@ struct ComponentSnapshotTests {
     }
 
     @Test func locationPicker() {
-        assertComponentSnapshot(LocationPickerView(onSelect: { _ in }, onFindLocationAgain: {}).frame(width: rowWidth))
+        assertComponentSnapshot(LocationPickerView(isFindingLocation: false, onSelect: { _ in }, onFindLocationAgain: {}).frame(width: rowWidth))
     }
 
     @Test func appLogo() {

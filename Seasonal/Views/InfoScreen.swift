@@ -36,6 +36,8 @@ struct InfoScreen: View {
                             Text(state.fullName).tag(state)
                         }
                     }
+                    // Menu pickers keep the tint they were created with, so rebuild them when it changes.
+                    .id(themeStore.theme)
                 }
 
                 Section {
@@ -44,11 +46,13 @@ struct InfoScreen: View {
                             Text(theme.title).tag(theme)
                         }
                     }
+                    .id(themeStore.theme)
                     Picker(Strings.Info.appearancePicker, selection: $themeStore.appearance) {
                         ForEach(Appearance.allCases) { appearance in
                             Text(appearance.title).tag(appearance)
                         }
                     }
+                    .id(themeStore.theme)
                 } header: {
                     Text(Strings.Info.appearanceSection)
                 } footer: {

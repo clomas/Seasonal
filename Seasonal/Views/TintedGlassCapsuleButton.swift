@@ -37,7 +37,7 @@ struct TintedGlassCapsuleButton: View {
                 }
             }
             .padding(.horizontal, style == .list ? .space5 : .space8)
-            .padding(.vertical, .space4)
+            .padding(.vertical, style == .list ? .space3 : .space4)
             .frame(maxWidth: style == .list ? listMaxWidth : nil)
             .glassEffect(
                 .regular.tint(Colour.inSeason.opacity(style == .list ? listTintOpacity : prominentTintOpacity)).interactive(),

@@ -109,7 +109,7 @@ enum Strings {
     }
 
     enum Info {
-        static let button = String(localized: "App information")
+        static let button = String(localized: "Settings")
         static let title = String(localized: "Seasonal")
         static let locationSection = String(localized: "Location")
         static let produceLocation = String(localized: "Produce location")
@@ -120,7 +120,7 @@ enum Strings {
         static let appearanceSection = String(localized: "Appearance")
         static let themePicker = String(localized: "Colour")
         static let appearancePicker = String(localized: "Mode")
-        static let themeFooter = String(localized: "Match season changes the accent colour through the year.")
+        static let themeFooter = String(localized: "Match current season changes the accent colour through the year.")
 
         // swiftlint:disable:next line_length
         static func intro(location: String) -> String { String(localized: "Location of Produce Displayed: \(location).\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!") }
@@ -131,7 +131,7 @@ enum Strings {
     }
 
     enum Theme {
-        static let automatic = String(localized: "Match season")
+        static let automatic = String(localized: "Match current season")
         static let fresh = String(localized: "Fresh")
         static let citrus = String(localized: "Citrus")
         static let berry = String(localized: "Berry")

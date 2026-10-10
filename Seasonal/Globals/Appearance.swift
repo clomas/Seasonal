@@ -21,9 +21,9 @@ enum Appearance: String, Codable, CaseIterable, Identifiable {
 		}
 	}
 
-	var colorScheme: ColorScheme? {
+	var userInterfaceStyle: UIUserInterfaceStyle {
 		switch self {
-		case .automatic: nil
+		case .automatic: .unspecified
 		case .light: .light
 		case .dark: .dark
 		}

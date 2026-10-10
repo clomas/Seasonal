@@ -14,13 +14,6 @@ struct ProduceCacheTests {
 
     private let cache = ProduceCache()
 
-    @Test func allProduceSortedAlphabetically() {
-        let banana = Produce.fixture(id: 1, name: "Banana")
-        let apple = Produce.fixture(id: 2, name: "Apple")
-
-        #expect(cache.allProduce(from: [banana, apple]).map(\.name) == ["Apple", "Banana"])
-    }
-
     @Test func favouritesReturnsOnlyLiked() {
         let liked = Produce.fixture(id: 1, name: "A", liked: true)
         let notLiked = Produce.fixture(id: 2, name: "B", liked: false)

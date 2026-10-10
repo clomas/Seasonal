@@ -14,7 +14,7 @@ struct MainTabScreen: View {
 
     @State private var state = MainScreenState()
     @State private var showTip = !GlobalSettings.swipeTipShown.swipe
-    @State private var showInfo = false
+    @State private var isShowingSettings = false
 
     private let tipDismissDelay: Duration = .milliseconds(500)
     private let tipFadeDuration: TimeInterval = 1.5
@@ -22,16 +22,16 @@ struct MainTabScreen: View {
     var body: some View {
         TabView(selection: $state.selectedTab) {
             Tab(Tabs.favourites.title, systemImage: Symbol.favourites, value: .favourites) {
-                browsingScreen(for: .favourites)
+                produceTab(for: .favourites)
             }
             Tab(Tabs.months.title, systemImage: Symbol.months, value: .months) {
-                browsingScreen(for: .months)
+                produceTab(for: .months)
             }
             Tab(Tabs.seasons.title, systemImage: Symbol.seasons, value: .seasons) {
-                browsingScreen(for: .seasons)
+                produceTab(for: .seasons)
             }
             Tab(Tabs.search.title, systemImage: Symbol.search, value: .search, role: .search) {
-                browsingScreen(for: state.searchOrigin, isSearchable: true)
+                produceTab(for: state.searchOrigin, isSearchable: true)
             }
         }
         .accessibilityIdentifier("mainTabView")
@@ -40,8 +40,8 @@ struct MainTabScreen: View {
         .onChange(of: state.selectedTab) { _, newTab in
             StoredSelectedTab.storeTab(newTab)
         }
-        .sheet(isPresented: $showInfo) {
-            InfoScreen()
+        .sheet(isPresented: $isShowingSettings) {
+            SettingsModalScreen()
         }
         .overlay {
             if showTip, let tip {
@@ -65,12 +65,12 @@ struct MainTabScreen: View {
         return { await dismissTipAfterPeek() }
     }
 
-    private func browsingScreen(for tab: Tabs, isSearchable: Bool = false) -> BrowsingScreen {
-        BrowsingScreen(tab: tab, isSearchable: isSearchable, onPeekFinished: peekFinishedHandler, onShowInfo: showInfoScreen)
+    private func produceTab(for tab: Tabs, isSearchable: Bool = false) -> ProduceTabView {
+        ProduceTabView(tab: tab, isSearchable: isSearchable, onPeekFinished: peekFinishedHandler, onShowSettings: showSettings)
     }
 
-    private func showInfoScreen() {
-        showInfo = true
+    private func showSettings() {
+        isShowingSettings = true
     }
 
     private func dismissTipAfterPeek() async {

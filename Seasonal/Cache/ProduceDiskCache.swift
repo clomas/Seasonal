@@ -8,39 +8,46 @@
 
 import Foundation
 
-/// The base catalogue only changes with an app update, so it's keyed by app version.
-/// Liked state isn't trusted from here; it's always refreshed from CloudKit.
+/// Keeps each region's catalogue indefinitely, so it's only downloaded once. Liked state isn't
+/// trusted from here; it's always refreshed from CloudKit.
 struct ProduceDiskCache: ProduceDiskCaching {
 
+    /// Bump this when the produce data in CloudKit changes (new items, new icons) to discard every
+    /// cached region once.
+    static let currentCatalogueVersion = 1
+
     private struct Payload: Codable {
-        let location: String
-        let appVersion: String
+        let catalogueVersion: Int
         let produce: [Produce]
     }
 
-    private let fileURL: URL
-    private let appVersion = Bundle.main.shortVersion ?? "0"
+    private let directory: URL
+    private let catalogueVersion: Int
 
-    init(fileURL: URL = .cachesDirectory.appending(path: "produce_base_cache.json")) {
-        self.fileURL = fileURL
+    init(
+        directory: URL = .cachesDirectory.appending(path: "Produce", directoryHint: .isDirectory),
+        catalogueVersion: Int = Self.currentCatalogueVersion
+    ) {
+        self.directory = directory
+        self.catalogueVersion = catalogueVersion
     }
 
     func load(for location: StateLocation) -> [Produce]? {
-        guard let data = try? Data(contentsOf: fileURL),
+        guard let data = try? Data(contentsOf: fileURL(for: location)),
               let payload = try? JSONDecoder().decode(Payload.self, from: data),
-              payload.location == location.rawValue,
-              payload.appVersion == appVersion
+              payload.catalogueVersion == catalogueVersion
         else { return nil }
         return payload.produce
     }
 
     func save(_ produce: [Produce], for location: StateLocation) {
-        let payload = Payload(location: location.rawValue, appVersion: appVersion, produce: produce)
+        let payload = Payload(catalogueVersion: catalogueVersion, produce: produce)
         guard let data = try? JSONEncoder().encode(payload) else { return }
-        try? data.write(to: fileURL, options: .atomic)
+        try? FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try? data.write(to: fileURL(for: location), options: .atomic)
     }
 
-    func clear() {
-        try? FileManager.default.removeItem(at: fileURL)
+    private func fileURL(for location: StateLocation) -> URL {
+        directory.appending(path: "\(location.rawValue).json", directoryHint: .notDirectory)
     }
 }

@@ -19,8 +19,4 @@ final class InMemoryProduceDiskCache: ProduceDiskCaching {
     func save(_ produce: [Produce], for location: StateLocation) {
         stored[location] = produce
     }
-
-    func clear() {
-        stored = [:]
-    }
 }

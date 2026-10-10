@@ -10,10 +10,6 @@ final class Cache<Key: Hashable, Value> {
 
 	private var storage: [Key: Value] = [:]
 
-	func peek(for key: Key) -> Value? {
-		storage[key]
-	}
-
 	func value(for key: Key, orInsert build: () -> Value) -> Value {
 		if let cached = storage[key] {
 			return cached

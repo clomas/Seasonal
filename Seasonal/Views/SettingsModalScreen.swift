@@ -1,15 +1,16 @@
 //
-//  InfoScreen.swift
+//  SettingsModalScreen.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 15/6/2026.
 //  Copyright © 2026 Clint Thomas. All rights reserved.
 //
 
+import CloudKit
 import SwiftUI
 
 @available(iOS 26, *)
-struct InfoScreen: View {
+struct SettingsModalScreen: View {
 
     @Environment(AppCoordinator.self) private var coordinator
     @Environment(\.dismiss) private var dismiss
@@ -17,6 +18,9 @@ struct InfoScreen: View {
     @Bindable private var themeStore = ThemeStore.shared
 
     @State private var selectedState = Self.savedState
+    @State private var isChangingLocation = false
+    @State private var locationError: CKError?
+    @State private var isShowingLocationError = false
 
     var body: some View {
         NavigationStack {
@@ -27,59 +31,67 @@ struct InfoScreen: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Section(Strings.Info.locationSection) {
-                    Picker(Strings.Info.produceLocation, selection: $selectedState) {
+                Section(Strings.Settings.locationSection) {
+                    Picker(selection: $selectedState) {
                         if selectedState == .noState {
                             Text(StateLocation.noState.fullName).tag(StateLocation.noState)
                         }
                         ForEach(StateLocation.selectable, id: \.self) { state in
                             Text(state.fullName).tag(state)
                         }
+                    } label: {
+                        HStack(spacing: .space2) {
+                            Text(Strings.Settings.produceLocation)
+                            if isChangingLocation {
+                                ProgressView()
+                            }
+                        }
                     }
+                    .disabled(isChangingLocation)
                     // Menu pickers keep the tint they were created with, so rebuild them when it changes.
                     .id(themeStore.theme)
                 }
 
                 Section {
-                    Picker(Strings.Info.themePicker, selection: $themeStore.theme) {
+                    Picker(Strings.Settings.themePicker, selection: $themeStore.theme) {
                         ForEach(Theme.allCases) { theme in
                             Text(theme.title).tag(theme)
                         }
                     }
                     .id(themeStore.theme)
-                    Picker(Strings.Info.appearancePicker, selection: $themeStore.appearance) {
+                    Picker(Strings.Settings.appearancePicker, selection: $themeStore.appearance) {
                         ForEach(Appearance.allCases) { appearance in
                             Text(appearance.title).tag(appearance)
                         }
                     }
                     .id(themeStore.theme)
                 } header: {
-                    Text(Strings.Info.appearanceSection)
+                    Text(Strings.Settings.appearanceSection)
                 } footer: {
-                    Text(Strings.Info.themeFooter)
+                    Text(Strings.Settings.themeFooter)
                 }
 
-                Section(Strings.Info.aboutSection) {
+                Section(Strings.Settings.aboutSection) {
                     if let url = ExternalLink.sourceCode {
                         Link(destination: url) {
-                            Label(Strings.Info.viewSource, systemImage: Symbol.sourceCode)
+                            Label(Strings.Settings.viewSource, systemImage: Symbol.sourceCode)
                         }
                     }
                     if let url = ExternalLink.privacyPolicy {
                         Link(destination: url) {
-                            Label(Strings.Info.privacyPolicy, systemImage: Symbol.privacy)
+                            Label(Strings.Settings.privacyPolicy, systemImage: Symbol.privacy)
                         }
                     }
                     if let url = ExternalLink.contactEmail {
                         Link(destination: url) {
-                            Label(Strings.Info.getInTouch, systemImage: Symbol.email)
+                            Label(Strings.Settings.getInTouch, systemImage: Symbol.email)
                         }
                     }
                 }
 
                 if let version = Bundle.main.shortVersion {
                     Section {
-                        Text(Strings.Info.version(version))
+                        Text(Strings.Settings.version(version))
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                             .frame(maxWidth: .infinity, alignment: .center)
@@ -87,19 +99,21 @@ struct InfoScreen: View {
                     .listRowBackground(Color.clear)
                 }
             }
-            .navigationTitle(Strings.Info.title)
+            .navigationTitle(Strings.Settings.title)
             .toolbarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .close, action: dismiss.callAsFunction)
-                        .accessibilityIdentifier("closeInfoButton")
+                        .accessibilityIdentifier("closeSettingsButton")
                 }
             }
             .tint(Colour.inSeason)
-            .onChange(of: selectedState) { _, newState in
-                guard newState != Self.savedState else { return }
-                dismiss()
-                coordinator.changeLocation(to: newState)
+            .task(id: selectedState) {
+                await changeLocation(to: selectedState)
+            }
+            .alert(locationError?.errorTitle ?? "", isPresented: $isShowingLocationError) {
+            } message: {
+                Text(locationError?.errorMessage ?? "")
             }
         }
     }
@@ -109,12 +123,25 @@ struct InfoScreen: View {
     }
 
     private var introText: String {
-        Strings.Info.intro(location: Self.savedState.fullName)
+        Strings.Settings.intro(location: Self.savedState.fullName)
+    }
+
+    private func changeLocation(to newState: StateLocation) async {
+        guard newState != Self.savedState else { return }
+
+        isChangingLocation = true
+        locationError = await coordinator.changeLocation(to: newState)
+        isChangingLocation = false
+
+        if locationError != nil {
+            isShowingLocationError = true
+            selectedState = Self.savedState
+        }
     }
 }
 
 @available(iOS 26, *)
 #Preview {
-    InfoScreen()
+    SettingsModalScreen()
         .environment(previewCoordinator)
 }

@@ -21,6 +21,7 @@ final class ProduceStore {
 	private(set) var allProduce: [Produce] = []
 
 	@ObservationIgnored private var likeSync: Task<Void, Never>?
+	@ObservationIgnored private var loadedLocation: StateLocation?
 
 	var favourites: [Produce] {
 		cache.favourites(from: allProduce)
@@ -52,33 +53,24 @@ final class ProduceStore {
 		return sync
 	}
 
-	func prepareForLocationChange() {
-		cache.invalidate()
-		diskCache.clear()
-		allProduce = []
-	}
-
+	/// The current produce stays in place until the new location's arrives, so a failure leaves it untouched.
 	func fetchFromCloudKit(for location: StateLocation) async -> Result<Void, CKError> {
-		if let cached = cache.cachedAllProduce(), !cached.isEmpty {
-			allProduce = cached
-			return .success(())
-		}
+		guard location != loadedLocation else { return .success(()) }
 
+		let result: Result<[Produce], CKError>
 		if let baseProduce = diskCache.load(for: location) {
-			return await apply(.success(service.likes(for: location, basedOn: baseProduce)))
+			result = .success(await service.likes(for: location, basedOn: baseProduce))
+		} else {
+			result = await service.produce(for: location)
+			if case let .success(produceList) = result {
+				diskCache.save(produceList, for: location)
+			}
 		}
 
-		let result = await service.produce(for: location)
-		if case let .success(produceList) = result {
-			diskCache.save(produceList, for: location)
-		}
-		return apply(result)
-	}
-
-	private func apply(_ result: Result<[Produce], CKError>) -> Result<Void, CKError> {
-		result.map { produceList in
+		return result.map { produceList in
 			allProduce = produceList.sortedByName()
-			cache.allProduce(from: produceList)
+			cache.invalidate()
+			loadedLocation = location
 		}
 	}
 }

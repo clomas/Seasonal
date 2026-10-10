@@ -16,5 +16,4 @@ enum GlobalSettings {
 	@UserDefault("swipeTipShown", defaultValue: TipShown(swipe: false)) static var swipeTipShown: TipShown
 	@UserDefault("selectedTheme", defaultValue: .fresh) static var theme: Theme
 	@UserDefault("selectedAppearance", defaultValue: .automatic) static var appearance: Appearance
-	@UserDefault("produceCacheLastAppVersion", defaultValue: "") static var produceCacheAppVersion: String
 }

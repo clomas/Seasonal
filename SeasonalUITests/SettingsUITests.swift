@@ -1,5 +1,5 @@
 //
-//  InfoUITests.swift
+//  SettingsUITests.swift
 //  SeasonalUITests
 //
 //  Created by Clint Thomas on 28/9/2026.
@@ -9,13 +9,13 @@
 import XCTest
 
 @available(iOS 26, *)
-final class InfoUITests: SeasonalUITestCase {
+final class SettingsUITests: SeasonalUITestCase {
 
     private let brightScreen = 0.6
     private let darkScreen = 0.4
     private let appearanceSettleTime: TimeInterval = 1
 
-    func testInfoSheetOpensAndCloses() throws {
+    func testSettingsOpenAndClose() throws {
         try launch()
 
         app.buttons["settingsButton"].tap()
@@ -24,7 +24,7 @@ final class InfoUITests: SeasonalUITestCase {
         XCTAssertTrue(sheet.waitForExistence(timeout: elementTimeout))
         XCTAssertTrue(app.staticTexts["Produce location"].exists)
 
-        sheet.buttons["closeInfoButton"].tap()
+        sheet.buttons["closeSettingsButton"].tap()
 
         XCTAssertTrue(sheet.waitForNonExistence(timeout: elementTimeout))
     }

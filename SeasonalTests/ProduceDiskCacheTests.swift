@@ -12,15 +12,15 @@ import Testing
 
 final class ProduceDiskCacheTests {
 
-    private let fileURL = URL.temporaryDirectory.appending(path: "produce-\(UUID().uuidString).json")
+    private let directory = URL.temporaryDirectory.appending(path: "produce-\(UUID().uuidString)", directoryHint: .isDirectory)
     private let cache: ProduceDiskCache
 
     init() {
-        cache = ProduceDiskCache(fileURL: fileURL)
+        cache = ProduceDiskCache(directory: directory)
     }
 
     deinit {
-        try? FileManager.default.removeItem(at: fileURL)
+        try? FileManager.default.removeItem(at: directory)
     }
 
     @Test func roundTripsForTheSameLocation() throws {
@@ -36,22 +36,26 @@ final class ProduceDiskCacheTests {
         #expect(cache.load(for: .victoria) == nil)
     }
 
-    @Test func differentLocationMisses() {
+    @Test func eachRegionIsKeptSeparately() {
         cache.save([.fixture(id: 1, name: "Apple")], for: .victoria)
+        cache.save([.fixture(id: 2, name: "Mango")], for: .queensland)
 
-        #expect(cache.load(for: .queensland) == nil)
+        #expect(cache.load(for: .victoria)?.map(\.id) == [1])
+        #expect(cache.load(for: .queensland)?.map(\.id) == [2])
+        #expect(cache.load(for: .tasmania) == nil)
     }
 
-    @Test func clearRemovesEverything() {
+    @Test func bumpingTheCatalogueVersionDiscardsEveryRegion() {
         cache.save([.fixture(id: 1, name: "Apple")], for: .victoria)
 
-        cache.clear()
+        let bumped = ProduceDiskCache(directory: directory, catalogueVersion: ProduceDiskCache.currentCatalogueVersion + 1)
 
-        #expect(cache.load(for: .victoria) == nil)
+        #expect(bumped.load(for: .victoria) == nil)
     }
 
     @Test func unreadableFileMisses() throws {
-        try Data("not json".utf8).write(to: fileURL)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        try Data("not json".utf8).write(to: directory.appending(path: "vic.json"))
 
         #expect(cache.load(for: .victoria) == nil)
     }

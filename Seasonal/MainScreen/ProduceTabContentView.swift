@@ -1,5 +1,5 @@
 //
-//  BrowsingContent.swift
+//  ProduceTabContentView.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 4/10/2026.
@@ -9,7 +9,7 @@
 import SwiftUI
 
 @available(iOS 26, *)
-struct BrowsingContent: View {
+struct ProduceTabContentView: View {
 
     @Environment(MainScreenState.self) private var state
     @Environment(ProduceStore.self) private var produceStore

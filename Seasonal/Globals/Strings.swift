@@ -108,7 +108,7 @@ enum Strings {
         static let unavailable = String(localized: "iCloud is temporarily unavailable. Try again later.")
     }
 
-    enum Info {
+    enum Settings {
         static let button = String(localized: "Settings")
         static let title = String(localized: "Seasonal")
         static let locationSection = String(localized: "Location")

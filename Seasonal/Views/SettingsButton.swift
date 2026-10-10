@@ -14,7 +14,7 @@ struct SettingsButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(Strings.Info.button, systemImage: Symbol.settings, action: action)
+        Button(Strings.Settings.button, systemImage: Symbol.settings, action: action)
             .tint(.primary)
             .accessibilityIdentifier("settingsButton")
     }

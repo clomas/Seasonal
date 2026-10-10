@@ -9,5 +9,4 @@
 protocol ProduceDiskCaching {
     func load(for location: StateLocation) -> [Produce]?
     func save(_ produce: [Produce], for location: StateLocation)
-    func clear()
 }

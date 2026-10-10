@@ -6,6 +6,7 @@
 //  Copyright © 2025 Clint Thomas. All rights reserved.
 //
 
+import CloudKit
 import Network
 import SwiftUI
 
@@ -93,13 +94,18 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
         fetchProduce(for: location)
     }
 
-    func changeLocation(to location: StateLocation) {
-        guard location != currentLocation else { return }
-        GlobalSettings.location = Location(state: location.rawValue)
-        currentLocation = location
-        produceStore.prepareForLocationChange()
-        state = .initial
-        fetchProduce(for: location)
+    /// The new location is only saved once its produce has loaded.
+    func changeLocation(to location: StateLocation) async -> CKError? {
+        guard location != currentLocation else { return nil }
+
+        switch await produceStore.fetchFromCloudKit(for: location) {
+        case .success:
+            currentLocation = location
+            GlobalSettings.location = Location(state: location.rawValue)
+            return nil
+        case let .failure(error):
+            return error
+        }
     }
 
     /// Set on the window rather than with `preferredColorScheme`, which doesn't restyle a sheet

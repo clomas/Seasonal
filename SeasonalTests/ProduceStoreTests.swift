@@ -105,13 +105,14 @@ struct ProduceStoreTests {
         #expect(store.favourites.map(\.id) == [1])
     }
 
-    @Test(.tags(.networking)) func refetchUsesTheMemoryCache() async throws {
+    @Test(.tags(.networking)) func refetchingTheLoadedLocationIsFree() async throws {
         service.produceResult = .success([.fixture(id: 1, name: "Apple")])
         try await store.fetchFromCloudKit(for: .victoria).get()
 
         try await store.fetchFromCloudKit(for: .victoria).get()
 
         #expect(service.produceRequests.count == 1)
+        #expect(service.likesRequests.isEmpty)
         #expect(store.allProduce.map(\.id) == [1])
     }
 
@@ -126,15 +127,28 @@ struct ProduceStoreTests {
         #expect(diskCache.load(for: .victoria) == nil)
     }
 
-    @Test(.tags(.networking)) func locationChangeDiscardsEverythingCached() async throws {
+    @Test(.tags(.networking)) func switchingBackToALoadedRegionUsesItsCache() async throws {
         service.produceResult = .success([.fixture(id: 1, name: "Apple")])
         try await store.fetchFromCloudKit(for: .victoria).get()
-
-        store.prepareForLocationChange()
-
-        #expect(store.allProduce.isEmpty)
-        #expect(diskCache.load(for: .victoria) == nil)
+        service.produceResult = .success([.fixture(id: 2, name: "Mango")])
         try await store.fetchFromCloudKit(for: .queensland).get()
+
+        service.likesResult = [.fixture(id: 1, name: "Apple")]
+        try await store.fetchFromCloudKit(for: .victoria).get()
+
         #expect(service.produceRequests == [.victoria, .queensland])
+        #expect(service.likesRequests == [[1]])
+        #expect(store.allProduce.map(\.id) == [1])
+    }
+
+    @Test(.tags(.networking)) func failedLocationChangeKeepsTheCurrentProduce() async throws {
+        service.produceResult = .success([.fixture(id: 1, name: "Apple")])
+        try await store.fetchFromCloudKit(for: .victoria).get()
+        service.produceResult = .failure(CKError(.networkFailure))
+
+        let result = await store.fetchFromCloudKit(for: .queensland)
+
+        #expect(throws: CKError.self) { try result.get() }
+        #expect(store.allProduce.map(\.id) == [1])
     }
 }

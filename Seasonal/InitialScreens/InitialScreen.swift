@@ -30,7 +30,7 @@ struct InitialScreen: View {
 			.transition(.opacity.animation(.easeInOut(duration: stateChangeAnimationDuration)))
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.padding(.bottom, .space8)
+		.padding(.bottom, .initialScreenLogoPadding)
 		.background(Colour.background)
 		.onChange(of: appCoordinator.state) {
 			AccessibilityNotification.ScreenChanged().post()

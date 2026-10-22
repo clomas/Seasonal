@@ -16,7 +16,7 @@ struct MainTabScreen: View {
     @State private var showTip = GlobalSettings.isSwipeTipDue
     @State private var isShowingSettings = false
 
-    private let tipDismissDelay: Duration = .milliseconds(500)
+    private let tipDismissDelay: Duration = .milliseconds(1500)
     private let tipFadeDuration: TimeInterval = 1.5
 
     var body: some View {

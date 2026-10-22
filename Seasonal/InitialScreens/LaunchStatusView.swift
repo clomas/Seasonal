@@ -15,28 +15,29 @@ struct LaunchStatusView: View {
 
 	/// An input rather than read from the coordinator, so a copy fading out keeps showing its old state.
 	let state: AppCoordinatorState
+	private let logoSize: CGFloat = 150
 
 	var body: some View {
 		VStack {
 			switch state {
 			case .initial:
-				AppLogo()
+				logo
 				ProgressView()
 					.controlSize(.large)
 					.tint(.primary)
 					.accessibilityLabel(Strings.Launch.loading)
 			case let .dataFailed(errorTitle, errorMessage):
-				AppLogo()
+				logo
 				FailureMessageView(title: errorTitle, message: errorMessage, onRetry: appCoordinator.retryFetchData)
 			case .networkFailed:
-				AppLogo()
+				logo
 				FailureMessageView(
 					title: Strings.Launch.networkErrorTitle,
 					message: Strings.Launch.networkErrorMessage,
 					onRetry: appCoordinator.retryStart
 				)
 			case .locationNotFound:
-				AppLogo()
+				logo
 				LocationPickerView(
 					isFindingLocation: appCoordinator.isFindingLocation,
 					onSelect: appCoordinator.chooseInitialLocation,
@@ -46,5 +47,13 @@ struct LaunchStatusView: View {
 				EmptyView()
 			}
 		}
+	}
+
+	private var logo: some View {
+		Image(.logoGlass)
+			.resizable()
+			.frame(width: logoSize, height: logoSize)
+			.padding()
+			.accessibilityHidden(true)
 	}
 }

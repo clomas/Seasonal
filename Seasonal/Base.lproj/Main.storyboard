@@ -20,7 +20,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DGm-Bv-KHu">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Q1Q-Zn-qT0">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LogoGlass" translatesAutoresizingMaskIntoConstraints="NO" id="Q1Q-Zn-qT0">
                                         <rect key="frame" x="47" y="272" width="320" height="232"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="320" id="Dju-f6-uqY"/>
@@ -798,7 +798,7 @@ I’m always looking to improve the accuracy of the application, so get in conta
     <color key="tintColor" name="cellColour"/>
     <resources>
         <image name="Apples" width="75.5" height="75.5"/>
-        <image name="Logo" width="720" height="720"/>
+        <image name="LogoGlass" width="824" height="824"/>
         <image name="apr" width="25" height="25"/>
         <image name="aug" width="25" height="25"/>
         <image name="back" width="24" height="24"/>

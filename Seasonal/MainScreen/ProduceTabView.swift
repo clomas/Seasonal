@@ -24,46 +24,37 @@ struct ProduceTabView: View {
         @Bindable var state = state
 
         NavigationStack {
-            Group {
-                // Building the mirrored pager while the keyboard animates in stutters, so it waits for a query.
-                if isSearchable && state.searchQuery.isEmpty {
-                    ContentUnavailableView(Strings.Search.prompt, systemImage: Symbol.search)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(Colour.background)
-                } else {
-                    ProduceTabContentView(tab: tab, searchText: searchText, onPeekFinished: onPeekFinished)
+            ProduceTabContentView(tab: tab, searchText: searchText, onPeekFinished: onPeekFinished)
+                .navigationTitle(title)
+                .toolbarTitleDisplayMode(.inline)
+                .toolbarTitleMenu(isPresented: tab.hasPeriodPicker) {
+                    switch tab {
+                    case .months:
+                        PeriodJumpPicker<Months>(
+                            jumpToIndex: $state.jumpToMonthIndex,
+                            title: Strings.Jump.toMonth,
+                            currentIndex: state.currentMonthIndex
+                        )
+                    case .seasons:
+                        PeriodJumpPicker<Seasons>(
+                            jumpToIndex: $state.jumpToSeasonIndex,
+                            title: Strings.Jump.toSeason,
+                            currentIndex: state.currentSeasonIndex
+                        )
+                    case .favourites, .search:
+                        EmptyView()
+                    }
                 }
-            }
-            .navigationTitle(title)
-            .toolbarTitleDisplayMode(.inline)
-            .toolbarTitleMenu(isPresented: tab.hasPeriodPicker) {
-                switch tab {
-                case .months:
-                    PeriodJumpPicker<Months>(
-                        jumpToIndex: $state.jumpToMonthIndex,
-                        title: Strings.Jump.toMonth,
-                        currentIndex: state.currentMonthIndex
-                    )
-                case .seasons:
-                    PeriodJumpPicker<Seasons>(
-                        jumpToIndex: $state.jumpToSeasonIndex,
-                        title: Strings.Jump.toSeason,
-                        currentIndex: state.currentSeasonIndex
-                    )
-                case .favourites, .search:
-                    EmptyView()
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        CategoryFilterButton(selectedCategory: $state.selectedCategory)
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        SettingsButton(action: onShowSettings)
+                    }
                 }
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    CategoryFilterButton(selectedCategory: $state.selectedCategory)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    SettingsButton(action: onShowSettings)
-                }
-            }
-            .searchableIfPresent(text: isSearchable ? $state.searchQuery : nil, prompt: Strings.Search.prompt)
-            .searchPresentationToolbarBehavior(.avoidHidingContent)
+                .searchableIfPresent(text: isSearchable ? $state.searchQuery : nil, prompt: Strings.Search.prompt)
+                .searchPresentationToolbarBehavior(.avoidHidingContent)
         }
     }
 

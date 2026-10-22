@@ -1,7 +1,5 @@
 {
-  "fill" : {
-    "automatic-gradient" : "display-p3:0.98047,1.00000,0.99727,1.00000"
-  },
+  "fill" : "automatic",
   "groups" : [
     {
       "layers" : [
@@ -28,6 +26,7 @@
               "value" : true
             }
           ],
+          "hidden" : false,
           "image-name" : "combined.png",
           "name" : "combined",
           "position" : {

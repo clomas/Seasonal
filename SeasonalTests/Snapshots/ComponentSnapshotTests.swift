@@ -76,10 +76,6 @@ struct ComponentSnapshotTests {
         assertComponentSnapshot(LocationPickerView(isFindingLocation: false, onSelect: { _ in }, onFindLocationAgain: {}).frame(width: rowWidth))
     }
 
-    @Test func appLogo() {
-        assertComponentSnapshot(AppLogo())
-    }
-
     private func assertComponentSnapshot<V: View>(
         _ view: V,
         fileID: StaticString = #fileID,

@@ -45,6 +45,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
         }
         if CommandLine.arguments.contains("reset-onboarding") {
             GlobalSettings.swipeTipShownVersion = ""
+            GlobalSettings.selectedTab = .favourites
         }
 #endif
     }

@@ -23,7 +23,7 @@ struct PeriodScrollContainer<Cell: View>: View {
     private static var bufferRepeats: Int { 21 }
     private static var jumpDuration: TimeInterval { 0.4 }
     private static var peekStartDelay: Duration { .milliseconds(500) }
-    private static var peekHopDuration: TimeInterval { 1 }
+    private static var peekHopDuration: TimeInterval { 0.8 }
 
     private let initialIndex: Int
     private let centerOffset: Int
@@ -74,10 +74,12 @@ struct PeriodScrollContainer<Cell: View>: View {
         }
         .scrollTargetBehavior(.viewAligned)
         .scrollPosition($scrollPosition)
-        .task {
+        // Not `.task`: if SwiftUI cancels it mid-peek, every remaining sleep returns at once and the
+        // peek and tip collapse to an instant.
+        .onAppear {
             guard !hasPeeked, onPeekFinished != nil else { return }
             hasPeeked = true
-            await runPeekSequence()
+            Task { await runPeekSequence() }
         }
         .onChange(of: jumpToIndex) { _, newValue in
             guard let index = newValue else { return }

@@ -23,11 +23,11 @@ DerivedData/
 # Swift Package Manager
 /.build/
 /.swiftpm/
-Package.resolved
 
 # CocoaPods
 Pods/
 *.xcworkspace
+!Seasonal.xcodeproj/project.xcworkspace
 Podfile.lock
 
 # Fastlane

@@ -49,7 +49,7 @@ class InfoViewController: UIViewController {
 		// Compose an email form.
 		let composer: MFMailComposeViewController = MFMailComposeViewController()
         composer.mailComposeDelegate = self
-        composer.setToRecipients(["clint.thomas@me.com"])
+        composer.setToRecipients(["seasonal.ios.app@gmail.com"])
         composer.setSubject("")
         composer.setMessageBody("Hello!", isHTML: false)
         present(composer, animated: true)
@@ -69,12 +69,12 @@ class InfoViewController: UIViewController {
 	// Copy my email address to the clipboard (if no email client)
     private func presentCopyEmailToClipboardAlert() {
 		presentAlert(title: "Unable to launch mail app",
-					 message: "Copy email address: 'clint.thomas@me.com' to clipboard?",
+					 message: "Copy email address: 'seasonal.ios.app@gmail.com' to clipboard?",
 					 alertStyle: .alert,
 					 actionTitles: ["Yes", "Nope"],
 					 actionStyles: [.default, .cancel],
 					 actions: [ { _ in
-						 UIPasteboard.general.string = "clint.thomas@me.com"
+						 UIPasteboard.general.string = "seasonal.ios.app@gmail.com"
 					 }, { _ in
 						 // cancel
 						 return

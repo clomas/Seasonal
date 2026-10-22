@@ -28,7 +28,7 @@ struct SettingsModalScreen: View {
         NavigationStack {
             Form {
                 Section {
-                    Text(introText)
+                    Text(Strings.Settings.intro)
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
@@ -127,10 +127,6 @@ struct SettingsModalScreen: View {
 
     private static var savedState: StateLocation {
         StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
-    }
-
-    private var introText: String {
-        Strings.Settings.intro(location: Self.savedState.fullName)
     }
 
     private func changeLocation(to newState: StateLocation) async {

@@ -121,9 +121,8 @@ enum Strings {
         static let themePicker = String(localized: "Colour")
         static let appearancePicker = String(localized: "Light/Dark Mode")
         static let themeFooter = String(localized: "Match current season changes the accent colour through the year.")
-
         // swiftlint:disable:next line_length
-        static func intro(location: String) -> String { String(localized: "Location of Produce Displayed: \(location).\n\n\n It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n \n I’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!") }
+        static let intro: String = String(localized: "It's never been more important to eat local and in season, mass scale farming and mono cropping is depleting nutrients in the soil and intern our food suffers. Frozen and imported produce is sold year round, causing further depletion of nutrients in our food. I hope this app can help users make a more informed decisions about their produce.\n\nI’m always looking to improve the accuracy of the application, so get in contact if you have any suggestions, corrections or additional information you would like to see in this app. Thanks for downloading!")
 
         static func version(_ version: String) -> String {
             String(localized: "Seasonal \(version)")

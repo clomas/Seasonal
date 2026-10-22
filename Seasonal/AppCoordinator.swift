@@ -2,164 +2,180 @@
 //  AppCoordinator.swift
 //  Seasonal
 //
-//  Created by Clint Thomas on 16/2/21.
-//  Copyright © 2021 Clint Thomas. All rights reserved.
+//  Created by Clint Thomas on 30/6/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
-import Foundation
-import UIKit
+import CloudKit
 import Network
+import SwiftUI
 
-protocol Coordinator: AnyObject {
-	func start()
-}
+@available(iOS 26, *)
+@MainActor
+@Observable
+final class AppCoordinator: AppCoordinatorVersionProtocol {
 
-protocol InitialCoordinatorDelegate: AnyObject {
-	func dataIsReady()
-	func networkFailed()
-	func locationNotFound()
-}
+    let produceStore = ProduceStore()
 
-final class AppCoordinator: LocationDelegate, NetworkObserverDelegate {
+    @ObservationIgnored private let window: UIWindow?
+    @ObservationIgnored private let locationService = LocationService()
 
-	let cloudKitDataService: CloudKitDataService = CloudKitDataService()
+    var state: AppCoordinatorState = .initial {
+        didSet { isFindingLocation = false }
+    }
+    private(set) var isFindingLocation = false
 
-	private let window: UIWindow
-	private let navigationController: UINavigationController = UINavigationController()
+    @ObservationIgnored private var currentLocation: StateLocation = .noState
+    @ObservationIgnored private var networkTask: Task<Void, Never>?
+    @ObservationIgnored private var locationTask: Task<Void, Never>?
+    @ObservationIgnored private var cloudTask: Task<Void, Never>?
+    @ObservationIgnored private var appearanceTask: Task<Void, Never>?
 
-	private(set) var childCoordinators: [Coordinator] = []
-	private var networkService: NetworkService?
-	private var currentLocation: StateLocation = .noState
-	private var produceData: [ProduceModel]?
-	private var isFirstRun: Bool {
-		UserDefaults.isFirstLaunch()
-	}
+    private var savedLocation: StateLocation {
+        StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
+    }
 
-	lazy private var locationManager: LocationManager? = { LocationManager() }()
+    init(window: UIWindow?) {
+        self.window = window
 
-	weak var initialCoordinatorDelegate: InitialCoordinatorDelegate?
+#if DEBUG
+        if CommandLine.arguments.contains("enable-testing") {
+            UIView.setAnimationsEnabled(false)
+            GlobalSettings.markSwipeTipShown()
+        }
+        if CommandLine.arguments.contains("reset-onboarding") {
+            GlobalSettings.swipeTipShownVersion = ""
+            GlobalSettings.selectedTab = .favourites
+        }
+#endif
+    }
 
-	init(window: UIWindow) {
-		self.window = window
+    func start() {
+        let rootScreen = RootScreen()
+            .environment(self)
+            .environment(produceStore)
 
-		#if DEBUG
-		if CommandLine.arguments.contains("enable-testing") {
-			// if testing UI disable animations.
-			UIView.setAnimationsEnabled(false)
-		}
-		#endif
-	}
+        window?.rootViewController = UIHostingController(rootView: rootScreen)
+        followAppearanceSetting()
+        window?.makeKeyAndVisible()
 
-	func start() {
-		loadInitialViewCoordinator()
-		networkService = NetworkService(delegate: self)
+#if DEBUG
+        if CommandLine.arguments.contains("use-mock-data") {
+            produceStore.loadMockData(previewProduce)
+            state = .dataIsReady
+            return
+        }
+#endif
 
-		window.rootViewController = navigationController
-		window.makeKeyAndVisible()
-	}
+        waitForNetwork()
+    }
 
-	// Called from location manager
-	// also called from updateChosenLocation
-	// fetch data when conditions are right
-	func locationReady(location: StateLocation) {
+    func retryStart() {
+        state = .initial
+        waitForNetwork()
+    }
 
-		// If not determined, wait until it is
-		if locationManager?.authStatus != .notDetermined {
-			currentLocation = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
+    /// Network is already up by the time the picker shows, so this skips straight to detection.
+    func findLocationAgain() {
+        isFindingLocation = true
+        detectLocation()
+    }
 
-			// If not found && nothing is stored
-			if location == .noState && currentLocation == .noState {
-					// choose your own location
-				initialCoordinatorDelegate?.locationNotFound()
+    func retryFetchData() {
+        state = .initial
+        fetchProduce(for: currentLocation)
+    }
 
-			// If location is found - go on and get that data
-			} else if location != .noState {
-				currentLocation = location
-				GlobalSettings.location = Location(state: location.rawValue)
-				getDataFromCloudKit(for: currentLocation)
+    func chooseInitialLocation(_ location: StateLocation) {
+        if GlobalSettings.location.state.isEmpty {
+            GlobalSettings.location = Location(state: location.rawValue)
+        }
+        currentLocation = location
+        state = .initial
+        fetchProduce(for: location)
+    }
 
-			// If location services is denied and nothing stored - prompt user for state
-			} else if locationManager?.authStatus == .denied && currentLocation == .noState {
-				initialCoordinatorDelegate?.locationNotFound()
+    /// The new location is only saved once its produce has loaded.
+    func changeLocation(to location: StateLocation) async -> CKError? {
+        guard location != currentLocation else { return nil }
 
-			// If current location is stored - proceed
-			} else if currentLocation != .noState {
-				getDataFromCloudKit(for: currentLocation)
-			}
-		}
-	}
+        switch await produceStore.fetchFromCloudKit(for: location) {
+        case .success:
+            currentLocation = location
+            GlobalSettings.location = Location(state: location.rawValue)
+            return nil
+        case let .failure(error):
+            return error
+        }
+    }
 
-	func loadMainViewCoordinator() {
-		let mainViewCoordinator: MainViewCoordinator = MainViewCoordinator(navigationController: navigationController,
-																		   cloudKitDataService: cloudKitDataService,
-																		   dataFetched: produceData,
-																		   location: currentLocation
-		)
-		childCoordinators.append(mainViewCoordinator)
-		mainViewCoordinator.parentCoordinator = self
-		mainViewCoordinator.start()
-	}
+    /// Set on the window rather than with `preferredColorScheme`, which doesn't restyle a sheet
+    /// that's already open or reliably undo an override when switched back to automatic.
+    private func followAppearanceSetting() {
+        window?.overrideUserInterfaceStyle = ThemeStore.shared.appearance.userInterfaceStyle
+        appearanceTask = Task {
+            for await appearance in Observations({ ThemeStore.shared.appearance }) {
+                window?.overrideUserInterfaceStyle = appearance.userInterfaceStyle
+            }
+        }
+    }
 
-	func internetStatusDidChange(status: NWPath.Status) {
+    private func waitForNetwork() {
+        networkTask?.cancel()
+        networkTask = Task {
+            for await path in NWPathMonitor() {
+                guard path.status == .satisfied else {
+                    state = .networkFailed
+                    continue
+                }
+                networkIsAvailable()
+                return
+            }
+        }
+    }
 
-		switch status {
-		case .satisfied:
-			instantiateLocationManager()
-			networkService?.stop()
-		default:
-			initialCoordinatorDelegate?.networkFailed()
-		}
-	}
+    private func networkIsAvailable() {
+        state = .initial
+        if savedLocation != .noState {
+            currentLocation = savedLocation
+            fetchProduce(for: savedLocation)
+        } else {
+            detectLocation()
+        }
+    }
 
-	func childDidFinish(_ childCoordinator: Coordinator) {
-		if let index: Int = childCoordinators.firstIndex(where: { coordinator -> Bool in
-			return childCoordinator === coordinator
-		}) {
-			childCoordinators.remove(at: index)
-		}
-	}
+    private func detectLocation() {
+        locationTask?.cancel()
+        locationTask = Task {
+            let location = await locationService.currentLocation()
+            let detectedState = await LocationInformationManager().parseLocation(location)
+            guard !Task.isCancelled else { return }
 
-	private func getDataFromCloudKit(for location: StateLocation) {
-		getData(for: location, dataFetched: { [weak self] (produce: [ProduceModel]) in
-		    self?.produceData = produce
+            if detectedState != .noState {
+                currentLocation = detectedState
+                GlobalSettings.location = Location(state: detectedState.rawValue)
+                fetchProduce(for: detectedState)
+            } else if savedLocation != .noState {
+                currentLocation = savedLocation
+                fetchProduce(for: savedLocation)
+            } else {
+                state = .locationNotFound
+            }
+        }
+    }
 
-			DispatchQueue.main.asyncAfter(deadline: .now(), execute: { [weak self] in
-				self?.initialCoordinatorDelegate?.dataIsReady()
-			})
-		})
-	}
+    private func fetchProduce(for location: StateLocation) {
+        cloudTask?.cancel()
+        cloudTask = Task {
+            let result = await produceStore.fetchFromCloudKit(for: location)
+            guard !Task.isCancelled else { return }
 
-	// Bubbled up from viewController
-	// let the user chose a location once then store it
-	func updateChosenLocationUserDefaults(to location: StateLocation) {
-
-		if GlobalSettings.location.state == "" {
-			GlobalSettings.location = Location(state: location.rawValue)
-		}
-		currentLocation = location
-		getDataFromCloudKit(for: location)
-	}
-
-	private func getData(for location: StateLocation, dataFetched: @escaping ([ProduceModel]) -> Void) {
-		cloudKitDataService.getData(for: location, dataFetched: { [weak self] data in
-			do {
-				dataFetched(try data.get())
-			} catch {
-				self?.initialCoordinatorDelegate?.networkFailed()
-			}
-		})
-	}
-
-	private func loadInitialViewCoordinator() {
-		let initialViewCoordinator: InitialViewCoordinator = InitialViewCoordinator(navigationController: navigationController,
-																					firstRun: isFirstRun
-		)
-		childCoordinators.append(initialViewCoordinator)
-		initialViewCoordinator.parentCoordinator = self
-		initialViewCoordinator.start()
-	}
-
-	private func instantiateLocationManager() {
-		locationManager = LocationManager()
-		locationManager?.locationDelegate = self
-	}
+            switch result {
+            case .success:
+                state = .dataIsReady
+            case let .failure(ckError):
+                state = .dataFailed(errorTitle: ckError.errorTitle, errorMessage: ckError.errorMessage)
+            }
+        }
+    }
 }

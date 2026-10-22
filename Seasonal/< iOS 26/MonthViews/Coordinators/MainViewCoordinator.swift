@@ -1,0 +1,249 @@
+//
+//  MainViewCoordinator.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 21/2/21.
+//  Copyright © 2021 Clint Thomas. All rights reserved.
+//
+// The MainView has no children coordinators. I could have made
+// one for SeasonsView however, it this class isn't massive.
+
+import Foundation
+import UIKit
+
+// Keep track of the current View that is shown
+// The integers match up with the index of the menuBar buttons
+enum ViewDisplayed: Int {
+	case favourites = 0
+	case monthPicker = 1
+	case months = 2
+	case seasons = 3
+
+	enum ProduceCategory: Int, CaseIterable {
+		case all = 4
+		case fruit = 5
+		case vegetables = 6
+		case herbs = 7
+		case cancelled = 8
+
+		static func fromString(_ string: String) -> ViewDisplayed.ProduceCategory {
+			switch string {
+			case "fruit": .fruit
+			case "vegetables": .vegetables
+			case "herbs": .herbs
+			default:
+				.cancelled
+			}
+		}
+	}
+}
+
+protocol MonthSelectedDelegate: AnyObject {
+	func updateMonth(to month: MonthOld?)
+}
+
+final class MainViewCoordinator: NSObject, Coordinator, UINavigationControllerDelegate, UIGestureRecognizerDelegate {
+
+	private let navigationController: UINavigationController
+	private var modalNavigationController: UINavigationController?
+
+	var parentCoordinator: AppCoordinatorOld?
+	var cloudKitDataServiceOld: CloudKitDataServiceOld?
+
+	@MainActor
+	weak var monthSelectedDelegate: MonthSelectedDelegate?
+
+	private var mainViewController: MainViewController?
+	private var dataFetched: [ProduceOld]?
+	private var determinedLocation: StateLocation
+	private var monthAndSeason: (MonthOld, SeasonsOld) = DateHandler().findMonthAndSeasonOld()
+	private var currentMonth: MonthOld { monthAndSeason.0 }
+	private var currentSeason: SeasonsOld { monthAndSeason.1 }
+
+	init(navigationController: UINavigationController,
+		 cloudKitDataService: CloudKitDataServiceOld,
+		 dataFetched: [ProduceOld]?,
+		 location: StateLocation) {
+		self.navigationController = navigationController
+		self.cloudKitDataServiceOld = cloudKitDataService
+		self.dataFetched = dataFetched
+		self.determinedLocation = location
+	}
+
+	func start() {
+		navigationController.delegate = self
+		mainViewController = .instantiate()
+
+		let monthNow: MonthOld = currentMonth
+		let mainViewModel: MainViewModel = MainViewModel(monthsProduce: dataFetched?.sortIntoMonths(),
+														 favouritesProduce: dataFetched?.sortIntoFavourites(),
+														 viewDisplayed: .months,
+														 monthToDisplay: monthNow,
+														 previousMonth: monthNow,
+														 thisMonthForProduceCell: monthNow,
+														 category: .all,
+														 searchString: ""
+		)
+		mainViewModel.coordinator = self
+		mainViewController?.viewModel = mainViewModel
+
+		// change animation to slide up
+		// navigationController.
+		let fromTopTransition: CATransition = setUpNavigationTransition()
+		navigationController.view.layer.add(fromTopTransition, forKey: kCATransition)
+
+		if let mainViewControllerToPresent: UIViewController = mainViewController {
+			navigationController.pushViewController(mainViewControllerToPresent, animated: true)
+		}
+	}
+
+	// MARK: Navigation
+
+	func seasonsBackButtonTapped() {
+		navigationController.popViewController(animated: true)
+	}
+
+	// Handle all navigation options
+	func menuBarTappedWasForNavigation(at index: Int) {
+		switch index {
+		case ViewDisplayed.monthPicker.rawValue:
+			presentMonthPickerViewController()
+		case ViewDisplayed.seasons.rawValue:
+			presentSeasonsViewController()
+		default:
+			break
+		}
+	}
+
+	func monthPickerFinished(display month: MonthOld?) {
+		monthSelectedDelegate?.updateMonth(to: month ?? nil)
+	}
+
+	func presentInfoViewController() {
+		guard let infoViewController: InfoViewController = .instantiate() else { return }
+		infoViewController.viewModel = InfoViewModel(location: determinedLocation)
+		infoViewController.viewModel?.coordinator = self
+
+		modalNavigationController = UINavigationController()
+		modalNavigationController?.setViewControllers([infoViewController], animated: false)
+
+		if let modalNavigationController: UINavigationController = modalNavigationController {
+			navigationController.present(modalNavigationController, animated: true, completion: nil)
+		}
+	}
+
+	@MainActor
+	func updateDataModelsAndDatabase(for id: Int, liked: Bool, from view: ViewDisplayed) {
+		if view == .seasons {
+			mainViewController?.viewModel?.likeToggle(id: id, liked: liked)
+		} else {
+			// update the struct array that is passed to SeasonsView which is pushed and popped
+			if let index: Array<ProduceOld>.Index = dataFetched?.firstIndex(where: { $0.id == id}) {
+				dataFetched?[index].liked = liked
+			}
+		}
+
+		if liked {
+			addLikedProduceToCloudKitDatabase(id: id)
+		} else {
+			removeLikedProduceToCloudKitDatabase(id: id)
+		}
+	}
+
+	// MARK: Presenting ViewControllers
+	// Month Picker View Controller
+
+	private func presentMonthPickerViewController() {
+		guard let monthPickerViewController: MonthPickerViewController = .instantiate() else { return }
+		modalNavigationController = UINavigationController()
+
+		modalNavigationController?.setViewControllers([monthPickerViewController], animated: false)
+		monthPickerViewController.coordinator = self
+
+		if let modalNavigationController: UINavigationController = modalNavigationController {
+			navigationController.present(modalNavigationController, animated: true, completion: nil)
+		}
+	}
+
+	// Seasons View Controller
+
+	private func presentSeasonsViewController() {
+		guard let seasonsViewController: SeasonsViewController = .instantiate(),
+			  let produceData = dataFetched else {
+			return
+		}
+
+		let seasonsViewModel: SeasonsViewModel = SeasonsViewModel(produceData: produceData.sortIntoSeasons(),
+																  season: currentSeason,
+																  category: .all,
+																  searchString: ""
+		)
+		seasonsViewModel.coordinator = self
+		seasonsViewController.viewModel = seasonsViewModel
+
+		navigationController.interactivePopGestureRecognizer?.delegate = self
+		navigationController.interactivePopGestureRecognizer?.isEnabled = true
+		navigationController.pushViewController(seasonsViewController, animated: true)
+	}
+
+	private func addLikedProduceToCloudKitDatabase(id: Int) {
+		cloudKitDataServiceOld?.saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitErrorOld>) in
+			#if DEBUG
+			if result == .success(true) {
+				print(result, "added like record in CloudKit - id: \(id)")
+			}
+			#endif
+		}
+	}
+
+	private func removeLikedProduceToCloudKitDatabase(id: Int) {
+		cloudKitDataServiceOld?.deleteRecordsInPrivateDatabase(id: id) { (result: Result<Bool, CloudKitErrorOld>) in
+			#if DEBUG
+			if result == .success(true) {
+				print(result, "removed like record in CloudKit - id: \(id)")
+			} 
+			#endif
+		}
+	}
+
+	// View will slide up rather than default animation
+	private func setUpNavigationTransition() -> CATransition {
+		let transition: CATransition = CATransition()
+		transition.duration = 0.5
+		transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+		transition.type = CATransitionType.reveal
+		transition.subtype = CATransitionSubtype.fromTop
+
+		return transition
+	}
+}
+
+extension Array where Element == ProduceOld {
+
+	func sortIntoFavourites() -> [ProduceOld] {
+		self.map { $0 }.filter { $0.liked == true }
+	}
+
+	func sortIntoMonths() -> [[ProduceOld]] {
+			// create array of 12 months
+		var monthProduceArray: [[ProduceOld]] = .init(repeating: [], count: 12)
+
+		for monthIndex in 0...11 {
+			var monthArray: [ProduceOld] = [ProduceOld]()
+
+			self.forEach({ (item: ProduceOld) in
+
+				if let month: MonthOld = MonthOld(rawValue: (monthIndex	+ 1)) {
+					if item.months.contains(month) == true {
+						monthArray.append(item)
+					}
+				}
+			})
+			monthProduceArray[monthIndex] = monthArray
+		}
+		monthProduceArray.insert(monthProduceArray[11], at: 0)
+		monthProduceArray.append(monthProduceArray[1])
+
+		return monthProduceArray
+	}
+}

@@ -6,22 +6,26 @@
 //  Copyright © 2021 Clint Thomas. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
-@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
+	let featureToggleHelper = FeatureToggleHelper()
+
 	var window: UIWindow?
-	var appCoordinator: AppCoordinator?
+	var appCoordinatorVersionProtocol: AppCoordinatorVersionProtocol?
 
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 		guard let scene = (scene as? UIWindowScene) else { return }
 
-		let window: UIWindow = UIWindow(windowScene: scene)
+		let window = UIWindow(windowScene: scene)
 		self.window = window
 
-		appCoordinator = AppCoordinator(window: window)
-		appCoordinator?.start()
+		if featureToggleHelper.isEnabled(.useSwiftUI), #available(iOS 26, *) {
+			appCoordinatorVersionProtocol = AppCoordinator(window: window)
+		} else {
+			appCoordinatorVersionProtocol = AppCoordinatorOld(window: window)
+		}
+		appCoordinatorVersionProtocol?.start()
 	}
 }

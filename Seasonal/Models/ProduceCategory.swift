@@ -7,7 +7,6 @@
 //
 
 enum ProduceCategory: String, CaseIterable, Codable {
-
 	case fruit
 	case vegetables = "veg"
 	case herbs
@@ -24,10 +23,10 @@ enum ProduceCategory: String, CaseIterable, Codable {
 
 	var image: String {
 		switch self {
-		case .fruit: .fruit
-		case .vegetables: .vegetables
-		case .herbs: .herbs
-		case .all: .category
+		case .fruit: Symbol.fruit
+		case .vegetables: Symbol.vegetables
+		case .herbs: Symbol.herbs
+		case .all: Symbol.category
 		}
 	}
 }

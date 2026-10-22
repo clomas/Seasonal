@@ -11,26 +11,29 @@ import CloudKit
 @available(iOS 26, *)
 struct ProduceServicesManager: ProduceProviding {
 
-	private let localLikes = LocalLikes()
+	private let localFavourites = LocalFavourites()
+	private let pendingChanges = PendingFavouriteChanges()
 
 	func produce(for location: StateLocation) async -> Result<[Produce], CKError> {
-		await ProduceCloudDataService(location: location, localLikes: localLikes).getData()
+		await service(for: location).getData()
 	}
 
-	func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
-		await ProduceCloudDataService(location: location, localLikes: localLikes).getLikes(basedOn: baseProduce)
+	func favourites(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
+		await service(for: location).getFavourites(basedOn: baseProduce)
 	}
 
-	func updateLike(id: Int, liked: Bool) async {
-		let location = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
-		let service = ProduceCloudDataService(location: location, localLikes: localLikes)
-
-		if liked {
-			localLikes.save(id)
-			await service.saveLike(id: id)
+	func updateFavourite(id: Int, isFavourite: Bool) async {
+		if isFavourite {
+			localFavourites.save(id)
 		} else {
-			localLikes.delete(id)
-			await service.deleteLike(id: id)
+			localFavourites.delete(id)
 		}
+
+		let location = StateLocation(rawValue: GlobalSettings.location.state) ?? .noState
+		await service(for: location).updateFavourite(id: id, isFavourite: isFavourite)
+	}
+
+	private func service(for location: StateLocation) -> ProduceCloudDataService {
+		ProduceCloudDataService(location: location, localFavourites: localFavourites, pendingChanges: pendingChanges)
 	}
 }

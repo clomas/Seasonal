@@ -14,11 +14,11 @@ struct Produce: Identifiable, Sendable, Codable {
 	let description: String?
 	let months: [Months]?
 	let seasons: [Seasons]?
-	let liked: Bool
+	let isFavourite: Bool
 }
 
 extension Produce {
-	func withLiked(_ liked: Bool) -> Produce {
+	func withFavourite(_ isFavourite: Bool) -> Produce {
 		Produce(
 			id: id,
 			name: name,
@@ -27,7 +27,7 @@ extension Produce {
 			description: description,
 			months: months,
 			seasons: seasons,
-			liked: liked
+			isFavourite: isFavourite
 		)
 	}
 }

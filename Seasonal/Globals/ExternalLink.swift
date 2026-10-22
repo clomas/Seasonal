@@ -10,7 +10,7 @@ import Foundation
 
 enum ExternalLink {
     static let sourceCode = URL(string: "https://github.com/clomas/Seasonal")
-    // TODO: Replace with the privacy policy page once it exists.
-    static let privacyPolicy = URL(string: "https://github.com/clomas/Seasonal")
+    static let privacyPolicy = URL(string: "https://clomas.github.io/Seasonal/")
     static let contactEmail = URL(string: "mailto:clint.thomas@me.com")
 }
+    

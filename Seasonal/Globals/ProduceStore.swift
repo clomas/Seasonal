@@ -20,7 +20,7 @@ final class ProduceStore {
 
 	private(set) var allProduce: [Produce] = []
 
-	@ObservationIgnored private var likeSync: Task<Void, Never>?
+	@ObservationIgnored private var favouriteSync: Task<Void, Never>?
 	@ObservationIgnored private var loadedLocation: StateLocation?
 
 	var favourites: [Produce] {
@@ -36,20 +36,20 @@ final class ProduceStore {
 		cache.byPeriod(period, from: allProduce)
 	}
 
-	/// Syncs are chained so a quick like then unlike reaches CloudKit in order.
+	/// Syncs are chained so quick toggles reach CloudKit in order.
 	@discardableResult
-	func toggleLiked(for id: Int) -> Task<Void, Never>? {
+	func toggleFavourite(for id: Int) -> Task<Void, Never>? {
 		guard let index = allProduce.firstIndex(where: { $0.id == id }) else { return nil }
-		let liked = !allProduce[index].liked
-		allProduce[index] = allProduce[index].withLiked(liked)
+		let isFavourite = !allProduce[index].isFavourite
+		allProduce[index] = allProduce[index].withFavourite(isFavourite)
 		cache.invalidate()
 
-		let previousSync = likeSync
+		let previousSync = favouriteSync
 		let sync = Task {
 			await previousSync?.value
-			await service.updateLike(id: id, liked: liked)
+			await service.updateFavourite(id: id, isFavourite: isFavourite)
 		}
-		likeSync = sync
+		favouriteSync = sync
 		return sync
 	}
 
@@ -59,7 +59,7 @@ final class ProduceStore {
 
 		let result: Result<[Produce], CKError>
 		if let baseProduce = diskCache.load(for: location) {
-			result = .success(await service.likes(for: location, basedOn: baseProduce))
+			result = .success(await service.favourites(for: location, basedOn: baseProduce))
 		} else {
 			result = await service.produce(for: location)
 			if case let .success(produceList) = result {

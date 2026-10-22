@@ -60,7 +60,7 @@ extension MonthPickerViewController: UICollectionViewDataSource {
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		if let cell: MonthPickerCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.SelectMonthCell, for: indexPath) as? MonthPickerCell {
+		if let cell: MonthPickerCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsOld.SelectMonthCell, for: indexPath) as? MonthPickerCell {
 			// Plus 1 given overflow Months
 			cell.updateViews(month: MonthOld.asArray[(indexPath.row + 1)])
 			return cell

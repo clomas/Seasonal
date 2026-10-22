@@ -1,5 +1,5 @@
 //
-//  PeriodTabView.swift
+//  PeriodPagerView.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 19/8/2025.

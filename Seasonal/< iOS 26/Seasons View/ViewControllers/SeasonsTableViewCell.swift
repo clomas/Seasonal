@@ -34,14 +34,14 @@ class SeasonsTableViewCell: UITableViewCell {
 		likeButton.isSelected = produce.liked
 
         if produce.liked == false {
-			let likeImage: UIImage? = UIImage(named: "\(Constants.unliked).png")
+			let likeImage: UIImage? = UIImage(named: "\(ConstantsOld.unliked).png")
 			let tintedImage: UIImage? = likeImage?.withRenderingMode(.alwaysTemplate)
 
             likeButton.setImage(tintedImage, for: .normal)
             likeButton.tintColor = UIColor.LikeButton.tint
             likeButton.isSelected = false
         } else {
-			likeButton.setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
+			likeButton.setImage(UIImage(named: "\(ConstantsOld.liked).png"), for: .normal)
             likeButton.isSelected = true
         }
     }

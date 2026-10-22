@@ -1,5 +1,5 @@
 //
-//  LikedHeartView.swift
+//  FavouriteHeartView.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 12/7/2025.
@@ -10,13 +10,13 @@ import SwiftUI
 
 /// One stable symbol whose fill animates, so `.symbolEffect(.bounce)` fires on every toggle.
 @available(iOS 26, *)
-struct LikedHeartView: View {
+struct FavouriteHeartView: View {
 
-	let liked: Bool
+	let isFavourite: Bool
 
-	private let unlikedScale: CGFloat = 0.9
-	private let likedGradientSpread: CGFloat = 1.1
-	private let unlikedGradientRadius: CGFloat = 50
+	private let emptyScale: CGFloat = 0.9
+	private let filledGradientSpread: CGFloat = 1.1
+	private let emptyGradientRadius: CGFloat = 50
 
 	@ScaledMetric(relativeTo: .title2) private var size: CGFloat = 40
 
@@ -26,19 +26,19 @@ struct LikedHeartView: View {
 			.aspectRatio(contentMode: .fit)
 			.frame(width: size, height: size)
 			.foregroundStyle(fill)
-			.scaleEffect(liked ? 1 : unlikedScale)
-			.symbolEffect(.bounce, value: liked)
-			.animation(.bouncy, value: liked)
+			.scaleEffect(isFavourite ? 1 : emptyScale)
+			.symbolEffect(.bounce, value: isFavourite)
+			.animation(.bouncy, value: isFavourite)
 	}
 
 	private var fill: RadialGradient {
-		liked
-			? RadialGradient(colors: Colour.likedHeartGradient, center: .topLeading, startRadius: 0, endRadius: size * likedGradientSpread)
+		isFavourite
+			? RadialGradient(colors: Colour.favouriteHeartGradient, center: .topLeading, startRadius: 0, endRadius: size * filledGradientSpread)
 			: RadialGradient(
 				colors: [Colour.emptyHeartGradient1, Colour.emptyHeartGradient2],
 				center: .topLeading,
 				startRadius: 0,
-				endRadius: unlikedGradientRadius
+				endRadius: emptyGradientRadius
 			)
 	}
 }
@@ -46,8 +46,8 @@ struct LikedHeartView: View {
 @available(iOS 26, *)
 #Preview {
 	HStack {
-		LikedHeartView(liked: false)
-		LikedHeartView(liked: true)
+		FavouriteHeartView(isFavourite: false)
+		FavouriteHeartView(isFavourite: true)
 	}
 	.background(.white)
 }

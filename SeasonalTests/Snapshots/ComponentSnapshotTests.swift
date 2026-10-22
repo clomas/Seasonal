@@ -19,8 +19,8 @@ struct ComponentSnapshotTests {
     private let rowWidth: CGFloat = 402
     private let fixedMonth: Months = .september
 
-    @Test func likedHeart() {
-        assertComponentSnapshot(HStack { LikedHeartView(liked: false); LikedHeartView(liked: true) })
+    @Test func favouriteHeart() {
+        assertComponentSnapshot(HStack { FavouriteHeartView(isFavourite: false); FavouriteHeartView(isFavourite: true) })
     }
 
     @Test func currentMonthIndicator() {
@@ -74,6 +74,17 @@ struct ComponentSnapshotTests {
 
     @Test func locationPicker() {
         assertComponentSnapshot(LocationPickerView(isFindingLocation: false, onSelect: { _ in }, onFindLocationAgain: {}).frame(width: rowWidth))
+    }
+
+    @Test func themeSwatches() {
+        let themes = Theme.allCases.filter { $0 != .automatic }
+        assertComponentSnapshot(VStack {
+            ForEach([ColorScheme.light, .dark], id: \.self) { scheme in
+                HStack {
+                    ForEach(themes) { Image(swatch: $0.accentResource, scheme: scheme, contrast: .standard) }
+                }
+            }
+        })
     }
 
     private func assertComponentSnapshot<V: View>(

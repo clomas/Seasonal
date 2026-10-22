@@ -19,11 +19,11 @@ struct ProduceRecordMapper {
     }
 
     private func produce(from record: CKRecord) -> Produce? {
-        guard let id = record.object(forKey: Constants.id) as? Int,
-              let name = record.object(forKey: Constants.name) as? String,
-              let category = record.object(forKey: Constants.category) as? String,
-              let monthFlags = record.object(forKey: "months_\(location.rawValue)") as? String,
-              let seasonCodes = record.object(forKey: "seasons_\(location.rawValue)") as? String
+        guard let id = record.object(forKey: ProduceRecordKey.id) as? Int,
+              let name = record.object(forKey: ProduceRecordKey.name) as? String,
+              let category = record.object(forKey: ProduceRecordKey.category) as? String,
+              let monthFlags = record.object(forKey: ProduceRecordKey.months(for: location)) as? String,
+              let seasonCodes = record.object(forKey: ProduceRecordKey.seasons(for: location)) as? String
         else {
             return nil
         }
@@ -36,7 +36,7 @@ struct ProduceRecordMapper {
             description: "",
             months: months(from: monthFlags),
             seasons: seasons(from: seasonCodes),
-            liked: false
+            isFavourite: false
         )
     }
 

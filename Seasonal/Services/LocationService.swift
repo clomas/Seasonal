@@ -13,6 +13,7 @@ struct LocationService: Sendable {
 
     func currentLocation() async -> CLLocation? {
         let session = CLServiceSession(authorization: .whenInUse)
+        
         defer { session.invalidate() }
 
         do {
@@ -20,8 +21,11 @@ struct LocationService: Sendable {
                 if let location = update.location {
                     return location
                 }
-                if update.authorizationDenied || update.authorizationDeniedGlobally
-                    || update.authorizationRestricted || update.locationUnavailable {
+                if update.authorizationDenied
+                    || update.authorizationDeniedGlobally
+                    || update.authorizationRestricted
+                    || update.locationUnavailable
+                {
                     return nil
                 }
             }

@@ -72,7 +72,7 @@ struct PeriodScrollContainer<Cell: View>: View {
             }
             .scrollTargetLayout()
         }
-        .scrollTargetBehavior(.viewAligned)
+        .scrollTargetBehavior(.paging)
         .scrollPosition($scrollPosition)
         // Not `.task`: if SwiftUI cancels it mid-peek, every remaining sleep returns at once and the
         // peek and tip collapse to an instant.

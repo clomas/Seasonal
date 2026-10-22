@@ -13,22 +13,22 @@ import CloudKit
 final class MockProduceProvider: ProduceProviding {
 
     var produceResult: Result<[Produce], CKError> = .success([])
-    var likesResult: [Produce] = []
+    var favouritesResult: [Produce] = []
     private(set) var produceRequests: [StateLocation] = []
-    private(set) var likesRequests: [[Int]] = []
-    private(set) var likeUpdates: [Int: Bool] = [:]
+    private(set) var favouritesRequests: [[Int]] = []
+    private(set) var favouriteUpdates: [Int: Bool] = [:]
 
     func produce(for location: StateLocation) async -> Result<[Produce], CKError> {
         produceRequests.append(location)
         return produceResult
     }
 
-    func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
-        likesRequests.append(baseProduce.map(\.id))
-        return likesResult
+    func favourites(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce] {
+        favouritesRequests.append(baseProduce.map(\.id))
+        return favouritesResult
     }
 
-    func updateLike(id: Int, liked: Bool) async {
-        likeUpdates[id] = liked
+    func updateFavourite(id: Int, isFavourite: Bool) async {
+        favouriteUpdates[id] = isFavourite
     }
 }

@@ -44,4 +44,19 @@ struct LocationTests {
     func unknownOrMissingAreaHasNoState(_ area: String?) {
         #expect(manager.state(from: area, countryCode: LocationInformationManager.australiaCountryCode) == .noState)
     }
+
+    @Test(arguments: [
+        ("Sydney NSW", "NSW"),
+        ("Darwin City NT", "NT"),
+        ("シドニー NSW", "NSW"),
+        ("Los Angeles, CA", "CA"),
+    ])
+    func administrativeAreaIsTheLastWordOfCityWithContext(_ cityWithContext: String, _ area: String) {
+        #expect(manager.administrativeArea(fromCityWithContext: cityWithContext) == area)
+    }
+
+    @Test(arguments: [nil, ""])
+    func emptyCityWithContextHasNoAdministrativeArea(_ cityWithContext: String?) {
+        #expect(manager.administrativeArea(fromCityWithContext: cityWithContext) == nil)
+    }
 }

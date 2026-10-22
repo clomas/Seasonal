@@ -27,10 +27,6 @@ enum Months: Int, PeriodType, Codable {
 		Months(containing: .now)
 	}
 
-	init(containing date: Date, calendar: Calendar = .current) {
-		self = Months(rawValue: calendar.component(.month, from: date)) ?? .december
-	}
-
 	var title: String {
 		switch self {
 		case .january: Strings.Month.january
@@ -58,6 +54,10 @@ enum Months: Int, PeriodType, Codable {
 
 	var firstLetter: String {
 		title.first.map(String.init) ?? ""
+	}
+
+	init(containing date: Date, calendar: Calendar = .current) {
+		self = Months(rawValue: calendar.component(.month, from: date)) ?? .december
 	}
 
 	func contains(_ produce: Produce) -> Bool {

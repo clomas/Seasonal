@@ -10,7 +10,7 @@ import Foundation
 
 final class WelcomeViewModel {
 
-	let welcomeLabel: String = Constants.welcomeToSeasonal
+	let welcomeLabel: String = ConstantsOld.welcomeToSeasonal
 
 	weak var coordinator: InitialViewCoordinator?
 

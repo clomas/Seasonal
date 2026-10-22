@@ -22,7 +22,7 @@ enum Colour {
 	static let emptyHeartGradient1 = Color(.emptyHeartGradient1)
 	static let emptyHeartGradient2 = Color(.emptyHeartGradient2)
 	@available(iOS 26, *)
-	static var likedHeartGradient: [Color] {
+	static var favouriteHeartGradient: [Color] {
 		[.pink.mix(with: .white, by: 0.3), .red, .red.mix(with: .black, by: 0.3)]
 	}
 }

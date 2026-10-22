@@ -11,13 +11,13 @@ import XCTest
 @available(iOS 26, *)
 final class TabNavigationUITests: SeasonalUITestCase {
 
-    func testFavouritesShowsLikedProduceOnly() throws {
+    func testFavouritesShowsOnlyFavourites() throws {
         try launch()
         openTab(TabName.favourites)
 
         XCTAssertTrue(app.navigationBars[TabName.favourites].waitForExistence(timeout: elementTimeout))
         XCTAssertTrue(row(named: "Apples").exists)
-        XCTAssertFalse(row(named: "Pears").exists, "Pears isn't liked in the mock data")
+        XCTAssertFalse(row(named: "Pears").exists, "Pears isn't a favourite in the mock data")
     }
 
     func testMonthsOpensOnTheCurrentMonth() throws {

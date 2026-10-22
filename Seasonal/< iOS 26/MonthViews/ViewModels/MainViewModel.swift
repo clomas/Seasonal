@@ -58,13 +58,13 @@ final class MainViewModel: MenuBarDelegate, @preconcurrency MonthSelectedDelegat
 	var navigationBarTitleString: String {
 		switch viewDisplayed {
 		case .monthPicker:
-			return Constants.selectAMonth
+			return ConstantsOld.selectAMonth
 		case .months:
 			return monthToDisplay.monthNameString.createTitleString(with: category)
 		case .favourites:
-			return Constants.favourites.createTitleString(with: category)
+			return ConstantsOld.favourites.createTitleString(with: category)
 		default:
-			return Constants.seasonal
+			return ConstantsOld.seasonal
 		}
 	}
 

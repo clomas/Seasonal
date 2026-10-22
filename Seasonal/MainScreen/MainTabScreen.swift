@@ -42,6 +42,7 @@ struct MainTabScreen: View {
         }
         .sheet(isPresented: $isShowingSettings) {
             SettingsModalScreen()
+                .presentationSizing(.page)
         }
         .overlay {
             if showTip, let tip {

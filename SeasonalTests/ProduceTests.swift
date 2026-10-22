@@ -11,24 +11,24 @@ import Testing
 
 struct ProduceTests {
 
-    @Test func withLikedOnlyChangesLiked() {
+    @Test func withFavouriteOnlyChangesFavourite() {
         let produce = Produce.fixture(id: 3, name: "Kiwi", category: .fruit, months: [.may], seasons: [.winter])
 
-        let liked = produce.withLiked(true)
+        let favourite = produce.withFavourite(true)
 
-        #expect(liked.liked)
-        #expect(liked.id == produce.id)
-        #expect(liked.name == produce.name)
-        #expect(liked.category == produce.category)
-        #expect(liked.months == produce.months)
-        #expect(liked.seasons == produce.seasons)
+        #expect(favourite.isFavourite)
+        #expect(favourite.id == produce.id)
+        #expect(favourite.name == produce.name)
+        #expect(favourite.category == produce.category)
+        #expect(favourite.months == produce.months)
+        #expect(favourite.seasons == produce.seasons)
     }
 
     @Test func sortedByNameIsAlphabeticalWithUnnamedFirst() {
         let produce: [Produce] = [
             .fixture(id: 1, name: "Pear"),
             .fixture(id: 2, name: "Apple"),
-            Produce(id: 3, name: nil, category: nil, imageName: nil, description: nil, months: nil, seasons: nil, liked: false)
+            Produce(id: 3, name: nil, category: nil, imageName: nil, description: nil, months: nil, seasons: nil, isFavourite: false)
         ]
 
         #expect(produce.sortedByName().map(\.id) == [3, 2, 1])

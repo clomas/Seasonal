@@ -23,12 +23,14 @@ enum Theme: String, Codable, CaseIterable, Identifiable {
 		}
 	}
 
-	var accent: Color {
+	var accent: Color { Color(accentResource) }
+
+	var accentResource: ColorResource {
 		switch resolved {
-		case .fresh, .automatic: Color(.inSeason)
-		case .citrus: Color(.citrusAccent)
-		case .berry: Color(.berryAccent)
-		case .ocean: Color(.oceanAccent)
+		case .fresh, .automatic: .inSeason
+		case .citrus: .citrusAccent
+		case .berry: .berryAccent
+		case .ocean: .oceanAccent
 		}
 	}
 

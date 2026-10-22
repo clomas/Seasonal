@@ -25,11 +25,11 @@ class InfoViewController: UIViewController {
 
 		// If a location was detected, replace "Australia" with the state
 		if viewModel?.location != .noState, let usersStateInAustralia: String = viewModel?.location.fullName {
-			infoTextBlock.text = Constants.infoPageSpiel.replacingOccurrences(of: Constants.straya, with: "\(usersStateInAustralia)")
+			infoTextBlock.text = ConstantsOld.infoPageSpiel.replacingOccurrences(of: ConstantsOld.straya, with: "\(usersStateInAustralia)")
 
 		// else display "Australia" in default spiel
         } else {
-            infoTextBlock.text = Constants.infoPageSpiel
+            infoTextBlock.text = ConstantsOld.infoPageSpiel
         }
     }
 

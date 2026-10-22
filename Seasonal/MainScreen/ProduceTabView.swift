@@ -14,6 +14,9 @@ import SwiftUI
 struct ProduceTabView: View {
 
     @Environment(MainScreenState.self) private var state
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
+    @State private var isSearchPresented = false
 
     let tab: MainTabScreen.Tabs
     let isSearchable: Bool
@@ -53,9 +56,24 @@ struct ProduceTabView: View {
                         SettingsButton(action: onShowSettings)
                     }
                 }
-                .searchableIfPresent(text: isSearchable ? $state.searchQuery : nil, prompt: Strings.Search.prompt)
+                .searchableIfPresent(
+                    text: isSearchable ? $state.searchQuery : nil,
+                    isPresented: $isSearchPresented,
+                    placement: searchPlacement,
+                    prompt: Strings.Search.prompt
+                )
                 .searchPresentationToolbarBehavior(.avoidHidingContent)
         }
+        // `.searchTabSelection` only focuses a field that sits in the tab bar.
+        .onAppear {
+            isSearchPresented = isSearchable
+        }
+    }
+
+    /// In a regular width the tab bar shares the navigation bar, which shrinks an automatic field
+    /// to a second search button that the search tab can't open.
+    private var searchPlacement: SearchFieldPlacement {
+        horizontalSizeClass == .regular ? .navigationBarDrawer(displayMode: .always) : .automatic
     }
 
     private var searchText: String {

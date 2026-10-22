@@ -38,7 +38,7 @@ struct ProduceListRow: View {
 					.accessibilityAddTraits(.isHeader)
 					.frame(maxWidth: .infinity)
 
-				LikeButton(produce: produce)
+				FavouriteButton(produce: produce)
 					.padding(.trailing, .space4)
 					.frame(width: sideSlotWidth, alignment: .trailing)
 			}

@@ -15,8 +15,8 @@ extension Produce {
         category: ProduceCategory? = .fruit,
         months: [Months]? = nil,
         seasons: [Seasons]? = nil,
-        liked: Bool = false
+        isFavourite: Bool = false
     ) -> Produce {
-        Produce(id: id, name: name, category: category, imageName: nil, description: nil, months: months, seasons: seasons, liked: liked)
+        Produce(id: id, name: name, category: category, imageName: nil, description: nil, months: months, seasons: seasons, isFavourite: isFavourite)
     }
 }

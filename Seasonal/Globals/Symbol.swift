@@ -20,4 +20,9 @@ enum Symbol {
     static let location = "mappin.and.ellipse"
     static let findLocation = "location.magnifyingglass"
     static let retry = "arrow.clockwise"
+    static let fruit = "apple.fruit"
+    static let vegetables = "carrot"
+    static let herbs = "leaf"
+    static let category = "list.bullet"
+    static let swatch = "circle.fill"
 }

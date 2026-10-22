@@ -10,9 +10,14 @@ import SwiftUI
 
 extension View {
     @ViewBuilder
-    func searchableIfPresent(text: Binding<String>?, prompt: String) -> some View {
+    func searchableIfPresent(
+        text: Binding<String>?,
+        isPresented: Binding<Bool>,
+        placement: SearchFieldPlacement,
+        prompt: String
+    ) -> some View {
         if let text {
-            searchable(text: text, prompt: prompt)
+            searchable(text: text, isPresented: isPresented, placement: placement, prompt: prompt)
         } else {
             self
         }

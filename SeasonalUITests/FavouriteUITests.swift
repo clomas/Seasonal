@@ -1,5 +1,5 @@
 //
-//  LikeUITests.swift
+//  FavouriteUITests.swift
 //  SeasonalUITests
 //
 //  Created by Clint Thomas on 28/9/2026.
@@ -9,7 +9,7 @@
 import XCTest
 
 @available(iOS 26, *)
-final class LikeUITests: SeasonalUITestCase {
+final class FavouriteUITests: SeasonalUITestCase {
 
     private let applesID = 0
 
@@ -18,7 +18,7 @@ final class LikeUITests: SeasonalUITestCase {
         openTab(TabName.favourites)
         XCTAssertTrue(row(named: "Apples").waitForExistence(timeout: elementTimeout))
 
-        app.buttons["produceLikeButton_\(applesID)"].tap()
+        app.buttons["produceFavouriteButton_\(applesID)"].tap()
 
         XCTAssertTrue(row(named: "Apples").waitForNonExistence(timeout: elementTimeout))
     }

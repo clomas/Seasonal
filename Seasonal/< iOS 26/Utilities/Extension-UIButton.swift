@@ -18,7 +18,7 @@ extension UIButton {
 
 		// current state before toggle is false
 		if selected == false {
-			setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
+			setImage(UIImage(named: "\(ConstantsOld.liked).png"), for: .normal)
 			UIView.animate(withDuration: 0.2, animations: {() -> Void in
 				self.transform = CGAffineTransform.identity.scaledBy(x: 0.8, y: 0.8)
 
@@ -33,7 +33,7 @@ extension UIButton {
 				})
 			})
 		} else {
-			setImage(UIImage(named: "\(Constants.liked).png"), for: .normal)
+			setImage(UIImage(named: "\(ConstantsOld.liked).png"), for: .normal)
 			layoutIfNeeded()
 
 			UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.beginFromCurrentState, animations: {
@@ -44,7 +44,7 @@ extension UIButton {
 					self.frame = CGRect(x: self.frame.origin.x + 100, y: self.frame.origin.y, width: self.frame.width, height: self.frame.height)
 
 				}, completion: { _ in
-					let image: UIImage? = UIImage(named: "\(Constants.unliked).png")?.withRenderingMode(.alwaysTemplate)
+					let image: UIImage? = UIImage(named: "\(ConstantsOld.unliked).png")?.withRenderingMode(.alwaysTemplate)
 					self.setImage(image, for: .normal)
 					self.imageView?.tintColor = UIColor.LikeButton.tint
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Keeps each region's catalogue indefinitely, so it's only downloaded once. Liked state isn't
+/// Keeps each region's catalogue indefinitely, so it's only downloaded once. Favourite state isn't
 /// trusted from here; it's always refreshed from CloudKit.
 struct ProduceDiskCache: ProduceDiskCaching {
 

@@ -11,6 +11,6 @@ import CloudKit
 @MainActor
 protocol ProduceProviding {
 	func produce(for location: StateLocation) async -> Result<[Produce], CKError>
-	func likes(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce]
-	func updateLike(id: Int, liked: Bool) async
+	func favourites(for location: StateLocation, basedOn baseProduce: [Produce]) async -> [Produce]
+	func updateFavourite(id: Int, isFavourite: Bool) async
 }

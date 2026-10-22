@@ -33,12 +33,12 @@ final class SettingsUITests: SeasonalUITestCase {
         try launch()
         app.buttons["settingsButton"].tap()
         XCTAssertTrue(app.navigationBars["Seasonal"].waitForExistence(timeout: elementTimeout))
-        defer { choose("Automatic", in: "Mode") }
+        defer { choose("Automatic", in: "Light/Dark Mode") }
 
-        choose("Light", in: "Mode")
+        choose("Light", in: "Light/Dark Mode")
         XCTAssertGreaterThan(screenBrightness(), brightScreen)
 
-        choose("Dark", in: "Mode")
+        choose("Dark", in: "Light/Dark Mode")
         XCTAssertLessThan(screenBrightness(), darkScreen)
     }
 

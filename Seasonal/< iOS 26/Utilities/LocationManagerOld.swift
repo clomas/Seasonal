@@ -116,7 +116,7 @@ class LocationManagerOld: NSObject, @preconcurrency CLLocationManagerDelegate {
 			} else if state == "ca" {
 				stateFound = StateLocation.noState
 			} else {
-				if locationInfo.country != Constants.straya {
+				if locationInfo.country != ConstantsOld.straya {
 					if let state: StateLocation = StateLocation(rawValue: StateLocation.noState.rawValue) {
 						stateFound = state
 #if DEBUG
@@ -144,7 +144,7 @@ class LocationInformation {
 	var country: String?
 	var locationFound: Bool?
 
-	init(state: String? = "", country: String? = Constants.straya, locationFound: Bool? = false) {
+	init(state: String? = "", country: String? = ConstantsOld.straya, locationFound: Bool? = false) {
 		self.state = state
 		self.country = country
 		self.locationFound = locationFound

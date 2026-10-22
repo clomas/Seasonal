@@ -38,6 +38,12 @@ extension UIViewController {
 			alertController.addAction(action)
 		}
 
+		if let popover: UIPopoverPresentationController = alertController.popoverPresentationController {
+			popover.sourceView = view
+			popover.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+			popover.permittedArrowDirections = []
+		}
+
 		present(alertController, animated: true)
 	}
 
@@ -45,7 +51,7 @@ extension UIViewController {
 		presentAlert(title: "Undetermined Location",
 					 message: "Choose your location",
 					 alertStyle: .actionSheet,
-					 actionTitles: Constants.allLocations,
+					 actionTitles: ConstantsOld.allLocations,
 					 actionStyles: [.default, .default, .default, .default, .default, .default, .default],
 
 					 actions: [ { _ in

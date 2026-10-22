@@ -16,8 +16,8 @@ struct MenuBarModel {
 
 		func imageName() -> String {
 			switch self {
-			case .categories: return "\(Constants.categories).png"
-			case .altLabel: return "\(Constants.allCategories).png"
+			case .categories: return "\(ConstantsOld.categories).png"
+			case .altLabel: return "\(ConstantsOld.allCategories).png"
 			}
 		}
 	}
@@ -35,15 +35,15 @@ struct MenuBarModel {
 
 		func imageName(currentMonth: MonthOld) -> String {
 			switch self {
-			case .favourites: return "\(Constants.favourites).png"
-			case .calendar: return "\(Constants.months).png"
+			case .favourites: return "\(ConstantsOld.favourites).png"
+			case .calendar: return "\(ConstantsOld.months).png"
 			case .currentMonth: return currentMonth.calendarImageName
-			case .seasons: return "\(Constants.seasons).png"
-			case .all: return "\(Constants.categories).png"
-			case .fruit: return "\(Constants.fruit).png"
-			case .vegetables: return "\(Constants.vegetables).png"
-			case .herbs: return "\(Constants.herbs).png"
-			case .cancel: return "\(Constants.cancel).png"
+			case .seasons: return "\(ConstantsOld.seasons).png"
+			case .all: return "\(ConstantsOld.categories).png"
+			case .fruit: return "\(ConstantsOld.fruit).png"
+			case .vegetables: return "\(ConstantsOld.vegetables).png"
+			case .herbs: return "\(ConstantsOld.herbs).png"
+			case .cancel: return "\(ConstantsOld.cancel).png"
 			}
 		}
 	}
@@ -65,11 +65,11 @@ struct MenuBarModel {
 			case .autumn: return "\(Seasons.autumn).png"
 			case .winter: return "\(Seasons.winter).png"
 			case .spring: return "\(Seasons.spring).png"
-			case .all: return "\(Constants.categories).png"
-			case .fruit: return "\(Constants.fruit).png"
-			case .vegetables: return "\(Constants.vegetables).png"
-			case .herbs: return "\(Constants.herbs).png"
-			case .cancel: return "\(Constants.cancel).png"
+			case .all: return "\(ConstantsOld.categories).png"
+			case .fruit: return "\(ConstantsOld.fruit).png"
+			case .vegetables: return "\(ConstantsOld.vegetables).png"
+			case .herbs: return "\(ConstantsOld.herbs).png"
+			case .cancel: return "\(ConstantsOld.cancel).png"
 			}
 		}
 	}

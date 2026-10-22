@@ -57,7 +57,9 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 		loadInitialViewCoordinator()
 		networkService = NetworkServiceOld(delegate: self)
 
-		window?.rootViewController = navigationController
+		window?.rootViewController = UIDevice.current.userInterfaceIdiom == .pad
+			? PhoneSizedContainerViewController(child: navigationController)
+			: navigationController
 		window?.makeKeyAndVisible()
 	}
 

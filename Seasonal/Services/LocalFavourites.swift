@@ -1,5 +1,5 @@
 //
-//  LocalLikes.swift
+//  LocalFavourites.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 4/10/2026.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-/// The likes saved on this device: one file per produce ID, named after the ID. The legacy app
-/// reads and writes the same files, so likes carry over between the two.
-struct LocalLikes: Sendable {
+/// The favourites saved on this device: one file per produce ID, named after the ID. The legacy app
+/// reads and writes the same files, so favourites carry over between the two.
+struct LocalFavourites: Sendable {
 
     private struct Record: Codable {
         let id: Int
@@ -37,6 +37,12 @@ struct LocalLikes: Sendable {
 
     func delete(_ id: Int) {
         try? FileManager.default.removeItem(at: fileURL(for: id))
+    }
+
+    func replace(with newIDs: Set<Int>) {
+        let currentIDs = ids
+        newIDs.subtracting(currentIDs).forEach(save)
+        currentIDs.subtracting(newIDs).forEach(delete)
     }
 
     private func fileURL(for id: Int) -> URL {

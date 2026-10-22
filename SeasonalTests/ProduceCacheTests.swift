@@ -14,11 +14,11 @@ struct ProduceCacheTests {
 
     private let cache = ProduceCache()
 
-    @Test func favouritesReturnsOnlyLiked() {
-        let liked = Produce.fixture(id: 1, name: "A", liked: true)
-        let notLiked = Produce.fixture(id: 2, name: "B", liked: false)
+    @Test func favouritesReturnsOnlyFavourites() {
+        let favourite = Produce.fixture(id: 1, name: "A", isFavourite: true)
+        let notFavourite = Produce.fixture(id: 2, name: "B", isFavourite: false)
 
-        #expect(cache.favourites(from: [liked, notLiked]).map(\.id) == [1])
+        #expect(cache.favourites(from: [favourite, notFavourite]).map(\.id) == [1])
     }
 
     @Test func byPeriodFiltersForMonths() {
@@ -36,16 +36,16 @@ struct ProduceCacheTests {
     }
 
     @Test func derivedListsAreMemoisedUntilInvalidated() {
-        let liked = Produce.fixture(id: 1, name: "A", liked: true)
+        let favourite = Produce.fixture(id: 1, name: "A", isFavourite: true)
 
-        #expect(cache.favourites(from: [liked]).count == 1)
+        #expect(cache.favourites(from: [favourite]).count == 1)
         #expect(cache.favourites(from: []).count == 1)
     }
 
     @Test func invalidateForcesRecomputeAcrossAllKeys() {
-        let liked = Produce.fixture(id: 1, name: "Apple", months: [.april], liked: true)
-        #expect(cache.favourites(from: [liked]).count == 1)
-        #expect(cache.byPeriod(Months.april, from: [liked]).count == 1)
+        let favourite = Produce.fixture(id: 1, name: "Apple", months: [.april], isFavourite: true)
+        #expect(cache.favourites(from: [favourite]).count == 1)
+        #expect(cache.byPeriod(Months.april, from: [favourite]).count == 1)
 
         cache.invalidate()
 

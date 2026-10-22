@@ -14,11 +14,11 @@ extension ViewDisplayed.ProduceCategory {
 
 	var asString: String {
 		switch self {
-		case .all: return Constants.all
-		case .fruit: return Constants.fruit
-		case .vegetables: return Constants.vegetables
-		case .herbs: return Constants.herbs
-		case .cancelled: return Constants.cancelled
+		case .all: return ConstantsOld.all
+		case .fruit: return ConstantsOld.fruit
+		case .vegetables: return ConstantsOld.vegetables
+		case .herbs: return ConstantsOld.herbs
+		case .cancelled: return ConstantsOld.cancelled
 		}
 	}
 }

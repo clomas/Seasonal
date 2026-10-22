@@ -27,7 +27,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.march, .april, .may, .june, .july, .august],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 1,
@@ -37,7 +37,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.april, .august, .december, .january, .june, .september, .february, .august, .july],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 2,
@@ -47,7 +47,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.april, .august, .december, .january, .june, .september],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 3,
@@ -57,7 +57,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.april, .august, .december, .january, .june, .september, .may],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 4,
@@ -67,7 +67,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.april, .august, .april, .january, .june, .september],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 5,
@@ -77,7 +77,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.april, .august, .december, .january, .september, .february],
 			seasons: [.autumn, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 6,
@@ -87,7 +87,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.february, .march, .april, .may],
 			seasons: [.autumn],
-			liked: false
+			isFavourite: false
 		),
 		Produce(
 			id: 7,
@@ -97,7 +97,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.may, .june, .july, .august, .september, .october],
 			seasons: [.winter, .spring],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 8,
@@ -107,7 +107,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.march, .april, .may, .june, .july],
 			seasons: [.autumn, .winter],
-			liked: false
+			isFavourite: false
 		),
 		Produce(
 			id: 9,
@@ -117,7 +117,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.september, .october, .november, .december],
 			seasons: [.spring, .summer],
-			liked: true
+			isFavourite: true
 		),
 		Produce(
 			id: 10,
@@ -127,7 +127,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.november, .december, .january, .february],
 			seasons: [.summer],
-			liked: false
+			isFavourite: false
 		),
 		Produce(
 			id: 11,
@@ -137,7 +137,7 @@ let previewProduce: [Produce] = [
 			description: "",
 			months: [.october, .november, .december, .january, .february, .march],
 			seasons: [.spring, .summer, .autumn],
-			liked: true
+			isFavourite: true
 		),
 ]
 #endif

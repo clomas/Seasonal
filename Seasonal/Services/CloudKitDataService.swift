@@ -17,7 +17,7 @@ struct CloudKitDataService: Sendable {
 
     private let container = CKContainer.default()
 
-    private var hasUbiquityIdentityToken: Bool {
+    var hasUbiquityIdentityToken: Bool {
         FileManager.default.ubiquityIdentityToken != nil
     }
 

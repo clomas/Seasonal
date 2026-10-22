@@ -60,7 +60,7 @@ enum Strings {
         static let westernAustralia = String(localized: "Western Australia")
     }
 
-    enum Like {
+    enum Favourite {
         static let label = String(localized: "Favourite")
     }
 
@@ -119,7 +119,7 @@ enum Strings {
         static let getInTouch = String(localized: "Get in touch")
         static let appearanceSection = String(localized: "Appearance")
         static let themePicker = String(localized: "Colour")
-        static let appearancePicker = String(localized: "Mode")
+        static let appearancePicker = String(localized: "Light/Dark Mode")
         static let themeFooter = String(localized: "Match current season changes the accent colour through the year.")
 
         // swiftlint:disable:next line_length

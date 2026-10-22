@@ -25,7 +25,7 @@ struct ProduceRecordMapperTests {
         #expect(produce.category == .fruit)
         #expect(produce.months == [.january, .february, .november, .december])
         #expect(produce.seasons == [.summer, .autumn])
-        #expect(produce.liked == false)
+        #expect(produce.isFavourite == false)
     }
 
     @Test(arguments: [
@@ -60,10 +60,10 @@ struct ProduceRecordMapperTests {
     }
 
     @Test func otherStatesFieldsAreIgnored() {
-        let record = CKRecord(recordType: Constants.australianProduce)
-        record.setValue(1, forKey: Constants.id)
-        record.setValue("Item", forKey: Constants.name)
-        record.setValue("fruit", forKey: Constants.category)
+        let record = CKRecord(recordType: ProduceRecordKey.australianProduce)
+        record.setValue(1, forKey: ProduceRecordKey.id)
+        record.setValue("Item", forKey: ProduceRecordKey.name)
+        record.setValue("fruit", forKey: ProduceRecordKey.category)
         record.setValue("111111111111", forKey: "months_nsw")
         record.setValue("sum", forKey: "seasons_nsw")
 
@@ -71,17 +71,17 @@ struct ProduceRecordMapperTests {
     }
 
     @Test func incompleteRecordIsSkipped() {
-        let incomplete = CKRecord(recordType: Constants.australianProduce)
+        let incomplete = CKRecord(recordType: ProduceRecordKey.australianProduce)
         let complete = makeRecord(id: 7, name: "Apples", category: "fruit", months: "", seasons: "")
 
         #expect(mapper.produce(from: [incomplete, complete, incomplete]).map(\.id) == [7])
     }
 
     private func makeRecord(id: Int, name: String, category: String, months: String, seasons: String) -> CKRecord {
-        let record = CKRecord(recordType: Constants.australianProduce)
-        record.setValue(id, forKey: Constants.id)
-        record.setValue(name, forKey: Constants.name)
-        record.setValue(category, forKey: Constants.category)
+        let record = CKRecord(recordType: ProduceRecordKey.australianProduce)
+        record.setValue(id, forKey: ProduceRecordKey.id)
+        record.setValue(name, forKey: ProduceRecordKey.name)
+        record.setValue(category, forKey: ProduceRecordKey.category)
         record.setValue(months, forKey: "months_vic")
         record.setValue(seasons, forKey: "seasons_vic")
         return record

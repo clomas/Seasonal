@@ -25,8 +25,8 @@ struct ProduceStoreTests {
 
     @Test func favouritesDerivedFromAllProduce() {
         store.loadMockData([
-            .fixture(id: 1, name: "A", liked: true),
-            .fixture(id: 2, name: "B", liked: false)
+            .fixture(id: 1, name: "A", isFavourite: true),
+            .fixture(id: 2, name: "B", isFavourite: false)
         ])
 
         #expect(store.favourites.map(\.id) == [1])
@@ -43,41 +43,41 @@ struct ProduceStoreTests {
 
     // MARK: - Liking
 
-    @Test func toggleLikedUpdatesProduceAndFavourites() throws {
-        store.loadMockData([.fixture(id: 1, name: "A", liked: false)])
+    @Test func toggleFavouriteUpdatesProduceAndFavourites() throws {
+        store.loadMockData([.fixture(id: 1, name: "A", isFavourite: false)])
 
-        store.toggleLiked(for: 1)
+        store.toggleFavourite(for: 1)
 
         let item = try #require(store.allProduce.first { $0.id == 1 })
-        #expect(item.liked)
+        #expect(item.isFavourite)
         #expect(store.favourites.count == 1)
     }
 
-    @Test func toggleLikedInvalidatesCachedDerivedLists() {
-        store.loadMockData([.fixture(id: 1, name: "Apple", months: [.april], liked: false)])
-        #expect(store.byPeriod(Months.april).first?.liked == false)
+    @Test func toggleFavouriteInvalidatesCachedDerivedLists() {
+        store.loadMockData([.fixture(id: 1, name: "Apple", months: [.april], isFavourite: false)])
+        #expect(store.byPeriod(Months.april).first?.isFavourite == false)
         #expect(store.favourites.isEmpty)
 
-        store.toggleLiked(for: 1)
+        store.toggleFavourite(for: 1)
 
-        #expect(store.byPeriod(Months.april).first?.liked == true)
+        #expect(store.byPeriod(Months.april).first?.isFavourite == true)
         #expect(store.favourites.count == 1)
     }
 
-    @Test(.tags(.networking)) func toggleLikedSyncsTheNewState() async throws {
-        store.loadMockData([.fixture(id: 1, name: "A", liked: false)])
+    @Test(.tags(.networking)) func toggleFavouriteSyncsTheNewState() async throws {
+        store.loadMockData([.fixture(id: 1, name: "A", isFavourite: false)])
 
-        try await #require(store.toggleLiked(for: 1)).value
-        #expect(service.likeUpdates == [1: true])
+        try await #require(store.toggleFavourite(for: 1)).value
+        #expect(service.favouriteUpdates == [1: true])
 
-        try await #require(store.toggleLiked(for: 1)).value
-        #expect(service.likeUpdates == [1: false])
+        try await #require(store.toggleFavourite(for: 1)).value
+        #expect(service.favouriteUpdates == [1: false])
     }
 
     @Test func togglingUnknownProduceDoesNothing() {
-        store.loadMockData([.fixture(id: 1, name: "A", liked: false)])
+        store.loadMockData([.fixture(id: 1, name: "A", isFavourite: false)])
 
-        #expect(store.toggleLiked(for: 99) == nil)
+        #expect(store.toggleFavourite(for: 99) == nil)
         #expect(store.favourites.isEmpty)
     }
 
@@ -93,15 +93,15 @@ struct ProduceStoreTests {
         #expect(diskCache.load(for: .victoria)?.map(\.id) == [1, 2])
     }
 
-    @Test(.tags(.networking)) func diskCacheHitOnlyRefreshesLikes() async throws {
+    @Test(.tags(.networking)) func diskCacheHitOnlyRefreshesFavourites() async throws {
         let apple = Produce.fixture(id: 1, name: "Apple")
         diskCache.save([apple], for: .victoria)
-        service.likesResult = [apple.withLiked(true)]
+        service.favouritesResult = [apple.withFavourite(true)]
 
         try await store.fetchFromCloudKit(for: .victoria).get()
 
         #expect(service.produceRequests.isEmpty)
-        #expect(service.likesRequests == [[1]])
+        #expect(service.favouritesRequests == [[1]])
         #expect(store.favourites.map(\.id) == [1])
     }
 
@@ -112,7 +112,7 @@ struct ProduceStoreTests {
         try await store.fetchFromCloudKit(for: .victoria).get()
 
         #expect(service.produceRequests.count == 1)
-        #expect(service.likesRequests.isEmpty)
+        #expect(service.favouritesRequests.isEmpty)
         #expect(store.allProduce.map(\.id) == [1])
     }
 
@@ -133,11 +133,11 @@ struct ProduceStoreTests {
         service.produceResult = .success([.fixture(id: 2, name: "Mango")])
         try await store.fetchFromCloudKit(for: .queensland).get()
 
-        service.likesResult = [.fixture(id: 1, name: "Apple")]
+        service.favouritesResult = [.fixture(id: 1, name: "Apple")]
         try await store.fetchFromCloudKit(for: .victoria).get()
 
         #expect(service.produceRequests == [.victoria, .queensland])
-        #expect(service.likesRequests == [[1]])
+        #expect(service.favouritesRequests == [[1]])
         #expect(store.allProduce.map(\.id) == [1])
     }
 

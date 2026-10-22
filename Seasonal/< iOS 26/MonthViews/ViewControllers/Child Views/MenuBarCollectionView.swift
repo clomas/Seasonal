@@ -11,7 +11,13 @@ import Foundation
 
 class MenuBarCollectionView: UICollectionView {
 
+	private let visibleItemCount: CGFloat = 5
+
 	var viewModel: MenuBarViewModel?
+
+	private var itemWidth: CGFloat {
+		bounds.width / visibleItemCount
+	}
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -19,10 +25,18 @@ class MenuBarCollectionView: UICollectionView {
 		Task { @MainActor in self.setupView() }
 	}
 
+	override func layoutSubviews() {
+		super.layoutSubviews()
+
+		if let layout = collectionViewLayout as? UICollectionViewFlowLayout, layout.itemSize.width != itemWidth {
+			layout.itemSize = CGSize(width: itemWidth, height: bounds.height)
+		}
+	}
+
 	private func setupView() {
 		let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
 		layout.scrollDirection = .horizontal
-		layout.itemSize = CGSize(width: UIScreen.main.bounds.width / 5, height: frame.height)
+		layout.itemSize = CGSize(width: itemWidth, height: frame.height)
 		layout.minimumInteritemSpacing = 0
 		layout.minimumLineSpacing = 0
 
@@ -67,27 +81,27 @@ class MenuBarCollectionView: UICollectionView {
 
 			let originX: CGFloat = frame.origin.x
 				// slide coordinates for moving icon
-			var slideTo: CGFloat = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
+			var slideTo: CGFloat = cell.imageView.frame.origin.x - itemWidth
 				// jump icon back to the opposite side before sliding back into the cell.
-			var jumpTo: CGFloat = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
+			var jumpTo: CGFloat = cell.imageView.frame.origin.x + itemWidth * 2
 
 			if previousMonth == MonthOld.december && monthToScrollTo == MonthOld.january {
-				jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
-				slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
+				jumpTo = cell.imageView.frame.origin.x + itemWidth * 2
+				slideTo = cell.imageView.frame.origin.x - itemWidth
 
 			} else if previousMonth == MonthOld.january && monthToScrollTo == MonthOld.december {
-				slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
-				jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
+				slideTo = cell.imageView.frame.origin.x + itemWidth
+				jumpTo = cell.imageView.frame.origin.x - itemWidth * 2
 
 					// if page slideTo left
 			} else if previousMonth.rawValue > monthToScrollTo.rawValue {
-				slideTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5
-				jumpTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5 * 2
+				slideTo = cell.imageView.frame.origin.x + itemWidth
+				jumpTo = cell.imageView.frame.origin.x - itemWidth * 2
 
 					// else page slideTo right
 			} else if previousMonth.rawValue < monthToScrollTo.rawValue {
-				slideTo = cell.imageView.frame.origin.x - UIScreen.main.bounds.width / 5
-				jumpTo = cell.imageView.frame.origin.x + UIScreen.main.bounds.width / 5 * 2
+				slideTo = cell.imageView.frame.origin.x - itemWidth
+				jumpTo = cell.imageView.frame.origin.x + itemWidth * 2
 			}
 
 				// slide icon
@@ -173,7 +187,7 @@ extension MenuBarCollectionView: UICollectionViewDataSource {
 		layoutIfNeeded()
 
 			// swiftlint:disable line_length
-		if let cell: MenuBarCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MenuBarCell, for: indexPath) as? MenuBarCollectionViewCell {
+		if let cell: MenuBarCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsOld.MenuBarCell, for: indexPath) as? MenuBarCollectionViewCell {
 
 			cell.updateViews(viewModel: viewModel?.menuBarCells[indexPath.item])
 

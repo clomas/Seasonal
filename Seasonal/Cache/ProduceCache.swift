@@ -14,7 +14,7 @@ final class ProduceCache {
 	private let cache = Cache<ProduceCacheKey, [Produce]>()
 
 	func favourites(from produce: [Produce]) -> [Produce] {
-		cache.value(for: .favourites) { produce.filter(\.liked).sortedByName() }
+		cache.value(for: .favourites) { produce.filter(\.isFavourite).sortedByName() }
 	}
 
 	func byPeriod<P: PeriodType>(_ period: P, from produce: [Produce]) -> [Produce] {

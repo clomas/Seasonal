@@ -222,7 +222,7 @@ extension MainViewController: UICollectionViewDataSource {
 	}
 
 	func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: Constants.MonthTableCell,
+		if let cell: MonthTableCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: ConstantsOld.MonthTableCell,
 																					   for: indexPath) as? MonthTableCollectionViewCell {
 			if viewModel?.viewDisplayed == .favourites {
 				cell.tag = 0

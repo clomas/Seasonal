@@ -115,7 +115,7 @@ extension SeasonsViewController: UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		guard let viewModel,
-			  let cell: SeasonsTableViewCell = tableView.dequeueReusableCell(withIdentifier: Constants.SeasonsTableViewCell) as? SeasonsTableViewCell,
+			  let cell: SeasonsTableViewCell = tableView.dequeueReusableCell(withIdentifier: ConstantsOld.SeasonsTableViewCell) as? SeasonsTableViewCell,
 			  let produce: ProduceOld = viewModel.seasonProduceToDisplay?[indexPath.row] else { return ProduceMonthInfoViewCell() }
 
 		cell.updateViews(produce: produce)

@@ -1,5 +1,5 @@
 //
-//  Constants.swift
+//  ConstantsOld.swift
 //  Seasonal
 //
 //  Created by Clint Thomas on 20/2/19.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Constants {
+struct ConstantsOld {
 
 	static let seasonal: String = "Seasonal"
 
@@ -18,15 +18,15 @@ struct Constants {
 
 	// MARK: - CloudKit
     
-	static let australianProduce: String = "Australian_Produce"
-	static let australianProduceLikes: String = "Australian_Produce_Likes"
+	static let australianProduce: String = ProduceRecordKey.australianProduce
+	static let australianProduceLikes: String = ProduceRecordKey.australianProduceFavourites
 
 	// MARK: - Record fields
     
-	static let id: String = "id"
-	static let name: String = "name"
+	static let id: String = ProduceRecordKey.id
+	static let name: String = ProduceRecordKey.name
+	static let category: String = ProduceRecordKey.category
 	static let cancelled: String = "cancelled"
-	static let category: String = "category"
 
 	// MARK: - Icons & labels
     
@@ -95,13 +95,4 @@ struct Constants {
 		StateLocation.tasmania.fullName.capitalized
 	]
 
-}
-
-// MARK: - Category symbols
-
-extension String {
-	static let fruit: String = "apple.fruit"
-	static let herbs: String = "leaf"
-	static let category: String = "list.bullet"
-	static let vegetables: String = "carrot"
 }

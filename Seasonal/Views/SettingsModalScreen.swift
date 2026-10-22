@@ -14,6 +14,8 @@ struct SettingsModalScreen: View {
 
     @Environment(AppCoordinator.self) private var coordinator
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorSchemeContrast) private var contrast
 
     @Bindable private var themeStore = ThemeStore.shared
 
@@ -55,7 +57,12 @@ struct SettingsModalScreen: View {
                 Section {
                     Picker(Strings.Settings.themePicker, selection: $themeStore.theme) {
                         ForEach(Theme.allCases) { theme in
-                            Text(theme.title).tag(theme)
+                            Label {
+                                Text(theme.title)
+                            } icon: {
+                                Image(swatch: theme.accentResource, scheme: colorScheme, contrast: contrast)
+                            }
+                            .tag(theme)
                         }
                     }
                     .id(themeStore.theme)

@@ -24,9 +24,9 @@ final class CloudKitDataServiceOld: Sendable {
 	func getData(for locationFound: StateLocation, dataFetched: @escaping @MainActor @Sendable (Result<[ProduceOld], Error>) -> Void) {
 		Task {
 			do {
-				let publicRecords: [CKRecord] = try await cloudKitDataService.fetchItems(.public, recordType: Constants.australianProduce, queryKey: Constants.id)
+				let publicRecords: [CKRecord] = try await cloudKitDataService.fetchItems(.public, recordType: ConstantsOld.australianProduce, queryKey: ConstantsOld.id)
 				// continue if private error
-				let privateRecords: [CKRecord] = (try? await cloudKitDataService.fetchItems(.private, recordType: Constants.australianProduceLikes, queryKey: Constants.id)) ?? []
+				let privateRecords: [CKRecord] = (try? await cloudKitDataService.fetchItems(.private, recordType: ConstantsOld.australianProduceLikes, queryKey: ConstantsOld.id)) ?? []
 				await dataFetched(.success(addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords, location: locationFound)))
 			} catch {
 				#if DEBUG
@@ -41,35 +41,35 @@ final class CloudKitDataServiceOld: Sendable {
 
 	private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord], location: StateLocation) -> [ProduceOld] {
 		var produceArray: [ProduceOld] = [ProduceOld]()
-		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
+		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: ConstantsOld.id ) as? Int}
 
 		for record in publicRecords {
 			var id: Int = 0
-			var name: String = Constants.apple
-			var imageName: String = Constants.apple
+			var name: String = ConstantsOld.apple
+			var imageName: String = ConstantsOld.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
 			let description: String = ""
 			var months: [MonthOld] = [MonthOld]()
 			var seasons: [SeasonsOld] = [SeasonsOld]()
 			var liked: Bool = false
 
-			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
-			   let nameRecord: String = record.object(forKey: Constants.name) as? String,
-			   let categoryRecord: String = record.object(forKey: Constants.category) as? String,
-			   let monthsRecord: String = record.object(forKey: "months_\(location.rawValue)") as? String {
+			if let recordID: Int = record.object(forKey: ConstantsOld.id) as? Int,
+			   let nameRecord: String = record.object(forKey: ConstantsOld.name) as? String,
+			   let categoryRecord: String = record.object(forKey: ConstantsOld.category) as? String,
+			   let monthsRecord: String = record.object(forKey: ProduceRecordKey.months(for: location)) as? String {
 				id = recordID
 				name = nameRecord
 				imageName = nameRecord
 				category = ViewDisplayed.ProduceCategory.fromString(categoryRecord)
 				months = monthsRecord.createMonthArrayOld()
 
-				let seasonsKey = "seasons_\(location.rawValue)"
+				let seasonsKey = ProduceRecordKey.seasons(for: location)
 				if let seasonsRecord = record.object(forKey: seasonsKey) as? String {
 					seasons = seasonsRecord.createSeasonArrayOld()
 				}
 			}
 
-			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
+			if likedArray.contains(record.object(forKey: ConstantsOld.id) as? Int) {
 				liked = Bool(truncating: id as NSNumber)
 			}
 
@@ -138,8 +138,8 @@ final class CloudKitDataServiceOld: Sendable {
 	}
 
 	private func likeRecord(id: Int) -> CKRecord {
-		let record: CKRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: CKRecord.ID(recordName: "\(id)_"))
-		record.setValue(id, forKey: Constants.id)
+		let record: CKRecord = CKRecord(recordType: ConstantsOld.australianProduceLikes, recordID: CKRecord.ID(recordName: ProduceRecordKey.favouriteRecordName(for: id)))
+		record.setValue(id, forKey: ConstantsOld.id)
 		return record
 	}
 }

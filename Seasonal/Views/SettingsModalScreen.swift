@@ -140,8 +140,10 @@ struct SettingsModalScreen: View {
     }
 }
 
+#if DEBUG
 @available(iOS 26, *)
 #Preview {
     SettingsModalScreen()
         .environment(previewCoordinator)
 }
+#endif

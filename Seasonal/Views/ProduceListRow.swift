@@ -54,8 +54,10 @@ struct ProduceListRow: View {
 	}
 }
 
+#if DEBUG
 @available(iOS 26, *)
 #Preview {
 	ProduceListRow(produce: previewProduce[1], showMonths: true)
 		.environment(previewCoordinator.produceStore)
 }
+#endif

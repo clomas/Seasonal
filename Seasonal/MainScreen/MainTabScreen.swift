@@ -13,7 +13,7 @@ import TipKit
 struct MainTabScreen: View {
 
     @State private var state = MainScreenState()
-    @State private var showTip = !GlobalSettings.swipeTipShown.swipe
+    @State private var showTip = GlobalSettings.isSwipeTipDue
     @State private var isShowingSettings = false
 
     private let tipDismissDelay: Duration = .milliseconds(500)
@@ -76,7 +76,7 @@ struct MainTabScreen: View {
     private func dismissTipAfterPeek() async {
         try? await Task.sleep(for: tipDismissDelay)
         hideTip()
-        GlobalSettings.swipeTipShown = TipShown(swipe: true)
+        GlobalSettings.markSwipeTipShown()
     }
 
     private func hideTip() {
@@ -86,9 +86,11 @@ struct MainTabScreen: View {
     }
 }
 
+#if DEBUG
 @available(iOS 26, *)
 #Preview {
     MainTabScreen()
         .environment(previewCoordinator)
         .environment(previewCoordinator.produceStore)
 }
+#endif

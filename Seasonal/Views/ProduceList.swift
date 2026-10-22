@@ -15,6 +15,7 @@ struct ProduceList: View {
     let parentTab: MainTabScreen.Tabs
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.isSearching) private var isSearching
 
     var selectedCategory: ProduceCategory = .all
     var searchText = ""
@@ -33,7 +34,8 @@ struct ProduceList: View {
                                 .transition(reduceMotion ? .opacity : .slide.combined(with: .opacity))
                         }
                     }
-                    .padding(.bottom, .largePadding)
+                    // The keyboard and the search field cover far more than the usual room at the bottom.
+                    .padding(.bottom, isSearching ? .keyboardPadding : .space4)
                 }
                 .accessibilityIdentifier("produceList")
                 .scrollIndicators(.hidden)

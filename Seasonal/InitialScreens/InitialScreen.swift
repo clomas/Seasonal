@@ -38,8 +38,10 @@ struct InitialScreen: View {
 	}
 }
 
+#if DEBUG
 @available(iOS 26, *)
 #Preview {
 	InitialScreen()
 		.environment(previewCoordinator)
 }
+#endif

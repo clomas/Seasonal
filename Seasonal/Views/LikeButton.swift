@@ -38,8 +38,10 @@ struct LikeButton: View {
 	}
 }
 
+#if DEBUG
 @available(iOS 26, *)
 #Preview {
 	LikeButton(produce: previewProduce[0])
 		.environment(previewCoordinator.produceStore)
 }
+#endif

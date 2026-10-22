@@ -12,7 +12,10 @@ struct SwipeOnboardingTip: Tip {
 
 	let context: String
 
-	var id = "scroll-guide"
+	/// Versioned because TipKit remembers a closed tip forever, and this one should return after an update.
+	var id: String {
+		"scroll-guide-\(Bundle.main.shortVersion ?? "")"
+	}
 
 	var title: Text {
 		Text(Strings.Onboarding.swipeTitle)

@@ -41,10 +41,10 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
 #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
             UIView.setAnimationsEnabled(false)
-            GlobalSettings.swipeTipShown = TipShown(swipe: true)
+            GlobalSettings.markSwipeTipShown()
         }
         if CommandLine.arguments.contains("reset-onboarding") {
-            GlobalSettings.swipeTipShown = TipShown(swipe: false)
+            GlobalSettings.swipeTipShownVersion = ""
         }
 #endif
     }

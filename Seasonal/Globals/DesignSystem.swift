@@ -32,7 +32,7 @@ extension CGFloat {
     static let iconChip: CGFloat = 28
     static let minimumTapTarget: CGFloat = 44
     static let capsuleRowHeight: CGFloat = 30
-    static let largePadding: CGFloat = 200
+    static let keyboardPadding: CGFloat = 450
 }
 
 #Preview {

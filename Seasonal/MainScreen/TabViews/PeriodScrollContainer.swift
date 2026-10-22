@@ -16,9 +16,8 @@ struct PeriodScrollContainer<Cell: View>: View {
     @Binding var jumpToIndex: Int?
     @Binding var currentIndex: Int
 
-    let periods: [PeriodItem]
-    let initialIndex: Int
     let onPeekFinished: (() async -> Void)?
+    
     @ViewBuilder let cell: (PeriodItem) -> Cell
 
     private static var bufferRepeats: Int { 21 }
@@ -26,11 +25,13 @@ struct PeriodScrollContainer<Cell: View>: View {
     private static var peekStartDelay: Duration { .milliseconds(500) }
     private static var peekHopDuration: TimeInterval { 1 }
 
+    private let initialIndex: Int
+    private let centerOffset: Int
     private let slotCount: Int
     private let startSlot: Int
-    private let count: Int
-    private let centerOffset: Int
-
+    private let periodCount: Int
+    private let periods: [PeriodItem]
+    
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var scrollPosition: ScrollPosition
@@ -54,7 +55,7 @@ struct PeriodScrollContainer<Cell: View>: View {
         self._currentIndex = currentIndex
         self.onPeekFinished = onPeekFinished
         self.cell = cell
-        self.count = count
+        self.periodCount = count
         self.centerOffset = centerOffset
         self.startSlot = startSlot
         self.slotCount = Self.bufferRepeats * count
@@ -96,13 +97,13 @@ struct PeriodScrollContainer<Cell: View>: View {
     }
 
     private func periodIndex(for slot: Int) -> Int {
-        ((slot - centerOffset) % count + count) % count
+        ((slot - centerOffset) % periodCount + periodCount) % periodCount
     }
 
     private func nearestSlot(for index: Int) -> Int {
         let current = scrollPosition.viewID(type: Int.self) ?? startSlot
-        let nearestRepeat = (Double(current - centerOffset - index) / Double(count)).rounded()
-        return centerOffset + index + Int(nearestRepeat) * count
+        let nearestRepeat = (Double(current - centerOffset - index) / Double(periodCount)).rounded()
+        return centerOffset + index + Int(nearestRepeat) * periodCount
     }
 
     private func jump(to index: Int) {

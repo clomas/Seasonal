@@ -1,10 +1,10 @@
-	//
-	//  MenuBar.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 6/2/19.
-	//  Copyright © 2019 Clint Thomas. All rights reserved.
-	//
+//
+//  MenuBar.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 6/2/19.
+//  Copyright © 2019 Clint Thomas. All rights reserved.
+//
 
 import UIKit
 import Foundation
@@ -35,12 +35,12 @@ class MenuBarCollectionView: UICollectionView {
 		dataSource = self
 	}
 
-		// Menu Bar Actions
+    // Menu Bar Actions
 
-		/// If menuBar is tapped at index 4, we need to animate the cells across to
-		/// present the
-		/// - Parameters:
-		///   - index: index that was tapped
+    /// If menuBar is tapped at index 4, we need to animate the cells across to
+    /// present the
+    /// - Parameters:
+    ///   - index: index that was tapped
 	func beginMenuBarAnimation(for index: Int) {
 		DispatchQueue.main.async { [weak self] in
 			guard let self = self else { return }
@@ -58,7 +58,7 @@ class MenuBarCollectionView: UICollectionView {
 		}
 	}
 
-		// MARK: Scrolling Month Animation
+    // MARK: Scrolling Month Animation
 
 	func monthIconCarouselAnimation(from previousMonth: MonthOld, to monthToScrollTo: MonthOld) {
 		let indexPath: IndexPath = IndexPath(item: 2, section: 0)
@@ -140,8 +140,8 @@ class MenuBarCollectionView: UICollectionView {
 		}
 	}
 
-		// After selecting a month from the MonthPickerViewController, this will update the icon
-		// to the current month
+    // After selecting a month from the MonthPickerViewController, this will update the icon
+    // to the current month
 	private func updateMonthIconImage(to month: MonthOld) {
 		viewModel?.menuBarCells[IndexPath(viewDisplayed: .months).item].imageName = month.calendarImageName
 		reloadData()

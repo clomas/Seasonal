@@ -1,10 +1,10 @@
-	//
-	//  MonthsInSeasonCapsuleView.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 12/7/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  MonthsInSeasonCapsuleView.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 12/7/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 

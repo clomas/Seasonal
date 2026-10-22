@@ -83,7 +83,7 @@ final class AppCoordinatorOld: @preconcurrency LocationDelegateOld, NetworkObser
 
 			// If not found && nothing is stored
 			if location == .noState && currentLocation == .noState {
-					// choose your own location
+                // choose your own location
 				initialCoordinatorDelegate?.locationNotFound()
 
 			// If location is found - go on and get that data

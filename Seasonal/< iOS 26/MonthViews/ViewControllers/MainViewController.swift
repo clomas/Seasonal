@@ -1,10 +1,10 @@
-	//
-	//  MainViewController.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 25/2/21.
-	//  Copyright © 2021 Clint Thomas. All rights reserved.
-	//
+//
+//  MainViewController.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 25/2/21.
+//  Copyright © 2021 Clint Thomas. All rights reserved.
+//
 
 import UIKit
 
@@ -88,7 +88,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		}
 
 		if let current = indexOfCenteredItem(), current == indexToScrollTo {
-				// Already centered; just ensure the title is right
+            // Already centered; just ensure the title is right
 			setTitleFromScrollViewPaged(newTitle: viewModel?.navigationBarTitleString)
 			return
 		}
@@ -131,11 +131,11 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		return infiniteMonthCollectionView.indexPathForItem(at: center)?.item
 	}
 
-		// MARK: Title
+    // MARK: Title
 
-		/// Scrollview Paging changes the title
-		/// - Parameter newTitle: newTitle is the month determined from the index of the main tableView
-		/// this only runs if the infiniteMonthCollectionView is visible, otherwise the heading is "Favourites"
+    /// Scrollview Paging changes the title
+    /// - Parameter newTitle: newTitle is the month determined from the index of the main tableView
+    /// this only runs if the infiniteMonthCollectionView is visible, otherwise the heading is "Favourites"
 	private func setTitleFromScrollViewPaged(newTitle: String?) {
 		if viewModel?.viewDisplayed == .months, let newTitle: String = newTitle, newTitle.isEmpty == false {
 
@@ -145,9 +145,9 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 				titleAnimation.duration = 0.5
 				titleAnimation.type = CATransitionType.fade
 				titleAnimation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-					// this is a detail view controller, so we must grab the reference
-					// to the parent view controller's navigation controller
-					// then cycle through until we find the title labels.
+                // this is a detail view controller, so we must grab the reference
+                // to the parent view controller's navigation controller
+                // then cycle through until we find the title labels.
 				if let subviews: [UIView] = navigationController?.navigationBar.subviews {
 					for navigationItem in subviews {
 						for itemSubView in navigationItem.subviews {
@@ -157,7 +157,6 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 						}
 					}
 				}
-					// finally set the title
 				navigationItem.title = newTitle
 			}
 		}
@@ -167,7 +166,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		viewModel?.infoButtonTapped()
 	}
 
-		// MARK: Search controller setup
+    // MARK: Search controller setup
 
 	private func setupNavigationControllerView() {
 		navigationController?.navigationBar.isTranslucent = false
@@ -191,7 +190,7 @@ class MainViewController: UIViewController, UISearchBarDelegate, UISearchResults
 		searchController.searchBar.searchBarStyle = .minimal
 		searchController.searchBar.isTranslucent = false
 		searchController.searchResultsUpdater = self
-			// for cancel button
+        // for cancel button
 		searchController.searchBar.tintColor = UIColor.SearchBar.tint
 		searchController.hidesNavigationBarDuringPresentation = false
 
@@ -323,6 +322,7 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: Search Bar Delegates
+
 extension MainViewController: UISearchControllerDelegate {
 
 	func updateSearchResults(for searchController: UISearchController) {

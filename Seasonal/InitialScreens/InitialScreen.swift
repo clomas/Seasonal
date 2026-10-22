@@ -1,10 +1,10 @@
-	//
-	//  InitialScreen.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 3/7/2025.
-	//  Copyright © 2025 Clint Thomas. All rights reserved.
-	//
+//
+//  InitialScreen.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 3/7/2025.
+//  Copyright © 2025 Clint Thomas. All rights reserved.
+//
 
 import SwiftUI
 

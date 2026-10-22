@@ -1,10 +1,10 @@
-	//
-	//  LocationService.swift
-	//  Seasonal
-	//
-	//  Created by Clint Thomas on 6/8/19.
-	//  Copyright © 2019 Clint Thomas. All rights reserved.
-	//
+//
+//  LocationService.swift
+//  Seasonal
+//
+//  Created by Clint Thomas on 6/8/19.
+//  Copyright © 2019 Clint Thomas. All rights reserved.
+//
 
 import Foundation
 import CoreLocation
@@ -39,7 +39,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 		guard let mostRecentLocation = locations.last else {
 			return
 		}
-			// now fill address as well for complete information through lat long ..
+        // now fill address as well for complete information through lat long ..
 		let geoCoder: CLGeocoder = CLGeocoder()
 		geoCoder.reverseGeocodeLocation(mostRecentLocation) { [weak self] (placeMarks: [CLPlacemark]?, _)  in
 			guard let placeMarks = placeMarks, let placeMark = placeMarks.first else { return }
@@ -55,7 +55,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-		// MARK: Location Updated
+    // MARK: Location Updated
 
 	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
 		authStatus = status
@@ -71,7 +71,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-		// MARK: Failure
+    // MARK: Failure
 
 	func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
 		locationManager.stopUpdatingLocation()
@@ -82,7 +82,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 #endif
 	}
 
-		// MARK: Start
+    // MARK: Start
 
 	private func start() {
 
@@ -97,14 +97,14 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 		}
 	}
 
-		// MARK: Stop
+    // MARK: Stop
 
 	private func stop() {
 		locationManager.stopUpdatingLocation()
 		locationDelegate?.locationReady(location: .noState)
 	}
 
-		// MARK: States in Aus
+    // MARK: States in Aus
 
 	private func parseLocation() {
 		var stateFound: StateLocation = .noState

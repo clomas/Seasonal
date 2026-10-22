@@ -10,68 +10,45 @@
 // https://swiftrocks.com/avoiding-callback-hell-in-swift
 
 import Foundation
-import UIKit
 import CloudKit
 
 enum CloudKitErrorOld: Error {
     case likesError
 }
 
-class CloudKitDataServiceOld {
-	private let container: CKContainer = CKContainer.default()
-    var currentLocation: StateLocation = .noState
+final class CloudKitDataServiceOld: Sendable {
+	private let cloudKitDataService: CloudKitDataService = CloudKitDataService()
 
 	// MARK: CloudKit Database
 
-    func getData(for locationFound: StateLocation, dataFetched: @escaping(Result<[ProduceOld], Error>) -> Void) {
-        currentLocation = locationFound
-		let predicate: NSPredicate = NSPredicate(value: true)
-		let publicQuery: CKQuery = CKQuery(recordType: Constants.australianProduce, predicate: predicate)
-		let privateQuery: CKQuery = CKQuery(recordType: Constants.australianProduceLikes, predicate: predicate)
-		publicQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
-        privateQuery.sortDescriptors = [NSSortDescriptor(key: Constants.id, ascending: true)]
-        var publicData: [CKRecord] = [CKRecord]()
-
-        CKContainer.default().publicCloudDatabase.perform(publicQuery, inZoneWith: .default) { [unowned self] results, error in
-			if let error: Error = error {
+	func getData(for locationFound: StateLocation, dataFetched: @escaping @MainActor @Sendable (Result<[ProduceOld], Error>) -> Void) {
+		Task {
+			do {
+				let publicRecords: [CKRecord] = try await cloudKitDataService.fetchItems(.public, recordType: Constants.australianProduce, queryKey: Constants.id)
+				// continue if private error
+				let privateRecords: [CKRecord] = (try? await cloudKitDataService.fetchItems(.private, recordType: Constants.australianProduceLikes, queryKey: Constants.id)) ?? []
+				await dataFetched(.success(addDataToArray(publicRecords: publicRecords, privateRecords: privateRecords, location: locationFound)))
+			} catch {
 				#if DEBUG
-                print(error.localizedDescription)
+				print(error.localizedDescription)
 				#endif
-				dataFetched(.failure(error))
-            } else {
-				if let publicResults: [CKRecord] = results {
-                    publicData = publicResults
-                }
-                CKContainer.default().privateCloudDatabase.perform(privateQuery, inZoneWith: .default) { [unowned self] results, error in
-					if let error: Error = error {
-						// continue if private error
-						let privateData: [CKRecord] = [CKRecord]()
-						dataFetched(.success(addDataToArray(publicRecords: publicData, privateRecords: privateData)))
-						#if DEBUG
-                        print(error.localizedDescription)
-						#endif
-                    } else {
-                        if let privateData: [CKRecord] = results {
-							dataFetched(.success(addDataToArray(publicRecords: publicData, privateRecords: privateData)))
-                        }
-                    }
-                }
-            }
-        }
-    }
+				await dataFetched(.failure(error))
+			}
+		}
+	}
 
 	// MARK: Sort Data
 
-    private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord]) -> [ProduceOld] {
+	private func addDataToArray(publicRecords: [CKRecord], privateRecords: [CKRecord], location: StateLocation) -> [ProduceOld] {
 		var produceArray: [ProduceOld] = [ProduceOld]()
 		let likedArray: [Int?] = privateRecords.map { $0.object(forKey: Constants.id ) as? Int}
 
-        for record in publicRecords {
+		for record in publicRecords {
 			var id: Int = 0
 			var name: String = Constants.apple
 			var imageName: String = Constants.apple
 			var category: ViewDisplayed.ProduceCategory = ViewDisplayed.ProduceCategory.fruit
-            let description: String = ""
+			let description: String = ""
 			var months: [MonthOld] = [MonthOld]()
 			var seasons: [SeasonsOld] = [SeasonsOld]()
 			var liked: Bool = false
@@ -79,18 +56,18 @@ class CloudKitDataServiceOld {
 			if let recordID: Int = record.object(forKey: Constants.id) as? Int,
 			   let nameRecord: String = record.object(forKey: Constants.name) as? String,
 			   let categoryRecord: String = record.object(forKey: Constants.category) as? String,
-			   let monthsRecord: String = record.object(forKey: "months_\(currentLocation.rawValue)") as? String {
+			   let monthsRecord: String = record.object(forKey: "months_\(location.rawValue)") as? String {
 				id = recordID
-                name = nameRecord
-                imageName = nameRecord
+				name = nameRecord
+				imageName = nameRecord
 				category = ViewDisplayed.ProduceCategory.fromString(categoryRecord)
-                months = monthsRecord.createMonthArrayOld()
+				months = monthsRecord.createMonthArrayOld()
 
-				let seasonsKey = "seasons_\(currentLocation.rawValue)"
+				let seasonsKey = "seasons_\(location.rawValue)"
 				if let seasonsRecord = record.object(forKey: seasonsKey) as? String {
 					seasons = seasonsRecord.createSeasonArrayOld()
 				}
-            }
+			}
 
 			if likedArray.contains(record.object(forKey: Constants.id) as? Int) {
 				liked = Bool(truncating: id as NSNumber)
@@ -106,30 +83,31 @@ class CloudKitDataServiceOld {
 												 liked: liked
 			)
 			produceArray.append(produce)
-        }
+		}
 
 		let localLikedData: [LikedProduceOld] = LocalDataHandlerOld.loadAll(LikedProduceOld.self)
 		if !localLikedData.isEmpty {
-            compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
-        }
-        return produceArray
-    }
+			compareCoreDataToCloudKitData(locallyStoredData: localLikedData, produceArray: &produceArray)
+		}
+		return produceArray
+	}
 
 	// Update cloudKit with local data if there is a disparity
 	// local data should always be accurate
-    private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduceOld], produceArray: inout [ProduceOld]) {
+	private func compareCoreDataToCloudKitData(locallyStoredData: [LikedProduceOld], produceArray: inout [ProduceOld]) {
 		let likedArray: [ProduceOld] = produceArray.filter { $0.liked == true}
 
 		for localLike in locallyStoredData where likedArray.firstIndex(where: {$0.id == localLike.id}) == nil {
+			let id: Int = localLike.id
 
-			if let index: Array<ProduceOld>.Index = produceArray.firstIndex(where: {$0.id == localLike.id}) {
+			if let index: Array<ProduceOld>.Index = produceArray.firstIndex(where: {$0.id == id}) {
 				produceArray[index].liked = true
 			}
-			saveLikeToPrivateDatabaseInCloudKit(id: localLike.id) { (result: Result<Bool, CloudKitErrorOld>) in
+			saveLikeToPrivateDatabaseInCloudKit(id: id) { (result: Result<Bool, CloudKitErrorOld>) in
 			#if DEBUG
 				if result == .success(true) {
-					print(result, "added like record in CloudKit - id: \(localLike.id)")
-				} 
+					print(result, "added like record in CloudKit - id: \(id)")
+				}
 			#endif
 			}
 		}
@@ -137,38 +115,32 @@ class CloudKitDataServiceOld {
 
 	// MARK: Save
 
-	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping(Result<Bool, CloudKitErrorOld>) -> Void) {
-
-        if FileManager.default.ubiquityIdentityToken != nil {
-			let newPrivateRecordID: CKRecord.ID = CKRecord.ID(recordName: "\(id)_")
-			let newPrivateRecord: CKRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: newPrivateRecordID)
-            newPrivateRecord.setValue(id, forKey: Constants.id)
-
-			CKContainer.default().privateCloudDatabase.save(newPrivateRecord) { (_, error) in
-				if error != nil {
-					result(.failure(.likesError))
-				} else {
-					result(.success(true))
-				}
-            }
-        }
-    }
-
-	func deleteRecordsInPrivateDatabase(id: Int, result: @escaping(Result<Bool, CloudKitErrorOld>) -> Void) {
-
-		if FileManager.default.ubiquityIdentityToken != nil {
-			let operation: CKModifyRecordsOperation = CKModifyRecordsOperation(recordsToSave: nil, recordIDsToDelete: [CKRecord.ID(recordName: "\(id)_")])
-			operation.savePolicy = .allKeys
-
-			operation.modifyRecordsCompletionBlock = { _, _, error in
-				if error != nil {
-					result(.failure(.likesError))
-				} else {
-					result(.success(true))
-				}
+	func saveLikeToPrivateDatabaseInCloudKit(id: Int, result: @escaping @MainActor @Sendable (Result<Bool, CloudKitErrorOld>) -> Void) {
+		Task {
+			do {
+				try await cloudKitDataService.saveItem(likeRecord(id: id), in: .private)
+				await result(.success(true))
+			} catch {
+				await result(.failure(.likesError))
 			}
-			CKContainer.default().privateCloudDatabase.add(operation)
 		}
+	}
+
+	func deleteRecordsInPrivateDatabase(id: Int, result: @escaping @MainActor @Sendable (Result<Bool, CloudKitErrorOld>) -> Void) {
+		Task {
+			do {
+				try await cloudKitDataService.deleteItem(likeRecord(id: id), in: .private)
+				await result(.success(true))
+			} catch {
+				await result(.failure(.likesError))
+			}
+		}
+	}
+
+	private func likeRecord(id: Int) -> CKRecord {
+		let record: CKRecord = CKRecord(recordType: Constants.australianProduceLikes, recordID: CKRecord.ID(recordName: "\(id)_"))
+		record.setValue(id, forKey: Constants.id)
+		return record
 	}
 }
 // On creating the database I made some questionable decisions, I could have maybe handled it better.

@@ -13,7 +13,8 @@ protocol LocationDelegateOld: AnyObject {
 	func locationReady(location: StateLocation)
 }
 
-class LocationManagerOld: NSObject, CLLocationManagerDelegate {
+@MainActor
+class LocationManagerOld: NSObject, @preconcurrency CLLocationManagerDelegate {
 
 	private let locationManager: CLLocationManager
 	private let locationInfo: LocationInformation = LocationInformation()
@@ -26,9 +27,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 		locationManager = CLLocationManager()
 		super.init()
 
-		if #available(iOS 14.0, *) {
-			locationManager.desiredAccuracy = kCLLocationAccuracyReduced
-		}
+		locationManager.desiredAccuracy = kCLLocationAccuracyReduced
 		locationManager.distanceFilter = kCLLocationAccuracyThreeKilometers
 		locationManager.delegate = self
 
@@ -40,24 +39,25 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 			return
 		}
         // now fill address as well for complete information through lat long ..
-		let geoCoder: CLGeocoder = CLGeocoder()
-		geoCoder.reverseGeocodeLocation(mostRecentLocation) { [weak self] (placeMarks: [CLPlacemark]?, _)  in
-			guard let placeMarks = placeMarks, let placeMark = placeMarks.first else { return }
+		Task { [weak self] in
+			let placeMark = try? await CLGeocoder().reverseGeocodeLocation(mostRecentLocation).first
+			guard let self, let placeMark else { return }
 
 			if let state: String = placeMark.administrativeArea, let country: String = placeMark.country {
-				self?.locationInfo.state = state
-				self?.locationInfo.country = country
-				self?.locationInfo.locationFound = true
+				locationInfo.state = state
+				locationInfo.country = country
+				locationInfo.locationFound = true
 			} else {
-				self?.locationInfo.locationFound = false
+				locationInfo.locationFound = false
 			}
-			self?.parseLocation()
+			parseLocation()
 		}
 	}
 
     // MARK: Location Updated
 
-	func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+	func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+		let status = manager.authorizationStatus
 		authStatus = status
 		switch status {
 		case .notDetermined:
@@ -86,7 +86,7 @@ class LocationManagerOld: NSObject, CLLocationManagerDelegate {
 
 	private func start() {
 
-		switch CLLocationManager.authorizationStatus() {
+		switch locationManager.authorizationStatus {
 		case .notDetermined:
 			locationManager.requestWhenInUseAuthorization()
 			locationManager.startUpdatingLocation()

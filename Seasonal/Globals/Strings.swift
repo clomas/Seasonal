@@ -103,11 +103,11 @@ enum Strings {
         }
 
         static func searchFavourites(in category: String) -> String {
-            String(localized: "No favourite \(category) matches your search.")
+            String(localized: "No favourite \(category) match your search.")
         }
 
         static func searchCategory(_ category: String, in period: String) -> String {
-            String(localized: "No \(category) in \(period) matches your search.")
+            String(localized: "No \(category) in \(period) match your search.")
         }
 
         static func search(in period: String) -> String {

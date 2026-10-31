@@ -46,7 +46,8 @@ struct PeriodPagerView<Period: PeriodType>: View {
                 produce: produceStore.byPeriod(Period.allCases[item.id]),
                 parentTab: state.browsingTab,
                 selectedCategory: state.selectedCategory,
-                searchText: searchText
+                searchText: searchText,
+                periodTitle: item.title
             )
         }
     }

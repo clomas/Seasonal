@@ -89,6 +89,30 @@ enum Strings {
     enum EmptyState {
         static let favourites = String(localized: "No favourites selected")
         static let period = String(localized: "Nothing to display, try something else")
+
+        static func favourites(in category: String) -> String {
+            String(localized: "No favourite \(category)")
+        }
+
+        static func category(_ category: String, in period: String) -> String {
+            String(localized: "No \(category) in \(period)")
+        }
+
+        static func noResults(for searchText: String) -> String {
+            String(localized: "No Results for “\(searchText)”")
+        }
+
+        static func searchFavourites(in category: String) -> String {
+            String(localized: "No favourite \(category) matches your search.")
+        }
+
+        static func searchCategory(_ category: String, in period: String) -> String {
+            String(localized: "No \(category) in \(period) matches your search.")
+        }
+
+        static func search(in period: String) -> String {
+            String(localized: "Nothing in \(period) matches your search.")
+        }
     }
 
     enum Launch {

@@ -93,6 +93,24 @@
     "Herbs" : {
 
     },
+    "No %@ in %@" : {
+      "comment" : "Empty list for a month or season when a category filter is selected, e.g. \"No herbs in Summer\"."
+    },
+    "No %@ in %@ matches your search." : {
+      "comment" : "Search found nothing in a month or season with a category filter, e.g. \"No fruit in Summer matches your search.\""
+    },
+    "No Results for “%@”" : {
+      "comment" : "Title shown when a search finds nothing. The argument is the search text."
+    },
+    "No favourite %@" : {
+      "comment" : "Empty favourites list when a category filter is selected, e.g. \"No favourite fruit\"."
+    },
+    "No favourite %@ matches your search." : {
+      "comment" : "Search found nothing in favourites with a category filter, e.g. \"No favourite fruit matches your search.\""
+    },
+    "Nothing in %@ matches your search." : {
+      "comment" : "Search found nothing in a month or season, e.g. \"Nothing in Summer matches your search.\""
+    },
     "iCloud Error" : {
 
     },

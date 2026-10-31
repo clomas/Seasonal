@@ -18,11 +18,6 @@ struct MainTabScreenTests {
         #expect(MainTabScreen.Tabs.search.title == Strings.Tab.search)
     }
 
-    @Test func emptyMessages() {
-        #expect(MainTabScreen.Tabs.favourites.emptyProduceListViewMessage == Strings.EmptyState.favourites)
-        #expect(MainTabScreen.Tabs.months.emptyProduceListViewMessage == Strings.EmptyState.period)
-    }
-
     @Test(arguments: [(MainTabScreen.Tabs.months, true), (.seasons, true), (.favourites, false), (.search, false)])
     func onlyPeriodTabsHaveAPicker(_ tab: MainTabScreen.Tabs, expected: Bool) {
         #expect(tab.hasPeriodPicker == expected)

@@ -37,12 +37,5 @@ extension MainTabScreen {
             case .months, .seasons: .nothingToShow
             }
         }
-
-        var emptyProduceListViewMessage: String {
-            switch self {
-            case .favourites: Strings.EmptyState.favourites
-            case .search, .months, .seasons: Strings.EmptyState.period
-            }
-        }
     }
 }

@@ -22,12 +22,18 @@ struct ProduceList: View {
 
     var selectedCategory: ProduceCategory = .all
     var searchText = ""
+    var periodTitle: String?
 
     var body: some View {
         let produce = filteredProduce
         Group {
             if produce.isEmpty {
-                emptyState
+                ProduceListEmptyState(
+                    parentTab: parentTab,
+                    category: selectedCategory,
+                    periodTitle: periodTitle,
+                    searchText: searchText
+                )
             } else {
                 ScrollView {
                     LazyVStack(spacing: 0) {
@@ -54,20 +60,5 @@ struct ProduceList: View {
         produce
             .filter { selectedCategory == .all || $0.category == selectedCategory }
             .filter { searchText.isEmpty || $0.name?.localizedStandardContains(searchText) == true }
-    }
-
-    @ViewBuilder
-    private var emptyState: some View {
-        if searchText.isEmpty {
-            ContentUnavailableView {
-                Label {
-                    Text(parentTab.emptyProduceListViewMessage)
-                } icon: {
-                    parentTab.emptyListIcon
-                }
-            }
-        } else {
-            ContentUnavailableView.search
-        }
     }
 }

@@ -19,6 +19,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
 
     @ObservationIgnored private let window: UIWindow?
     @ObservationIgnored private let locationService = LocationService()
+    @ObservationIgnored private let pinsFavourites: Bool
 
     var state: AppCoordinatorState = .initial {
         didSet { isFindingLocation = false }
@@ -37,6 +38,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
 
     init(window: UIWindow?) {
         self.window = window
+        self.pinsFavourites = FeatureToggleHelper().isEnabled(.pinFavourites)
 
 #if DEBUG
         if CommandLine.arguments.contains("enable-testing") {
@@ -54,6 +56,7 @@ final class AppCoordinator: AppCoordinatorVersionProtocol {
         let rootScreen = RootScreen()
             .environment(self)
             .environment(produceStore)
+            .environment(\.pinsFavourites, pinsFavourites)
 
         window?.rootViewController = UIHostingController(rootView: rootScreen)
         followAppearanceSetting()

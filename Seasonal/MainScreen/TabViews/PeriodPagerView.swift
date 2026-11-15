@@ -13,6 +13,7 @@ struct PeriodPagerView<Period: PeriodType>: View {
 
     @Environment(ProduceStore.self) private var produceStore
     @Environment(MainScreenState.self) private var state
+    @Environment(\.pinsFavourites) private var pinsFavourites
 
     @Binding var jumpToIndex: Int?
     @Binding var currentIndex: Int
@@ -47,7 +48,9 @@ struct PeriodPagerView<Period: PeriodType>: View {
                 parentTab: state.browsingTab,
                 selectedCategory: state.selectedCategory,
                 searchText: searchText,
-                periodTitle: item.title
+                periodTitle: item.title,
+                pinsFavourites: pinsFavourites,
+                isCurrentPage: item.id == currentIndex
             )
         }
     }

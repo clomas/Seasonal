@@ -15,8 +15,7 @@ final class FeatureToggleHelper {
 
 	init() {
 		for feature in Feature.allCases {
-			let stored = UserDefaults.standard.object(forKey: feature.rawValue) as? Bool
-			toggles[feature] = stored ?? feature.defaultValue
+			toggles[feature] = UserDefaults.standard.bool(forKey: feature.rawValue, default: feature.defaultValue)
 		}
 	}
 

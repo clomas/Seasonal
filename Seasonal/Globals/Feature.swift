@@ -15,11 +15,7 @@ enum Feature: String, CaseIterable {
 		case .useSwiftUI:
 			if #available(iOS 26, *) { true } else { false }
 		case .pinFavourites:
-			#if DEBUG
 			true
-			#else
-			false
-			#endif
 		}
 	}
 }

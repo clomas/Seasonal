@@ -24,7 +24,7 @@ class SeasonalUITestCase: XCTestCase {
     }
 
     let launchTimeout: TimeInterval = 30
-    let elementTimeout: TimeInterval = 5
+    let elementTimeout: TimeInterval = 2
 
     var app: XCUIApplication!
 

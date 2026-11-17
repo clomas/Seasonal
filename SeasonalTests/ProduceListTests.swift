@@ -42,6 +42,31 @@ struct ProduceListTests {
         #expect(list.filteredProduce.map(\.id) == [3])
     }
 
+    @Test(arguments: [(false, ""), (true, "app")])
+    func favouritesArentPinned(pinsFavourites: Bool, searchText: String) {
+        let produce: [Produce] = [.fixture(id: 1, name: "Apple", isFavourite: true)]
+
+        let ids = ProduceList.pinnedIDs(in: produce, snapshot: [1], pinsFavourites: pinsFavourites, searchText: searchText)
+
+        #expect(ids.isEmpty)
+    }
+
+    @Test func liveFavouritesArePinnedBeforeTheSnapshot() {
+        let produce: [Produce] = [.fixture(id: 1, name: "Apple"), .fixture(id: 2, name: "Pear", isFavourite: true)]
+
+        let ids = ProduceList.pinnedIDs(in: produce, snapshot: nil, pinsFavourites: true, searchText: "")
+
+        #expect(ids == [2])
+    }
+
+    @Test func snapshotWinsOverLiveFavourites() {
+        let produce: [Produce] = [.fixture(id: 1, name: "Apple", isFavourite: true), .fixture(id: 2, name: "Pear")]
+
+        let ids = ProduceList.pinnedIDs(in: produce, snapshot: [2], pinsFavourites: true, searchText: "")
+
+        #expect(ids == [2])
+    }
+
     @Test func searchAndCategoryCombine() {
         let list = ProduceList(produce: produce, parentTab: .favourites, selectedCategory: .vegetables, searchText: "app")
 

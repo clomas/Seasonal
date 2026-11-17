@@ -64,6 +64,11 @@ enum Strings {
         static let label = String(localized: "Favourite")
     }
 
+    enum PinnedSection {
+        static let favourites = String(localized: "Pinned favourites header", defaultValue: "Favourites")
+        static let others = String(localized: "Other produce")
+    }
+
     enum Search {
         static let prompt = String(localized: "Search produce")
     }

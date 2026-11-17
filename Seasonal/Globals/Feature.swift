@@ -8,11 +8,14 @@
 
 enum Feature: String, CaseIterable {
 	case useSwiftUI
+	case pinFavourites
 
 	var defaultValue: Bool {
 		switch self {
 		case .useSwiftUI:
 			if #available(iOS 26, *) { true } else { false }
+		case .pinFavourites:
+			true
 		}
 	}
 }

@@ -26,7 +26,7 @@ struct ProduceList: View {
     var searchText = ""
     var periodTitle: String?
     var pinsFavourites = false
-    // The pager keeps neighbouring pages alive without `onAppear`, so only the current page freezes its order.
+    // The pager keeps neighbouring pages alive without `onDisappear`, so only the current page freezes its order.
     var isCurrentPage = true
 
     var body: some View {
@@ -64,11 +64,11 @@ struct ProduceList: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Colour.background)
-        .onAppear { refreshPinnedSnapshot() }
-        .onDisappear { pinnedSnapshot = nil }
-        .onChange(of: searchText) { refreshPinnedSnapshot() }
-        .onChange(of: selectedCategory) { refreshPinnedSnapshot() }
-        .onChange(of: isCurrentPage) { refreshPinnedSnapshot() }
+        .onChange(of: produce.favouriteIDs) { previous, _ in freezePinnedOrder(at: previous) }
+        .onDisappear { clearPinnedSnapshot() }
+        .onChange(of: searchText) { clearPinnedSnapshot() }
+        .onChange(of: selectedCategory) { clearPinnedSnapshot() }
+        .onChange(of: isCurrentPage) { clearPinnedSnapshot() }
     }
 
     var filteredProduce: [Produce] {
@@ -78,7 +78,7 @@ struct ProduceList: View {
     }
 
     private var pinnedIDs: Set<Int> {
-        Self.pinnedIDs(in: produce, snapshot: isCurrentPage ? pinnedSnapshot : nil, pinsFavourites: pinsFavourites, searchText: searchText)
+        Self.pinnedIDs(in: produce, snapshot: pinnedSnapshot, pinsFavourites: pinsFavourites, searchText: searchText)
     }
 
     static func pinnedIDs(in produce: [Produce], snapshot: Set<Int>?, pinsFavourites: Bool, searchText: String) -> Set<Int> {
@@ -86,7 +86,14 @@ struct ProduceList: View {
         return snapshot ?? produce.favouriteIDs
     }
 
-    private func refreshPinnedSnapshot() {
-        pinnedSnapshot = produce.favouriteIDs
+    private func freezePinnedOrder(at ids: Set<Int>) {
+        guard isCurrentPage, pinnedSnapshot == nil else { return }
+        pinnedSnapshot = ids
+    }
+
+    // Writing state mid-scroll cancels the pager's animated scroll, so only write when there's a snapshot to clear.
+    private func clearPinnedSnapshot() {
+        guard pinnedSnapshot != nil else { return }
+        pinnedSnapshot = nil
     }
 }

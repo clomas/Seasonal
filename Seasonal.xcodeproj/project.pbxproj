@@ -587,7 +587,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
@@ -614,7 +614,7 @@
 				CODE_SIGN_ENTITLEMENTS = Seasonal/Seasonal.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				GCC_DYNAMIC_NO_PIC = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Seasonal/Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";

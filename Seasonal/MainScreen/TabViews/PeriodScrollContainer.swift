@@ -24,6 +24,7 @@ struct PeriodScrollContainer<Cell: View>: View {
     private static var jumpDuration: TimeInterval { 0.4 }
     private static var peekStartDelay: Duration { .milliseconds(500) }
     private static var peekHopDuration: TimeInterval { 0.8 }
+    private static var peekHoldDuration: TimeInterval { 0.4 }
 
     private let initialIndex: Int
     private let centerOffset: Int
@@ -119,7 +120,7 @@ struct PeriodScrollContainer<Cell: View>: View {
         let hops = [startSlot + 1, startSlot, startSlot - 1, startSlot]
         if reduceMotion {
             // Keep the tip on screen as long as the peek would have, without the motion.
-            try? await Task.sleep(for: .seconds(Self.peekHopDuration * Double(hops.count)))
+            try? await Task.sleep(for: .seconds((Self.peekHopDuration + Self.peekHoldDuration) * Double(hops.count)))
         } else {
             for slot in hops {
                 await hop(to: slot)
@@ -128,10 +129,11 @@ struct PeriodScrollContainer<Cell: View>: View {
         await onPeekFinished?()
     }
 
+    // Starting the next hop as the last one ends sometimes gets dropped, so hold on each page first.
     private func hop(to id: Int) async {
         withAnimation(.easeInOut(duration: Self.peekHopDuration)) {
             scrollPosition.scrollTo(id: id)
         }
-        try? await Task.sleep(for: .seconds(Self.peekHopDuration))
+        try? await Task.sleep(for: .seconds(Self.peekHopDuration + Self.peekHoldDuration))
     }
 }
